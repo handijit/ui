@@ -7,7 +7,7 @@
  */
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createRef, type ReactNode, useState } from 'react';
+import { type ComponentProps, createRef, type ReactNode, useState } from 'react';
 
 import Checkbox from '@/components/Checkbox';
 import ChipGroup from '@/components/ChipGroup';
@@ -73,6 +73,15 @@ describe.each([
     expect(screen.getByRole(role)).toHaveAccessibleDescription(
       'Gerekli Sözleşmeyi okudum Sözleşme metni ayrıca e-postayla gelir.',
     );
+  });
+
+  /* `@handijit/forms` 1.0 passed the hint id itself, next to `Field`'s error id. */
+  it('names an id once when the passed aria-describedby already holds the hint', () => {
+    render(
+      <Control id="terms" label="Kabul" hint="Sözleşme" aria-describedby="f-error terms-hint" />,
+    );
+
+    expect(describedBy(screen.getByRole(role))).toEqual(['terms-hint', 'f-error']);
   });
 
   it('without an error, writes no invalid state and keeps a passed aria-invalid', () => {
@@ -566,6 +575,19 @@ describe('TagInput — value and the duplicate label', () => {
         <TagInput label="Etiketler" removeLabel="Kaldır" value={['a']} onChange={onChange} />,
       ),
     );
+
+    await user.type(screen.getByRole('textbox'), 'b{Enter}');
+    expect(onChange).toHaveBeenCalledWith(['a', 'b']);
+  });
+
+  it('keeps a wrapper that omits values and passes it itself compiling (no union)', async () => {
+    const user = userEvent.setup();
+    const onChange = jest.fn();
+    type WrapperProps = Omit<ComponentProps<typeof TagInput>, 'values' | 'onChange'>;
+    const Wrapper = (props: WrapperProps) => (
+      <TagInput {...props} values={['a']} onChange={onChange} />
+    );
+    render(withLabels(<Wrapper label="Etiketler" removeLabel="Kaldır" />));
 
     await user.type(screen.getByRole('textbox'), 'b{Enter}');
     expect(onChange).toHaveBeenCalledWith(['a', 'b']);

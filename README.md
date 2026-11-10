@@ -442,7 +442,7 @@ are linked for a screen reader.
   `<id>-hint`) and a `ReactNode` label.
 - **`Checkbox`, `Switch`, `Radio`** take `error`: the message under the label,
   `aria-invalid` and the link. A passed `aria-describedby` is **merged** with
-  the error and the hint (until 2.1 it replaced the hint).
+  the error and the hint, each id once (until 2.1 it replaced the hint).
 - **Composites** take the four props of `FieldChildProps`. Where they land:
 
 | Component          | `id`                         | `aria-invalid` · `aria-describedby` | `required`                 |

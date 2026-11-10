@@ -925,7 +925,7 @@ workaround in the binder. Nothing is renamed or removed; `CHANGELOG.md` has the 
 
 | Gap | 2.2 |
 |---|---|
-| `Checkbox` / `Switch` / `Radio` had no error; a passed `aria-describedby` REPLACED the hint | `error` (message under the label, `aria-invalid`, the link); the description is `error · hint · passed`, merged by `helpers/aria.helper.ts` `idList` |
+| `Checkbox` / `Switch` / `Radio` had no error; a passed `aria-describedby` REPLACED the hint | `error` (message under the label, `aria-invalid`, the link); the description is `error · hint · passed`, each id once, merged by `helpers/aria.helper.ts` `idList` (forms 1.0 passed the hint id itself: without the de-duplication the hint was read twice) |
 | `Field` had no `id`, its label was a string | `id` (messages `<id>-error`, `<id>-hint`), `label: ReactNode` |
 | Composites took none of `FieldChildProps` | `id`, `aria-invalid`, `aria-describedby`, `required` on `QuantityStepper`, `SegmentedControl`, `ChipGroup`, `RangeSlider`, `RatingInput`, `DateRange`; where each lands is a table in `README.md` ("Form fields") |
 | `Select` / `Combobox`: no `onBlur`, no `ref`; `Select` could not hold `null` | `onBlur` (React's focus events bubble through the portal: the root hears the trigger AND the panel; focus moving between them, or into the open sheet, is not a blur), `ref` → trigger, `Select value: T \| null` |

@@ -14,31 +14,16 @@ import { useUi } from '../../theme/context';
 
 import styles from './index.module.scss';
 
-/**
- * The tags. `value` (2.2) is the name every other field uses; `values` is the 2.0 name, kept
- * until 3.0. Give one of the two.
- */
-type ValueProps =
-  | {
-      /** The tags (2.2). */
-      value: string[];
-      /**
-       * @deprecated 2.2: use `value`, the name every other field uses. Removed in 3.0.
-       */
-      values?: never;
-    }
-  | {
-      value?: never;
-      /**
-       * @deprecated 2.2: use `value`, the name every other field uses. Removed in 3.0.
-       */
-      values: string[];
-    };
-
 /** What a tag already in the list announces (2.2); the 2.0 text when nothing is given. */
 const DEFAULT_DUPLICATE_LABEL: Formatter<[value: string]> = value => `${value} zaten ekli`;
 
-type Props = ValueProps & {
+type Props = {
+  /** The tags (2.2), the name every other field uses. Wins over `values` when both are given. */
+  value?: string[];
+  /**
+   * @deprecated 2.2: use `value`, the name every other field uses. Removed in 3.0.
+   */
+  values?: string[];
   onChange: (values: string[]) => void;
   /** Alanın erişilebilir adı. */
   label: string;

@@ -7,9 +7,9 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: $radius-pill;
-  background-color: $surface-3;
+  background-color: $bg-inset;
   color: $text;
-  font-family: $font-heading;
+  font-family: $font-display;
   font-weight: $weight-semibold;
   letter-spacing: 0;
   line-height: $leading-none;
@@ -39,70 +39,70 @@
   // Köşeli madalyon: yarıçap ölçüyle büyür, tek değer küçük madalyonu yuvarlak, büyüğünü keskin
   // gösteriyordu.
   &--rounded {
-    border-radius: $radius-md;
+    border-radius: $radius-sm;
 
     &.avatar--md {
-      border-radius: $radius-lg;
+      border-radius: $radius-md;
     }
 
     &.avatar--lg {
-      border-radius: $radius-xl;
+      border-radius: $radius-lg;
     }
   }
 
   // Marka madalyonu — iki temada aynı (logo kuralı: çam zemin, mint işaret).
   &--brand {
     background-color: $band-bg;
-    color: $band-accent;
+    color: $highlight;
   }
 
   &--sm {
     width: 32px;
     height: 32px;
-    font-size: $font-size-xs;
+    font-size: $font-size-caption;
   }
 
   &--md {
     width: 44px;
     height: 44px;
-    font-size: $font-size-base;
+    font-size: $font-size-body;
   }
 
   &--lg {
     width: 56px;
     height: 56px;
-    font-size: $font-size-lg;
+    font-size: $font-size-h4;
   }
 }
 
 // Karma tonlar: altısından YALNIZCA BİRİ yeşil. 4.x'te üçü yeşildi (rol, olumlu, OEM) ve avatar
 // listesi markanın rengini taşıyordu.
 .avatar--tone-0 {
-  background-color: $selected-tint;
+  background-color: $primary-soft;
   color: $text;
 }
 
 .avatar--tone-1 {
-  background-color: $ok-bg;
-  color: $ok-fg;
+  background-color: $success-bg;
+  color: $success-fg;
 }
 
 .avatar--tone-2 {
-  background-color: $warn-bg;
-  color: $warn-fg;
+  background-color: $warning-bg;
+  color: $warning-fg;
 }
 
 .avatar--tone-3 {
-  background-color: $alt-bg;
-  color: $alt-fg;
+  background-color: $highlight-soft;
+  color: $highlight-text;
 }
 
 .avatar--tone-4 {
-  background-color: $off-bg;
-  color: $off-fg;
+  background-color: $bg-raised;
+  color: $text-2;
 }
 
 .avatar--tone-5 {
-  background-color: $bad-bg;
-  color: $bad-fg;
+  background-color: $danger-bg;
+  color: $danger-fg;
 }

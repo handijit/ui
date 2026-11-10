@@ -4,22 +4,17 @@
   // `autoAttachChildProcesses: false`).
   //
   // ⚠ `nvm use` öneki ZORUNLU: makinenin varsayılanı node 14, `.nvmrc` -> 24.
-  //
-  // ⚠ Her komut `npm run tokens` ile başlıyor. `src/styles/_tokens.generated.scss`,
-  //   `_colors.generated.scss` ve `_metrics.generated.scss` gitignore'da —
-  //   kaynakları `src/theme/*.ts` ve DERLEMEDE üretiliyorlar. Temiz bir
-  //   checkout'ta önek olmadan SCSS derlemesi "dosya yok" ile düşer.
   // ─────────────────────────────────────────────────────────────────────
   "version": "0.2.0",
   "configurations": [
     {
-      // Bileşen galerisi — tema · RTL · yoğunluk anahtarı.
+      // Bileşen galerisi — tema · RTL anahtarı.
       // http://localhost:5273 (playground/vite.config.ts, strictPort).
       "name": "ui — playground (5273)",
       "type": "node-terminal",
       "request": "launch",
       "cwd": "${workspaceFolder}",
-      "command": ". \"$HOME/.nvm/nvm.sh\" && nvm use && npm run tokens && npm run playground",
+      "command": ". \"$HOME/.nvm/nvm.sh\" && nvm use && npm run playground",
       "autoAttachChildProcesses": false
     },
     {

@@ -1,5 +1,9 @@
+// `@handijit/ui/base.css` — box-model reset, shared `@keyframes` and helper classes.
+//
+// No design token is declared here: colours, type, spacing, radii, motion and layers are the
+// `--hd-*` custom properties of `@handijit/design/tokens.css`, which the application loads once.
+// The `--ui-anim-*` names below are animation names, not theme values.
 @use 'mixins' as *;
-@use 'tokens.generated';
 
 [class^='ui-'],
 [class*=' ui-'],
@@ -60,8 +64,8 @@
   }
 }
 
-// Nabız bir HALE: nokta soluklaşmaz, etrafında genişleyen halka söner. Kesirli `opacity`
-// kullanılmaz (nöbetçi `passive-opacity.test.ts`); renk `currentColor`dan karışır.
+// The pulse is a HALO: the dot does not fade, a ring grows around it and dies out. No fractional
+// `opacity` (sentinel `passive-opacity.test.ts`); the colour is mixed from `currentColor`.
 @keyframes ui-pulse {
   from {
     box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 55%, transparent);
@@ -139,30 +143,6 @@
   input[type='radio'],
   input[type='range'] {
     forced-color-adjust: auto;
-  }
-}
-
-@media (prefers-contrast: more) {
-  :root {
-    --ui-border: var(--ui-border-strong);
-    --ui-nav-line: var(--ui-nav-line-strong);
-    --ui-text-3: var(--ui-text-2);
-    --ui-nav-fg-3: var(--ui-nav-fg-2);
-  }
-}
-
-// ⚠ Örtüler paletin mürekkebinden türer, SABİT renk yazılmaz: bu blok bir dönem 4.x öncesinin
-// mavi-grisini (`rgb(17 21 27)`) ve saf siyahı taşıyordu — ikisi de palette yoktu.
-@media (prefers-reduced-transparency: reduce) {
-  :root {
-    --ui-glass: var(--ui-glass-solid);
-    --ui-scrim: color-mix(in srgb, var(--ui-shell) 92%, transparent);
-    --ui-scrim-soft: color-mix(in srgb, var(--ui-shell) 78%, transparent);
-  }
-
-  :root[data-ui-theme='dark'] {
-    --ui-scrim: color-mix(in srgb, var(--ui-surface-inset) 94%, transparent);
-    --ui-scrim-soft: color-mix(in srgb, var(--ui-surface-inset) 82%, transparent);
   }
 }
 

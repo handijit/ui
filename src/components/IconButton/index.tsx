@@ -14,7 +14,7 @@ import UiLink from '../Link';
 
 import styles from './index.module.scss';
 
-export type IconButtonVariant = 'ghost' | 'outline' | 'solid' | 'cart' | 'danger';
+export type IconButtonVariant = 'ghost' | 'outline' | 'solid' | 'accent' | 'danger';
 
 /** Köşe biçimi. `round` tam daire — sohbet girdisindeki gönder / durdur gibi. Ölçü değişmez. */
 export type IconButtonShape = 'rounded' | 'round';
@@ -23,7 +23,7 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   icon: ReactNode;
   /** Görsel etiketi olmayan düğmenin erişilebilir adı — ZORUNLU. */
   label: string;
-  /** `cart` yalnızca dönüşüm eyleminde kullanılır — ekrandaki en parlak yeşil odur. */
+  /** `accent` (coral) is for the conversion action only: download, try, subscribe. */
   variant?: IconButtonVariant;
   size?: 'sm' | 'md';
   shape?: IconButtonShape;

@@ -1,147 +1,62 @@
+import {
+  THEME_ATTRIBUTE,
+  THEME_STORAGE_KEY,
+  type ThemeName,
+  type ThemePreference,
+} from '@handijit/design';
 import { isClient } from '@handijit/utils';
 
-import { DARK_THEME, DEFAULT_FONTS, LIGHT_THEME } from '../theme/tokens';
-import type { UiColorScheme, UiResolvedTokens, UiThemeConfig } from '@/types/theme.type';
-
-/** CSS özel özelliği öneki — `_tokens.generated.scss` ile aynı olmak zorunda. */
-export const TOKEN_PREFIX = '--ui-';
-
-/** Ezme kurallarını taşıyan `<style>` etiketinin kimliği. */
-export const THEME_STYLE_ID = 'ui-theme-overrides';
-
-/** Temanın taşındığı öznitelik. `<html data-ui-theme="dark">`. */
-export const THEME_ATTRIBUTE = 'data-ui-theme';
-
-/** Bilgi yoğunluğunun taşındığı öznitelik. `<html data-ui-density="compact">`. */
-export const DENSITY_ATTRIBUTE = 'data-ui-density';
-
-/** Geçiş animasyonlarını tek kare boyunca kapatan sınıf (bkz. `base.scss`). */
+/** Turns transitions off for one frame while the theme flips (see `base.scss`). */
 export const THEME_SWITCHING_CLASS = 'ui-theme-switching';
 
-/** Ezmelerin katmanı — `scripts/lib/postcss-ui-layer.mjs`in varsayılanıyla aynı olmak zorunda. */
-export const THEME_LAYER = 'ui';
+const DARK_QUERY = '(prefers-color-scheme: dark)';
+
+const isThemeName = (value: unknown): value is ThemeName => value === 'light' || value === 'dark';
+
+/** The operating system's setting; `light` on the server. */
+export const readSystemTheme = (): ThemeName =>
+  isClient() && window.matchMedia?.(DARK_QUERY).matches ? 'dark' : 'light';
 
 /**
- * Ezme kurallarının kök seçicisi: `_tokens.generated.scss`teki karşılığından bir öğe (`html`) daha
- * özgül — (0,1,1) > (0,1,0), (0,2,1) > (0,2,0). Katman içinde ezme varsayılanı KAYNAK SIRASINDAN
- * bağımsız yener. Açık temanın `html:root`u (0,1,1) koyu varsayılanın `:root:not([…])`ına
- * (0,2,0) yenilir: açık ezme koyu temaya sızmaz.
+ * The user's stored choice. "System" is the absence of the key, and a storage that throws (private
+ * window, blocked site data) counts as no choice — the same reading as the design boot script.
  */
-const THEME_ROOT = 'html:root';
+export const readStoredPreference = (): ThemePreference => {
+  if (!isClient()) return 'system';
 
-/** Verilen şemanın tam token eşlemesi — ezmeler uygulanmış hâliyle. */
-export const resolveTokens = (scheme: UiColorScheme, config?: UiThemeConfig): UiResolvedTokens => {
-  const base = scheme === 'dark' ? DARK_THEME : LIGHT_THEME;
-  const overrides = (scheme === 'dark' ? config?.dark : config?.light) ?? {};
+  try {
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    return isThemeName(stored) ? stored : 'system';
+  } catch {
+    return 'system';
+  }
+};
 
-  return { ...base, ...overrides };
+/** The theme drawn on the page: the root attribute when it names a theme, else the system's. */
+export const readActiveTheme = (): ThemeName => {
+  if (!isClient()) return 'light';
+
+  const attribute = document.documentElement.getAttribute(THEME_ATTRIBUTE);
+  return isThemeName(attribute) ? attribute : readSystemTheme();
 };
 
 /**
- * Yapılandırmayı CSS metnine çevirir. Çıktının tamamı `@layer ui` içinde: tüketicinin katmansız
- * her kuralı ezmeyi özgüllükten ve sıradan bağımsız yener (README, "CSS'imizi ezmek").
- * ⚠ 5.6.2'ye kadar ezme katmansızdı: `:root:not([data-ui-theme])` (0,2,0) tüketicinin `<html>`e
- * yazdığı ezmeyi (`html:has(.panel)`, 0,1,1) hidrasyondan SONRA eziyordu — sunucu çiziminde
- * tüketicinin rengi, bir kare sonra temanınki (ölçüldü: panelin kırmızı sil düğmesi koyu temada
- * beyaza dönüyordu). Katmansız açık ezme koyu varsayılanı da yeniyor, koyu temaya sızıyordu.
+ * Stores the choice and applies it to the root element, the way `@handijit/design` documents it:
+ * only `light` / `dark` are stored, "system" removes the key, and the attribute always carries the
+ * resolved theme so the boot script and this function agree.
  */
-export const buildThemeCss = (config: UiThemeConfig): string => {
-  const blocks: string[] = [];
-
-  const declarations = (tokens: Record<string, string>, indent = '  ') =>
-    Object.entries(tokens)
-      .map(([name, value]) => `${indent}${TOKEN_PREFIX}${name}: ${value};`)
-      .join('\n');
-
-  const fonts = config.fonts ?? {};
-  const fontEntries = Object.entries(fonts).filter(([, value]) => Boolean(value)) as [
-    keyof typeof DEFAULT_FONTS,
-    string,
-  ][];
-
-  if (fontEntries.length > 0)
-    blocks.push(
-      `${THEME_ROOT} {\n${fontEntries
-        .map(([role, stack]) => `  ${TOKEN_PREFIX}font-${role}: ${stack};`)
-        .join('\n')}\n}`,
-    );
-
-  /* OLCU EZMELERI TEMA BASINA DEGIL, TEK BLOKTA. */
-  const metrics = config.metrics ?? {};
-
-  if (Object.keys(metrics).length > 0) {
-    const body = declarations(metrics as Record<string, string>);
-    blocks.push(`${THEME_ROOT} {\n${body}\n}`);
-    blocks.push(`${THEME_ROOT}[${DENSITY_ATTRIBUTE}='compact'] {\n${body}\n}`);
-  }
-
-  /*
-   * Acik tema iki secicide birden yazilir: `html:root` (varsayilan) ve
-   * `html:root[data-ui-theme='light']` (kullanicinin acik secimi).
-   */
-  if (config.light && Object.keys(config.light).length > 0) {
-    const body = declarations(config.light);
-    blocks.push(`${THEME_ROOT} {\n${body}\n}`);
-    blocks.push(`${THEME_ROOT}[${THEME_ATTRIBUTE}='light'] {\n${body}\n}`);
-  }
-
-  if (config.dark && Object.keys(config.dark).length > 0) {
-    const body = declarations(config.dark);
-    blocks.push(`${THEME_ROOT}[${THEME_ATTRIBUTE}='dark'] {\n${body}\n}`);
-    blocks.push(
-      `@media (prefers-color-scheme: dark) {\n  ${THEME_ROOT}:not([${THEME_ATTRIBUTE}]) {\n${declarations(
-        config.dark,
-        '    ',
-      )}\n  }\n}`,
-    );
-  }
-
-  if (blocks.length === 0) return '';
-
-  return `@layer ${THEME_LAYER} {\n${blocks.join('\n\n').replace(/^(?=.)/gm, '  ')}\n}`;
-};
-
-/**
- * `<style>` içine HTML olarak yazılacak CSS: `</style` dizisi etiketi kapatamaz. Değerler
- * yapılandırmadan (kiracının veritabanındaki marka rengi) gelebilir; `\/` CSS'te `/` demek.
- */
-export const toStyleHtml = (css: string): string => css.replace(/<\/style/gi, '<\\/style');
-
-/**
- * Ezmeleri `<head>`in sonuna yazar — React dışındaki yol (`initUi`); sağlayıcı ezmeyi ağaçta
- * çizer.
- * ⚠ Stil sayfalarından SONRA çağrılmalı: `@layer ui` belgede ilk kez burada görülürse katman
- * sırası buradan kurulur ve tüketicinin sonra gelen `@layer reset, ui;` bildirimi `reset`i
- * `ui`nin üstüne koyar.
- */
-export const applyThemeConfig = (config: UiThemeConfig | undefined): void => {
+export const applyThemePreference = (preference: ThemePreference): void => {
   if (!isClient()) return;
 
-  const css = config ? buildThemeCss(config) : '';
-  const existing = document.getElementById(THEME_STYLE_ID);
-
-  if (css === '') {
-    existing?.remove();
-    return;
+  try {
+    if (preference === 'system') window.localStorage.removeItem(THEME_STORAGE_KEY);
+    else window.localStorage.setItem(THEME_STORAGE_KEY, preference);
+  } catch {
+    /* The choice still applies for this page view; it just cannot be remembered. */
   }
 
-  const element = existing ?? document.createElement('style');
-  element.id = THEME_STYLE_ID;
-  element.textContent = css;
-
-  if (!existing) document.head.appendChild(element);
+  document.documentElement.setAttribute(
+    THEME_ATTRIBUTE,
+    preference === 'system' ? readSystemTheme() : preference,
+  );
 };
-
-/**
- * İLK BOYAMADAN ÖNCE çalışacak tema betiği — `<head>` içine, React ağacından ÖNCE.
- * Kayıtlı açık seçimi (`light` / `dark`) `<html data-ui-theme>`e yazar; kayıt yoksa öznitelik
- * yazılmaz ve sistem tercihi izlenir.
- * ⚠ React ağacına konamaz: sağlayıcı ağaç monte olduktan sonra çalışıyor ve koyu tema seçmiş
- * kullanıcı o ana kadar bir kare beyaz ekran görüyordu. İki tüketici bu betiği ELLE yazıyordu.
- * ⚠ Depolama okunamazsa (gizli pencere, engellenmiş site verisi) sessizce sistem tercihine düşer.
- * @example <script dangerouslySetInnerHTML={{ __html: themeBootScript({ storageKey: 'theme' }) }} />
- */
-export const themeBootScript = ({ storageKey }: { storageKey: string }): string =>
-  `(function(){try{var t=localStorage.getItem(${JSON.stringify(storageKey)});` +
-  `if(t==="light"||t==="dark")document.documentElement.setAttribute("${THEME_ATTRIBUTE}",t)}` +
-  `catch(e){}})()`;

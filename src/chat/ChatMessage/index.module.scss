@@ -38,11 +38,11 @@
 
   .message--user & {
     padding: $space-3 $space-4;
-    border-radius: $radius-xl;
-    border-end-end-radius: $radius-sm;
-    background-color: $surface-2;
+    border-radius: $radius-lg;
+    border-end-end-radius: $radius-xs;
+    background-color: $bg-raised;
     color: $text;
-    font-size: $font-size-body;
+    font-size: $font-size-lead;
     line-height: $leading-normal;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -52,7 +52,7 @@
 // Eylemler SESSİZ başlar ve mesajın üzerine gelince ya da içinde odak varken belirginleşir.
 .message__actions {
   color: $text-3;
-  transition: color $duration-fast $ease-out;
+  transition: color $duration-fast $ease-standard;
 
   .message:hover &,
   .message:focus-within & {

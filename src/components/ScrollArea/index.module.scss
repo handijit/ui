@@ -22,7 +22,7 @@
     overflow: auto;
   }
 
-  @include focus-ring($ring-color, -2px);
+  @include focus-ring($focus, -2px);
 
   &--fade {
     --ui-scroll-fade-start: 0px;

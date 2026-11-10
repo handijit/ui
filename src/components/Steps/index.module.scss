@@ -58,19 +58,19 @@
   min-width: 0;
   padding: $space-2;
   border: none;
-  border-radius: $radius-md;
+  border-radius: $radius-sm;
   background: none;
   text-align: start;
-  font-family: $font-ui;
+  font-family: $font-body;
   color: inherit;
 }
 
 button.steps__button {
-  @include interactive-surface($rest: transparent, $hover: $surface-2, $pressed: $surface-3);
+  @include interactive-surface($rest: transparent, $hover: $bg-raised, $pressed: $bg-inset);
 
   cursor: pointer;
 
-  @include focus-ring($ring-color, -1px);
+  @include focus-ring($focus, -1px);
 }
 
 .steps__marker {
@@ -82,9 +82,9 @@ button.steps__button {
   height: 28px;
   border-radius: $radius-pill;
   border: 1px solid $border-strong;
-  background-color: $surface;
+  background-color: $bg-surface;
   color: $text-2;
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   font-weight: $weight-semibold;
   font-variant-numeric: tabular-nums;
 
@@ -92,14 +92,14 @@ button.steps__button {
   // numara, bekleyen = ince kenarlık + numara. Bir ADIM başarısız olamaz; tamamlanmak bir başarı
   // DURUMU değil, o yüzden olumlu yeşili taşımaz (4.x'te taşıyordu).
   .steps__item--done & {
-    background-color: $selected;
-    border-color: $selected;
-    color: $on-selected;
+    background-color: $primary;
+    border-color: $primary;
+    color: $on-primary;
   }
 
   .steps__item--current & {
-    border-color: $selected;
-    box-shadow: inset 0 0 0 1px $selected;
+    border-color: $primary;
+    box-shadow: inset 0 0 0 1px $primary;
     color: $text;
   }
 
@@ -122,7 +122,7 @@ button.steps__button {
 .steps__label {
   @include truncate;
 
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   font-weight: $weight-medium;
   color: $text-2;
 
@@ -137,7 +137,7 @@ button.steps__button {
 }
 
 .steps__description {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-3;
 }
 

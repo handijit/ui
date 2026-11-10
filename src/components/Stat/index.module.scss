@@ -7,8 +7,8 @@
   position: relative;
   padding: $space-4;
   border: 1px solid $border;
-  border-radius: $radius-lg;
-  background-color: $surface;
+  border-radius: $radius-md;
+  background-color: $bg-surface;
 
   &--sm {
     padding: $space-3;
@@ -45,7 +45,7 @@
     }
 
     .stat__value {
-      @include technical-text($font-size-xs);
+      @include technical-text($font-size-caption);
 
       font-weight: $weight-medium;
       letter-spacing: normal;
@@ -69,7 +69,7 @@
 .stat__label {
   // Bileşen değişkenleri (6.0): etiket ve değer tipografisi tüketicide tek yerden ezilir.
   font-family: var(--ui-stat-label-font, inherit);
-  font-size: var(--ui-stat-label-size, #{$font-size-xs});
+  font-size: var(--ui-stat-label-size, #{$font-size-caption});
   font-weight: var(--ui-stat-label-weight, #{$weight-medium});
   letter-spacing: var(--ui-stat-label-tracking, normal);
   text-transform: var(--ui-stat-label-transform, none);
@@ -80,8 +80,8 @@
 .stat__value {
   @include row($space-1, baseline);
 
-  font-family: var(--ui-stat-value-font, #{$font-heading});
-  font-size: $font-size-2xl;
+  font-family: var(--ui-stat-value-font, #{$font-display});
+  font-size: $font-size-h2;
   font-weight: var(--ui-stat-value-weight, #{$weight-bold});
   line-height: $leading-tight;
   letter-spacing: var(--ui-stat-value-tracking, #{$tracking-tight});
@@ -89,13 +89,13 @@
   font-variant-numeric: tabular-nums;
 
   .stat--sm & {
-    font-size: $font-size-xl;
+    font-size: $font-size-h3;
   }
 }
 
 .stat__unit {
   font-family: var(--ui-stat-unit-font, inherit);
-  font-size: var(--ui-stat-unit-size, #{$font-size-sm});
+  font-size: var(--ui-stat-unit-size, #{$font-size-small});
   font-weight: $weight-medium;
   color: $text-2;
   letter-spacing: var(--ui-stat-unit-tracking, normal);
@@ -106,7 +106,7 @@
   @include row(2px);
 
   align-self: flex-start;
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   font-weight: $weight-semibold;
   font-variant-numeric: tabular-nums;
   color: $text-2;
@@ -117,16 +117,16 @@
   }
 
   &--positive {
-    color: $ok-fg;
+    color: $success-fg;
   }
 
   &--negative {
-    color: $bad-fg;
+    color: $danger-fg;
   }
 }
 
 .stat__description {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-3;
 }
 

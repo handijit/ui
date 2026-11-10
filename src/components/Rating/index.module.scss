@@ -9,7 +9,7 @@
   &__stars {
     display: inline-flex;
     gap: 1px;
-    color: $star;
+    color: $warning-solid;
   }
 
   &__empty {
@@ -17,7 +17,7 @@
   }
 
   &__count {
-    font-size: $font-size-xs;
+    font-size: $font-size-caption;
     color: $text-2;
     font-variant-numeric: tabular-nums;
   }

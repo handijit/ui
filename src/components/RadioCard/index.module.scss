@@ -6,14 +6,14 @@
 
   min-height: 44px;
   padding: $space-3 $space-4;
-  background-color: $surface;
+  background-color: $bg-surface;
   // Bileşen değişkenleri (6.0): çizgi ve yarıçap.
   border: 1px solid var(--ui-radio-card-line, #{$border});
-  border-radius: var(--ui-radio-card-radius, #{$radius-md});
+  border-radius: var(--ui-radio-card-radius, #{$radius-sm});
   cursor: pointer;
   transition:
-    border-color $duration-fast $ease-out,
-    background-color $duration-fast $ease-out;
+    border-color $duration-fast $ease-standard,
+    background-color $duration-fast $ease-standard;
 
   &:hover {
     border-color: $border-strong;
@@ -24,19 +24,19 @@
   }
 
   &--selected {
-    border-color: $selected-line;
-    background-color: $selected-tint;
-    box-shadow: inset 0 0 0 1px $selected-line;
+    border-color: $primary-line;
+    background-color: $primary-soft;
+    box-shadow: inset 0 0 0 1px $primary-line;
 
     &:hover {
-      border-color: $selected;
+      border-color: $primary;
     }
 
     .radioCard__indicator {
-      border-color: $selected;
+      border-color: $primary;
 
       &::after {
-        background-color: $selected;
+        background-color: $primary;
       }
     }
   }
@@ -51,7 +51,7 @@
     }
 
     .radioCard__indicator {
-      background-color: $surface-2;
+      background-color: $bg-raised;
       border-color: $border;
     }
 
@@ -76,10 +76,10 @@
     flex-shrink: 0;
     width: 18px;
     height: 18px;
-    background-color: $surface;
+    background-color: $bg-surface;
     border: 1px solid $border-strong;
     border-radius: $radius-pill;
-    transition: border-color $duration-fast $ease-out;
+    transition: border-color $duration-fast $ease-standard;
 
     &::after {
       content: '';
@@ -87,7 +87,7 @@
       height: 8px;
       border-radius: $radius-pill;
       background-color: transparent;
-      transition: background-color $duration-fast $ease-out;
+      transition: background-color $duration-fast $ease-standard;
     }
   }
 

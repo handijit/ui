@@ -44,12 +44,12 @@
 
 .counter {
   align-self: flex-end;
-  font-size: $font-size-2xs;
+  font-size: $font-size-caption;
   color: $text-3;
   font-variant-numeric: tabular-nums;
 
   &--near {
-    color: $warn-fg;
+    color: $warning-fg;
     font-weight: $weight-semibold;
   }
 }

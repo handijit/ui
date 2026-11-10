@@ -4,16 +4,16 @@
 .segmented {
   display: inline-flex;
   padding: 3px;
-  border-radius: $radius-md;
-  background-color: $surface-2;
+  border-radius: $radius-sm;
+  background-color: $bg-raised;
   border: 1px solid $border;
 
   &--sm {
-    font-size: $font-size-xs;
+    font-size: $font-size-caption;
   }
 
   &--md {
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
   }
 }
 
@@ -25,17 +25,17 @@
   min-width: 0;
   padding: $space-2 $space-3;
   border: none;
-  border-radius: calc(#{$radius-md} - 3px);
+  border-radius: calc(#{$radius-sm} - 3px);
   background: none;
   cursor: pointer;
-  font-family: $font-ui;
+  font-family: $font-body;
   font-size: inherit;
   font-weight: $weight-medium;
   color: $text-2;
   white-space: nowrap;
   transition:
-    background-color $duration-fast $ease-out,
-    color $duration-fast $ease-out;
+    background-color $duration-fast $ease-standard,
+    color $duration-fast $ease-standard;
 
   .segmented--sm & {
     padding: $space-1 $space-2;
@@ -45,12 +45,12 @@
     color: $text;
   }
 
-  @include focus-ring($ring-color, -1px);
+  @include focus-ring($focus, -1px);
 
   &--selected {
-    background-color: $surface;
+    background-color: $bg-surface;
     color: $text;
-    box-shadow: $shadow-xs;
+    box-shadow: $shadow-1;
   }
 
   &:disabled {

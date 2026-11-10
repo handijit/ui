@@ -5,11 +5,6 @@ test-results/
 playwright-report/
 coverage/
 
-# Token üretici çıktısı — kaynak `src/theme/*.ts`, bu dosyalar derlemede üretilir.
-src/styles/_tokens.generated.scss
-src/styles/_colors.generated.scss
-src/styles/_syntax.generated.scss
-
 *.log
 npm-debug.log*
 .DS_Store
@@ -24,4 +19,3 @@ npm-debug.log*
 !.vscode/extensions.json
 .env
 .env.local
-src/styles/_metrics.generated.scss

@@ -1,199 +1,190 @@
-/** KONTRAST DENETÇİSİ — `npm run check:contrast`, `verify` içinde. */
-import { contrast, round } from './lib/contrast.mjs';
-import { loadTokens } from './lib/load-tokens.mjs';
-
-const { LIGHT_THEME, DARK_THEME, SYNTAX_LIGHT_THEME, SYNTAX_DARK_THEME } = await loadTokens();
-
-const THRESHOLD = { text: 4.5, large: 3, graphic: 3 };
-
-/** Yüzeyler: temanın "arkasında ne var" kümesi. */
-const SURFACES = ['page', 'surface', 'surface-2', 'surface-3', 'surface-inset'];
-
-/** Durum üçlüleri: `<ad>-bg` / `<ad>-fg` / `<ad>-line`. */
-const TINTS = ['ok', 'warn', 'off', 'bad', 'oem', 'alt'];
-
-/** Bantlar kendi yüzey merdivenini taşır; metinleri de ayrı. */
-const NAV_SURFACES = ['nav-bg', 'nav-bg-2', 'footer-bg'];
-
 /**
- * Ölçülecek çiftler.
- * @returns `{ fg, bg, tier, base? }` — `base`, saydam bir ZEMİNİN arkasında duran…
+ * CONTRAST GATE — `npm run check:contrast`, part of `verify`.
+ *
+ * The library owns no colour: every value comes from `@handijit/design`, which gates its own
+ * palette. What the design package cannot know is WHICH TOKEN THIS LIBRARY PUTS ON WHICH — a
+ * caption in a well, a syntax colour on a code block, white on a hover fill. Those pairings are
+ * decisions made in the component styles, and this file is the list of them, measured against the
+ * values of the installed design package in both themes.
+ *
+ * Text ≥ 4.5:1 (WCAG 1.4.3) · focus ring and state-carrying graphics ≥ 3:1 (WCAG 1.4.11).
+ * A pairing a component starts to use is ADDED here; a failing pairing is fixed in the component
+ * (pick another token), never by writing a one-off colour.
  */
+import { contrast, scales, themes } from '@handijit/design';
+
+const THRESHOLD = { text: 4.5, graphic: 3 };
+
+/** Everything a component can sit on. */
+const SURFACES = ['bg-page', 'bg-surface', 'bg-raised', 'bg-inset', 'bg-overlay'];
+
+/** Where the default focus ring is drawn — every surface but the well. */
+const GRAPHIC_SURFACES = ['bg-page', 'bg-surface', 'bg-raised', 'bg-overlay'];
+
+/** The surfaces a caption (`text-3`) is allowed on — NOT the well (`bg-inset`), see below. */
+const CAPTION_SURFACES = ['bg-page', 'bg-surface', 'bg-raised', 'bg-overlay'];
+
+const STATUSES = ['success', 'warning', 'danger', 'info'];
+
+/** The fixed dark surface (`$inverse-*`): terminal output and the code badge, same in both themes. */
+const INVERSE = {
+  'inverse-bg': scales.slate[900],
+  'inverse-bg-2': scales.slate[800],
+  'inverse-text': scales.slate[50],
+  'inverse-text-2': scales.slate[300],
+  'inverse-danger': scales.danger[300],
+};
+
 const buildPairs = () => {
   const pairs = [];
-  const add = (fg, bg, tier, base) => pairs.push({ fg, bg, tier, base });
+  const add = (fg, bg, tier = 'text') => pairs.push({ fg, bg, tier });
 
-  // --- Gövde metni ---
-  for (const surface of SURFACES) add('text', surface, 'text');
-  for (const surface of ['page', 'surface', 'surface-2', 'surface-inset'])
-    add('text-2', surface, 'text');
-  /* `text-3` de `surface-2` üzerinde ölçülür. */
-  for (const surface of ['page', 'surface', 'surface-inset', 'surface-2'])
-    add('text-3', surface, 'text');
-
-  // --- Dolgu üzerindeki metin: her etkileşim durumu ayrı ölçülür ---
-  for (const fill of ['action', 'action-hover', 'action-active']) add('on-action', fill, 'text');
-  for (const fill of ['cart', 'cart-hover', 'cart-active']) add('on-cart', fill, 'text');
-
+  // --- Body text ---
+  for (const surface of SURFACES) {
+    add('text', surface);
+    add('text-2', surface);
+  }
   /*
-   * PASİF DOLGU ÜZERİNDEKİ METİN — WCAG'in muaf tuttuğu ama kütüphanenin kendine ŞART KOŞTUĞU tek
-   * çift.
+   * `text-3` is 4.35:1 on the light well. Component styles use `text-2` inside `bg-inset`
+   * (code blocks, segmented tracks, input adornments); the pair is deliberately absent here.
    */
-  add('on-action-soft', 'action-soft', 'text');
-  for (const fill of ['danger-solid', 'danger-solid-hover']) add('on-danger', fill, 'text');
+  for (const surface of CAPTION_SURFACES) add('text-3', surface);
 
-  /*
-   * Seçim dolgusu üzerindeki metin — etkin sayfa numarası (`Pagination`), etkin karo madalyonu
-   * (`Tile`), geçerli adım (`Steps`). Koyu temada dolgu krem, metin siyah.
-   */
-  for (const fill of ['selected', 'selected-hover', 'selected-active'])
-    add('on-selected', fill, 'text');
-  /* Seçili satır / seçenek: zemin `selected-tint`, metin gövde metni. */
-  add('text', 'selected-tint', 'text');
+  // --- Text on a fill: every interaction state is its own pair ---
+  for (const fill of ['primary', 'primary-hover', 'primary-active']) add('on-primary', fill);
+  for (const fill of ['accent', 'accent-hover', 'accent-active']) add('on-accent', fill);
+  add('on-highlight', 'highlight');
+  for (const status of STATUSES) add(`${status}-on-solid`, `${status}-solid`);
 
-  /* Mürekkep yüzey (terminal, teknik blok) — temadan bağımsız. */
-  for (const fill of ['shell', 'shell-2', 'shell-3']) {
-    add('on-shell', fill, 'text');
-    add('on-shell-2', fill, 'text');
-    add('on-shell-danger', fill, 'text');
+  // --- Cobalt text: links, ghost and outline buttons, the selected option ---
+  for (const surface of [...SURFACES, 'primary-soft', 'primary-soft-hover'])
+    add('primary-text', surface);
+  add('text', 'primary-soft');
+  add('text', 'primary-soft-hover');
+  add('text', 'selection-bg');
+
+  // --- Status tints, and status text straight on a surface (field errors, diff lines) ---
+  for (const status of STATUSES) {
+    add(`${status}-fg`, `${status}-bg`);
+    for (const surface of SURFACES) add(`${status}-fg`, surface);
+  }
+  add('highlight-text', 'highlight-soft');
+  for (const surface of SURFACES) add('highlight-text', surface);
+
+  // --- Brand band ---
+  for (const fill of ['band-bg', 'band-deep']) {
+    add('band-text', fill);
+    add('band-text-2', fill);
   }
 
-  /* `on-green` YALNIZCA `green-accent` ile ölçülür, hover'ıyla değil. */
-  add('on-green', 'green-accent', 'text');
-
-  // --- Bağlantı ---
-  for (const surface of ['page', 'surface', 'surface-2', 'surface-inset']) {
-    add('link', surface, 'text');
-    add('link-hover', surface, 'text');
+  // --- Fixed dark surface ---
+  for (const fill of ['inverse-bg', 'inverse-bg-2']) {
+    add('inverse-text', fill);
+    add('inverse-text-2', fill);
+    add('inverse-danger', fill);
   }
 
+  // --- Focus ring (1.4.11) ---
   /*
-   * Kod gövdesi (`surface-inset`) ve kodun durabileceği üç yüzey: sözdizimi renkleri 12-13 px
-   * METİN. Fark satırları durum ailesinin ön planını kod gövdesinde taşır.
+   * `focus` is 2.95:1 on the light well, so a control that sits IN a well (a segment of a
+   * segmented control, the copy button of a code block) draws its ring with `$focus-inset`
+   * (`primary-text`) instead. Both halves are gated: the ring everywhere else, the stronger ring
+   * in the well.
    */
-  for (const surface of ['surface-inset', 'page', 'surface', 'surface-2'])
-    for (const role of ['keyword', 'string', 'number', 'name', 'type'])
-      add(`syntax-${role}`, surface, 'text');
-  add('ok-fg', 'surface-inset', 'text');
-  add('bad-fg', 'surface-inset', 'text');
+  for (const surface of GRAPHIC_SURFACES) add('focus', surface, 'graphic');
+  add('primary-text', 'bg-inset', 'graphic');
 
-  // --- Durum üçlüleri ---
-  for (const tint of TINTS) add(`${tint}-fg`, `${tint}-bg`, 'text');
-  add('sale-fg', 'sale-bg', 'text');
-
-  // --- Bantlar ---
-  for (const band of NAV_SURFACES) {
-    add('nav-fg', band, 'text');
-    add('nav-fg-2', band, 'text');
-    add('nav-fg-3', band, 'text');
-  }
-
-  /* Marka şeridi: temadan bağımsız, iki temada da aynı çift ölçülür. */
-  add('band-fg', 'band-bg', 'text');
-  add('band-fg-2', 'band-bg', 'text');
-  add('band-fg-3', 'band-bg', 'text');
-
-  // --- Örtü ve cam: saydam; arkalarında sayfa var ---
-  add('on-scrim', 'scrim', 'text', 'page');
-  add('text', 'glass', 'text', 'page');
-  add('text', 'glass-solid', 'text');
-
+  // --- Fills that carry a state on their own: checkbox, switch, radio, progress, slider ---
   /*
-   * `scrim-soft` metin taşımaz — görselin üzerine binen HAFİF bir örtü, altındaki fotoğrafın
-   * görünür kalması için var.
+   * `bg-overlay` is absent on purpose: the cobalt and red fills are 2.7–2.85:1 on the dark overlay
+   * surface (the design package gates them on page, surface and raised only). On a menu or a dialog
+   * a filled control is never the only carrier — the glyph inside it is measured above as text on
+   * a fill. The numbers are printed in the advisory list.
    */
-
-  // --- Grafik ve ikon (1.4.11) ---
-  for (const surface of ['page', 'surface', 'surface-2']) {
-    /*
-     * Birincil düğmenin SINIRI eşiği taşıyan taraf: dolgunun kendisi (çam) koyu temada koyu yüzeyde
-     * 1,04:1 ve advisory listede kalıyor.
-     */
-    add('action-line', surface, 'graphic');
-    add('ring-color', surface, 'graphic');
-    add('red-accent', surface, 'graphic');
-    add('green-accent', surface, 'graphic');
-    add('star', surface, 'graphic');
-    /* Seçim dolgusu tek başına durum taşır (onay kutusu, anahtar, ilerleme): grafik eşiği. */
-    add('selected', surface, 'graphic');
-    for (const series of ['cat-1', 'cat-2', 'cat-3', 'cat-4', 'cat-5', 'series-1', 'series-2'])
-      add(series, surface, 'graphic');
+  for (const surface of ['bg-page', 'bg-surface', 'bg-raised', 'bg-inset']) {
+    add('primary', surface, 'graphic');
+    for (const status of STATUSES) add(`${status}-solid`, surface, 'graphic');
   }
+  for (const surface of ['bg-page', 'bg-surface', 'bg-raised'])
+    for (const index of [1, 2, 3, 4, 5, 6]) add(`chart-${index}`, surface, 'graphic');
+  /* The ring of a button that sits on the band. */
+  add('band-text', 'band-bg', 'graphic');
+  add('band-line-strong', 'band-bg', 'graphic');
 
   return pairs;
 };
 
-/** Ölçülür ama derlemeyi kırmaz — gerekçe dosya başlığında. */
+/** Measured and printed with UI_CONTRAST_VERBOSE=1, never failing — WCAG exempts these. */
 const buildAdvisoryPairs = () => {
   const pairs = [];
   const add = (fg, bg) => pairs.push({ fg, bg, tier: 'advisory' });
 
-  for (const tint of TINTS) add(`${tint}-line`, `${tint}-bg`);
-  for (const surface of ['page', 'surface', 'surface-2']) {
+  /* Disabled controls are exempt from 1.4.3; the number is kept visible, not gated. */
+  add('text-disabled', 'bg-disabled');
+  add('text-disabled', 'bg-surface');
+  add('text-3', 'bg-inset');
+  add('focus', 'bg-inset');
+  for (const fill of ['primary', 'danger-solid', 'info-solid']) add(fill, 'bg-overlay');
+  /* Turquoise is a tint and a text colour here, never a state on its own. */
+  add('highlight', 'bg-surface');
+  for (const surface of ['bg-page', 'bg-surface', 'bg-raised']) {
     add('border', surface);
     add('border-strong', surface);
   }
-  add('action-soft', 'surface');
-  add('track', 'surface');
-  add('selected-tint', 'surface');
-  add('shell-line', 'page');
-  add('nav-line', 'nav-bg');
-  add('nav-line-strong', 'nav-bg');
-
-  /* Dolu düğmenin sayfaya karşı sınırı. */
-  for (const fill of ['action', 'cart', 'danger-solid', 'selected'])
-    for (const surface of ['page', 'surface']) add(fill, surface);
+  for (const status of STATUSES) add(`${status}-line`, `${status}-bg`);
+  for (const fill of ['primary', 'accent', 'danger-solid']) add(fill, 'bg-page');
 
   return pairs;
 };
 
 const measure = (theme, pairs) =>
   pairs.map(pair => {
-    const ratio = round(contrast(theme[pair.fg], theme[pair.bg], theme[pair.base ?? 'page']));
+    const foreground = theme[pair.fg];
+    const background = theme[pair.bg];
+
+    if (!foreground || !background)
+      throw new Error(`ui: unknown token in the contrast list: ${pair.fg} / ${pair.bg}`);
+
+    const ratio = Math.round(contrast(foreground, background) * 100) / 100;
     const required = THRESHOLD[pair.tier] ?? 0;
 
     return { ...pair, ratio, required, isFailing: pair.tier !== 'advisory' && ratio < required };
   });
 
 const format = row =>
-  `${row.isFailing ? '✗' : '·'} ${String(row.ratio.toFixed(2)).padStart(6)}:1 ` +
+  `${row.isFailing ? '✗' : '·'} ${row.ratio.toFixed(2).padStart(6)}:1 ` +
   `(≥${row.required || '—'})  ${row.fg} / ${row.bg}`;
-
-/* Sözdizimi token'ları ana tablonun dışında (sohbet girişinde) ama aynı yüzeylerin üzerinde. */
-const themes = [
-  ['LIGHT', { ...LIGHT_THEME, ...SYNTAX_LIGHT_THEME }],
-  ['DARK', { ...DARK_THEME, ...SYNTAX_DARK_THEME }],
-];
 
 const pairs = buildPairs();
 const advisory = buildAdvisoryPairs();
 const failures = [];
 
-for (const [name, theme] of themes) {
+for (const name of ['light', 'dark']) {
+  const theme = { ...themes[name], ...INVERSE };
   const rows = measure(theme, pairs);
   const failed = rows.filter(row => row.isFailing);
-  failures.push(...failed.map(row => ({ ...row, theme: name })));
+  failures.push(...failed);
 
-  console.log(`\n${name} — ${rows.length} çift, ${failed.length} ihlal`);
+  console.log(`\n${name.toUpperCase()} — ${rows.length} pairs, ${failed.length} failing`);
   for (const row of failed) console.log(`  ${format(row)}`);
 
   if (process.env.UI_CONTRAST_VERBOSE) {
-    console.log(`  — advisory (kırmaz) —`);
+    for (const row of rows) console.log(`  ${format(row)}`);
+    console.log(`  — advisory (never fails) —`);
     for (const row of measure(theme, advisory)) console.log(`  ${format(row)}`);
   }
 }
 
 if (failures.length > 0) {
   console.error(
-    `\nui: ${failures.length} kontrast ihlali. Düzeltme src/theme/palette.ts` +
-      ` içinde yapılır — bileşenin SCSS'ine tek seferlik bir renk yazmak,` +
-      ` aynı tonu kullanan diğer yerleri sessizce ihlalde bırakır.\n`,
+    `\nui: ${failures.length} contrast failure(s). The colours belong to @handijit/design; fix the` +
+      ` PAIRING in the component style (another token for the text or the surface).\n`,
   );
   process.exit(1);
 }
 
 console.log(
-  `\nui: ${pairs.length * 2} kontrast çifti temiz` +
-    ` (metin ≥${THRESHOLD.text}:1, grafik ≥${THRESHOLD.graphic}:1).` +
-    ` Advisory için: UI_CONTRAST_VERBOSE=1\n`,
+  `\nui: ${pairs.length * 2} contrast pairs clean` +
+    ` (text ≥${THRESHOLD.text}:1, focus and graphics ≥${THRESHOLD.graphic}:1).` +
+    ` Every number: UI_CONTRAST_VERBOSE=1\n`,
 );

@@ -45,7 +45,7 @@
 
     &:not([open]),
     &[open] {
-      @include surface-transition($shift: 100%, $duration: $duration-normal);
+      @include surface-transition($shift: 100%, $duration: $duration-base);
     }
   }
 
@@ -53,15 +53,15 @@
     display: flex;
     flex-direction: column;
     max-height: 90dvh;
-    background-color: $surface;
+    background-color: $bg-surface;
     border: 1px solid $border;
-    border-radius: $radius-xl;
-    box-shadow: $shadow-xl;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-3;
     overflow: hidden;
 
     @include for-mobile {
       max-height: 92dvh;
-      border-radius: $radius-xl $radius-xl 0 0;
+      border-radius: $radius-lg $radius-lg 0 0;
       border-bottom: none;
     }
   }
@@ -87,7 +87,7 @@
     width: 40px;
     height: 40px;
     flex-shrink: 0;
-    border-radius: $radius-md;
+    border-radius: $radius-sm;
     font-size: $icon-xl;
 
     &--neutral {
@@ -120,14 +120,14 @@
   }
 
   &__title {
-    @include heading(lg);
+    @include heading(h4);
 
     margin: 0;
     text-wrap: balance;
   }
 
   &__description {
-    @include muted($font-size-sm);
+    @include muted($font-size-small);
 
     margin: 0;
     max-width: $measure;
@@ -164,7 +164,7 @@
     justify-content: flex-end;
     padding: $space-4 $space-5;
     border-top: 1px solid $border;
-    background-color: $surface-2;
+    background-color: $bg-raised;
     flex-shrink: 0;
 
     @include for-mobile {

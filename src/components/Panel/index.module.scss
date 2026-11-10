@@ -24,10 +24,10 @@
     width: 32px;
     height: 32px;
     flex-shrink: 0;
-    border-radius: $radius-sm;
-    background-color: $surface-2;
+    border-radius: $radius-xs;
+    background-color: $bg-raised;
     color: $text-2;
-    font-size: $font-size-base;
+    font-size: $font-size-body;
   }
 
   &__headingText {
@@ -37,13 +37,13 @@
   }
 
   &__title {
-    @include heading(base, $weight-semibold);
+    @include block-title;
 
     margin: 0;
   }
 
   &__description {
-    @include muted($font-size-xs);
+    @include muted($font-size-caption);
 
     margin: 0;
     max-width: $measure;
@@ -77,7 +77,7 @@
   &__footer {
     padding: $space-4 $space-5;
     border-top: 1px solid $border;
-    background-color: $surface-2;
+    background-color: $bg-raised;
 
     @include for-mobile {
       padding: $space-3 $space-4;

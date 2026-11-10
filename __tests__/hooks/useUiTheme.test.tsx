@@ -1,6 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
 
-import { THEME_ATTRIBUTE, THEME_SWITCHING_CLASS } from '@/helpers/theme.helper';
+import { THEME_ATTRIBUTE, THEME_STORAGE_KEY } from '@handijit/design';
+
+import { THEME_SWITCHING_CLASS } from '@/helpers/theme.helper';
 import useUiTheme from '@/hooks/useUiTheme';
 
 const mockMatchMedia = (prefersDark: boolean) => {
@@ -25,17 +27,18 @@ describe('useUiTheme', () => {
   beforeEach(() => {
     document.documentElement.removeAttribute(THEME_ATTRIBUTE);
     document.documentElement.classList.remove(THEME_SWITCHING_CLASS);
+    window.localStorage.clear();
     mockMatchMedia(false);
   });
 
-  it('monte olmadan önce `light` ve `isReady: false`', () => {
+  it('monte olmadan önce `light` ve `isReady: false`', async () => {
     const { result } = renderHook(() => useUiTheme());
 
     expect(result.current.isReady).toBe(true);
     expect(result.current.scheme).toBe('light');
   });
 
-  it('`<html data-ui-theme>` neyse onu okur', () => {
+  it('`<html data-theme>` neyse onu okur', async () => {
     document.documentElement.setAttribute(THEME_ATTRIBUTE, 'dark');
 
     const { result } = renderHook(() => useUiTheme());
@@ -43,7 +46,7 @@ describe('useUiTheme', () => {
     expect(result.current.scheme).toBe('dark');
   });
 
-  it('öznitelik yokken SİSTEM tercihini okur', () => {
+  it('öznitelik yokken SİSTEM tercihini okur', async () => {
     mockMatchMedia(true);
 
     const { result } = renderHook(() => useUiTheme());
@@ -51,7 +54,7 @@ describe('useUiTheme', () => {
     expect(result.current.scheme).toBe('dark');
   });
 
-  it('geçersiz öznitelik değeri sistem tercihine düşer', () => {
+  it('geçersiz öznitelik değeri sistem tercihine düşer', async () => {
     document.documentElement.setAttribute(THEME_ATTRIBUTE, 'sepia');
     mockMatchMedia(true);
 
@@ -60,28 +63,52 @@ describe('useUiTheme', () => {
     expect(result.current.scheme).toBe('dark');
   });
 
-  it('`setScheme` özniteliği yazar', () => {
+  it('`setScheme` özniteliği yazar ve seçimi tasarım paketinin anahtarında saklar', async () => {
     const { result } = renderHook(() => useUiTheme());
 
-    act(() => result.current.setScheme('dark'));
+    await act(async () => result.current.setScheme('dark'));
 
     expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe('dark');
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark');
+    expect(result.current.scheme).toBe('dark');
+    expect(result.current.preference).toBe('dark');
+  });
+
+  it('saklanan seçim tercihi olarak okunur — yeniden yüklemeden sonra "system" görünmez', async () => {
+    window.localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+    document.documentElement.setAttribute(THEME_ATTRIBUTE, 'dark');
+
+    const { result } = renderHook(() => useUiTheme());
+
+    expect(result.current.preference).toBe('dark');
     expect(result.current.scheme).toBe('dark');
   });
 
-  it('`toggle` iki yönde de çalışır', () => {
+  it('özniteliği başkası (önyükleme betiği, başka bir kanca) yazınca izler', async () => {
     const { result } = renderHook(() => useUiTheme());
 
-    act(() => result.current.toggle());
+    await act(async () => {
+      document.documentElement.setAttribute(THEME_ATTRIBUTE, 'dark');
+      await Promise.resolve();
+    });
+
+    expect(result.current.scheme).toBe('dark');
+  });
+
+  it('`toggle` iki yönde de çalışır', async () => {
+    const { result } = renderHook(() => useUiTheme());
+
+    await act(async () => result.current.toggle());
     expect(result.current.scheme).toBe('dark');
 
-    act(() => result.current.toggle());
+    await act(async () => result.current.toggle());
     expect(result.current.scheme).toBe('light');
   });
 
   it('geçiş sınıfı yazılır ve iki kare sonra kaldırılır', async () => {
     const { result } = renderHook(() => useUiTheme());
 
+    /* Synchronous on purpose: an awaited `act` may let the two frames pass before the assertion. */
     act(() => result.current.setScheme('dark'));
     expect(document.documentElement).toHaveClass(THEME_SWITCHING_CLASS);
 
@@ -95,17 +122,17 @@ describe('useUiTheme', () => {
     expect(document.documentElement).not.toHaveClass(THEME_SWITCHING_CLASS);
   });
 
-  it('AÇIK seçim varken sistem tercihi değişimi görmezden gelinir', () => {
+  it('AÇIK seçim varken sistem tercihi değişimi görmezden gelinir', async () => {
     const media = mockMatchMedia(false);
     const { result } = renderHook(() => useUiTheme());
 
-    act(() => result.current.setScheme('light'));
-    act(() => media.emit());
+    await act(async () => result.current.setScheme('light'));
+    await act(async () => media.emit());
 
     expect(result.current.scheme).toBe('light');
   });
 
-  it('seçim yokken sistem tercihi izlenmeye devam eder', () => {
+  it('seçim yokken sistem tercihi izlenmeye devam eder', async () => {
     const media = mockMatchMedia(false);
     const { result } = renderHook(() => useUiTheme());
 
@@ -120,13 +147,13 @@ describe('useUiTheme', () => {
       }),
     });
 
-    act(() => media.emit());
+    await act(async () => media.emit());
 
     expect(result.current.scheme).toBe('dark');
   });
 
   describe('`system` tercihi', () => {
-    it('öznitelik yokken tercih `system`, çözülmüş şema sistemden gelir', () => {
+    it('öznitelik yokken tercih `system`, çözülmüş şema sistemden gelir', async () => {
       mockMatchMedia(true);
 
       const { result } = renderHook(() => useUiTheme());
@@ -135,46 +162,51 @@ describe('useUiTheme', () => {
       expect(result.current.scheme).toBe('dark');
     });
 
-    it('`setScheme("system")` özniteliği SİLER', () => {
+    /*
+     * 1.x özniteliği siliyordu. Tasarım sözleşmesinde öznitelik HER ZAMAN çözülmüş temayı taşır;
+     * "sistem" saklanan anahtarın yokluğudur.
+     */
+    it('`setScheme("system")` anahtarı SİLER, özniteliğe çözülmüş temayı yazar', async () => {
       const { result } = renderHook(() => useUiTheme());
 
-      act(() => result.current.setScheme('dark'));
-      expect(document.documentElement.hasAttribute(THEME_ATTRIBUTE)).toBe(true);
+      await act(async () => result.current.setScheme('dark'));
+      expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark');
 
-      act(() => result.current.setScheme('system'));
+      await act(async () => result.current.setScheme('system'));
 
-      expect(document.documentElement.hasAttribute(THEME_ATTRIBUTE)).toBe(false);
+      expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+      expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe('light');
       expect(result.current.preference).toBe('system');
     });
 
-    it('`system`e dönüldüğünde ARADA değişen sistem tercihi görülür', () => {
+    it('`system`e dönüldüğünde ARADA değişen sistem tercihi görülür', async () => {
       const media = mockMatchMedia(false);
       const { result } = renderHook(() => useUiTheme());
 
-      act(() => result.current.setScheme('light'));
+      await act(async () => result.current.setScheme('light'));
 
       mockMatchMedia(true);
-      act(() => media.emit());
+      await act(async () => media.emit());
       expect(result.current.scheme).toBe('light');
 
-      act(() => result.current.setScheme('system'));
+      await act(async () => result.current.setScheme('system'));
       expect(result.current.scheme).toBe('dark');
     });
 
-    it('`toggle` `system` iken ÇÖZÜLMÜŞ değerin tersine geçer', () => {
+    it('`toggle` `system` iken ÇÖZÜLMÜŞ değerin tersine geçer', async () => {
       mockMatchMedia(true);
       const { result } = renderHook(() => useUiTheme());
 
       expect(result.current.scheme).toBe('dark');
 
-      act(() => result.current.toggle());
+      await act(async () => result.current.toggle());
 
       expect(result.current.preference).toBe('light');
       expect(result.current.scheme).toBe('light');
     });
   });
 
-  it('sökülünce sistem dinleyicisi kaldırılır', () => {
+  it('sökülünce sistem dinleyicisi kaldırılır', async () => {
     const media = mockMatchMedia(false);
     const { unmount } = renderHook(() => useUiTheme());
 

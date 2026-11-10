@@ -11,10 +11,10 @@
   margin: 12vh auto auto;
   padding: 0;
   border: 1px solid $border;
-  border-radius: $radius-lg;
-  background-color: $surface;
+  border-radius: $radius-md;
+  background-color: $bg-surface;
   color: $text;
-  box-shadow: $shadow-xl;
+  box-shadow: $shadow-3;
   overflow: hidden;
 
   @include surface-transition;
@@ -54,7 +54,7 @@
     min-width: 0;
     border: none;
     background: none;
-    font-family: $font-ui;
+    font-family: $font-body;
     // Form denetimi puntosu: 16 px altına inmez; iOS Safari küçük metin alanına odaklanınca yakınlaştırıyordu.
     font-size: $font-size-control;
     color: $text;
@@ -84,7 +84,7 @@
   &__group {
     display: block;
     padding: $space-2 $space-2 $space-1;
-    font-size: $font-size-2xs;
+    font-size: $font-size-caption;
     font-weight: $weight-semibold;
     letter-spacing: $tracking-wide;
     text-transform: uppercase;
@@ -95,12 +95,12 @@
     @include row($space-3);
 
     padding: $space-2 $space-3;
-    border-radius: $radius-sm;
+    border-radius: $radius-xs;
     cursor: pointer;
     min-height: 40px;
 
     &--active {
-      background-color: $surface-2;
+      background-color: $bg-raised;
     }
   }
 
@@ -121,14 +121,14 @@
   &__label {
     @include truncate;
 
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     color: $text;
   }
 
   &__description {
     @include truncate;
 
-    font-size: $font-size-2xs;
+    font-size: $font-size-caption;
     color: $text-2;
   }
 
@@ -139,7 +139,7 @@
   &__empty {
     padding: $space-5 $space-3;
     text-align: center;
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     color: $text-2;
   }
 }

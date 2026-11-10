@@ -2,14 +2,14 @@
 
 .labels {
   fill: $text-3;
-  font-family: $font-ui;
+  font-family: $font-body;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 
 // Boş hücre: veri yok (sıfır değil) — tarama deseni yerine kesik kenarlık, zemin yüzey.
 .empty {
-  fill: $surface;
+  fill: $bg-surface;
   stroke: $border-strong;
   stroke-dasharray: 2 2;
 }

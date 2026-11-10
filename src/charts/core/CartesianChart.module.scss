@@ -17,13 +17,13 @@
 }
 
 .point {
-  stroke: $surface;
+  stroke: $bg-surface;
   stroke-width: 1.5;
 }
 
 // Etkin noktanın halkası — yüzey rengi kenar, iki temada da noktayı çizgiden ayırır.
 .marker {
-  stroke: $surface;
+  stroke: $bg-surface;
   stroke-width: 2;
 }
 
@@ -36,7 +36,7 @@
 
 // Etkin kategorinin bandı — çubukların ALTINDA (alt katman), renklerini değiştirmez.
 .band {
-  fill: $surface-2;
+  fill: $bg-raised;
 }
 
 .zero {

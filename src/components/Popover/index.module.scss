@@ -8,26 +8,26 @@
   max-width: min(360px, calc(100vw - #{$space-6}));
 
   padding: $space-3;
-  border-radius: $radius-lg;
-  background-color: $surface;
+  border-radius: $radius-md;
+  background-color: $bg-surface;
   border: 1px solid $border;
-  box-shadow: $shadow-lg;
+  box-shadow: $shadow-2;
   color: $text;
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   line-height: $leading-normal;
   text-align: start;
 
   &--top {
-    animation: $anim-fade-in-up $duration-fast $ease-out;
+    animation: $anim-fade-in-up $duration-fast $ease-standard;
   }
 
   &--bottom {
-    animation: $anim-fade-in-down $duration-fast $ease-out;
+    animation: $anim-fade-in-down $duration-fast $ease-standard;
   }
 
   &--left,
   &--right {
-    animation: $anim-fade-in $duration-fast $ease-out;
+    animation: $anim-fade-in $duration-fast $ease-standard;
   }
 
   @include reduced-motion {

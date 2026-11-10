@@ -12,16 +12,16 @@
   text-align: center;
   padding: $space-6 $space-4;
   border: 2px dashed $border-strong;
-  border-radius: $radius-lg;
-  background-color: $surface-inset;
+  border-radius: $radius-md;
+  background-color: $bg-inset;
   cursor: pointer;
   transition:
-    border-color $duration-fast $ease-out,
-    background-color $duration-fast $ease-out;
+    border-color $duration-fast $ease-standard,
+    background-color $duration-fast $ease-standard;
 
   &:hover {
     border-color: $border-strong;
-    background-color: $surface-2;
+    background-color: $bg-raised;
   }
 
   &:has(.upload__input:focus-visible) {
@@ -30,8 +30,8 @@
 
   &--dragging {
     border-style: solid;
-    border-color: $selected-line;
-    background-color: $selected-tint;
+    border-color: $primary-line;
+    background-color: $primary-soft;
   }
 
   &--invalid {
@@ -43,7 +43,7 @@
 
     &:hover {
       border-color: $border;
-      background-color: $surface-2;
+      background-color: $bg-raised;
     }
 
     .upload__icon,
@@ -69,18 +69,18 @@
 }
 
 .upload__label {
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   font-weight: $weight-semibold;
   color: $text;
 }
 
 .upload__drag {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-2;
 }
 
 .upload__hint {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-3;
 }
 
@@ -88,8 +88,8 @@
   @include row($space-2, flex-start);
 
   margin: 0;
-  font-size: $font-size-xs;
-  color: $bad-fg;
+  font-size: $font-size-caption;
+  color: $danger-fg;
 
   svg {
     flex-shrink: 0;
@@ -111,12 +111,12 @@
 
   padding: $space-2 $space-3;
   border: 1px solid $border;
-  border-radius: $radius-md;
-  background-color: $surface;
+  border-radius: $radius-sm;
+  background-color: $bg-surface;
 
   &--error {
-    border-color: $bad-line;
-    background-color: $bad-bg;
+    border-color: $danger-line;
+    background-color: $danger-bg;
   }
 }
 
@@ -130,17 +130,17 @@
 .upload__fileName {
   @include truncate;
 
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   color: $text;
 }
 
 .upload__fileMeta {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-2;
   font-variant-numeric: tabular-nums;
 
   .upload__file--error & {
-    color: $bad-fg;
+    color: $danger-fg;
   }
 }
 

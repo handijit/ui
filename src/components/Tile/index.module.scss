@@ -24,13 +24,13 @@
     width: 52px;
     height: 52px;
     border-radius: $radius-pill;
-    background-color: $surface-2;
+    background-color: $bg-raised;
     color: $text-2;
-    font-size: $font-size-xl;
+    font-size: $font-size-h3;
     flex-shrink: 0;
     transition:
-      background-color $duration-fast $ease-out,
-      color $duration-fast $ease-out;
+      background-color $duration-fast $ease-standard,
+      color $duration-fast $ease-standard;
 
     @include reduced-motion {
       transition: none;
@@ -38,30 +38,30 @@
   }
 
   &__label {
-    font-family: $font-heading;
-    font-size: $font-size-sm;
+    font-family: $font-display;
+    font-size: $font-size-small;
     font-weight: $weight-semibold;
     line-height: $leading-snug;
     color: $text;
   }
 
   &__meta {
-    font-size: $font-size-2xs;
+    font-size: $font-size-caption;
     color: $text-2;
     font-variant-numeric: tabular-nums;
   }
 
   &:hover &__medallion {
-    background-color: $selected-tint;
+    background-color: $primary-soft;
     color: $text;
   }
 
   &--active {
-    border-color: $selected-line;
+    border-color: $primary-line;
 
     .tile__medallion {
-      background-color: $selected;
-      color: $on-selected;
+      background-color: $primary;
+      color: $on-primary;
     }
 
     .tile__label {

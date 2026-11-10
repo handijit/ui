@@ -1,9 +1,12 @@
-/** Ölçü basamakları. */
+/** Size steps. */
 enum UISize {
-  /** Görsel 30 px — yoğun araç çubuğu ve üst bant. Dokunma hedefi yine 44 px (`tap-target`). */
+  /** 28px tall — dense toolbars and the top band. The touch target stays 44px (`tap-target`). */
   XSMALL = 'XSMALL',
+  /** 32px tall. */
   SMALL = 'SMALL',
+  /** 40px tall. */
   MEDIUM = 'MEDIUM',
+  /** 48px tall. */
   LARGE = 'LARGE',
 }
 

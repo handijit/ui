@@ -12,19 +12,19 @@
 
   &--interactive {
     transition:
-      border-color $duration-fast $ease-out,
-      box-shadow $duration-fast $ease-out,
-      transform $duration-fast $ease-out;
+      border-color $duration-fast $ease-standard,
+      box-shadow $duration-fast $ease-standard,
+      transform $duration-fast $ease-standard;
 
     &:hover {
       border-color: $border-strong;
-      box-shadow: $shadow-md;
+      box-shadow: $shadow-2;
       transform: translateY(-2px);
     }
 
     &:active {
       transform: translateY(0);
-      box-shadow: $shadow-sm;
+      box-shadow: $shadow-1;
     }
 
     &:hover .media__frame > img {
@@ -62,7 +62,7 @@
     > img {
       width: 100%;
       height: 100%;
-      transition: transform $duration-slow $ease-out;
+      transition: transform $duration-slow $ease-standard;
 
       @include reduced-motion {
         transition: none;
@@ -97,7 +97,7 @@
 
 .overlay {
   position: absolute;
-  z-index: $z-raised;
+  z-index: $z-sticky;
   display: flex;
   flex-direction: column;
   gap: $space-1;

@@ -274,23 +274,41 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   UiProvider: {
     description: (
       <p style={{ maxWidth: '52ch' }}>
-        Sağlayıcı görünür bir şey çizmez: tema ezmelerini çocuklarından önce bir{' '}
-        <code>&lt;style&gt;</code> olarak çizer (sunucu çıktısında da), metinleri ve yönlendirici
-        bileşenini ağaca dağıtır. Bu sayfanın tamamı zaten onun içinde.
+        Sağlayıcı görünür bir şey çizmez ve stil enjekte etmez: metinleri ve yönlendirici bileşenini
+        ağaca dağıtır. Bu sayfanın tamamı zaten onun içinde.
       </p>
     ),
   },
   /* Görünür bir şey çizmez — `<head>`deki tema betiği. */
-  UiThemeScript: { default: <UiThemeScript storageKey="theme" /> },
+  UiThemeScript: { default: <UiThemeScript /> },
 
   // --- Eylem ---
   Button: {
     primary: <Button variant={UIVariant.PRIMARY}>Kaydet</Button>,
     secondary: <Button variant={UIVariant.SECONDARY}>Vazgeç</Button>,
-    cart: <Button variant={UIVariant.CART}>Sepete ekle</Button>,
+    accent: <Button variant={UIVariant.ACCENT}>Ücretsiz dene</Button>,
     outline: <Button variant={UIVariant.OUTLINE}>İncele</Button>,
+    soft: <Button variant={UIVariant.SOFT}>Filtrele</Button>,
     ghost: <Button variant={UIVariant.GHOST}>Daha fazla</Button>,
     danger: <Button variant={UIVariant.DANGER}>Sil</Button>,
+    onBand: (
+      <div style={{ padding: 16, borderRadius: 14, background: 'var(--hd-band-bg)' }}>
+        <Button variant={UIVariant.ON_BAND}>Belgeleri oku</Button>
+      </div>
+    ),
+    accentDisabled: (
+      <Button variant={UIVariant.ACCENT} disabled>
+        Ücretsiz dene
+      </Button>
+    ),
+    sizes: (
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+        <Button size={UISize.XSMALL}>28</Button>
+        <Button size={UISize.SMALL}>32</Button>
+        <Button size={UISize.MEDIUM}>40</Button>
+        <Button size={UISize.LARGE}>48</Button>
+      </div>
+    ),
     loading: <Button isLoading>Kaydet</Button>,
     disabled: <Button disabled>Kaydet</Button>,
     link: <Button href="#">Bağlantı düğmesi</Button>,
@@ -305,9 +323,10 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     outline: (
       <IconButton icon={<HeartFill aria-hidden />} label="Favorilere ekle" variant="outline" />
     ),
-    /* Dolu varyantlar galeride OLMALI: yeşil yalnızca eylemde kalıyorsa görsel fark onu görmeli. */
+    /* The filled variants belong in the gallery: a colour decision has to show up in a visual diff. */
     solid: <IconButton icon={<HeartFill aria-hidden />} label="Favorilere ekle" variant="solid" />,
-    cart: <IconButton icon={<HeartFill aria-hidden />} label="Sepete ekle" variant="cart" />,
+    accent: <IconButton icon={<HeartFill aria-hidden />} label="İndir" variant="accent" />,
+    danger: <IconButton icon={<HeartFill aria-hidden />} label="Sil" variant="danger" />,
     disabled: <IconButton icon={<HeartFill aria-hidden />} label="Favorilere ekle" disabled />,
     round: (
       <IconButton icon={<ArrowUp aria-hidden />} label="Gönder" variant="solid" shape="round" />
@@ -482,7 +501,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     default: <Textarea aria-label="Not" placeholder="Notunuz" />,
     /* Çerçeveyi kapsayıcı çizer — galeride kapsayıcıyla birlikte gösterilir. */
     bare: (
-      <div style={{ padding: 12, border: '1px solid var(--ui-border)', borderRadius: 12 }}>
+      <div style={{ padding: 12, border: '1px solid var(--hd-border)', borderRadius: 12 }}>
         <Textarea
           aria-label="Mesaj"
           placeholder="Mesajınızı yazın…"
@@ -534,20 +553,42 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     success: <Badge tone="success">Stokta</Badge>,
     warning: <Badge tone="warning">Son 2 adet</Badge>,
     danger: <Badge tone="danger">Tükendi</Badge>,
-    /* Bugüne kadar galeride olmayan tonlar — renk kararı değiştiğinde görsel fark bunları görmüyordu. */
     info: <Badge tone="info">Bilgi</Badge>,
-    oem: <Badge tone="oem">Orijinal</Badge>,
-    alt: <Badge tone="alt">Muadil</Badge>,
-    sale: <Badge tone="sale">%20</Badge>,
-    action: (
-      <Badge tone="action" variant="solid">
-        3
-      </Badge>
+    highlight: <Badge tone="highlight">Canlı</Badge>,
+    solidTones: (
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <Badge tone="success" variant="solid">
+          Etkin
+        </Badge>
+        <Badge tone="warning" variant="solid">
+          Bekliyor
+        </Badge>
+        <Badge tone="danger" variant="solid">
+          %20
+        </Badge>
+        <Badge tone="info" variant="solid">
+          3
+        </Badge>
+        <Badge tone="highlight" variant="solid">
+          Yeni
+        </Badge>
+      </div>
     ),
-    link: (
-      <Badge tone="link" variant="outline">
-        Kategori
-      </Badge>
+    outlineTones: (
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <Badge tone="success" variant="outline">
+          Etkin
+        </Badge>
+        <Badge tone="danger" variant="outline">
+          Hata
+        </Badge>
+        <Badge tone="info" variant="outline">
+          Kategori
+        </Badge>
+        <Badge tone="highlight" variant="outline">
+          Canlı
+        </Badge>
+      </div>
     ),
   },
   Breadcrumb: {
@@ -597,7 +638,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     default: (
       <Card>
         <CardMedia ratio={1.4}>
-          <div style={{ width: '100%', height: '100%', background: 'var(--ui-media-bg)' }} />
+          <div style={{ width: '100%', height: '100%', background: 'var(--hd-bg-inset)' }} />
           <CardOverlay position="top-left">
             <Badge tone="danger" variant="solid">
               %20
@@ -670,7 +711,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       <EmptyState
         title="Sepetiniz boş"
         description="Beğendiğiniz ürünleri buraya ekleyin."
-        action={<Button variant={UIVariant.CART}>Alışverişe başla</Button>}
+        action={<Button variant={UIVariant.ACCENT}>Alışverişe başla</Button>}
       />
     ),
   },
@@ -1624,7 +1665,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   },
   ChatThread: {
     default: (
-      <div style={{ height: 360, border: '1px solid var(--ui-border)', borderRadius: 12 }}>
+      <div style={{ height: 360, border: '1px solid var(--hd-border)', borderRadius: 12 }}>
         <ChatThread
           dock={
             <PromptInput
@@ -1936,11 +1977,11 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         label="Bağlam bileşimi"
         max={100}
         segments={[
-          { id: 'p', label: 'Önek 32', tone: 'cat-1', value: 32 },
-          { id: 'm', label: 'Harita 18', tone: 'cat-2', value: 18 },
-          { id: 's', label: 'Durum 12', tone: 'cat-3', value: 12 },
-          { id: 'u', label: 'Kullanıcı 8', tone: 'cat-4', value: 8 },
-          { id: 't', label: 'Tur içi 10', tone: 'cat-5', value: 10 },
+          { id: 'p', label: 'Önek 32', tone: 'chart-1', value: 32 },
+          { id: 'm', label: 'Harita 18', tone: 'chart-2', value: 18 },
+          { id: 's', label: 'Durum 12', tone: 'chart-3', value: 12 },
+          { id: 'u', label: 'Kullanıcı 8', tone: 'chart-4', value: 8 },
+          { id: 't', label: 'Tur içi 10', tone: 'chart-5', value: 10 },
         ]}
         markers={[{ id: 'b', at: 85, label: 'Bütçe 85', tone: 'danger' }]}
       />
@@ -1951,8 +1992,8 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         max={10}
         segments={[
           { id: 'w', label: 'Bekleme 0-1,2 sn', tone: 'muted', from: 0, to: 1.2 },
-          { id: 's', label: 'Akış 1,2-5 sn', tone: 'series-1', from: 1.2, to: 5 },
-          { id: 't', label: 'Araçlar 5-8 sn', tone: 'series-2', from: 5, to: 8 },
+          { id: 's', label: 'Akış 1,2-5 sn', tone: 'chart-1', from: 1.2, to: 5 },
+          { id: 't', label: 'Araçlar 5-8 sn', tone: 'chart-6', from: 5, to: 8 },
         ]}
       />
     ),
@@ -1972,11 +2013,11 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     default: (
       <Legend
         items={[
-          { id: 'prefix', label: 'Önek', tone: 'cat-1' },
-          { id: 'map', label: 'Harita', tone: 'cat-2' },
-          { id: 'state', label: 'Durum', tone: 'cat-3' },
-          { id: 'user', label: 'Kullanıcı', tone: 'cat-4' },
-          { id: 'turn', label: 'Tur içi', tone: 'cat-5' },
+          { id: 'prefix', label: 'Önek', tone: 'chart-1' },
+          { id: 'map', label: 'Harita', tone: 'chart-2' },
+          { id: 'state', label: 'Durum', tone: 'chart-3' },
+          { id: 'user', label: 'Kullanıcı', tone: 'chart-4' },
+          { id: 'turn', label: 'Tur içi', tone: 'chart-5' },
           { id: 'wait', label: 'Bekleme', tone: 'muted' },
         ]}
       />

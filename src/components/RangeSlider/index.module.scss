@@ -12,18 +12,18 @@
     }
 
     .range__fill {
-      background-color: $action-soft;
+      background-color: $bg-disabled;
     }
 
     .range__input::-webkit-slider-thumb {
-      background-color: $surface-2;
-      border-color: $action-soft;
+      background-color: $bg-raised;
+      border-color: $bg-disabled;
       box-shadow: none;
     }
 
     .range__input::-moz-range-thumb {
-      background-color: $surface-2;
-      border-color: $action-soft;
+      background-color: $bg-raised;
+      border-color: $bg-disabled;
       box-shadow: none;
     }
   }
@@ -32,8 +32,8 @@
     @include row($space-2);
 
     justify-content: center;
-    font-family: $font-heading;
-    font-size: $font-size-sm;
+    font-family: $font-display;
+    font-size: $font-size-small;
     font-weight: $weight-semibold;
     color: $text;
     font-variant-numeric: tabular-nums;
@@ -56,7 +56,7 @@
       inset-inline: 0;
       height: 4px;
       border-radius: $radius-pill;
-      background-color: $surface-3;
+      background-color: $bg-inset;
     }
   }
 
@@ -64,7 +64,7 @@
     position: absolute;
     height: 4px;
     border-radius: $radius-pill;
-    background-color: $selected;
+    background-color: $primary;
   }
 
   &__input {
@@ -94,13 +94,13 @@
       height: 20px;
       margin-top: -8px;
       border-radius: $radius-pill;
-      background-color: $surface;
-      border: 2px solid $selected;
-      box-shadow: $shadow-sm;
+      background-color: $bg-surface;
+      border: 2px solid $primary;
+      box-shadow: $shadow-1;
       cursor: grab;
       transition:
-        transform $duration-fast $ease-out,
-        box-shadow $duration-fast $ease-out;
+        transform $duration-fast $ease-standard,
+        box-shadow $duration-fast $ease-standard;
     }
 
     &::-moz-range-thumb {
@@ -108,13 +108,13 @@
       width: 20px;
       height: 20px;
       border-radius: $radius-pill;
-      background-color: $surface;
-      border: 2px solid $selected;
-      box-shadow: $shadow-sm;
+      background-color: $bg-surface;
+      border: 2px solid $primary;
+      box-shadow: $shadow-1;
       cursor: grab;
       transition:
-        transform $duration-fast $ease-out,
-        box-shadow $duration-fast $ease-out;
+        transform $duration-fast $ease-standard,
+        box-shadow $duration-fast $ease-standard;
     }
 
     &:hover::-webkit-slider-thumb {
@@ -127,12 +127,12 @@
 
     &:active::-webkit-slider-thumb {
       cursor: grabbing;
-      box-shadow: $ring;
+      box-shadow: $focus-halo;
     }
 
     &:active::-moz-range-thumb {
       cursor: grabbing;
-      box-shadow: $ring;
+      box-shadow: $focus-halo;
     }
 
     &:focus {
@@ -140,13 +140,13 @@
     }
 
     &:focus-visible::-webkit-slider-thumb {
-      box-shadow: $ring;
-      border-color: $selected-active;
+      box-shadow: $focus-halo;
+      border-color: $primary-active;
     }
 
     &:focus-visible::-moz-range-thumb {
-      box-shadow: $ring;
-      border-color: $selected-active;
+      box-shadow: $focus-halo;
+      border-color: $primary-active;
     }
 
     @include reduced-motion {
@@ -161,7 +161,7 @@
     @include row($space-2);
 
     justify-content: space-between;
-    font-size: $font-size-2xs;
+    font-size: $font-size-caption;
     color: $text-3;
     font-variant-numeric: tabular-nums;
   }

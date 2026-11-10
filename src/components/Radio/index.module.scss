@@ -8,11 +8,11 @@
   cursor: pointer;
   padding: $space-2;
   margin-inline: calc(-1 * #{$space-2});
-  border-radius: $radius-sm;
-  transition: background-color $duration-fast $ease-out;
+  border-radius: $radius-xs;
+  transition: background-color $duration-fast $ease-standard;
 
   &:hover {
-    background-color: $surface-2;
+    background-color: $bg-raised;
   }
 
   @include reduced-motion {
@@ -24,7 +24,7 @@
     height: 18px;
     margin: 0;
     flex-shrink: 0;
-    accent-color: $selected;
+    accent-color: $primary;
     cursor: pointer;
     margin-top: 2px;
 
@@ -39,19 +39,19 @@
   }
 
   &__label {
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     line-height: $leading-normal;
     color: $text;
   }
 
   &__hint {
-    font-size: $font-size-xs;
+    font-size: $font-size-caption;
     color: $text-2;
     line-height: $leading-normal;
   }
 
   &__count {
-    font-size: $font-size-2xs;
+    font-size: $font-size-caption;
     color: $text-3;
     font-variant-numeric: tabular-nums;
     flex-shrink: 0;

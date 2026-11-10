@@ -2,7 +2,7 @@
 @use '../../styles/mixins' as *;
 
 .text {
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   line-height: $leading-normal;
   color: $text-2;
 }

@@ -20,7 +20,7 @@
   }
 
   &__title {
-    @include heading(base, $weight-semibold);
+    @include block-title;
 
     margin: 0;
   }

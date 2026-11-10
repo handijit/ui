@@ -1,9 +1,9 @@
 /**
- * `@handijit/ui/base.css` — token'lar (`:root`), kutu modeli sıfırlaması ve `@keyframes`.
+ * `@handijit/ui/base.css` — box-model reset, `@keyframes` and helper classes (no design tokens:
+ * those are `@handijit/design/tokens.css`).
  *
- * Bu modülün tek işi derlemeye bir CSS girişi vermektir: Vite `base.scss`i `build/base.css` olarak
- * çıkarır, bileşen modülleri onu kendi CSS'leriyle birlikte içe aktarır (`vite.modules.ts`).
- * ⚠ `index.ts` BUNU İÇE AKTARMAZ: cephe yalnızca yeniden dışa aktarım taşır ki Next'in
- * `optimizePackageImports` dönüşümü onu saf bir cephe sayıp bileşen dosyasına kısa devre yapabilsin.
+ * This module only gives the build a CSS entry: Vite emits `base.scss` as `build/base.css`.
+ * ⚠ `index.ts` does NOT import it: the facade carries re-exports only, so Next's
+ * `optimizePackageImports` can treat it as a pure facade and short-circuit to the component file.
  */
 import './base.scss';

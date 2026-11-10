@@ -24,7 +24,6 @@ export default {
       },
     ],
   },
-  transformIgnorePatterns: ['/node_modules/(?!(@ahmetilhn)/)'],
   testMatch: ['<rootDir>/__tests__/**/*.test.{ts,tsx}'],
 
   /*

@@ -1,210 +1,132 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
+import { THEME_ATTRIBUTE, THEME_BOOT_SCRIPT, THEME_STORAGE_KEY } from '@handijit/design';
 
 import {
-  buildThemeCss,
-  resolveTokens,
-  themeBootScript,
-  THEME_ATTRIBUTE,
-  THEME_LAYER,
-  toStyleHtml,
+  applyThemePreference,
+  readActiveTheme,
+  readStoredPreference,
+  readSystemTheme,
 } from '@/helpers/theme.helper';
-import { DARK_THEME, LIGHT_THEME } from '@/theme/tokens';
 
-/** Bir CSS metnindeki kural seçicileri (`@` kuralları hariç). */
-const selectorsOf = (css: string): string[] =>
-  css
-    .split('\n')
-    .map(line => line.trim())
-    .filter(line => line.endsWith('{') && !line.startsWith('@'))
-    .map(line => line.slice(0, -1).trim());
+const root = document.documentElement;
 
-describe('buildThemeCss', () => {
-  it('yapılandırma boşken hiç kural üretmez', () => {
-    expect(buildThemeCss({})).toBe('');
-    expect(buildThemeCss({ light: {}, dark: {} })).toBe('');
+const mockSystem = (prefersDark: boolean) =>
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: (query: string) => ({
+      matches: prefersDark,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }),
   });
 
-  it('yalnızca EZİLEN token yazılır, tam eşleme değil', () => {
-    const css = buildThemeCss({ light: { link: '#0d6efd' } });
+beforeEach(() => {
+  root.removeAttribute(THEME_ATTRIBUTE);
+  window.localStorage.clear();
+  mockSystem(false);
+});
 
-    expect(css).toContain('--ui-link: #0d6efd');
-    expect(css).not.toContain('--ui-surface:');
-    expect(css).not.toContain('--ui-text:');
+afterEach(() => jest.restoreAllMocks());
+
+describe('readSystemTheme', () => {
+  it('follows prefers-color-scheme', () => {
+    expect(readSystemTheme()).toBe('light');
+
+    mockSystem(true);
+    expect(readSystemTheme()).toBe('dark');
   });
 
-  it('açık tema ezmesi HEM `html:root` HEM açık seçim seçicisine yazılır', () => {
-    const css = buildThemeCss({ light: { link: '#0d6efd' } });
+  it('is light where matchMedia does not exist', () => {
+    Object.defineProperty(window, 'matchMedia', { writable: true, value: undefined });
 
-    expect(css).toMatch(/html:root\s*\{[^}]*--ui-link: #0d6efd/);
-    expect(selectorsOf(css)).toEqual(['html:root', `html:root[${THEME_ATTRIBUTE}='light']`]);
-  });
-
-  it('koyu tema ezmesi sistem tercihi yedeğine de iner', () => {
-    const css = buildThemeCss({ dark: { link: '#6ea8fe' } });
-
-    expect(css).toContain('@media (prefers-color-scheme: dark)');
-    expect(selectorsOf(css)).toEqual([
-      `html:root[${THEME_ATTRIBUTE}='dark']`,
-      `html:root:not([${THEME_ATTRIBUTE}])`,
-    ]);
-  });
-
-  it('ölçü ezmesi tema seçiminden bağımsız `:root`a yazılır', () => {
-    const css = buildThemeCss({ metrics: { 'radius-md': '2px', 'space-4': '20px' } });
-
-    expect(css).toContain('--ui-radius-md: 2px;');
-    expect(css).toContain('--ui-space-4: 20px;');
-    expect(css).not.toContain(`[${THEME_ATTRIBUTE}='dark']`);
-  });
-
-  it('ölçü ezmesi YOĞUN kipte de geçerli kalır', () => {
-    const css = buildThemeCss({ metrics: { 'space-4': '20px' } });
-
-    expect(css).toContain("html:root[data-ui-density='compact'] {");
-    expect(css.match(/--ui-space-4: 20px;/g)).toHaveLength(2);
-  });
-
-  it('ölçü verilmediğinde yoğunluk bloğu HİÇ yazılmaz', () => {
-    expect(buildThemeCss({ metrics: {} })).toBe('');
-    expect(buildThemeCss({ light: { link: '#0d6efd' } })).not.toContain('density');
-  });
-
-  it('font ezmesi tema seçiminden bağımsız `:root`a yazılır', () => {
-    const css = buildThemeCss({ fonts: { heading: 'Archivo, sans-serif' } });
-
-    expect(css).toContain('--ui-font-heading: Archivo, sans-serif');
-    expect(css).not.toContain(THEME_ATTRIBUTE);
+    expect(readSystemTheme()).toBe('light');
   });
 });
 
-describe('buildThemeCss — tüketicinin ezmesi her zaman kazanır', () => {
-  const FULL = {
-    light: { link: '#0d6efd' },
-    dark: { link: '#6ea8fe' },
-    fonts: { heading: 'Archivo, sans-serif' },
-    metrics: { 'radius-md': '2px' },
-  };
+describe('readStoredPreference', () => {
+  it('is "system" when nothing is stored', () => {
+    expect(readStoredPreference()).toBe('system');
+  });
+
+  it('reads the key of @handijit/design', () => {
+    window.localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+
+    expect(readStoredPreference()).toBe('dark');
+  });
+
+  it('treats an unknown value as no choice — the boot script does the same', () => {
+    window.localStorage.setItem(THEME_STORAGE_KEY, 'sepia');
+
+    expect(readStoredPreference()).toBe('system');
+  });
+
+  it('treats a storage that throws as no choice', () => {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+
+    expect(readStoredPreference()).toBe('system');
+  });
+});
+
+describe('readActiveTheme', () => {
+  it('reads the root attribute', () => {
+    root.setAttribute(THEME_ATTRIBUTE, 'dark');
+
+    expect(readActiveTheme()).toBe('dark');
+  });
+
+  it('falls back to the system when the attribute is missing or unknown', () => {
+    mockSystem(true);
+    expect(readActiveTheme()).toBe('dark');
+
+    root.setAttribute(THEME_ATTRIBUTE, 'sepia');
+    expect(readActiveTheme()).toBe('dark');
+  });
+});
+
+describe('applyThemePreference', () => {
+  it('stores an explicit choice and writes it to the root', () => {
+    applyThemePreference('dark');
+
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark');
+    expect(root.getAttribute(THEME_ATTRIBUTE)).toBe('dark');
+  });
+
+  it('"system" REMOVES the key and writes the resolved theme', () => {
+    applyThemePreference('dark');
+    mockSystem(true);
+
+    applyThemePreference('system');
+
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+    expect(root.getAttribute(THEME_ATTRIBUTE)).toBe('dark');
+  });
+
+  it('still applies the theme when the storage throws', () => {
+    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('quota');
+    });
+
+    expect(() => applyThemePreference('dark')).not.toThrow();
+    expect(root.getAttribute(THEME_ATTRIBUTE)).toBe('dark');
+  });
 
   /*
-   * Ezme katmansızken `:root:not([data-ui-theme])` (0,2,0) tüketicinin `html:has(.panel)`
-   * (0,1,1) ezmesini hidrasyondan sonra eziyordu: koyu temada kırmızı sil düğmesi bir kare sonra
-   * beyaza, alanların zemini ve çizgisi temanın griye dönüyordu (ölçüldü, 5.6.3).
+   * Two writers of one attribute: this function and the design boot script. Run the real script
+   * after a choice and the page must not move — otherwise a reload would flash the other theme.
    */
-  it('çıktının TAMAMI kütüphanenin katmanında — dışında kural yok', () => {
-    const css = buildThemeCss(FULL);
+  it.each(['light', 'dark', 'system'] as const)(
+    'agrees with the design boot script after "%s"',
+    preference => {
+      mockSystem(true);
+      applyThemePreference(preference);
+      const applied = root.getAttribute(THEME_ATTRIBUTE);
 
-    expect(css.startsWith(`@layer ${THEME_LAYER} {\n`)).toBe(true);
-    expect(css.endsWith('\n}')).toBe(true);
-    expect(css.match(/^@layer/gm)).toHaveLength(1);
-    /* Katmanın içindeki her satır girintili: kapanıştan önce katman dışına çıkan kural yok. */
-    expect(
-      css
-        .split('\n')
-        .slice(1, -1)
-        .every(line => line === '' || line.startsWith('  ')),
-    ).toBe(true);
-  });
+      root.removeAttribute(THEME_ATTRIBUTE);
+      new Function(THEME_BOOT_SCRIPT)();
 
-  it('katman adı derlemenin sarmaladığı katmanla AYNI', () => {
-    const plugin = readFileSync(
-      path.join(__dirname, '../../scripts/lib/postcss-ui-layer.mjs'),
-      'utf8',
-    );
-
-    expect(plugin).toContain(`layer = '${THEME_LAYER}'`);
-  });
-
-  /*
-   * Seçici `_tokens.generated.scss`teki karşılığından bir öğe daha özgül: katman içinde ezme
-   * varsayılanı kaynak sırasından bağımsız yener, açık ezme koyu varsayılana (0,2,0) yenilir.
-   */
-  it('her seçici `html:root` ile başlar — `:root` karşılığından bir öğe özgül', () => {
-    const selectors = selectorsOf(buildThemeCss(FULL));
-
-    expect(selectors.length).toBeGreaterThan(0);
-    expect(selectors.filter(selector => !selector.startsWith('html:root'))).toEqual([]);
-  });
-});
-
-describe('toStyleHtml', () => {
-  it('`</style` dizisi etiketi kapatamaz — değer veritabanından gelebilir', () => {
-    const css = buildThemeCss({ light: { link: 'red;}</style><script>alert(1)</script>' } });
-
-    expect(toStyleHtml(css)).not.toMatch(/<\/style/i);
-    expect(toStyleHtml(css)).toContain('<\\/style><script>');
-  });
-
-  it('başka hiçbir şeye dokunmaz', () => {
-    const css = buildThemeCss({ dark: { link: '#6ea8fe' } });
-
-    expect(toStyleHtml(css)).toBe(css);
-  });
-});
-
-describe('resolveTokens', () => {
-  it('ezilmeyen her token varsayılanında kalır', () => {
-    const resolved = resolveTokens('light', { light: { link: '#0d6efd' } });
-
-    expect(resolved.link).toBe('#0d6efd');
-    expect(resolved.surface).toBe(LIGHT_THEME.surface);
-    expect(resolved.text).toBe(LIGHT_THEME.text);
-  });
-
-  it('koyu şema koyu varsayılanlardan türer', () => {
-    expect(resolveTokens('dark').page).toBe(DARK_THEME.page);
-    expect(resolveTokens('dark').page).not.toBe(LIGHT_THEME.page);
-  });
-
-  it('açık ezmesi koyu şemaya SIZMAZ', () => {
-    const config = { light: { link: '#0d6efd' } };
-
-    expect(resolveTokens('dark', config).link).toBe(DARK_THEME.link);
-  });
-});
-
-describe('token sözleşmesi', () => {
-  it('açık ve koyu tema AYNI anahtar kümesini taşır', () => {
-    expect(Object.keys(DARK_THEME).sort()).toEqual(Object.keys(LIGHT_THEME).sort());
-  });
-
-  it('hiçbir token boş değer taşımaz', () => {
-    const empty = Object.entries({ ...LIGHT_THEME, ...DARK_THEME }).filter(
-      ([, value]) => !value || value.trim() === '',
-    );
-
-    expect(empty).toEqual([]);
-  });
-});
-
-describe('themeBootScript', () => {
-  const run = (script: string) => new Function(script)();
-
-  beforeEach(() => {
-    document.documentElement.removeAttribute('data-ui-theme');
-    localStorage.clear();
-  });
-
-  it('kayıtlı AÇIK seçimi `<html>`e yazar', () => {
-    localStorage.setItem('theme', 'dark');
-    run(themeBootScript({ storageKey: 'theme' }));
-
-    expect(document.documentElement.getAttribute('data-ui-theme')).toBe('dark');
-  });
-
-  it('kayıt yoksa ya da geçersizse öznitelik YAZMAZ — sistem tercihi izlenir', () => {
-    run(themeBootScript({ storageKey: 'theme' }));
-    expect(document.documentElement.hasAttribute('data-ui-theme')).toBe(false);
-
-    localStorage.setItem('theme', 'system');
-    run(themeBootScript({ storageKey: 'theme' }));
-    expect(document.documentElement.hasAttribute('data-ui-theme')).toBe(false);
-  });
-
-  it('anahtar betiğe KAÇIŞLI girer — tırnak betiği kırmaz', () => {
-    localStorage.setItem('a"b', 'light');
-
-    expect(() => run(themeBootScript({ storageKey: 'a"b' }))).not.toThrow();
-    expect(document.documentElement.getAttribute('data-ui-theme')).toBe('light');
-  });
+      expect(root.getAttribute(THEME_ATTRIBUTE)).toBe(applied);
+    },
+  );
 });

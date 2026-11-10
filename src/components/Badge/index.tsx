@@ -9,31 +9,25 @@ export type BadgeTone =
   | 'success'
   | 'danger'
   | 'warning'
+  /** Cobalt: information, a counter, a navigation label. */
   | 'info'
-  /** Birincil sınıflandırma tinti (yeşil aile — örn. "Orijinal"). */
-  | 'oem'
-  /** İkincil sınıflandırma tinti (menekşe aile — örn. "Muadil"). */
-  | 'alt'
-  /** İndirim / olumlu değişim yüzdesi. Tutarın kendisi nötr kalır. */
-  | 'sale'
-  /** Miktar sayacı (sepet adedi, filtre sayısı) — dolu zemine izin verilir. */
-  | 'action'
-  /** Gezinme etiketi. */
-  | 'link';
+  /** Turquoise: a highlight or a live state ("New", "Live"). */
+  | 'highlight';
 
+/** `soft` is the tint, `solid` the filled pair (a counter, a discount), `outline` line and text. */
 export type BadgeVariant = 'soft' | 'solid' | 'outline';
 
 type Props = {
   children: ReactNode;
   tone?: BadgeTone;
   variant?: BadgeVariant;
-  /** Küçük ikon; metnin solunda gösterilir. */
+  /** A small icon, shown before the text. */
   icon?: ReactNode;
   className?: string;
   testId?: string;
 };
 
-/** Rozet — durum ve sınıflandırma etiketi. */
+/** Badge — a status or classification label. */
 const Badge: FC<Props> = ({
   children,
   tone = 'neutral',

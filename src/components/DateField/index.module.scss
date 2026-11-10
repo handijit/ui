@@ -5,11 +5,11 @@
   @include input-base;
 
   &::-webkit-calendar-picker-indicator {
-    border-radius: $radius-sm;
+    border-radius: $radius-xs;
     cursor: pointer;
 
     &:hover {
-      background-color: $surface-2;
+      background-color: $bg-raised;
     }
   }
 
@@ -44,14 +44,14 @@
 }
 
 .range__summary {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-2;
 
   order: var(--ui-field-message-order, 0);
 }
 
 .range__error {
-  font-size: $font-size-xs;
-  color: $bad-fg;
+  font-size: $font-size-caption;
+  color: $danger-fg;
   order: var(--ui-field-message-order, 0);
 }

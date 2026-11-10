@@ -21,8 +21,8 @@
   }
 
   &--open {
-    border-color: $ring-color;
-    box-shadow: $ring;
+    border-color: $focus;
+    box-shadow: $focus-halo;
   }
 
   &--invalid {
@@ -59,7 +59,7 @@
     color: $text-2;
     flex-shrink: 0;
     font-size: $icon-xs;
-    transition: transform $duration-fast $ease-out;
+    transition: transform $duration-fast $ease-standard;
 
     &--open {
       transform: rotate(180deg);
@@ -75,12 +75,12 @@
   position: fixed;
   z-index: $z-dropdown;
   min-width: 200px;
-  background-color: $surface;
+  background-color: $bg-surface;
   border: 1px solid $border;
-  border-radius: $radius-lg;
-  box-shadow: $shadow-lg;
+  border-radius: $radius-md;
+  box-shadow: $shadow-2;
   overflow: hidden;
-  animation: $anim-fade-in-up $duration-fast $ease-out;
+  animation: $anim-fade-in-up $duration-fast $ease-standard;
 
   @include reduced-motion {
     animation: none;
@@ -109,8 +109,8 @@
 
     .option {
       min-height: 48px;
-      font-size: $font-size-base;
-      border-radius: $radius-md;
+      font-size: $font-size-body;
+      border-radius: $radius-sm;
     }
   }
 }
@@ -120,18 +120,18 @@
 
   justify-content: space-between;
   padding: $space-2 $space-3;
-  border-radius: $radius-sm;
-  font-size: $font-size-sm;
+  border-radius: $radius-xs;
+  font-size: $font-size-small;
   color: $text;
   cursor: pointer;
-  transition: background-color $duration-fast $ease-out;
+  transition: background-color $duration-fast $ease-standard;
 
   &--active {
-    background-color: $surface-2;
+    background-color: $bg-raised;
   }
 
   &--selected {
-    background-color: $selected-tint;
+    background-color: $primary-soft;
     color: $text;
     font-weight: $weight-semibold;
   }

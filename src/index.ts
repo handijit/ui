@@ -3,31 +3,21 @@
  * kadar kaldırılmaz ve davranışı sessizce değişmez.
  */
 
-// --- Tema -------------------------------------------------------------
+// --- Theme -------------------------------------------------------------
 export { default as UiProvider } from './theme/UiProvider';
-export { default as initUi } from './theme/initUi';
 export { default as UiThemeScript } from './theme/UiThemeScript';
 export { useUi } from './theme/context';
-export {
-  COMPACT_DENSITY,
-  DARK_THEME,
-  DEFAULT_FONTS,
-  LIGHT_THEME,
-  METRIC_TOKENS,
-} from './theme/tokens';
 /*
- * ⚠ `applyThemeConfig` DE PUBLIC ve bu zorunlu: onsuz `resolveTokens` + `buildThemeCss` cifti ISE
- * YARAMIYORDU
- * ⚠ `THEME_ATTRIBUTE` / `DENSITY_ATTRIBUTE` de disariya veriliyor: iki tuketici de
- * `data-ui-theme` dizesini ELLE yaziyor…
+ * The theme contract belongs to `@handijit/design`; these four are re-exported unchanged so an
+ * application that only talks to the component library does not need a second import line, and so
+ * the boot script and its CSP hash can never drift from the design package's copy.
  */
 export {
-  applyThemeConfig,
-  buildThemeCss,
-  DENSITY_ATTRIBUTE,
-  resolveTokens,
   THEME_ATTRIBUTE,
-} from './helpers/theme.helper';
+  THEME_BOOT_SCRIPT,
+  THEME_BOOT_SCRIPT_HASH,
+  THEME_STORAGE_KEY,
+} from '@handijit/design';
 /*
  * Sayfa düzeyinde `Escape` dinleyen kod (sohbetin "akışı durdur" kısayolu)
  * `event.defaultPrevented || hasOpenSurface()` sorar; yığının kendisi (`pushModal` / `isTopModal`)
@@ -63,6 +53,7 @@ export {
   ABOVE_MOBILE_MEDIA_QUERY,
   ABOVE_TABLET_MEDIA_QUERY,
   MOBILE_BREAKPOINT,
+  SHEET_MEDIA_QUERY,
   TABLET_BREAKPOINT,
   TABLET_PORTRAIT_BREAKPOINT,
 } from './constants/breakpoint.constants';
@@ -191,14 +182,6 @@ export type {
   UiColorPreference,
   UiColorScheme,
   UiContextValue,
-  UiDensity,
-  UiFonts,
   UiLabels,
-  UiMetricToken,
-  UiMetrics,
-  UiResolvedTokens,
-  UiThemeConfig,
-  UiThemeTokens,
-  UiToken,
-  InitUiOptions,
+  UiThemeState,
 } from './types/theme.type';

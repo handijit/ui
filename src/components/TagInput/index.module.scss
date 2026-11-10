@@ -12,8 +12,8 @@
   cursor: text;
 
   &:has(.tagInput__field:focus-visible) {
-    border-color: $ring-color;
-    box-shadow: $ring;
+    border-color: $focus;
+    box-shadow: $focus-halo;
   }
 
   &--invalid {
@@ -21,7 +21,7 @@
   }
 
   &--disabled {
-    background-color: $surface-2;
+    background-color: $bg-raised;
     cursor: not-allowed;
   }
 }
@@ -31,18 +31,18 @@
 
   flex-shrink: 0;
   padding: 2px $space-1 2px $space-2;
-  border-radius: $radius-sm;
-  background-color: $surface-2;
+  border-radius: $radius-xs;
+  background-color: $bg-raised;
   border: 1px solid $border;
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text;
   transition:
-    background-color $duration-fast $ease-out,
-    border-color $duration-fast $ease-out;
+    background-color $duration-fast $ease-standard,
+    border-color $duration-fast $ease-standard;
 
   &--duplicate {
-    background-color: $warn-bg;
-    border-color: $warn-line;
+    background-color: $warning-bg;
+    border-color: $warning-line;
   }
 
   @include reduced-motion {
@@ -64,10 +64,10 @@
   background: none;
   cursor: pointer;
   color: $text-2;
-  font-size: $font-size-2xs;
+  font-size: $font-size-caption;
 
   &:hover:not(:disabled) {
-    background-color: $surface-3;
+    background-color: $bg-inset;
     color: $text;
   }
 
@@ -75,7 +75,7 @@
     cursor: not-allowed;
   }
 
-  @include focus-ring($ring-color, 1px);
+  @include focus-ring($focus, 1px);
 }
 
 .tagInput__field {
@@ -84,8 +84,8 @@
   border: none;
   background: none;
   padding: $space-1 0;
-  font-family: $font-ui;
-  font-size: $font-size-sm;
+  font-family: $font-body;
+  font-size: $font-size-small;
   color: $text;
 
   @include for-touch {

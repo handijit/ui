@@ -12,7 +12,7 @@
   flex: 1;
   min-width: 0;
   border-radius: $radius-pill;
-  background-color: $track;
+  background-color: $bg-inset;
   overflow: hidden;
 
   &--xs {
@@ -29,7 +29,7 @@
 
   &--indeterminate .progress__fill {
     inline-size: 40%;
-    animation: $anim-progress-slide $duration-shimmer $ease-in-out infinite;
+    animation: $anim-progress-slide $duration-shimmer $ease-standard infinite;
 
     @include reduced-motion {
       animation: none;
@@ -42,15 +42,15 @@
   display: block;
   height: 100%;
   border-radius: $radius-pill;
-  background-color: $selected;
-  transition: inline-size $duration-normal $ease-out;
+  background-color: $primary;
+  transition: inline-size $duration-base $ease-standard;
 
   &--success {
-    background-color: $green-accent;
+    background-color: $success-solid;
   }
 
   &--warning {
-    background-color: $star;
+    background-color: $warning-solid;
   }
 
   &--danger {
@@ -68,7 +68,7 @@
 }
 
 .progress__value {
-  @include technical-text($font-size-xs);
+  @include technical-text($font-size-caption);
 
   flex-shrink: 0;
   color: $text-2;
@@ -85,20 +85,20 @@
   }
 
   &__track {
-    stroke: $track;
+    stroke: $bg-inset;
   }
 
   &__fill {
-    stroke: $selected;
+    stroke: $primary;
     stroke-linecap: round;
-    transition: stroke-dashoffset $duration-normal $ease-out;
+    transition: stroke-dashoffset $duration-base $ease-standard;
 
     &--success {
-      stroke: $green-accent;
+      stroke: $success-solid;
     }
 
     &--warning {
-      stroke: $star;
+      stroke: $warning-solid;
     }
 
     &--danger {
@@ -124,7 +124,7 @@
   }
 
   &__label {
-    @include technical-text($font-size-xs);
+    @include technical-text($font-size-caption);
 
     position: absolute;
     inset: 0;

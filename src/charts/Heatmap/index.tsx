@@ -2,6 +2,7 @@
 
 import { memo, useCallback, useId, useMemo } from 'react';
 
+import { cssVar } from '@handijit/design';
 import { useUi } from '@handijit/ui';
 
 import { named } from '../../helpers/component.helper';
@@ -63,7 +64,7 @@ const Heatmap = ({
   rows,
   values,
   valueLabel,
-  tone = 'cat-1',
+  tone = 'chart-1',
   height = 280,
   width: fixedWidth,
   formatValue,
@@ -144,7 +145,7 @@ const Heatmap = ({
             style={
               cell.mix === null
                 ? undefined
-                : { fill: `color-mix(in srgb, ${color} ${cell.mix}%, var(--ui-surface))` }
+                : { fill: `color-mix(in srgb, ${color} ${cell.mix}%, ${cssVar('bg-surface')})` }
             }
           />
         ))}
@@ -172,7 +173,7 @@ const Heatmap = ({
             <stop
               offset="0%"
               style={{
-                stopColor: `color-mix(in srgb, ${color} ${MIN_MIX}%, var(--ui-surface))`,
+                stopColor: `color-mix(in srgb, ${color} ${MIN_MIX}%, ${cssVar('bg-surface')})`,
               }}
             />
             <stop offset="100%" style={{ stopColor: color }} />

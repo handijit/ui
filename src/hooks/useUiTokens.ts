@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from 'react';
 
+import { cssVarName, THEME_ATTRIBUTE, type TokenName } from '@handijit/design';
 import { isClient } from '@handijit/utils';
 
-import { THEME_ATTRIBUTE, THEME_STYLE_ID, TOKEN_PREFIX } from '../helpers/theme.helper';
-import { useUi } from '../theme/context';
-import type { UiToken } from '@/types/theme.type';
-
-/** Sunucuda ve ilk karede dönen değer: çizim kütüphaneleri boş dizeyi siyah boyuyor. */
+/** Returned on the server and in the first frame: drawing libraries paint an empty string black. */
 const FALLBACK = 'currentColor';
 
-const read = <TName extends UiToken>(names: readonly TName[]): Record<TName, string> => {
-  const style = getComputedStyle(document.documentElement);
+const read = <TName extends TokenName>(
+  names: readonly TName[],
+  element: Element,
+): Record<TName, string> => {
+  const style = getComputedStyle(element);
 
   return Object.fromEntries(
-    names.map(name => [name, style.getPropertyValue(`${TOKEN_PREFIX}${name}`).trim() || FALLBACK]),
+    names.map(name => [name, style.getPropertyValue(cssVarName(name)).trim() || FALLBACK]),
   ) as Record<TName, string>;
 };
 
@@ -23,22 +23,16 @@ const isSame = (first: Record<string, string>, second: Record<string, string>): 
   Object.keys(first).every(key => first[key] === second[key]);
 
 /**
- * Token'ların ÇÖZÜLMÜŞ değerleri — CSS değişkeni okuyamayan çizim kütüphaneleri için (recharts
- * `stroke`/`fill` prop'ları `var(--…)` kabul etmiyor).
- * Tema değiştiğinde (açık seçim, sistem tercihi, `UiProvider` ya da `initUi` ezmesi)
- * yeniden çizer.
- * ⚠ Sunucu çıktısında ve hidrasyondan önceki ilk karede her değer `currentColor`.
- * @example const colors = useUiTokens(['series-1', 'series-2', 'border']);
+ * The RESOLVED values of design tokens — for drawing libraries that cannot read a CSS variable
+ * (a canvas, an SVG attribute that rejects `var(--…)`).
+ * Names are the token names of `@handijit/design` without the `--hd-` prefix. The values follow the
+ * root theme (`data-theme`, the system setting, an inline override on `<html>`).
+ * ⚠ Every value is `currentColor` in the server output and in the first frame before hydration.
+ * @example const colors = useUiTokens(['chart-1', 'chart-2', 'border']);
  */
-const useUiTokens = <TName extends UiToken>(names: readonly TName[]): Record<TName, string> => {
-  /* Dizi her render'da yeni nesne olabilir; abonelik ADLARA bağlanır, kimliğe değil. */
+const useUiTokens = <TName extends TokenName>(names: readonly TName[]): Record<TName, string> => {
+  /* The array may be a new object on every render; the subscription follows the NAMES. */
   const key = names.join('|');
-  /*
-   * Sağlayıcının ezmesi ağaçtaki `<style>`da; tema ilk kez verildiğinde o etiket `<head>`e değil
-   * ağaca eklenir ve aşağıdaki gözlemci onu görmez. Bağlamdaki tema nesnesi yalnızca İÇERİK
-   * değişince yenilenir (sağlayıcının `themeKey`i).
-   */
-  const { theme } = useUi();
 
   const [values, setValues] = useState(
     () => Object.fromEntries(names.map(name => [name, FALLBACK])) as Record<TName, string>,
@@ -50,7 +44,7 @@ const useUiTokens = <TName extends UiToken>(names: readonly TName[]): Record<TNa
     const list = key.split('|') as TName[];
     const update = () =>
       setValues(previous => {
-        const next = read(list);
+        const next = read(list, document.documentElement);
         return isSame(previous, next) && Object.keys(previous).length === list.length
           ? previous
           : next;
@@ -58,17 +52,13 @@ const useUiTokens = <TName extends UiToken>(names: readonly TName[]): Record<TNa
 
     update();
 
-    /* Açık seçim ve satır içi ezme `<html>`de; `initUi` ezmesi `<head>`deki tek `<style>`da. */
     const observer = new MutationObserver(update);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: [THEME_ATTRIBUTE, 'style'],
+      attributeFilter: [THEME_ATTRIBUTE, 'style', 'class'],
     });
+    /* A stylesheet added later (the application's brand override) changes the values too. */
     observer.observe(document.head, { childList: true });
-
-    const overrides = document.getElementById(THEME_STYLE_ID);
-    if (overrides)
-      observer.observe(overrides, { characterData: true, childList: true, subtree: true });
 
     const query = window.matchMedia?.('(prefers-color-scheme: dark)');
     query?.addEventListener('change', update);
@@ -77,7 +67,7 @@ const useUiTokens = <TName extends UiToken>(names: readonly TName[]): Record<TNa
       observer.disconnect();
       query?.removeEventListener('change', update);
     };
-  }, [key, theme]);
+  }, [key]);
 
   return values;
 };

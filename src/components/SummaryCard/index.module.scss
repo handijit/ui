@@ -18,8 +18,8 @@
     width: 40px;
     height: 40px;
     flex-shrink: 0;
-    border-radius: $radius-sm;
-    background-color: $surface-2;
+    border-radius: $radius-xs;
+    background-color: $bg-raised;
     color: $text-2;
     font-size: $icon-md;
   }
@@ -32,7 +32,7 @@
   }
 
   &__title {
-    font-size: $font-size-base;
+    font-size: $font-size-body;
     font-weight: $weight-semibold;
     line-height: $leading-snug;
   }
@@ -47,7 +47,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      border-radius: $radius-lg;
+      border-radius: $radius-md;
     }
   }
 
@@ -62,7 +62,7 @@
 
   &__meta {
     position: relative;
-    z-index: $z-raised;
+    z-index: $z-sticky;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

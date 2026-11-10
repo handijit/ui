@@ -8,7 +8,7 @@
   gap: $space-2;
 
   &__current {
-    @include money($font-size-lg);
+    @include money($font-size-h4);
   }
 
   &__currency {
@@ -18,35 +18,35 @@
   }
 
   &__list {
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     color: $text-3;
     font-variant-numeric: tabular-nums;
     text-decoration-thickness: 1px;
   }
 
   &__discount {
-    font-size: $font-size-xs;
+    font-size: $font-size-caption;
     font-weight: $weight-bold;
-    color: $sale-fg;
-    background-color: $sale-bg;
+    color: $danger-on-solid;
+    background-color: $danger-solid;
     border-radius: $radius-xs;
     padding: 2px $space-1;
     line-height: $leading-none;
   }
 
   &--sm .price__current {
-    font-size: $font-size-base;
+    font-size: $font-size-body;
   }
 
   &--md .price__current {
-    font-size: $font-size-lg;
+    font-size: $font-size-h4;
   }
 
   &--lg .price__current {
-    font-size: $font-size-2xl;
+    font-size: $font-size-h2;
   }
 
   &--xl .price__current {
-    font-size: $font-size-3xl;
+    font-size: $font-size-h2;
   }
 }

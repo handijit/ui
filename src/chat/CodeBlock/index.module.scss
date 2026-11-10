@@ -1,13 +1,11 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
-// Sözdizimi token'ları sohbet girişinde yaşar: `:root` kuralları `chat.css`e iner (bkz. `tokens.ts`).
-@use '../../styles/syntax.generated' as *;
 
 .block {
   margin: 0.9em 0;
   border: 1px solid $border;
-  border-radius: $radius-lg;
-  background-color: $surface-inset;
+  border-radius: $radius-md;
+  background-color: $bg-inset;
   overflow: hidden;
 }
 
@@ -19,11 +17,11 @@
   min-height: 36px;
   padding-inline: $space-3 $space-1;
   border-bottom: 1px solid $border;
-  background-color: $surface-2;
+  background-color: $bg-raised;
 }
 
 .block__language {
-  @include technical-text($font-size-2xs);
+  @include technical-text($font-size-caption);
 
   color: $text-2;
   text-transform: lowercase;
@@ -35,7 +33,7 @@
   overflow: auto;
 
   @include custom-scrollbar;
-  @include focus-ring($ring-color, -2px);
+  @include focus-ring($focus, -2px);
 }
 
 .block__pre,
@@ -44,46 +42,47 @@
   padding: $space-3 $space-4;
   background: transparent !important;
   font-family: $font-mono;
-  font-size: $font-size-xs;
-  line-height: $leading-relaxed;
+  font-size: $font-size-caption;
+  line-height: $leading-normal;
   white-space: pre;
   tab-size: 2;
 }
 
-// Shiki çift tema çıktısı: renkler değişkende, hangisinin çizileceğine tema karar verir.
+// Shiki dual-theme output: both colours are in variables and the theme picks one. The design tokens
+// set `color-scheme` with every theme block, so `light-dark()` follows the root theme and a
+// `data-theme` island alike; a browser without it keeps the light colour.
 .block__highlighted :global(span) {
   color: var(--shiki-light);
-
-  @include for-dark {
-    color: var(--shiki-dark);
-  }
+  color: light-dark(var(--shiki-light), var(--shiki-dark));
 }
 
-// Yerleşik vurgulayıcı: her parça türü bir token. Yorum `text-3` + eğik (renk tek başına anlam
-// taşımaz), noktalama `text-2`, fark satırları durum aileleri (`+`/`-` öneki de anlamı taşıyor).
+// Built-in highlighter: every token kind maps to a semantic design token, so the colours follow the
+// theme and stay inside the measured text pairs. Comments are `text-2` + italic (colour alone never
+// carries meaning), punctuation `text-2`, diff lines the status families (the `+`/`-` prefix
+// carries the meaning too).
 .block__token--comment {
-  color: $text-3;
+  color: $text-2;
   font-style: italic;
 }
 
 .block__token--keyword {
-  color: $syntax-keyword;
+  color: $primary-text;
 }
 
 .block__token--string {
-  color: $syntax-string;
+  color: $success-fg;
 }
 
 .block__token--number {
-  color: $syntax-number;
+  color: $warning-fg;
 }
 
 .block__token--name {
-  color: $syntax-name;
+  color: $text;
 }
 
 .block__token--type {
-  color: $syntax-type;
+  color: $highlight-text;
 }
 
 .block__token--punctuation {
@@ -91,9 +90,9 @@
 }
 
 .block__token--inserted {
-  color: $ok-fg;
+  color: $success-fg;
 }
 
 .block__token--deleted {
-  color: $bad-fg;
+  color: $danger-fg;
 }

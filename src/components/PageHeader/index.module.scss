@@ -47,8 +47,8 @@
   }
 
   &__meta {
-    font-family: $font-ui;
-    font-size: $font-size-sm;
+    font-family: $font-body;
+    font-size: $font-size-small;
     font-weight: $weight-medium;
     color: $text-2;
     font-variant-numeric: tabular-nums;
@@ -56,7 +56,7 @@
   }
 
   &__description {
-    @include muted($font-size-base);
+    @include muted($font-size-body);
 
     margin: 0;
     max-width: $measure;

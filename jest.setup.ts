@@ -43,22 +43,3 @@ if (hasDom && !window.matchMedia)
       dispatchEvent: () => false,
     }),
   });
-
-/*
- * jsdom'un CSS ayrıştırıcısı `@layer`ı tanımıyor ve her tema ezmesinde "Could not parse CSS
- * stylesheet" basıyor; ezme 5.6.3'ten beri `@layer ui` içinde. Tarayıcıda geçerli bir kural —
- * yalnız bu ayrıştırma hatası susturulur, başka her hata görünür kalır.
- */
-if (hasDom) {
-  const consoleError = console.error.bind(console);
-
-  console.error = (...args: unknown[]) => {
-    /* Hata jsdom'un realm'inden geliyor: `instanceof Error` orada tutmuyor. */
-    const { message, detail } = (args[0] ?? {}) as { message?: unknown; detail?: unknown };
-    const isLayerParseError =
-      String(message).startsWith('Could not parse CSS stylesheet') &&
-      String(detail).startsWith('@layer');
-
-    if (!isLayerParseError) consoleError(...args);
-  };
-}

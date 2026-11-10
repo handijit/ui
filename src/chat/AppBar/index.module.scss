@@ -4,15 +4,15 @@
 .bar {
   position: sticky;
   top: 0;
-  z-index: $z-raised;
+  z-index: $z-sticky;
   display: flex;
   align-items: center;
   gap: $space-3;
   min-height: 56px;
   padding: $space-2 $space-5;
-  border-bottom: 1px solid $nav-line;
-  background-color: $nav-bg;
-  color: $nav-fg;
+  border-bottom: 1px solid $border;
+  background-color: $bg-surface;
+  color: $text;
 
   @include for-mobile {
     flex-wrap: wrap;
@@ -25,8 +25,8 @@
   align-items: center;
   gap: $space-2;
   flex-shrink: 0;
-  font-family: $font-heading;
-  font-size: $font-size-base;
+  font-family: $font-display;
+  font-size: $font-size-body;
   font-weight: $weight-semibold;
   letter-spacing: $tracking-snug;
 }

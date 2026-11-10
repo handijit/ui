@@ -30,27 +30,27 @@
   max-width: 420px;
 
   padding: $space-3;
-  border-radius: $radius-md;
-  background-color: $surface;
+  border-radius: $radius-sm;
+  background-color: $bg-surface;
   border: 1px solid $border;
-  box-shadow: $shadow-lg;
+  box-shadow: $shadow-2;
 
-  animation: $anim-fade-in-up $duration-normal $ease-out;
+  animation: $anim-fade-in-up $duration-base $ease-standard;
 
   @include reduced-motion {
     animation: none;
   }
 
   &--info {
-    border-inline-start: 3px solid $selected;
+    border-inline-start: 3px solid $primary;
   }
 
   &--success {
-    border-inline-start: 3px solid $green-accent;
+    border-inline-start: 3px solid $success-solid;
   }
 
   &--warning {
-    border-inline-start: 3px solid $star;
+    border-inline-start: 3px solid $warning-solid;
   }
 
   &--danger {
@@ -73,11 +73,11 @@
   }
 
   .toast--success & {
-    color: $green-accent;
+    color: $success-solid;
   }
 
   .toast--warning & {
-    color: $star;
+    color: $warning-solid;
   }
 
   .toast--danger & {
@@ -93,13 +93,13 @@
 }
 
 .toast__message {
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   font-weight: $weight-semibold;
   color: $text;
 }
 
 .toast__description {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-2;
   line-height: $leading-normal;
 }
@@ -109,21 +109,21 @@
   flex-shrink: 0;
   padding: $space-1 $space-2;
   border: none;
-  border-radius: $radius-sm;
+  border-radius: $radius-xs;
   background: none;
   cursor: pointer;
-  font-family: $font-ui;
-  font-size: $font-size-xs;
+  font-family: $font-body;
+  font-size: $font-size-caption;
   font-weight: $weight-semibold;
   color: $text;
   text-decoration: underline;
   text-underline-offset: 3px;
 
   &:hover {
-    background-color: $surface-2;
+    background-color: $bg-raised;
   }
 
-  @include focus-ring($ring-color, 1px);
+  @include focus-ring($focus, 1px);
 }
 
 .toast__close {

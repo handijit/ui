@@ -32,7 +32,7 @@
   padding-block: $space-1;
 
   @include custom-scrollbar;
-  @include focus-ring($ring-color, -2px);
+  @include focus-ring($focus, -2px);
 
   > * {
     scroll-snap-align: start;
@@ -61,15 +61,15 @@
   background-color: $border-strong;
   cursor: pointer;
   transition:
-    background-color $duration-fast $ease-out,
-    width $duration-fast $ease-out;
+    background-color $duration-fast $ease-standard,
+    width $duration-fast $ease-standard;
 
   &--active {
     width: 20px;
-    background-color: $selected;
+    background-color: $primary;
   }
 
-  @include focus-ring($ring-color, 2px);
+  @include focus-ring($focus, 2px);
 
   @include reduced-motion {
     transition: none;

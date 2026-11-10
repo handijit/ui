@@ -13,9 +13,9 @@
   margin: 0;
   padding: 0;
   border: none;
-  background-color: $surface;
+  background-color: $bg-surface;
   color: $text;
-  box-shadow: $shadow-xl;
+  box-shadow: $shadow-3;
   overflow: hidden;
 
   &--sm {
@@ -53,10 +53,10 @@
   }
 
   transition:
-    opacity $duration-normal $ease-out,
-    translate $duration-normal $ease-out,
-    overlay $duration-normal allow-discrete,
-    display $duration-normal allow-discrete;
+    opacity $duration-base $ease-standard,
+    translate $duration-base $ease-standard,
+    overlay $duration-base allow-discrete,
+    display $duration-base allow-discrete;
 
   &[open] {
     opacity: 1;
@@ -75,7 +75,7 @@
     }
   }
 
-  @include backdrop-transition($duration-normal);
+  @include backdrop-transition($duration-base);
 
   &::backdrop {
     background-color: $scrim;
@@ -107,7 +107,7 @@
   }
 
   &__title {
-    @include heading(base, $weight-semibold);
+    @include block-title;
 
     margin: 0;
   }

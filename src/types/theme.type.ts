@@ -1,5 +1,6 @@
+import type { ThemeName, ThemePreference } from '@handijit/design';
+
 import type { UiLinkComponent } from '@/types/link.type';
-import { LIGHT_THEME, METRIC_TOKENS } from '@/theme/tokens';
 
 /**
  * Sayı biçimlendiricileri: değere bağlı metinler dizeyle verilemez.
@@ -8,59 +9,17 @@ import { LIGHT_THEME, METRIC_TOKENS } from '@/theme/tokens';
 export type Formatter<TArgs extends unknown[]> = (...args: TArgs) => string;
 
 /**
- * Dışarıdan verilebilecek tema yapılandırması.
- * @example initUi({ theme: { light: { link: '#0a58ca', 'ring-color': '#0d6efd' }, dark: {…
+ * The user's CHOICE. `system` = no explicit choice, the operating system's setting is followed.
+ * The same union as `ThemePreference` of `@handijit/design`.
  */
-export type UiThemeConfig = Partial<{
-  light: UiThemeTokens;
-  dark: UiThemeTokens;
-  fonts: UiFonts;
-  /**
-   * Ölçü ezmeleri — yarıçap, boşluk, punto, süre.
-   * @example initUi({ theme: { metrics: { 'radius-md': '2px', 'radius-lg': '4px' } } });
-   */
-  metrics: UiMetrics;
-}>;
+export type UiColorPreference = ThemePreference;
 
-/** Yazı tipi ailesi sözleşmesi. */
-export type UiFonts = Partial<{
-  heading: string;
-  body: string;
-  mono: string;
-}>;
-
-/**
- * Kullanıcının SEÇİMİ. `system` = açık bir seçim yok, işletim sistemi tercihi izlenir
- * (`prefers-color-scheme`).
- */
-export type UiColorPreference = UiColorScheme | 'system';
-
-/** ÇÖZÜLMÜŞ tema — ekranda gerçekten hangisi çizili. */
-export type UiColorScheme = 'light' | 'dark';
-
-/** Bir temanın TAM eşlemesi. */
-export type UiResolvedTokens = Record<UiToken, string>;
-
-/** Bir temanın token → değer eşlemesi. */
-export type UiThemeTokens = Partial<Record<UiToken, string>>;
-
-/** Bilgi yoğunluğu. `default` vitrin, `compact` operasyon paneli. */
-export type UiDensity = 'default' | 'compact';
-
-/** Ölçü ezmeleri. */
-export type UiMetrics = Partial<Record<UiMetricToken, string>>;
-
-/** Ölçü token adları — `METRIC_TOKENS`ten türetilir. */
-export type UiMetricToken = keyof typeof METRIC_TOKENS;
-
-/** Token adları — `LIGHT_THEME`den türetilir, elle listelenmez. */
-export type UiToken = keyof typeof LIGHT_THEME;
+/** The RESOLVED theme — the one actually drawn. The same union as design's `ThemeName`. */
+export type UiColorScheme = ThemeName;
 
 export type UiContextValue = {
   /** Tüketicinin yönlendiricisi (`next/link`, `react-router`ın `Link`i…). */
   linkComponent?: UiLinkComponent;
-  /** Uygulanan tema ezmeleri. */
-  theme?: UiThemeConfig;
   /**
    * Arayüz metinleri.
    * ⚠ Referans bir dönem `theme/labels.ts`yi gösteriyordu; o dosya yalnızca tek satırlık bir başlık
@@ -226,15 +185,6 @@ export type UiLabels = Partial<{
     /** Beş puanın anlamı. */
     scale: Record<1 | 2 | 3 | 4 | 5, string>;
   }>;
-}>;
-
-export type InitUiOptions = Partial<{
-  /** Tema ve ölçü ezmeleri. */
-  theme: UiThemeConfig;
-  /** Başlangıç şeması. */
-  colorScheme: UiColorScheme;
-  /** Bilgi yoğunluğu. */
-  density: UiDensity;
 }>;
 
 export type UiThemeState = {

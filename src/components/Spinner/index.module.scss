@@ -4,8 +4,8 @@
 .spinner {
   display: inline-block;
   border-radius: $radius-pill;
-  border: 2px solid $track;
-  border-top-color: $selected;
+  border: 2px solid $bg-inset;
+  border-top-color: $primary;
   animation: $anim-spin $duration-spin linear infinite;
 
   &__label {
@@ -30,6 +30,6 @@
 
   @include reduced-motion {
     animation: none;
-    border-top-color: $selected;
+    border-top-color: $primary;
   }
 }

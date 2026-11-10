@@ -6,10 +6,10 @@
 
   align-items: center;
   text-align: center;
-  padding: $space-8 $space-5;
+  padding: $space-12 $space-5;
 
   @include for-mobile {
-    padding: $space-7 $space-4;
+    padding: $space-10 $space-4;
   }
 
   &__icon {
@@ -19,22 +19,22 @@
     width: 64px;
     height: 64px;
     border-radius: $radius-pill;
-    background-color: $surface-2;
+    background-color: $bg-raised;
     border: 1px solid $border;
     color: $text-2;
-    font-size: $font-size-2xl;
+    font-size: $font-size-h2;
     margin-bottom: $space-1;
   }
 
   &__title {
-    @include heading(lg);
+    @include heading(h4);
 
     margin: 0;
     text-wrap: balance;
   }
 
   &__description {
-    @include muted($font-size-sm);
+    @include muted($font-size-small);
 
     margin: 0;
     max-width: 48ch;
@@ -68,18 +68,18 @@
     }
 
     .empty__title {
-      @include heading(base);
+      @include block-title;
     }
   }
 }
 
 .empty--error {
   .empty__icon {
-    color: $bad-fg;
-    background-color: $bad-bg;
+    color: $danger-fg;
+    background-color: $danger-bg;
   }
 
   .empty__title {
-    color: $bad-fg;
+    color: $danger-fg;
   }
 }

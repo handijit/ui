@@ -1,6 +1,7 @@
 // SCSS API — `@use '@handijit/ui/scss' as ui;`
-// Tüketicinin token değişkenlerini ve mixin'leri KOPYALAMADAN almasının tek kapısı. Değişkenler
-// `var(--ui-…)` dizeleri: tema çalışma zamanında döner, derleme anında sabitlenmez.
-// ⚠ Buraya giren her ad bir SÜRÜM TAAHHÜDÜDÜR (bkz. CLAUDE.md "SCSS API").
+// The one door through which a consumer takes the variables and mixins without copying them. The
+// variables are `var(--hd-…)` strings pointing at the tokens of `@handijit/design`: the theme is
+// resolved at run time, nothing is fixed at compile time.
+// ⚠ Every name that enters here is a VERSION COMMITMENT (see CLAUDE.md, "SCSS API").
 @forward 'variables';
 @forward 'mixins';

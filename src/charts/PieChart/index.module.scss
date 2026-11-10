@@ -2,20 +2,20 @@
 
 // Ayırıcı yüzey renginde: iki temada da dilimleri ayırır.
 .slice {
-  stroke: $surface;
+  stroke: $bg-surface;
   stroke-linejoin: round;
 }
 
 .center__value {
   fill: $text;
-  font-family: $font-heading;
-  font-size: $font-size-xl;
+  font-family: $font-display;
+  font-size: $font-size-h3;
   font-weight: $weight-semibold;
   font-variant-numeric: tabular-nums;
 }
 
 .center__label {
   fill: $text-3;
-  font-family: $font-ui;
-  font-size: $font-size-xs;
+  font-family: $font-body;
+  font-size: $font-size-caption;
 }

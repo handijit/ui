@@ -8,14 +8,14 @@
   align-items: center;
   justify-content: center;
   border: 1px solid transparent;
-  border-radius: $radius-md;
+  border-radius: $radius-sm;
   background: none;
   cursor: pointer;
   color: $text-2;
   transition:
-    background-color $duration-fast $ease-out,
-    border-color $duration-fast $ease-out,
-    color $duration-fast $ease-out;
+    background-color $duration-fast $ease-standard,
+    border-color $duration-fast $ease-standard,
+    color $duration-fast $ease-standard;
 
   @include focus-ring;
 
@@ -52,13 +52,13 @@
   }
 
   &--ghost:hover:not(:disabled) {
-    background-color: $surface-2;
+    background-color: $bg-raised;
     color: $text;
   }
 
   &--outline {
     border-color: $border-strong;
-    background-color: $surface;
+    background-color: $bg-surface;
 
     &:hover:not(:disabled) {
       border-color: $text-3;
@@ -66,49 +66,54 @@
     }
 
     &:disabled {
-      background-color: $surface-2;
+      background-color: $bg-raised;
       border-color: $border;
     }
   }
 
   &--solid {
-    background-color: $action;
-    border-color: $action-line;
-    color: $on-action;
+    background-color: $primary;
+    border-color: $primary;
+    color: $on-primary;
 
     &:hover:not(:disabled) {
-      background-color: $action-hover;
+      background-color: $primary-hover;
     }
 
     &:disabled {
-      background-color: $action-soft;
+      background-color: $bg-disabled;
       border-color: transparent;
-      color: $on-action-soft;
+      color: $text-disabled;
     }
   }
 
-  &--cart {
-    background-color: $cart;
-    color: $on-cart;
+  // Coral: the conversion action only.
+  &--accent {
+    background-color: $accent;
+    color: $on-accent;
 
     &:hover:not(:disabled) {
-      background-color: $cart-hover;
+      background-color: $accent-hover;
+    }
+
+    &:active:not(:disabled) {
+      background-color: $accent-active;
     }
 
     &:disabled {
-      background-color: $cart-soft;
-      color: $on-cart;
+      background-color: $bg-disabled;
+      color: $text-disabled;
     }
   }
 
   &--danger {
     border-color: $border-strong;
-    background-color: $surface;
+    background-color: $bg-surface;
 
     &:hover:not(:disabled) {
       border-color: $danger-solid;
       color: $danger-solid;
-      background-color: $bad-bg;
+      background-color: $danger-bg;
     }
   }
 }

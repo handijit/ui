@@ -5,16 +5,17 @@
   display: inline-flex;
   align-items: center;
   gap: $space-1;
-  // Bileşen değişkenleri (6.0): rozet "etiket dili" (mono, büyük harf) tüketicide tek yerden.
-  font-family: var(--ui-badge-font, #{$font-ui});
-  font-size: $font-size-xs;
+  // Component variables: the "label language" of a badge (mono, uppercase) is set by the consumer in
+  // one place.
+  font-family: var(--ui-badge-font, #{$font-body});
+  font-size: $font-size-caption;
   font-weight: var(--ui-badge-weight, #{$weight-semibold});
   letter-spacing: var(--ui-badge-tracking, normal);
   text-transform: var(--ui-badge-transform, none);
   line-height: $leading-none;
   white-space: nowrap;
-  padding: 5px $space-2;
-  border-radius: var(--ui-badge-radius, #{$radius-sm});
+  padding: $space-1 $space-2;
+  border-radius: var(--ui-badge-radius, #{$radius-pill});
   border: 1px solid transparent;
 
   &__icon {
@@ -24,11 +25,17 @@
 }
 
 .badge--neutral {
-  &.badge--soft,
+  &.badge--soft {
+    background-color: var(--ui-badge-bg, #{$bg-raised});
+    border-color: var(--ui-badge-line, #{$border});
+    color: var(--ui-badge-fg, #{$text-2});
+  }
+
+  // The neutral solid is the inverse of the page: body text colour as the fill.
   &.badge--solid {
-    background-color: var(--ui-badge-bg, #{$off-bg});
-    border: 1px solid var(--ui-badge-line, #{$off-line});
-    color: var(--ui-badge-fg, #{$off-fg});
+    background-color: var(--ui-badge-bg, #{$text});
+    border-color: var(--ui-badge-line, #{$text});
+    color: var(--ui-badge-fg, #{$bg-surface});
   }
 
   &.badge--outline {
@@ -37,127 +44,41 @@
   }
 }
 
-.badge--success {
-  &.badge--soft,
-  &.badge--solid {
-    @include tint(success);
-  }
+// Status tones: `soft` is the tint triple (bg / line / fg), `solid` the filled pair, `outline` the
+// line and text alone.
+@each $tone in (success, warning, danger, info) {
+  .badge--#{$tone} {
+    &.badge--soft {
+      @include tint($tone);
+    }
 
-  &.badge--outline {
-    border-color: $ok-line;
-    color: $ok-fg;
-  }
-}
+    &.badge--solid {
+      background-color: var(--hd-#{$tone}-solid);
+      border-color: var(--hd-#{$tone}-solid);
+      color: var(--hd-#{$tone}-on-solid);
+    }
 
-.badge--danger {
-  &.badge--soft,
-  &.badge--solid {
-    @include tint(danger);
-  }
-
-  &.badge--outline {
-    border-color: $bad-line;
-    color: $bad-fg;
+    &.badge--outline {
+      border-color: var(--hd-#{$tone}-line);
+      color: var(--hd-#{$tone}-fg);
+    }
   }
 }
 
-.badge--warning {
-  &.badge--soft,
-  &.badge--solid {
-    @include tint(warning);
-  }
-
-  &.badge--outline {
-    border-color: $warn-line;
-    color: $warn-fg;
-  }
-}
-
-.badge--info {
-  &.badge--soft,
-  &.badge--solid {
-    @include tint(info);
-  }
-
-  &.badge--outline {
-    border-color: $border-strong;
-    color: $text;
-  }
-}
-
-.badge--oem {
-  &.badge--soft,
-  &.badge--solid {
-    @include tint(oem);
-  }
-
-  &.badge--outline {
-    border-color: $oem-line;
-    color: $oem-fg;
-  }
-}
-
-.badge--alt {
-  &.badge--soft,
-  &.badge--solid {
-    @include tint(alt);
-  }
-
-  &.badge--outline {
-    border-color: $alt-line;
-    color: $alt-fg;
-  }
-}
-
-.badge--sale {
-  &.badge--soft,
-  &.badge--solid {
-    background-color: $sale-bg;
-    border-color: $sale-bg;
-    color: $sale-fg;
-  }
-
-  &.badge--outline {
-    border-color: $sale-fg;
-    color: $sale-fg;
-  }
-}
-
-.badge--action {
+// Turquoise: a highlight or a live state. The fill never carries body text; `on-highlight` does.
+.badge--highlight {
   &.badge--soft {
-    background-color: $surface-2;
-    color: $text;
+    @include tint(highlight);
   }
 
   &.badge--solid {
-    background-color: $action;
-    border-color: $action-line;
-    color: $on-action;
+    background-color: $highlight;
+    border-color: $highlight;
+    color: $on-highlight;
   }
 
   &.badge--outline {
-    border-color: $border-strong;
-    color: $text;
-  }
-}
-
-// Gezinme etiketi: YEŞİL yalnızca metinde (bağlantı rengi). Dolu varyant mürekkep — yeşil dolgu
-// birincil eylemin işareti, bir etiketin değil.
-.badge--link {
-  &.badge--soft {
-    background-color: $surface-2;
-    border-color: $border;
-    color: $link;
-  }
-
-  &.badge--solid {
-    background-color: $selected;
-    border-color: $selected;
-    color: $on-selected;
-  }
-
-  &.badge--outline {
-    border-color: $link;
-    color: $link;
+    border-color: color-mix(in srgb, #{$highlight} 45%, transparent);
+    color: $highlight-text;
   }
 }

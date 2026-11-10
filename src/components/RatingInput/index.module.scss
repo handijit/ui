@@ -32,7 +32,7 @@
 
   &__legend {
     padding: 0;
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     font-weight: $weight-medium;
     color: $text-2;
   }
@@ -54,21 +54,21 @@
     color: $border;
     cursor: pointer;
     transition:
-      color $duration-fast $ease-out,
-      transform $duration-fast $ease-out;
+      color $duration-fast $ease-standard,
+      transform $duration-fast $ease-standard;
 
     &:hover {
       transform: scale(1.1);
     }
 
     &--filled {
-      color: $star;
+      color: $warning-solid;
     }
 
     &:focus-within {
       @include focus-ring-shape;
 
-      border-radius: $radius-sm;
+      border-radius: $radius-xs;
     }
 
     @include reduced-motion {
@@ -89,7 +89,7 @@
   }
 
   &__caption {
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     font-weight: $weight-medium;
     color: $text;
     min-height: 1.4em;

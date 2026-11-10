@@ -5,7 +5,7 @@
   position: relative;
   height: 10px;
   border-radius: $radius-pill;
-  background-color: $surface-2;
+  background-color: $bg-raised;
   overflow: hidden;
 
   @media (forced-colors: active) {
@@ -18,7 +18,7 @@
   inset-block: 0;
 
   // Komşu iki parça arasında 2 px boşluk — yan yana aynı aydınlıkta iki ton tek renk gibi okunuyordu.
-  box-shadow: inset -2px 0 0 $surface;
+  box-shadow: inset -2px 0 0 $bg-surface;
 
   @media (forced-colors: active) {
     background-color: CanvasText !important;
@@ -33,6 +33,6 @@
   background-color: $text;
 
   &--danger {
-    background-color: $bad-fg;
+    background-color: $danger-fg;
   }
 }

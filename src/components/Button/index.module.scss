@@ -9,22 +9,22 @@
   justify-content: center;
   gap: $space-2;
   border: 1px solid transparent;
-  // Bileşen değişkenleri (6.0): yarıçap, ağırlık, harf aralığı ve satır kırma tüketicide tek yerden
-  // ezilir; önceden her biri sınıf seçicili bir geçersiz kılma gerektiriyordu.
-  border-radius: var(--ui-button-radius, #{$radius-md});
-  font-family: $font-ui;
+  // Component variables: radius, weight, letter spacing and wrapping are overridden by the consumer
+  // in one place instead of a class-selector override each.
+  border-radius: var(--ui-button-radius, #{$radius-sm});
+  font-family: $font-body;
   font-weight: var(--ui-button-weight, #{$weight-semibold});
   line-height: $leading-none;
-  letter-spacing: var(--ui-button-tracking, -0.006em);
+  letter-spacing: var(--ui-button-tracking, normal);
   white-space: var(--ui-button-wrap, nowrap);
   cursor: pointer;
   text-decoration: none;
   transition:
-    background-color $duration-fast $ease-out,
-    border-color $duration-fast $ease-out,
-    color $duration-fast $ease-out,
-    box-shadow $duration-fast $ease-out,
-    transform $duration-instant $ease-out;
+    background-color $duration-fast $ease-standard,
+    border-color $duration-fast $ease-standard,
+    color $duration-fast $ease-standard,
+    box-shadow $duration-fast $ease-standard,
+    transform $duration-fast $ease-standard;
 
   @include focus-ring;
 
@@ -65,7 +65,7 @@
     align-items: center;
   }
 
-  // Pasif BAĞLANTI: düğme gibi `disabled` olamaz; tıklama ve imleç burada kesilir (bkz. index.tsx).
+  // A passive LINK cannot be `disabled` like a button; clicks and the cursor are cut here (index.tsx).
   &--inert {
     pointer-events: none;
   }
@@ -78,11 +78,11 @@
     cursor: progress;
   }
 
-  // Görsel 30 px; dokunma alanı `tap-target` örtüsüyle 44 px kalır.
+  // The visual height is below 44px on every size but large; `tap-target` keeps the hit area at 44px.
   &--xsmall {
     padding: $space-1 $space-3;
-    font-size: $font-size-xs;
-    min-height: 30px;
+    font-size: $font-size-caption;
+    min-height: 28px;
 
     .button__icon {
       font-size: $icon-xs;
@@ -94,9 +94,9 @@
   }
 
   &--small {
-    padding: $space-2 $space-3;
-    font-size: $font-size-sm;
-    min-height: 36px;
+    padding: $space-1 $space-3;
+    font-size: $font-size-small;
+    min-height: 32px;
 
     .button__icon {
       font-size: $icon-sm;
@@ -104,171 +104,168 @@
   }
 
   &--medium {
-    padding: $space-3 $space-5;
-    font-size: $font-size-sm;
-    min-height: $tap-target-size;
+    padding: $space-2 $space-4;
+    // Between the `small` and `body` roles (14px with the default scale), derived from both.
+    font-size: calc((#{$font-size-small} + #{$font-size-body}) / 2);
+    min-height: 40px;
   }
 
   &--large {
-    padding: $space-4 $space-6;
-    font-size: $font-size-base;
-    min-height: 52px;
+    padding: $space-3 $space-6;
+    font-size: $font-size-body;
+    min-height: 48px;
 
     .button__icon {
       font-size: $icon-lg;
     }
   }
 
+  // Cobalt: the one expected action of the screen.
   &--primary {
-    background-color: $action;
-    border-color: $action-line;
-    color: $on-action;
-    box-shadow: $shadow-xs;
+    background-color: $primary;
+    border-color: $primary;
+    color: $on-primary;
 
     &:hover:not(:disabled) {
-      background-color: $action-hover;
-      box-shadow: $shadow-sm;
+      background-color: $primary-hover;
+      border-color: $primary-hover;
     }
 
     &:active:not(:disabled) {
-      background-color: $action-active;
-      box-shadow: $shadow-xs;
-    }
-
-    &:disabled {
-      background-color: $action-soft;
-      border-color: transparent;
-      color: $on-action-soft;
+      background-color: $primary-active;
+      border-color: $primary-active;
     }
   }
 
-  &--cart {
-    background-color: $cart;
-    color: $on-cart;
-    box-shadow: $shadow-xs;
+  // Coral: the conversion action (download, try, subscribe) — and nothing else in the library.
+  &--accent {
+    background-color: $accent;
+    border-color: $accent;
+    color: $on-accent;
 
     &:hover:not(:disabled) {
-      background-color: $cart-hover;
-      box-shadow: $shadow-sm;
+      background-color: $accent-hover;
+      border-color: $accent-hover;
     }
 
     &:active:not(:disabled) {
-      background-color: $cart-active;
-      box-shadow: $shadow-xs;
-    }
-
-    &:disabled {
-      background-color: $cart-soft;
-      color: $on-cart;
+      background-color: $accent-active;
+      border-color: $accent-active;
     }
   }
 
   &--secondary {
-    background-color: $surface;
+    background-color: $bg-surface;
     border-color: $border-strong;
     color: $text;
 
     &:hover:not(:disabled) {
       border-color: $text-3;
-      background-color: $surface-2;
+      background-color: $bg-raised;
     }
 
     &:active:not(:disabled) {
-      background-color: $surface-3;
-    }
-
-    &:disabled {
-      background-color: $surface-2;
-      border-color: $border;
-      color: $text-3;
+      background-color: $bg-inset;
     }
   }
 
-  // Mürekkep çerçeve: SECONDARY'nin gri kenarlığından bir kademe vurgulu, birincil eylemin yeşilini
-  // taşımaz. 4.x'te rol yeşiliydi.
+  // Cobalt frame: an encouraged action that is not the primary one ("See all").
   &--outline {
     background-color: transparent;
-    border-color: $selected-line;
-    color: $text;
+    border-color: $primary;
+    color: $primary-text;
 
     &:hover:not(:disabled) {
-      background-color: $surface-2;
-      border-color: $selected-hover;
+      background-color: $primary-soft;
     }
 
     &:active:not(:disabled) {
-      background-color: $surface-3;
-      border-color: $selected-active;
-    }
-
-    &:disabled {
-      border-color: $border;
-      color: $text-3;
+      background-color: $primary-soft-hover;
     }
   }
 
-  &--dark {
-    background-color: $nav-bg-2;
-    border-color: $nav-line-strong;
-    color: $nav-fg;
-
-    &:hover:not(:disabled) {
-      border-color: $nav-fg-3;
-      background-color: $nav-hover;
-    }
-
-    @include focus-ring($ring-color);
-
-    &:disabled {
-      color: $nav-fg-3;
-    }
-  }
-
-  &--light {
-    background-color: $surface-2;
+  // Neutral fill: a secondary action inside a card.
+  &--soft {
+    background-color: $bg-raised;
     color: $text;
 
     &:hover:not(:disabled) {
-      background-color: $surface-3;
+      background-color: $bg-inset;
     }
 
-    &:disabled {
-      color: $text-3;
+    &:active:not(:disabled) {
+      background-color: $bg-inset;
+      border-color: $border-strong;
     }
   }
 
   &--ghost {
     background-color: transparent;
-    color: $text-2;
+    color: $primary-text;
 
     &:hover:not(:disabled) {
-      background-color: $surface-2;
-      color: $text;
+      background-color: $primary-soft;
     }
 
     &:active:not(:disabled) {
-      background-color: $surface-3;
-    }
-
-    &:disabled {
-      color: $text-3;
+      background-color: $primary-soft-hover;
     }
   }
 
   &--danger {
     background-color: $danger-solid;
-    color: $on-danger;
+    border-color: $danger-solid;
+    color: $danger-on-solid;
+
+    // The design has one danger fill; the pressed-in states are mixed from it.
+    &:hover:not(:disabled) {
+      background-color: color-mix(in oklab, #{$danger-solid} 88%, black);
+      border-color: color-mix(in oklab, #{$danger-solid} 88%, black);
+    }
+
+    &:active:not(:disabled) {
+      background-color: color-mix(in oklab, #{$danger-solid} 78%, black);
+      border-color: color-mix(in oklab, #{$danger-solid} 78%, black);
+    }
+  }
+
+  // An action on the brand band, which is deep cobalt in both themes.
+  &--on-band {
+    background-color: transparent;
+    border-color: $band-line-strong;
+    color: $band-text;
 
     &:hover:not(:disabled) {
-      background-color: $danger-solid-hover;
+      background-color: $band-line;
+      border-color: $band-text-2;
     }
 
-    @include focus-ring($danger-solid);
+    &:active:not(:disabled) {
+      background-color: $band-deep;
+    }
 
     &:disabled {
-      background-color: $off-bg;
-      color: $text-3;
+      background-color: transparent;
+      border-color: $band-line;
+      color: $band-line-strong;
     }
+  }
+
+  // One passive look for every variant on a theme surface: the fill withdraws, the text stays
+  // readable enough to recognise the action (`text-disabled` on `bg-disabled`).
+  &:disabled:not(.button--on-band) {
+    background-color: $bg-disabled;
+    border-color: transparent;
+    color: $text-disabled;
+  }
+
+  &--outline:disabled:not(.button--on-band),
+  &--ghost:disabled:not(.button--on-band) {
+    background-color: transparent;
+  }
+
+  &--outline:disabled:not(.button--on-band) {
+    border-color: $border;
   }
 }
 

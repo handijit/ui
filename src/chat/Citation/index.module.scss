@@ -4,7 +4,7 @@
 // Satır içi küçük işaret; dokunma alanı görsel kutudan büyük (`tap-target`).
 .citation {
   @include tap-target;
-  @include technical-text($font-size-2xs);
+  @include technical-text($font-size-caption);
 
   display: inline-flex;
   align-items: center;
@@ -14,15 +14,15 @@
   padding: 0 4px;
   border: 1px solid $border;
   border-radius: $radius-xs;
-  background-color: $surface-2;
-  color: $link;
+  background-color: $bg-raised;
+  color: $primary-text;
   line-height: 1.5;
   vertical-align: super;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    background-color: $surface-3;
+    background-color: $bg-inset;
   }
 
   @include focus-ring;
@@ -36,7 +36,7 @@
     cursor: default;
 
     &:hover {
-      background-color: $surface-2;
+      background-color: $bg-raised;
     }
   }
 }

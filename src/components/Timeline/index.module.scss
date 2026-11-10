@@ -39,30 +39,30 @@
   height: 24px;
   border-radius: $radius-pill;
   border: 2px solid $border-strong;
-  background-color: $surface;
-  color: $on-green;
-  font-size: $font-size-2xs;
-  z-index: $z-base;
+  background-color: $bg-surface;
+  color: $success-on-solid;
+  font-size: $font-size-caption;
+  z-index: $z-raised;
 
   .timeline__item--done & {
-    background-color: $green-accent;
-    border-color: $green-accent;
+    background-color: $success-solid;
+    border-color: $success-solid;
   }
 
   .timeline__item--current & {
-    border-color: $selected;
-    box-shadow: inset 0 0 0 3px $selected;
+    border-color: $primary;
+    box-shadow: inset 0 0 0 3px $primary;
   }
 
   .timeline__item--pending & {
     border-style: dashed;
-    background-color: $surface;
+    background-color: $bg-surface;
   }
 
   .timeline__item--failed & {
     background-color: $danger-solid;
     border-color: $danger-solid;
-    color: $on-danger;
+    color: $danger-on-solid;
   }
 
   @media (forced-colors: active) {
@@ -84,7 +84,7 @@
 }
 
 .timeline__title {
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   font-weight: $weight-semibold;
   color: $text;
 
@@ -94,18 +94,18 @@
   }
 
   .timeline__item--failed & {
-    color: $bad-fg;
+    color: $danger-fg;
   }
 }
 
 .timeline__time {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-3;
   font-variant-numeric: tabular-nums;
 }
 
 .timeline__description {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   line-height: $leading-normal;
   color: $text-2;
 }

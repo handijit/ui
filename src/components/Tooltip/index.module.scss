@@ -19,27 +19,27 @@
   max-width: min(280px, calc(100vw - #{$space-6}));
 
   padding: $space-2 $space-3;
-  border-radius: $radius-sm;
-  background-color: $nav-bg;
-  border: 1px solid $nav-line-strong;
-  box-shadow: $shadow-lg;
-  color: $nav-fg;
-  font-size: $font-size-xs;
+  border-radius: $radius-xs;
+  background-color: $bg-overlay;
+  border: 1px solid $border-strong;
+  box-shadow: $shadow-2;
+  color: $text;
+  font-size: $font-size-caption;
   font-weight: $weight-regular;
   line-height: $leading-normal;
   text-align: start;
 
   &--top {
-    animation: $anim-fade-in-up $duration-fast $ease-out;
+    animation: $anim-fade-in-up $duration-fast $ease-standard;
   }
 
   &--bottom {
-    animation: $anim-fade-in-down $duration-fast $ease-out;
+    animation: $anim-fade-in-down $duration-fast $ease-standard;
   }
 
   &--left,
   &--right {
-    animation: $anim-fade-in $duration-fast $ease-out;
+    animation: $anim-fade-in $duration-fast $ease-standard;
   }
 
   @include reduced-motion {

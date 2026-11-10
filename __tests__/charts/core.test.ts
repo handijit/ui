@@ -225,9 +225,9 @@ describe('palet, biçim, kenar boşluğu', () => {
   it('ton sırası dizinle döner; verilen ton kazanır', () => {
     expect(toneAt(0)).toBe(TONE_ORDER[0]);
     expect(toneAt(TONE_ORDER.length)).toBe(TONE_ORDER[0]);
-    expect(toneAt(2, 'series-1')).toBe('series-1');
-    expect(toneColor('cat-3')).toBe('var(--ui-cat-3)');
-    expect(toneColor('muted')).toBe('var(--ui-text-3)');
+    expect(toneAt(2, 'chart-1')).toBe('chart-1');
+    expect(toneColor('chart-3')).toBe('var(--hd-chart-3)');
+    expect(toneColor('muted')).toBe('var(--hd-text-3)');
   });
 
   it('sayı biçimi yerele göre; eksen kısa, ipucu tam', () => {
@@ -310,8 +310,8 @@ describe('kartezyen geometri', () => {
     ],
     xKey: 'x',
     series: [
-      { key: 'up', label: 'Artı', type: 'bar', tone: 'cat-1' },
-      { key: 'down', label: 'Eksi', type: 'bar', tone: 'cat-2' },
+      { key: 'up', label: 'Artı', type: 'bar', tone: 'chart-1' },
+      { key: 'down', label: 'Eksi', type: 'bar', tone: 'chart-2' },
     ],
     width: 400,
     height: 240,
@@ -356,7 +356,7 @@ describe('kartezyen geometri', () => {
           { x: 'a', up: 80 },
           { x: 'b', up: 90 },
         ],
-        series: [{ key: 'up', label: 'Artı', type: 'bar', tone: 'cat-1' }],
+        series: [{ key: 'up', label: 'Artı', type: 'bar', tone: 'chart-1' }],
       }),
     );
 
@@ -369,8 +369,8 @@ describe('kartezyen geometri', () => {
       input({
         orientation: 'horizontal',
         series: [
-          { key: 'up', label: 'Artı', type: 'bar', tone: 'cat-1' },
-          { key: 'down', label: 'Eksi', type: 'line', tone: 'cat-2' },
+          { key: 'up', label: 'Artı', type: 'bar', tone: 'chart-1' },
+          { key: 'down', label: 'Eksi', type: 'line', tone: 'chart-2' },
         ],
       }),
     );
@@ -388,7 +388,7 @@ describe('kartezyen geometri', () => {
           { x: 2, up: 4 },
           { x: 10, up: 2 },
         ],
-        series: [{ key: 'up', label: 'Artı', type: 'line', tone: 'cat-1' }],
+        series: [{ key: 'up', label: 'Artı', type: 'line', tone: 'chart-1' }],
       }),
     );
 
@@ -404,8 +404,8 @@ describe('kartezyen geometri', () => {
     const right = cartesianGeometry(
       input({
         series: [
-          { key: 'up', label: 'Artı', type: 'bar', tone: 'cat-1' },
-          { key: 'down', label: 'Oran', type: 'line', tone: 'cat-2', axis: 'right' },
+          { key: 'up', label: 'Artı', type: 'bar', tone: 'chart-1' },
+          { key: 'down', label: 'Oran', type: 'line', tone: 'chart-2', axis: 'right' },
         ],
       }),
     );

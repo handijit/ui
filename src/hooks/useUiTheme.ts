@@ -2,54 +2,67 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
+import { THEME_ATTRIBUTE } from '@handijit/design';
 import { isClient } from '@handijit/utils';
 
-import { THEME_ATTRIBUTE, THEME_SWITCHING_CLASS } from '../helpers/theme.helper';
+import {
+  applyThemePreference,
+  readActiveTheme,
+  readStoredPreference,
+  THEME_SWITCHING_CLASS,
+} from '../helpers/theme.helper';
 import type { UiColorPreference, UiColorScheme, UiThemeState } from '@/types/theme.type';
 
-/** Sistem tercihini okur. */
-const readSystemScheme = (): UiColorScheme =>
-  isClient() && window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-
-/** `<html>` üzerindeki AÇIK seçim; öznitelik yoksa `system`. */
-const readPreference = (): UiColorPreference => {
-  if (!isClient()) return 'system';
-
-  const attribute = document.documentElement.getAttribute(THEME_ATTRIBUTE);
-  return attribute === 'dark' || attribute === 'light' ? attribute : 'system';
-};
-
 /**
- * Açık/koyu seçimini okur ve değiştirir.
+ * Reads and changes the light/dark choice, on the `data-theme` contract of `@handijit/design`.
+ *
+ * The choice lives where the design boot script reads it (`localStorage["hd-theme"]`), so a choice
+ * made here survives a reload without a flash when `UiThemeScript` is in `<head>`.
  * @example const { scheme, toggle, isReady } = useUiTheme();
  */
 const useUiTheme = (): UiThemeState => {
   /*
-   * Ilk deger SABIT 'light': sunucuda `document` yok ve istemcideki gercek degeri ilk render'da
-   * okumak hidrasyon uyusmazligi uretiyordu (sunucu "light"…
+   * The first value is a constant: the server has no `document`, and reading the real value during
+   * the first client render produced a hydration mismatch. `isReady` tells when it is real.
    */
-  const [preference, setPreferenceState] = useState<UiColorPreference>('light');
-  const [systemScheme, setSystemScheme] = useState<UiColorScheme>('light');
+  const [preference, setPreferenceState] = useState<UiColorPreference>('system');
+  const [scheme, setSchemeState] = useState<UiColorScheme>('light');
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setPreferenceState(readPreference());
-    setSystemScheme(readSystemScheme());
+    if (!isClient()) return;
+
+    const sync = () => {
+      setPreferenceState(readStoredPreference());
+      setSchemeState(readActiveTheme());
+    };
+
+    sync();
     setIsReady(true);
+
+    /* The boot script, another hook instance or the application may write the attribute. */
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: [THEME_ATTRIBUTE],
+    });
+
+    /*
+     * Without the boot script nobody rewrites the attribute when the system setting changes; a page
+     * that follows the system has to be moved here.
+     */
+    const query = window.matchMedia?.('(prefers-color-scheme: dark)');
+    const handleSystemChange = () => {
+      if (readStoredPreference() === 'system') applyThemePreference('system');
+      sync();
+    };
+    query?.addEventListener('change', handleSystemChange);
+
+    return () => {
+      observer.disconnect();
+      query?.removeEventListener('change', handleSystemChange);
+    };
   }, []);
-
-  /* Sistem tercihi HER ZAMAN izlenir, `preference` ne olursa olsun. */
-  useEffect(() => {
-    if (!isClient() || !window.matchMedia) return;
-
-    const query = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = () => setSystemScheme(readSystemScheme());
-
-    query.addEventListener('change', handleChange);
-    return () => query.removeEventListener('change', handleChange);
-  }, []);
-
-  const scheme: UiColorScheme = preference === 'system' ? systemScheme : preference;
 
   const setScheme = useCallback((next: UiColorPreference) => {
     if (!isClient()) return;
@@ -57,17 +70,11 @@ const useUiTheme = (): UiThemeState => {
     const root = document.documentElement;
 
     root.classList.add(THEME_SWITCHING_CLASS);
-
-    /*
-     * `system` bir DEGER degil, degerin YOKLUGU: oznitelik silinir ve `_tokens.generated.scss`
-     * icindeki `:not([data-ui-theme])` sorgusu devreye girer.…
-     */
-    if (next === 'system') root.removeAttribute(THEME_ATTRIBUTE);
-    else root.setAttribute(THEME_ATTRIBUTE, next);
-
+    applyThemePreference(next);
     setPreferenceState(next);
+    setSchemeState(readActiveTheme());
 
-    /* Sinif BIR SONRAKI karede kaldirilir. */
+    /* The class comes off on the NEXT frame, after the new colours have been painted once. */
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => root.classList.remove(THEME_SWITCHING_CLASS));
     });

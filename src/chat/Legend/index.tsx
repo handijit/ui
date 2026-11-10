@@ -1,13 +1,15 @@
 import { type FC, memo } from 'react';
 
+import { cssVar } from '@handijit/design';
+
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';
 
 import styles from './index.module.scss';
 
-/** Kategorik paletin adları (`cat-*`, `series-*`) + bekleme/boşluk için `muted`. */
+/** The data series tokens of `@handijit/design` (`chart-1…6`) + `muted` for a waiting or empty part. */
 export type LegendTone =
-  'cat-1' | 'cat-2' | 'cat-3' | 'cat-4' | 'cat-5' | 'series-1' | 'series-2' | 'muted';
+  'chart-1' | 'chart-2' | 'chart-3' | 'chart-4' | 'chart-5' | 'chart-6' | 'muted';
 
 export type LegendItem = {
   id: string;
@@ -21,8 +23,8 @@ type Props = {
   testId?: string;
 };
 
-const swatchColor = (tone: LegendTone): string =>
-  tone === 'muted' ? 'var(--ui-text-3)' : `var(--ui-${tone})`;
+export const legendToneColor = (tone: LegendTone): string =>
+  cssVar(tone === 'muted' ? 'text-3' : tone);
 
 /**
  * Grafik lejantı — renk karesi + ad. Renk yalnızca kategorik paletten gelir (iki temanın üç
@@ -35,7 +37,7 @@ const Legend: FC<Props> = ({ items, className, testId }) => (
         <span
           aria-hidden
           className={styles.legend__swatch}
-          style={{ backgroundColor: swatchColor(item.tone) }}
+          style={{ backgroundColor: legendToneColor(item.tone) }}
         />
         {item.label}
       </li>

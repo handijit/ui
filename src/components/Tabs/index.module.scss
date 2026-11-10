@@ -16,8 +16,8 @@
     display: inline-flex;
     align-items: center;
     gap: $space-2;
-    font-family: $font-ui;
-    font-size: $font-size-sm;
+    font-family: $font-body;
+    font-size: $font-size-small;
     font-weight: var(--ui-tab-weight, #{$weight-medium});
     color: $text-2;
     background: none;
@@ -26,13 +26,13 @@
     cursor: pointer;
     white-space: nowrap;
     position: relative;
-    transition: color $duration-fast $ease-out;
+    transition: color $duration-fast $ease-standard;
 
     &:hover {
       color: $text;
     }
 
-    @include focus-ring($ring-color, -2px);
+    @include focus-ring($focus, -2px);
 
     &::before {
       content: '';
@@ -42,7 +42,7 @@
       height: 2px;
       background-color: transparent;
       border-radius: $radius-xs $radius-xs 0 0;
-      transition: background-color $duration-fast $ease-out;
+      transition: background-color $duration-fast $ease-standard;
     }
 
     &--active {
@@ -50,7 +50,7 @@
       font-weight: $weight-semibold;
 
       &::before {
-        background-color: $selected;
+        background-color: $primary;
       }
     }
 
@@ -64,10 +64,10 @@
   }
 
   &__count {
-    font-size: $font-size-2xs;
+    font-size: $font-size-caption;
     font-weight: $weight-semibold;
     color: $text-2;
-    background-color: $surface-3;
+    background-color: $bg-inset;
     border-radius: $radius-pill;
     padding: 1px $space-2;
     font-variant-numeric: tabular-nums;
@@ -75,9 +75,9 @@
 
   &__panel {
     &:focus-visible {
-      @include focus-ring-shape($ring-color, 4px);
+      @include focus-ring-shape($focus, 4px);
 
-      border-radius: $radius-sm;
+      border-radius: $radius-xs;
     }
   }
 }

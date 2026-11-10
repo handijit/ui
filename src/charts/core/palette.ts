@@ -1,26 +1,25 @@
+import { cssVar } from '@handijit/design';
+
 /**
- * SERİ RENKLERİ — ui kategorik paleti (`cat-1…5`, `series-2`). Her ton iki temanın üç
- * yüzeyinde ≥3:1 (`check:contrast`) ve iki ton arasında ΔE ≥ 8 (palet üreteci).
- * ⚠ Marka yeşilleri (çam, mint) seri rengi OLMAZ: yeşil eylemin rengi. `cat-3` orta aydınlıkta bir
- * kategori yeşili.
+ * SERIES COLOURS — the six data series tokens of `@handijit/design` (`chart-1…6`), which the design
+ * package gates for contrast against the theme surfaces and for distance from each other.
+ * `muted` is for a waiting or empty part.
  */
 export type ChartTone =
-  'cat-1' | 'cat-2' | 'cat-3' | 'cat-4' | 'cat-5' | 'series-1' | 'series-2' | 'muted';
+  'chart-1' | 'chart-2' | 'chart-3' | 'chart-4' | 'chart-5' | 'chart-6' | 'muted';
 
-/** Sıra: ilk iki seri en uzak iki ton (mavi, kil) — iki serili grafik en sık durum. */
 export const TONE_ORDER: readonly ChartTone[] = [
-  'cat-1',
-  'cat-2',
-  'cat-3',
-  'cat-4',
-  'cat-5',
-  'series-2',
+  'chart-1',
+  'chart-2',
+  'chart-3',
+  'chart-4',
+  'chart-5',
+  'chart-6',
 ];
 
-/** Verilmeyen tonu sıradan alır; altıdan fazla seride döner (lejant adı ayırt eder). */
+/** Takes a missing tone from the order; wraps after six series (the legend name tells them apart). */
 export const toneAt = (index: number, tone?: ChartTone): ChartTone =>
   tone ?? TONE_ORDER[index % TONE_ORDER.length];
 
-/** CSS rengi — tema değişince yeniden çizim gerekmez, değişken çözülür. */
-export const toneColor = (tone: ChartTone): string =>
-  tone === 'muted' ? 'var(--ui-text-3)' : `var(--ui-${tone})`;
+/** A CSS colour — the variable resolves when the theme changes, no redraw needed. */
+export const toneColor = (tone: ChartTone): string => cssVar(tone === 'muted' ? 'text-3' : tone);

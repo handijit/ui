@@ -51,7 +51,7 @@ const Histogram = ({
   bins: binCount,
   valueLabel,
   countLabel,
-  tone = 'cat-1',
+  tone = 'chart-1',
   height = 260,
   width: fixedWidth,
   formatValue,

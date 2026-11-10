@@ -20,12 +20,12 @@ $jump-height: 49px;
 
     @include sticky-below-header(0);
 
-    z-index: $z-base;
-    background-color: $page;
+    z-index: $z-raised;
+    background-color: $bg-page;
   }
 
   &__label {
-    @include heading(lg, $weight-bold);
+    @include heading(h4);
 
     margin: 0;
     min-width: 0;
@@ -34,10 +34,10 @@ $jump-height: 49px;
   &__link {
     color: inherit;
     text-decoration: none;
-    transition: color $duration-fast $ease-out;
+    transition: color $duration-fast $ease-standard;
 
     &:hover {
-      color: $link;
+      color: $primary-text;
       text-decoration: underline;
       text-underline-offset: 3px;
     }
@@ -48,7 +48,7 @@ $jump-height: 49px;
   }
 
   &__meta {
-    @include muted($font-size-xs);
+    @include muted($font-size-caption);
 
     font-variant-numeric: tabular-nums;
     flex-shrink: 0;
@@ -72,7 +72,7 @@ $jump-height: 49px;
 
   /* Eski 1px saydam kenarligin yeri dolguya katildi: satir kutusu ayni olcude kalir. */
   padding: calc(#{$space-2} + 1px) calc(#{$space-3} + 1px);
-  border-radius: $radius-md;
+  border-radius: $radius-sm;
   text-decoration: none;
   color: inherit;
 
@@ -80,8 +80,8 @@ $jump-height: 49px;
    * Hover yalniz zemini bir kademe degistirir (Durum katmanlari). Eskiden kenarlik ve bag rengi de
    * degisiyordu: satirin kutusunda bir cerceve belirip kayboluyor, ad yesile donuyordu.
    */
-  @include interactive-surface($rest: transparent, $hover: $surface-2, $pressed: $surface-3);
-  @include focus-ring($ring-color, -2px);
+  @include interactive-surface($rest: transparent, $hover: $bg-raised, $pressed: $bg-inset);
+  @include focus-ring($focus, -2px);
 
   @include reduced-motion {
     transition: none;
@@ -94,11 +94,11 @@ $jump-height: 49px;
     width: 32px;
     height: 32px;
     flex-shrink: 0;
-    border-radius: $radius-sm;
-    background-color: $surface-2;
+    border-radius: $radius-xs;
+    background-color: $bg-raised;
     color: $text-2;
-    font-family: $font-ui;
-    font-size: $font-size-sm;
+    font-family: $font-body;
+    font-size: $font-size-small;
     font-weight: $weight-semibold;
     overflow: hidden;
 
@@ -113,9 +113,9 @@ $jump-height: 49px;
     @include truncate;
 
     flex: 1;
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     color: $text;
-    transition: color $duration-fast $ease-out;
+    transition: color $duration-fast $ease-standard;
 
     @include reduced-motion {
       transition: none;
@@ -126,7 +126,7 @@ $jump-height: 49px;
     display: inline-flex;
     align-items: center;
     flex-shrink: 0;
-    font-size: $font-size-xs;
+    font-size: $font-size-caption;
     color: $text-2;
     font-variant-numeric: tabular-nums;
   }
@@ -136,8 +136,8 @@ $jump-height: 49px;
   @include scroll-row($space-1);
   @include sticky-below-header(0);
 
-  z-index: $z-raised;
-  background-color: $page;
+  z-index: $z-sticky;
+  background-color: $bg-page;
   border-bottom: 1px solid $border;
 
   &__link {
@@ -147,19 +147,19 @@ $jump-height: 49px;
     min-width: 32px;
     min-height: 32px;
     padding-inline: $space-2;
-    border-radius: $radius-sm;
-    font-family: $font-ui;
-    font-size: $font-size-sm;
+    border-radius: $radius-xs;
+    font-family: $font-body;
+    font-size: $font-size-small;
     font-weight: $weight-semibold;
     color: $text-2;
     text-decoration: none;
     transition:
-      background-color $duration-fast $ease-out,
-      color $duration-fast $ease-out;
+      background-color $duration-fast $ease-standard,
+      color $duration-fast $ease-standard;
 
     &:hover {
-      background-color: $surface-2;
-      color: $link;
+      background-color: $bg-raised;
+      color: $primary-text;
     }
 
     @include focus-ring;

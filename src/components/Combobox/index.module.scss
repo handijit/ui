@@ -22,8 +22,8 @@ $clear-size: 22px;
     }
 
     &--open {
-      border-color: $ring-color;
-      box-shadow: $ring;
+      border-color: $focus;
+      box-shadow: $focus-halo;
     }
 
     &--invalid {
@@ -69,15 +69,15 @@ $clear-size: 22px;
     flex-shrink: 0;
     cursor: pointer;
     transition:
-      background-color $duration-fast $ease-out,
-      color $duration-fast $ease-out;
+      background-color $duration-fast $ease-standard,
+      color $duration-fast $ease-standard;
 
     &:hover {
-      background-color: $surface-2;
+      background-color: $bg-raised;
       color: $text;
     }
 
-    @include focus-ring($ring-color, 1px);
+    @include focus-ring($focus, 1px);
 
     @include reduced-motion {
       transition: none;
@@ -89,7 +89,7 @@ $clear-size: 22px;
     font-size: $icon-sm;
     flex-shrink: 0;
     pointer-events: none;
-    transition: transform $duration-fast $ease-out;
+    transition: transform $duration-fast $ease-standard;
 
     &--open {
       transform: rotate(180deg);
@@ -102,12 +102,12 @@ $clear-size: 22px;
 
   &__panel {
     z-index: $z-dropdown;
-    background-color: $surface;
+    background-color: $bg-surface;
     border: 1px solid $border;
-    border-radius: $radius-lg;
-    box-shadow: $shadow-lg;
+    border-radius: $radius-md;
+    box-shadow: $shadow-2;
     overflow: hidden;
-    animation: $anim-fade-in-up $duration-fast $ease-out;
+    animation: $anim-fade-in-up $duration-fast $ease-standard;
 
     @include reduced-motion {
       animation: none;
@@ -119,7 +119,7 @@ $clear-size: 22px;
 
     padding: $space-2 $space-3;
     border-bottom: 1px solid $border;
-    background-color: $surface;
+    background-color: $bg-surface;
 
     :global(dialog) & {
       padding: $space-1 $space-2;
@@ -138,8 +138,8 @@ $clear-size: 22px;
     min-width: 0;
     border: none;
     background: none;
-    font-family: $font-ui;
-    font-size: $font-size-sm;
+    font-family: $font-body;
+    font-size: $font-size-small;
     color: $text;
     padding-block: $space-2;
 
@@ -174,7 +174,7 @@ $clear-size: 22px;
 
       .combobox__option {
         min-height: 48px;
-        font-size: $font-size-base;
+        font-size: $font-size-body;
       }
     }
   }
@@ -184,14 +184,14 @@ $clear-size: 22px;
     align-items: center;
     gap: $space-2;
     padding: $space-2 $space-3;
-    border-radius: $radius-sm;
+    border-radius: $radius-xs;
     cursor: pointer;
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     color: $text;
     min-height: 40px;
 
     &--active {
-      background-color: $surface-2;
+      background-color: $bg-raised;
     }
 
     &--selected {
@@ -216,7 +216,7 @@ $clear-size: 22px;
   }
 
   &__optionDescription {
-    @include technical-text($font-size-2xs);
+    @include technical-text($font-size-caption);
 
     color: $text-2;
   }
@@ -230,7 +230,7 @@ $clear-size: 22px;
   &__empty {
     padding: $space-5 $space-3;
     text-align: center;
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     color: $text-2;
   }
 }

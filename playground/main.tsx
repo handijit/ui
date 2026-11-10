@@ -1,26 +1,28 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { THEME_ATTRIBUTE } from '@handijit/design';
+
 import { UiProvider, LABELS, SCENARIOS } from './scenarios';
 import { SOLO_ONLY } from './solo';
 
-/* Kutuphanenin GLOBAL stil sayfasi ACIKCA import ediliyor. */
+/* The design tokens and fonts first — exactly what an application does — then the library's globals. */
+import '@handijit/design/tokens.css';
+import '@handijit/design/fonts.css';
 import '../src/styles/base.scss';
 
 import './playground.css';
 
-/** BİLEŞEN GALERİSİ. */
+/** COMPONENT GALLERY — every component in every state; `?theme=dark`, `?dir=rtl`, `?solo=<name>`. */
 
 const params = new URLSearchParams(window.location.search);
 
 const theme = params.get('theme') === 'dark' ? 'dark' : 'light';
 const direction = params.get('dir') === 'rtl' ? 'rtl' : 'ltr';
-const density = params.get('density') === 'compact' ? 'compact' : 'default';
 const solo = params.get('solo');
 
-document.documentElement.setAttribute('data-ui-theme', theme);
+document.documentElement.setAttribute(THEME_ATTRIBUTE, theme);
 document.documentElement.setAttribute('dir', direction);
-document.documentElement.setAttribute('data-ui-density', density);
 
 const entries = Object.entries(SCENARIOS).filter(([name]) =>
   solo ? name === solo : !SOLO_ONLY.includes(name as (typeof SOLO_ONLY)[number]),
@@ -32,18 +34,11 @@ const Gallery = () => (
       <header className="gallery__bar">
         <h1>ui — bileşen galerisi</h1>
         <nav>
-          <a
-            href={`?theme=${theme === 'dark' ? 'light' : 'dark'}&dir=${direction}&density=${density}`}
-          >
+          <a href={`?theme=${theme === 'dark' ? 'light' : 'dark'}&dir=${direction}`}>
             {theme === 'dark' ? 'Açık tema' : 'Koyu tema'}
           </a>
-          <a href={`?theme=${theme}&dir=${direction === 'rtl' ? 'ltr' : 'rtl'}&density=${density}`}>
+          <a href={`?theme=${theme}&dir=${direction === 'rtl' ? 'ltr' : 'rtl'}`}>
             {direction === 'rtl' ? 'LTR' : 'RTL'}
-          </a>
-          <a
-            href={`?theme=${theme}&dir=${direction}&density=${density === 'compact' ? 'default' : 'compact'}`}
-          >
-            {density === 'compact' ? 'Ferah' : 'Yoğun'}
           </a>
         </nav>
       </header>

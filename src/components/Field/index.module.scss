@@ -18,7 +18,7 @@
   }
 
   &__required {
-    color: $bad-fg;
+    color: $danger-fg;
   }
 
   &__srOnly {
@@ -26,7 +26,7 @@
   }
 
   &__hint {
-    font-size: $font-size-xs;
+    font-size: $font-size-caption;
     color: $text-2;
     line-height: $leading-normal;
     order: var(--ui-field-message-order, 0);
@@ -36,9 +36,9 @@
     display: flex;
     align-items: center;
     gap: $space-1;
-    font-size: $font-size-xs;
+    font-size: $font-size-caption;
     font-weight: $weight-medium;
-    color: $bad-fg;
+    color: $danger-fg;
     line-height: $leading-normal;
     margin: 0;
     order: var(--ui-field-message-order, 0);

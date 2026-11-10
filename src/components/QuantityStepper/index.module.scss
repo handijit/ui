@@ -5,8 +5,8 @@
   display: inline-flex;
   align-items: stretch;
   border: 1px solid $border;
-  border-radius: $radius-md;
-  background-color: $surface;
+  border-radius: $radius-sm;
+  background-color: $bg-surface;
   overflow: hidden;
 
   &__button {
@@ -18,10 +18,10 @@
     color: $text-2;
     cursor: pointer;
     padding-inline: $space-3;
-    transition: background-color $duration-fast $ease-out;
+    transition: background-color $duration-fast $ease-standard;
 
     &:hover:not(:disabled) {
-      background-color: $surface-3;
+      background-color: $bg-inset;
       color: $text;
     }
 
@@ -29,7 +29,7 @@
       @include passive-surface;
     }
 
-    @include focus-ring($ring-color, -2px);
+    @include focus-ring($focus, -2px);
 
     @include reduced-motion {
       transition: none;
@@ -37,7 +37,7 @@
   }
 
   &__input {
-    @include technical-text($font-size-sm);
+    @include technical-text($font-size-small);
 
     width: 40px;
     border: none;
@@ -53,7 +53,7 @@
 
     &:focus {
       outline: none;
-      background-color: $surface-2;
+      background-color: $bg-raised;
     }
 
     &:disabled {
@@ -69,7 +69,7 @@
 
     .stepper__input {
       width: 34px;
-      font-size: $font-size-xs;
+      font-size: $font-size-caption;
 
       @include for-touch {
         font-size: $font-size-control;

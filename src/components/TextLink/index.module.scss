@@ -8,9 +8,9 @@
   font-weight: $weight-medium;
   text-decoration: none;
   border-radius: $radius-xs;
-  transition: color $duration-fast $ease-out;
+  transition: color $duration-fast $ease-standard;
 
-  @include focus-ring($ring-color, 3px);
+  @include focus-ring($focus, 3px);
 
   @include reduced-motion {
     transition: none;
@@ -25,7 +25,7 @@
 
     font-size: 1em;
     flex-shrink: 0;
-    transition: transform $duration-fast $ease-out;
+    transition: transform $duration-fast $ease-standard;
 
     @include reduced-motion {
       transition: none;
@@ -47,18 +47,18 @@
   }
 
   &--sm {
-    font-size: $font-size-xs;
+    font-size: $font-size-caption;
   }
 
   &--md {
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
   }
 
   &--brand {
-    color: $link;
+    color: $primary-text;
 
     &:hover {
-      color: $link-hover;
+      color: $primary-text;
     }
   }
 

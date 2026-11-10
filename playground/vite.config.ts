@@ -10,7 +10,7 @@ export default defineConfig({
   resolve: {
     /* `chat` bileşenleri ana girişi paket adıyla alır; galeride kaynağa eşlenir. */
     alias: [
-      { find: /^@ahmetilhn\/ui$/, replacement: resolve(import.meta.dirname, '../src/index.ts') },
+      { find: /^@handijit\/ui$/, replacement: resolve(import.meta.dirname, '../src/index.ts') },
       { find: '@', replacement: resolve(import.meta.dirname, '../src') },
     ],
   },

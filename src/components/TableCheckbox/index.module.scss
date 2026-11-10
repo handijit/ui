@@ -6,7 +6,7 @@
   height: 18px;
   margin: 0;
   display: block;
-  accent-color: $selected;
+  accent-color: $primary;
   cursor: pointer;
 
   @include tap-target;

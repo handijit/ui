@@ -8,11 +8,11 @@
   cursor: pointer;
   padding: $space-2;
   margin-inline: calc(-1 * #{$space-2});
-  border-radius: $radius-sm;
-  transition: background-color $duration-fast $ease-out;
+  border-radius: $radius-xs;
+  transition: background-color $duration-fast $ease-standard;
 
   &:hover {
-    background-color: $surface-2;
+    background-color: $bg-raised;
   }
 
   &:has(.switch__input:focus-visible) {
@@ -52,11 +52,11 @@
   width: 40px;
   height: 24px;
   border-radius: $radius-pill;
-  background-color: $action-soft;
+  background-color: $bg-disabled;
   border: 1px solid transparent;
   transition:
-    background-color $duration-fast $ease-out,
-    border-color $duration-fast $ease-out;
+    background-color $duration-fast $ease-standard,
+    border-color $duration-fast $ease-standard;
 
   @include tap-target;
 
@@ -72,9 +72,9 @@
   width: 18px;
   height: 18px;
   border-radius: $radius-pill;
-  background-color: $surface;
-  box-shadow: $shadow-sm;
-  transition: translate $duration-fast $ease-out;
+  background-color: $bg-surface;
+  box-shadow: $shadow-1;
+  transition: translate $duration-fast $ease-standard;
 
   @include reduced-motion {
     transition: none;
@@ -82,7 +82,7 @@
 }
 
 .switch__input:checked + .switch__track {
-  background-color: $selected;
+  background-color: $primary;
 
   .switch__thumb {
     translate: 16px 0;
@@ -98,7 +98,7 @@
  * temada kulpla (`surface`) ayni aydinlikta.
  */
 .switch__input:disabled + .switch__track {
-  background-color: $track;
+  background-color: $bg-inset;
   border-color: $border;
 }
 
@@ -140,11 +140,11 @@
 }
 
 .switch__label {
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   color: $text;
 }
 
 .switch__hint {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-2;
 }

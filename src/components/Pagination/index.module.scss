@@ -43,20 +43,20 @@
     min-width: 40px;
     height: 40px;
     padding-inline: $space-2;
-    font-family: $font-heading;
-    font-size: $font-size-sm;
+    font-family: $font-display;
+    font-size: $font-size-small;
     font-weight: $weight-semibold;
     font-variant-numeric: tabular-nums;
     color: $text-2;
-    background-color: $surface;
+    background-color: $bg-surface;
     border: 1px solid $border;
-    border-radius: $radius-md;
+    border-radius: $radius-sm;
     cursor: pointer;
     text-decoration: none;
     transition:
-      border-color $duration-fast $ease-out,
-      color $duration-fast $ease-out,
-      background-color $duration-fast $ease-out;
+      border-color $duration-fast $ease-standard,
+      color $duration-fast $ease-standard,
+      background-color $duration-fast $ease-standard;
 
     &:hover:not(:disabled) {
       border-color: $border-strong;
@@ -78,19 +78,19 @@
     min-height: 40px;
     padding: 0;
     padding-inline: $space-2;
-    font-family: $font-heading;
-    font-size: $font-size-sm;
+    font-family: $font-display;
+    font-size: $font-size-small;
     font-weight: $weight-semibold;
     font-variant-numeric: tabular-nums;
     letter-spacing: normal;
     color: $text-2;
-    background-color: $surface;
+    background-color: $bg-surface;
     border: 1px solid $border;
-    border-radius: $radius-md;
+    border-radius: $radius-sm;
 
     &:hover:not(:disabled) {
       border-color: $border-strong;
-      background-color: $surface;
+      background-color: $bg-surface;
       color: $text;
     }
 
@@ -101,15 +101,15 @@
   }
 
   & &__page--active {
-    background-color: $selected;
-    border-color: $selected;
-    color: $on-selected;
+    background-color: $primary;
+    border-color: $primary;
+    color: $on-primary;
 
     &:hover:not(:disabled),
     &:active:not(:disabled) {
-      background-color: $selected-hover;
-      border-color: $selected-hover;
-      color: $on-selected;
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+      color: $on-primary;
     }
   }
 

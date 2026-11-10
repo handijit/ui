@@ -71,7 +71,7 @@ const Button = /*#__PURE__*/ forwardRef<HTMLButtonElement, Props>(
 
     const classNames = cx(
       styles.button,
-      styles[`button--${variant.toLowerCase()}`],
+      styles[`button--${variant.toLowerCase().replace('_', '-')}`],
       styles[`button--${size.toLowerCase()}`],
       shape === 'pill' && styles['button--pill'],
       isFullWidth && styles['button--full'],

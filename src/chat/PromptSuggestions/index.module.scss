@@ -15,22 +15,22 @@
   min-height: $tap-target-size;
   padding: $space-3 $space-4;
   border: 1px solid $border;
-  border-radius: $radius-lg;
+  border-radius: $radius-md;
   color: $text;
   font: inherit;
   text-align: start;
   cursor: pointer;
 
-  @include interactive-surface($rest: $surface, $hover: $surface-2, $pressed: $surface-3);
+  @include interactive-surface($rest: $bg-surface, $hover: $bg-raised, $pressed: $bg-inset);
   @include focus-ring;
 }
 
 .card__label {
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   font-weight: $weight-medium;
 }
 
 .card__description {
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-2;
 }

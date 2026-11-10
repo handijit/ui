@@ -6,8 +6,8 @@
   align-items: flex-start;
   gap: $space-3;
   padding: $space-4;
-  border-radius: $radius-md;
-  font-size: $font-size-sm;
+  border-radius: $radius-sm;
+  font-size: $font-size-small;
 
   &__icon {
     display: inline-flex;
@@ -16,7 +16,7 @@
     width: 28px;
     height: 28px;
     flex-shrink: 0;
-    border-radius: $radius-sm;
+    border-radius: $radius-xs;
     font-size: $icon-lg;
   }
 
@@ -29,8 +29,8 @@
   }
 
   &__title {
-    font-family: $font-ui;
-    font-size: $font-size-sm;
+    font-family: $font-body;
+    font-size: $font-size-small;
     font-weight: $weight-semibold;
     color: inherit;
   }

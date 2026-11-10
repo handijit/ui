@@ -280,7 +280,7 @@ describe('içerik', () => {
       <SegmentBar
         label="Bileşim"
         max={100}
-        segments={[{ id: 'a', label: 'Önek 40', tone: 'cat-1', value: 40 }]}
+        segments={[{ id: 'a', label: 'Önek 40', tone: 'chart-1', value: 40 }]}
         markers={[{ id: 'm', at: 80, label: 'Bütçe 80' }]}
       />,
     );

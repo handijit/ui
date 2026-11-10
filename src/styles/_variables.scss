@@ -1,17 +1,212 @@
-@forward 'colors.generated';
-@forward 'metrics.generated';
+// SCSS names for the tokens of `@handijit/design`.
+//
+// Nothing in this file holds a colour, a size or a duration of its own: every theme-aware value is a
+// `var(--hd-*)` reference, so the consuming application decides the values by loading
+// `@handijit/design/tokens.css` once. `__tests__/styles/design-contract.test.ts` fails when a name
+// below points at a custom property the installed design package does not define.
+//
+// ⚠ The values are `var()` references: they cannot go through Sass colour functions (`darken`,
+// `rgba`). Mix in CSS instead: `color-mix(in srgb, #{$primary} 20%, transparent)`.
 
-$tracking-logo: 0.13em;
-$tracking-tight: -0.022em;
-$tracking-snug: -0.011em;
+// --- Surfaces, lines, text ---
+$bg-page: var(--hd-bg-page);
+$bg-surface: var(--hd-bg-surface);
+$bg-raised: var(--hd-bg-raised);
+$bg-inset: var(--hd-bg-inset);
+$bg-overlay: var(--hd-bg-overlay);
+$bg-disabled: var(--hd-bg-disabled);
+$border: var(--hd-border);
+$border-strong: var(--hd-border-strong);
+$text: var(--hd-text);
+$text-2: var(--hd-text-2);
+$text-3: var(--hd-text-3);
+$text-disabled: var(--hd-text-disabled);
+
+// --- Cobalt: primary action, link, selection, focus ---
+$primary: var(--hd-primary);
+$primary-hover: var(--hd-primary-hover);
+$primary-active: var(--hd-primary-active);
+$on-primary: var(--hd-on-primary);
+$primary-soft: var(--hd-primary-soft);
+$primary-soft-hover: var(--hd-primary-soft-hover);
+$primary-line: var(--hd-primary-line);
+$primary-text: var(--hd-primary-text);
+$focus: var(--hd-focus);
+$selection-bg: var(--hd-selection-bg);
+
+// --- Coral: the conversion button and nothing else ---
+$accent: var(--hd-accent);
+$accent-hover: var(--hd-accent-hover);
+$accent-active: var(--hd-accent-active);
+$on-accent: var(--hd-on-accent);
+$accent-soft: var(--hd-accent-soft);
+$accent-text: var(--hd-accent-text);
+
+// --- Turquoise: highlight and live state; a fill, never body text ---
+$highlight: var(--hd-highlight);
+$on-highlight: var(--hd-on-highlight);
+$highlight-soft: var(--hd-highlight-soft);
+$highlight-text: var(--hd-highlight-text);
+
+// --- Status ---
+$success-bg: var(--hd-success-bg);
+$success-fg: var(--hd-success-fg);
+$success-line: var(--hd-success-line);
+$success-solid: var(--hd-success-solid);
+$success-on-solid: var(--hd-success-on-solid);
+$warning-bg: var(--hd-warning-bg);
+$warning-fg: var(--hd-warning-fg);
+$warning-line: var(--hd-warning-line);
+$warning-solid: var(--hd-warning-solid);
+$warning-on-solid: var(--hd-warning-on-solid);
+$danger-bg: var(--hd-danger-bg);
+$danger-fg: var(--hd-danger-fg);
+$danger-line: var(--hd-danger-line);
+$danger-solid: var(--hd-danger-solid);
+$danger-on-solid: var(--hd-danger-on-solid);
+$info-bg: var(--hd-info-bg);
+$info-fg: var(--hd-info-fg);
+$info-line: var(--hd-info-line);
+$info-solid: var(--hd-info-solid);
+$info-on-solid: var(--hd-info-on-solid);
+
+// --- Data series ---
+$chart-1: var(--hd-chart-1);
+$chart-2: var(--hd-chart-2);
+$chart-3: var(--hd-chart-3);
+$chart-4: var(--hd-chart-4);
+$chart-5: var(--hd-chart-5);
+$chart-6: var(--hd-chart-6);
+
+// --- Brand band: deep cobalt in both themes ---
+$band-bg: var(--hd-band-bg);
+$band-deep: var(--hd-band-deep);
+$band-line: var(--hd-band-line);
+$band-line-strong: var(--hd-band-line-strong);
+$band-text: var(--hd-band-text);
+$band-text-2: var(--hd-band-text-2);
+
+// --- Inverse surface: dark in both themes (tooltip, terminal output, code badge) ---
+// Static slate steps, so the block does not flip with the theme the way a `bg-*` role does.
+$inverse-bg: var(--hd-slate-900);
+$inverse-bg-2: var(--hd-slate-800);
+$inverse-line: var(--hd-slate-700);
+$inverse-text: var(--hd-slate-50);
+$inverse-text-2: var(--hd-slate-300);
+$inverse-danger: var(--hd-danger-300);
+
+// --- Elevation ---
+$shadow-1: var(--hd-shadow-1);
+$shadow-2: var(--hd-shadow-2);
+$shadow-3: var(--hd-shadow-3);
+// A sheet rises from the bottom edge, so its shadow falls upwards; built from the theme's own shadow
+// colour and strength.
+$shadow-up: 0 -12px 32px -12px rgb(var(--hd-shadow-color) / calc(var(--hd-shadow-alpha) * 2));
+$scrim: var(--hd-scrim);
+
+// The soft halo a text field shows around its focused border, next to the focus outline colour.
+$focus-halo: 0 0 0 3px color-mix(in srgb, var(--hd-focus) 32%, transparent);
+$danger-halo: 0 0 0 3px color-mix(in srgb, var(--hd-danger-solid) 28%, transparent);
+
+// --- Typography ---
+$font-display: var(--hd-font-display);
+$font-body: var(--hd-font-body);
+$font-mono: var(--hd-font-mono);
+
+$weight-regular: var(--hd-font-weight-regular);
+$weight-medium: var(--hd-font-weight-medium);
+$weight-semibold: var(--hd-font-weight-semibold);
+$weight-bold: var(--hd-font-weight-bold);
+
+// One size per design type role. The `type` mixin applies a whole role (size, line height, weight,
+// letter spacing, stretch); these are for controls that only need the size.
+$font-size-caption: var(--hd-type-caption-size);
+$font-size-small: var(--hd-type-small-size);
+$font-size-body: var(--hd-type-body-size);
+$font-size-lead: var(--hd-type-lead-size);
+$font-size-h4: var(--hd-type-h4-size);
+$font-size-h3: var(--hd-type-h3-size);
+$font-size-h2: var(--hd-type-h2-size);
+$font-size-h1: var(--hd-type-h1-size);
+$font-size-display: var(--hd-type-display-size);
+$font-size-code: var(--hd-type-code-size);
+
+// iOS Safari zooms the page when a focused field is smaller than 16px; text entry never goes below.
+$font-size-control: #{'max(16px, var(--hd-type-body-size))'};
+
+$type-roles: display, h1, h2, h3, h4, lead, body, small, caption, code;
+
+$leading-none: 1;
+$leading-tight: var(--hd-type-h2-line-height);
+$leading-snug: var(--hd-type-h4-line-height);
+$leading-normal: var(--hd-type-body-line-height);
+
+$tracking-tight: var(--hd-type-h2-letter-spacing);
+$tracking-snug: var(--hd-type-h4-letter-spacing);
+// Uppercase overlines and table headings; the design roles carry no uppercase tracking.
 $tracking-wide: 0.045em;
 
-$weight-regular: 400;
-$weight-medium: 500;
-$weight-semibold: 600;
-$weight-bold: 700;
+// --- Spacing: step × 4px ---
+$space-0: var(--hd-space-0);
+$space-1: var(--hd-space-1);
+$space-2: var(--hd-space-2);
+$space-3: var(--hd-space-3);
+$space-4: var(--hd-space-4);
+$space-5: var(--hd-space-5);
+$space-6: var(--hd-space-6);
+$space-8: var(--hd-space-8);
+$space-10: var(--hd-space-10);
+$space-12: var(--hd-space-12);
+$space-16: var(--hd-space-16);
+$space-20: var(--hd-space-20);
+$space-24: var(--hd-space-24);
 
-$font-steps: 2xs, xs, sm, base, body, lg, xl, 2xl, 3xl, 4xl;
+// --- Radii ---
+$radius-xs: var(--hd-radius-xs);
+$radius-sm: var(--hd-radius-sm);
+$radius-md: var(--hd-radius-md);
+$radius-lg: var(--hd-radius-lg);
+$radius-pill: var(--hd-radius-pill);
+
+// --- Motion ---
+// The design package turns the three durations into ~0 under `prefers-reduced-motion`.
+$duration-fast: var(--hd-duration-fast);
+$duration-base: var(--hd-duration-base);
+$duration-slow: var(--hd-duration-slow);
+$ease-standard: var(--hd-ease-standard);
+$ease-enter: var(--hd-ease-enter);
+$ease-exit: var(--hd-ease-exit);
+
+// Looping animations have no design token (a loop is not a transition); `reduced-motion` stops them.
+$duration-spin: 700ms;
+$duration-shimmer: 1400ms;
+$duration-pulse: 1600ms;
+
+// --- Layers ---
+$z-base: var(--hd-z-base);
+$z-raised: var(--hd-z-raised);
+$z-sticky: var(--hd-z-sticky);
+$z-dropdown: var(--hd-z-dropdown);
+$z-overlay: var(--hd-z-overlay);
+$z-modal: var(--hd-z-modal);
+$z-popover: var(--hd-z-popover);
+$z-toast: var(--hd-z-toast);
+$z-tooltip: var(--hd-z-tooltip);
+
+// --- Breakpoints ---
+// Media queries cannot read custom properties, so these are the design values as numbers; the
+// contract test compares them with `breakpoints` from `@handijit/design`.
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+
+// --- Library metrics (not theme values) ---
+$icon-xs: 14px;
+$icon-sm: 16px;
+$icon-md: 18px;
+$icon-lg: 20px;
+$icon-xl: 24px;
 
 $measure: 68ch;
 $measure-narrow: 56ch;
@@ -20,27 +215,16 @@ $desktop-padding: 32px;
 $tablet-padding: 24px;
 $mobile-padding: 16px;
 
-$container-max-width: 1360px;
+$container-max-width: $breakpoint-xl;
 $container-narrow: 880px;
 $container-split: 1000px;
 $container-prose: 720px;
-
 $sidebar-width: 272px;
 
+// WCAG 2.5.5: the smallest area a finger hits reliably.
 $tap-target-size: 44px;
 
-$breakpoint-mobile: 640px;
-$breakpoint-tablet-portrait: 768px;
-$breakpoint-tablet: 1024px;
-$breakpoint-desktop: 1360px;
-
-$z-base: 1;
-$z-raised: 10;
-$z-dropdown: 200;
-
-$z-tooltip: 450;
-$z-toast: 500;
-
+// --- Shared animations (keyframes live in `base.css`) ---
 $anim-shimmer: var(--ui-anim-shimmer);
 $anim-spin: var(--ui-anim-spin);
 $anim-fade-in-up: var(--ui-anim-fade-in-up);

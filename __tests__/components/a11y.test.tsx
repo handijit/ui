@@ -111,7 +111,7 @@ const COLUMNS: ui.DataTableColumn[] = [
 const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   UiProvider: { default: <UiProvider>içerik</UiProvider> },
   /* Görünür bir şey çizmez; sunucu çıktısındaki betik ilk boyamadan önce çalışır. */
-  UiThemeScript: { default: <UiThemeScript storageKey="theme" /> },
+  UiThemeScript: { default: <UiThemeScript /> },
 
   Button: {
     default: <Button>Kaydet</Button>,

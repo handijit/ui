@@ -16,7 +16,7 @@
   overflow: visible;
   // Dokunmatikte grafiğin üzerinde sürüklemek sayfayı yatay KAYDIRMAZ, dikey kaydırma serbest.
   touch-action: pan-y;
-  border-radius: $radius-sm;
+  border-radius: $radius-xs;
 
   @include focus-ring;
 }
@@ -27,7 +27,7 @@
 
 .chart__tooltip {
   position: absolute;
-  z-index: $z-raised;
+  z-index: $z-sticky;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -35,11 +35,11 @@
   max-width: 260px;
   padding: $space-2 $space-3;
   border: 1px solid $border;
-  border-radius: $radius-md;
-  background-color: $surface;
-  box-shadow: $shadow-lg;
+  border-radius: $radius-sm;
+  background-color: $bg-surface;
+  box-shadow: $shadow-2;
   color: $text;
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   pointer-events: none;
   translate: 0 -50%;
 }
@@ -96,10 +96,10 @@
   gap: $space-2;
   padding: 2px $space-2;
   border: 0;
-  border-radius: $radius-sm;
+  border-radius: $radius-xs;
   color: $text-2;
   font: inherit;
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   cursor: pointer;
 
   @include interactive-surface;

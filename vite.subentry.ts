@@ -43,6 +43,7 @@ export const defineSubEntry = (name: 'chat' | 'charts'): UserConfig =>
           'react',
           'react-dom',
           'react/jsx-runtime',
+          '@handijit/design',
           '@handijit/utils',
           'react-bootstrap-icons',
         ],

@@ -6,8 +6,8 @@
   padding: 0;
   list-style: none;
   border: 1px solid $border;
-  border-radius: $radius-lg;
-  background-color: $surface;
+  border-radius: $radius-md;
+  background-color: $bg-surface;
   // Kapsayıcı blok: içindeki gizli metin (`visually-hidden`) kabın dışına taşmaz.
   position: relative;
   overflow: hidden;
@@ -50,18 +50,18 @@
   border: 0;
   color: $text;
   font: inherit;
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
   text-align: start;
   text-decoration: none;
   cursor: pointer;
 
   @include interactive-surface;
-  @include focus-ring($ring-color, -2px);
+  @include focus-ring($focus, -2px);
 
   // Seçili: kenarlık + zemin BİRLİKTE (mürekkep).
   &--selected {
-    background-color: $selected-tint;
-    box-shadow: inset 3px 0 0 $selected-line;
+    background-color: $primary-soft;
+    box-shadow: inset 3px 0 0 $primary-line;
   }
 
   &--muted {
@@ -70,7 +70,7 @@
 }
 
 .item__start {
-  @include technical-text($font-size-xs);
+  @include technical-text($font-size-caption);
 
   flex-shrink: 0;
   color: $text-2;
@@ -88,7 +88,7 @@
 
 .item__end {
   flex-shrink: 0;
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
   color: $text-3;
   font-variant-numeric: tabular-nums;
 }

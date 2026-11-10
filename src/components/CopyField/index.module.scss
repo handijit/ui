@@ -9,11 +9,11 @@
   min-width: 0;
 
   &--sm .copy__code {
-    @include technical-text($font-size-xs);
+    @include technical-text($font-size-caption);
   }
 
   &--md .copy__code {
-    @include technical-text($font-size-sm);
+    @include technical-text($font-size-small);
   }
 
   &__code {
@@ -40,25 +40,25 @@
     font-size: $icon-sm;
     cursor: pointer;
     transition:
-      color $duration-fast $ease-out,
-      background-color $duration-fast $ease-out;
+      color $duration-fast $ease-standard,
+      background-color $duration-fast $ease-standard;
 
     &:hover {
       color: $text;
-      background-color: $surface-2;
+      background-color: $bg-raised;
     }
 
-    @include focus-ring($ring-color, -1px);
+    @include focus-ring($focus, -1px);
 
     @include reduced-motion {
       transition: none;
     }
 
     &--done {
-      color: $green-accent;
+      color: $success-solid;
 
       &:hover {
-        color: $green-accent;
+        color: $success-solid;
       }
     }
   }

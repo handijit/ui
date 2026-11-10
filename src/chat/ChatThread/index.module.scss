@@ -21,7 +21,7 @@ $column: 768px;
   overscroll-behavior: contain;
 
   @include custom-scrollbar;
-  @include focus-ring($ring-color, -2px);
+  @include focus-ring($focus, -2px);
 }
 
 .thread__column {
@@ -47,15 +47,15 @@ $column: 768px;
 .thread__dock {
   position: relative;
   padding-top: $space-3;
-  background: linear-gradient(to bottom, transparent, $page $space-5);
+  background: linear-gradient(to bottom, transparent, $bg-page $space-5);
 }
 
 // Yöne bağımsız ortalama (RTL'de `translate: -50%` ters yöne kayıyordu).
 .thread__latest {
   position: absolute;
-  inset-block-start: calc(-1 * #{$space-8});
+  inset-block-start: calc(-1 * #{$space-12});
   inset-inline: 0;
   margin-inline: auto;
-  box-shadow: $shadow-md;
-  background-color: $surface;
+  box-shadow: $shadow-2;
+  background-color: $bg-surface;
 }

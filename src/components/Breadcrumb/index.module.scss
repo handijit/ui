@@ -9,7 +9,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: $font-size-xs;
+  font-size: $font-size-caption;
 
   @include for-tablet-portrait {
     @include scroll-row($space-1);
@@ -28,10 +28,10 @@
   &__link {
     color: $text-2;
     text-decoration: none;
-    transition: color $duration-fast $ease-out;
+    transition: color $duration-fast $ease-standard;
 
     &:hover {
-      color: $link;
+      color: $primary-text;
       text-decoration: underline;
     }
 

@@ -15,16 +15,16 @@
   gap: $space-2;
   padding: $space-2 $space-2 $space-2 $space-4;
   border: 1px solid $border-strong;
-  border-radius: $radius-xl;
-  background-color: $surface;
-  box-shadow: $shadow-sm;
+  border-radius: $radius-lg;
+  background-color: $bg-surface;
+  box-shadow: $shadow-1;
   transition:
-    border-color $duration-fast $ease-out,
-    box-shadow $duration-fast $ease-out;
+    border-color $duration-fast $ease-standard,
+    box-shadow $duration-fast $ease-standard;
 
   &:focus-within {
-    border-color: $ring-color;
-    box-shadow: $ring;
+    border-color: $focus;
+    box-shadow: $focus-halo;
   }
 
   &--disabled {
@@ -56,6 +56,6 @@
 
 .prompt__hint {
   text-align: center;
-  font-size: $font-size-2xs;
+  font-size: $font-size-caption;
   color: $text-3;
 }

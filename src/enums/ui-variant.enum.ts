@@ -1,21 +1,21 @@
-/** Düğme ve eylem varyantları. */
+/** Button variants. */
 enum UIVariant {
-  /** Ekranın tek beklenen eylemi: çam dolgu (koyu temada mint sınırla). Bir ekranda TEK. */
+  /** The one expected action of the screen: cobalt fill. One per screen. */
   PRIMARY = 'PRIMARY',
-  /** Dönüşüm eylemi — ve yalnızca o. */
-  CART = 'CART',
-  /** Nötr ikincil eylem: gri kenarlık, koyu metin ("Vazgeç"). */
+  /** The conversion action (download, try, subscribe): coral fill — and only that. */
+  ACCENT = 'ACCENT',
+  /** Neutral secondary action: grey border, body text ("Cancel"). */
   SECONDARY = 'SECONDARY',
-  /** Mürekkep çerçeveli eylem — teşvik edilen ama birincil olmayan gezinme ("Tümünü gör"). */
+  /** Cobalt frame — an encouraged navigation that is not the primary action ("See all"). */
   OUTLINE = 'OUTLINE',
-  /** Vurgu bandı içindeki eylem: bandın kendi yüzey merdivenini kullanır. */
-  DARK = 'DARK',
-  /** Nötr yüzey dolgusu; kart içi ikincil eylem. */
-  LIGHT = 'LIGHT',
-  /** Zeminsiz eylem: araç çubuğu ve satır içi ikincil işler. */
+  /** Neutral fill; a secondary action inside a card. */
+  SOFT = 'SOFT',
+  /** No surface: toolbar and inline secondary actions, in the link colour. */
   GHOST = 'GHOST',
-  /** Yıkıcı eylem: silme onayı. */
+  /** Destructive action: a delete confirmation. */
   DANGER = 'DANGER',
+  /** An action on the brand band (deep cobalt in both themes). */
+  ON_BAND = 'ON_BAND',
 }
 
 export default UIVariant;

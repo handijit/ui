@@ -5,13 +5,13 @@
 .terminal {
   margin: 0;
   padding: $space-3 $space-4;
-  border: 1px solid $shell-line;
-  border-radius: $radius-md;
-  background-color: $shell;
-  color: $on-shell;
+  border: 1px solid $inverse-line;
+  border-radius: $radius-sm;
+  background-color: $inverse-bg;
+  color: $inverse-text;
   font-family: $font-mono;
-  font-size: $font-size-xs;
-  line-height: $leading-relaxed;
+  font-size: $font-size-caption;
+  line-height: $leading-normal;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   // Kapsayıcı blok: stderr'in gizli öneki kabın dışına taşmaz.
@@ -19,20 +19,20 @@
   overflow-y: auto;
 
   @include custom-scrollbar;
-  @include focus-ring($on-shell, -2px);
+  @include focus-ring($inverse-text, -2px);
 }
 
 .terminal__command {
-  color: $on-shell;
+  color: $inverse-text;
   font-weight: $weight-semibold;
 }
 
 .terminal__prompt {
-  color: $on-shell-2;
+  color: $inverse-text-2;
 }
 
 .terminal__stderr {
-  color: $on-shell-danger;
+  color: $inverse-danger;
 }
 
 .terminal__srOnly {

@@ -10,18 +10,18 @@
   // MÜREKKEP yüzey, iki temada aynı: teknik bir kod etiketi bir EYLEM değil. 4.x'te birincil
   // eylemin çam dolgusunu taşıyordu ve açık temada `action-line` = `action` olduğu için "kopyalandı"
   // simgesi ile odak halkası dolguyla aynı renkteydi (1:1, görünmüyordu).
-  background-color: $shell;
-  color: $on-shell;
+  background-color: $inverse-bg;
+  color: $inverse-text;
 
-  border: 1px solid $shell-line;
-  border-radius: $radius-sm;
+  border: 1px solid $inverse-line;
+  border-radius: $radius-xs;
 
   &--xs {
     padding: 1px $space-1;
     border-radius: $radius-xs;
 
     .badge__code {
-      @include technical-text($font-size-2xs);
+      @include technical-text($font-size-caption);
 
       letter-spacing: 0.02em;
     }
@@ -31,7 +31,7 @@
     padding: $space-1 $space-2;
 
     .badge__code {
-      @include technical-text($font-size-sm);
+      @include technical-text($font-size-small);
     }
   }
 
@@ -39,7 +39,7 @@
     padding: $space-1 $space-3;
 
     .badge__code {
-      @include technical-text($font-size-lg);
+      @include technical-text($font-size-h4);
     }
   }
 
@@ -47,16 +47,16 @@
     padding: $space-2 $space-4;
 
     .badge__code {
-      @include technical-text($font-size-2xl);
+      @include technical-text($font-size-h2);
     }
   }
 
   // Etkileşimli kod: hover zemini BİR kademe (mürekkep merdiveninde), dolgu satırın tamamı.
   &--interactive {
-    transition: background-color $duration-fast $ease-out;
+    transition: background-color $duration-fast $ease-standard;
 
     &:has(.badge__action:hover) {
-      background-color: $shell-2;
+      background-color: $inverse-bg-2;
     }
 
     .badge__code {
@@ -81,7 +81,7 @@
     text-decoration: none;
     cursor: pointer;
 
-    @include focus-ring($on-shell, 2px);
+    @include focus-ring($inverse-text, 2px);
   }
 
   &__code {
@@ -106,16 +106,16 @@
     border: none;
     border-radius: $radius-xs;
     background: none;
-    color: $on-shell-2;
+    color: $inverse-text-2;
     font-size: $icon-sm;
     cursor: pointer;
-    transition: color $duration-fast $ease-out;
+    transition: color $duration-fast $ease-standard;
 
     &:hover {
-      color: $on-shell;
+      color: $inverse-text;
     }
 
-    @include focus-ring($on-shell, 1px);
+    @include focus-ring($inverse-text, 1px);
 
     @include reduced-motion {
       transition: none;
@@ -123,10 +123,10 @@
 
     // Durumu SİMGE taşır (kopyala → tik); renk tek başına anlam taşımaz.
     &--done {
-      color: $on-shell;
+      color: $inverse-text;
 
       &:hover {
-        color: $on-shell;
+        color: $inverse-text;
       }
     }
   }

@@ -20,19 +20,19 @@
   }
 
   &--success {
-    color: $ok-fg;
+    color: $success-fg;
   }
 
   &--warning {
-    color: $warn-fg;
+    color: $warning-fg;
   }
 
   &--danger {
-    color: $bad-fg;
+    color: $danger-fg;
   }
 
   &--pulsing {
-    animation: $anim-pulse $duration-pulse $ease-out infinite;
+    animation: $anim-pulse $duration-pulse $ease-standard infinite;
 
     @include reduced-motion {
       animation: none;

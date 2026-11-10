@@ -223,8 +223,8 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         label="Bağlam bileşimi"
         max={100}
         segments={[
-          { id: 'a', label: 'Önek · 40', tone: 'cat-1', value: 40 },
-          { id: 'b', label: 'Harita · 20', tone: 'cat-2', value: 20 },
+          { id: 'a', label: 'Önek · 40', tone: 'chart-1', value: 40 },
+          { id: 'b', label: 'Harita · 20', tone: 'chart-2', value: 20 },
         ]}
         markers={[{ id: 'budget', at: 80, label: 'Bütçe 80', tone: 'danger' }]}
       />
@@ -235,7 +235,7 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         max={10}
         segments={[
           { id: 'w', label: 'Bekleme 0-2 sn', tone: 'muted', from: 0, to: 2 },
-          { id: 's', label: 'Akış 2-6 sn', tone: 'series-1', from: 2, to: 6 },
+          { id: 's', label: 'Akış 2-6 sn', tone: 'chart-1', from: 2, to: 6 },
         ]}
       />
     ),
@@ -254,8 +254,8 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     default: (
       <Legend
         items={[
-          { id: 'prefix', label: 'Önek', tone: 'cat-1' },
-          { id: 'map', label: 'Harita', tone: 'cat-2' },
+          { id: 'prefix', label: 'Önek', tone: 'chart-1' },
+          { id: 'map', label: 'Harita', tone: 'chart-2' },
           { id: 'wait', label: 'Bekleme', tone: 'muted' },
         ]}
       />

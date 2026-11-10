@@ -19,13 +19,13 @@
   }
 
   &__title {
-    @include heading(xl);
+    @include heading(h3);
 
     margin: 0;
   }
 
   &__description {
-    font-size: $font-size-sm;
+    font-size: $font-size-small;
     color: $text-2;
     line-height: $leading-normal;
     max-width: $measure;
@@ -37,10 +37,10 @@
   }
 
   &--sm .header__title {
-    font-size: $font-size-lg;
+    font-size: $font-size-h4;
   }
 
   &--lg .header__title {
-    font-size: $font-size-2xl;
+    font-size: $font-size-h2;
   }
 }

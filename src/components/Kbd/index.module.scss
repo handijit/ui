@@ -15,16 +15,16 @@
 
 .kbd__joiner {
   padding-inline: 2px;
-  font-size: $font-size-2xs;
+  font-size: $font-size-caption;
   color: $text-3;
 }
 
 .kbd__key {
-  @include technical-text($font-size-2xs);
+  @include technical-text($font-size-caption);
 
   padding: 2px $space-1;
   border: 1px solid $border;
   border-radius: $radius-xs;
-  background-color: $surface-2;
+  background-color: $bg-raised;
   color: $text-2;
 }

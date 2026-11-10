@@ -6,7 +6,7 @@
   grid-template-columns: minmax(96px, max-content) minmax(0, 1fr);
   gap: $space-2 $space-4;
   margin: 0;
-  font-size: $font-size-sm;
+  font-size: $font-size-small;
 
   @include for-mobile {
     grid-template-columns: minmax(0, 1fr);
@@ -33,7 +33,7 @@
   min-width: 0;
 
   &--technical {
-    @include technical-text($font-size-xs);
+    @include technical-text($font-size-caption);
 
     overflow-wrap: anywhere;
   }

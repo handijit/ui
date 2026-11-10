@@ -9,8 +9,8 @@ import { compileString } from 'sass';
 /*
  * SCSS API — `@use '@handijit/ui/scss' as ui;` tüketicide derlenir ve HİÇBİR KURAL basmaz.
  *
- * ⚠ Modül değişken ve mixin taşır, CSS değil: `:root` token kuralları `styles.css`te. Bir
- * `@use` kural bassaydı her tüketici dosyası onları yeniden üretirdi (hanration'da ~60 modül).
+ * ⚠ Modül değişken ve mixin taşır, CSS değil: token kuralları `@handijit/design/tokens.css`te. Bir
+ * `@use` kural bassaydı her tüketici dosyası onları yeniden üretirdi.
  * Ad kümesinin sözleşmesi `scripts/api-baseline.scss.txt`te (`check:api`).
  */
 const STYLES = resolve(__dirname, '../../src/styles');
@@ -25,14 +25,12 @@ describe('SCSS API', () => {
 
   it("değişkenler çalışma zamanı token'ı — tema derleme anında sabitlenmez", () => {
     expect(compile('.a { color: ui.$text; padding: ui.$space-3; }')).toContain(
-      'color: var(--ui-text)',
+      'color: var(--hd-text)',
     );
   });
 
   it('kırılma noktaları kütüphanenin kendi değerleri (tüketicide kopyalanıp kayıyordu)', () => {
-    const css = compile(
-      '@media (max-width: ui.$breakpoint-tablet-portrait) { .a { display: none; } }',
-    );
+    const css = compile('@media (max-width: ui.$breakpoint-md) { .a { display: none; } }');
 
     expect(css).toContain('768px');
   });

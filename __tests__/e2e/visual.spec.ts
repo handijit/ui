@@ -40,13 +40,6 @@ for (const theme of THEMES) {
       await expect(page).toHaveScreenshot(`rtl-${theme}.png`, { fullPage: false });
     });
 
-    test(`yoğun kip — ${theme}`, async ({ page }) => {
-      await page.goto(`/?theme=${theme}&density=compact`);
-      await page.evaluate(() => document.fonts.ready);
-
-      await expect(page).toHaveScreenshot(`compact-${theme}.png`, { fullPage: false });
-    });
-
     test(`zorlanmış renk kipi — ${theme}`, async ({ page }) => {
       await page.emulateMedia({ forcedColors: 'active', colorScheme: theme });
       await page.goto(`/?theme=${theme}`);

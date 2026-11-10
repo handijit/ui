@@ -553,6 +553,10 @@ kırmızı. Düzeltme taban çizgisini **bayt bayt** geri getiriyor — güncell
 gerekmedi. ⚠ `ızgara` testi ilk uyuşmazlıkta DURUR ve yalnızca tek bir bileşen
 bildirir — arkasındaki bayat tabanları göstermez. 5.0 ve 5.3'teki toplu
 yenilemelerden sonra masaüstü ve mobil görsel süit **yeşil** (40/40).
+2.0: the theme changed every pixel, so all 480 baselines were regenerated
+(`--update-snapshots=all`, the pinned Chromium of `npm run test:device:install`) and the four
+compact-density shots were removed with the density; the suite is 40/40 again. `test:visual` and
+`test:device` are NOT part of `verify` or CI: run them by hand after a visual change.
 ⚠ `--update-snapshots=changed` küçük farkı YENİDEN YAZMAZ: eşik
 `maxDiffPixelRatio: 0.002`, yani iki küçük yazının kalktığı bir değişiklik eşiğin
 altında kalıp eski taban dosyada durur (ölçüldü: radar ölçek sayıları). Küçük

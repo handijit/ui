@@ -80,7 +80,7 @@ $jump-height: 49px;
    * Hover yalniz zemini bir kademe degistirir (Durum katmanlari). Eskiden kenarlik ve bag rengi de
    * degisiyordu: satirin kutusunda bir cerceve belirip kayboluyor, ad yesile donuyordu.
    */
-  @include interactive-surface($rest: transparent, $hover: $bg-raised, $pressed: $bg-inset);
+  @include interactive-surface;
   @include focus-ring($focus, -2px);
 
   @include reduced-motion {

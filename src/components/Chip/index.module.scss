@@ -108,25 +108,25 @@
     }
   }
 
-  // Seçili: kenarlık + zemin BİRLİKTE, MÜREKKEP. 4.x'te rol yeşiliydi; seçim bir eylem değil.
+  // Selected: the cobalt frame, the soft cobalt fill and the cobalt label TOGETHER.
   &--selected {
-    border-color: var(--ui-chip-selected-line, #{$primary-line});
-    color: var(--ui-chip-selected-fg, #{$text});
+    border-color: var(--ui-chip-selected-line, #{$primary});
+    color: var(--ui-chip-selected-fg, #{$primary-text});
     background-color: var(--ui-chip-selected-bg, #{$primary-soft});
     font-weight: var(--ui-chip-selected-weight, #{$weight-semibold});
 
     .chip__icon {
-      color: var(--ui-chip-selected-fg, #{$text});
+      color: var(--ui-chip-selected-fg, #{$primary-text});
     }
 
     .chip__count {
-      color: var(--ui-chip-selected-fg, #{$text-2});
+      color: var(--ui-chip-selected-fg, #{$primary-text});
     }
 
     &:hover:not(:disabled) {
       border-color: var(--ui-chip-selected-line, #{$primary-hover});
-      color: var(--ui-chip-selected-fg, #{$text});
-      background-color: var(--ui-chip-selected-bg, #{$primary-soft});
+      color: var(--ui-chip-selected-fg, #{$primary-text});
+      background-color: var(--ui-chip-selected-bg, #{$primary-soft-hover});
     }
 
     /* Pasif secili cip rol rengini birakir; secimi KENARLIK tasir. */

@@ -13,15 +13,15 @@
   padding: $space-6 $space-4;
   border: 2px dashed $border-strong;
   border-radius: $radius-md;
-  background-color: $bg-inset;
+  background-color: $bg-raised;
   cursor: pointer;
   transition:
     border-color $duration-fast $ease-standard,
     background-color $duration-fast $ease-standard;
 
   &:hover {
-    border-color: $border-strong;
-    background-color: $bg-raised;
+    border-color: $primary;
+    background-color: $primary-soft;
   }
 
   &:has(.upload__input:focus-visible) {

@@ -33,7 +33,8 @@
   overflow: auto;
 
   @include custom-scrollbar;
-  @include focus-ring($focus, -2px);
+  // The body is a well: the ring is drawn with the stronger colour (`focus` is 2.95:1 here).
+  @include focus-ring($focus-inset, -2px);
 }
 
 .block__pre,

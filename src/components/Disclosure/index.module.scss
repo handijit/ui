@@ -43,7 +43,7 @@
   font-weight: $weight-semibold;
   color: $text;
 
-  @include interactive-surface($rest: transparent, $hover: $bg-raised, $pressed: $bg-inset);
+  @include interactive-surface;
 
   &::-webkit-details-marker {
     display: none;

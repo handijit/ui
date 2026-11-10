@@ -21,7 +21,7 @@
     transition: background-color $duration-fast $ease-standard;
 
     &:hover:not(:disabled) {
-      background-color: $bg-inset;
+      background-color: $bg-raised;
       color: $text;
     }
 

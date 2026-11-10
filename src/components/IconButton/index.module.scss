@@ -52,7 +52,7 @@
   }
 
   &--ghost:hover:not(:disabled) {
-    background-color: $bg-raised;
+    background-color: $state-hover;
     color: $text;
   }
 
@@ -106,13 +106,17 @@
     }
   }
 
+  // The glyph is red at rest: without it the button is the `outline` one until it is hovered.
   &--danger {
     border-color: $border-strong;
     background-color: $bg-surface;
 
+    &:not(:disabled) {
+      color: $danger-fg;
+    }
+
     &:hover:not(:disabled) {
       border-color: $danger-solid;
-      color: $danger-solid;
       background-color: $danger-bg;
     }
   }

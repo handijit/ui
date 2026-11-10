@@ -6,6 +6,93 @@ reads the section of the version being released and uses it as the GitHub Releas
 to 1.0.0 are in Turkish, as written at the time; the 5.x tables of `@ahmetilhn/hanui` live in the
 README of the 1.0.0 tarball.
 
+## [2.2.0] — 2026-11-10
+
+**Form fields speak `Field`'s contract.** The gaps found while building `@handijit/forms` 1.0 and
+the desktop template, each of which needed a workaround in a binder. Everything is additive;
+three things look or behave differently and are listed under "Changed".
+
+### Added
+
+- **`Checkbox`, `Switch`, `Radio` `error`**: the message under the label (`role="alert"`, the
+  danger icon), `aria-invalid` and the `aria-describedby` link. An invalid box, radio or switch
+  track draws the danger edge of an invalid field, also from a passed `aria-invalid`.
+- **`Field` `id`** (the control's id; the messages take `<id>-error` and `<id>-hint`) and a
+  `ReactNode` `label`.
+- **`id`, `aria-invalid`, `aria-describedby`, `required`** on `QuantityStepper`,
+  `SegmentedControl`, `ChipGroup`, `RangeSlider`, `RatingInput` and `DateRange`, so
+  `{...props}` from `Field` links the error and hint. Where each lands: the number box, the
+  `radiogroup`, the group, the low thumb (`<id>-high` on the high one) and both thumbs, the
+  `<fieldset>`, the start field (`<id>-end`) and both fields; the table is in the README ("Form
+  fields"). `QuantityStepper` and `SegmentedControl` draw the danger edge when invalid.
+- **`Select`**: `value` can be `null` (the placeholder shows); `onBlur`; a `ref` to the trigger.
+- **`Combobox`**: `onBlur`; a `ref` to the trigger. `onBlur` fires when focus leaves the whole
+  control, not when it moves between the trigger, the search box and the options, nor while the
+  bottom sheet is open.
+- **`isReadOnly`** on `Select`, `Combobox`, `QuantityStepper`, `SegmentedControl`, `ChipGroup`,
+  `RangeSlider`, `RatingInput`, `DateRange` and `TagInput`: the value stays focusable and readable
+  (`aria-readonly` where the role has it, native `readOnly` on the text boxes), nothing changes
+  it. A read-only `Select` / `Combobox` draws no caret and no clear button; a read-only
+  `TagInput` no remove buttons.
+- **`isDisabled`** on `SegmentedControl` and `ChipGroup`: every item at once.
+- **`TagInput` `value`** (the name every other field uses) and **`duplicateLabel`** (also
+  `labels.tagInput.duplicate` on `UiProvider`) for the "already in the list" announcement.
+- **`Progress` / `ProgressCircle` `aria-labelledby`** as the alternative to `label`, for a bar
+  named by text already on screen. One of the two is required (`ProgressNameProps`).
+- **`@mixin field-error`** in `@handijit/ui/scss`: the error message of a control, as `Field`
+  and the choice controls draw it. The SCSS API is 227 names.
+- **`npm run check:types`** in `verify`: the built declarations compiled as a `nodenext`
+  consumer, ES modules and CommonJS, with `skipLibCheck` off.
+
+### Fixed
+
+- **The declarations resolve under `moduleResolution: "node16"` / `"nodenext"`.** Relative imports
+  in the emitted `.d.ts` had no extension (and the sub-entries kept the `@/` source alias), so
+  Node's resolution found nothing and a consumer got `any` for the props, silently under
+  `skipLibCheck`. Every specifier now names the file (`./Spinner.js`, `./Spinner/index.js`), and
+  each `.d.ts` has a `.d.cts` twin: the `require` condition of every `exports` entry points at it
+  (`{ import: { types, default }, require: { types, default } }`), so a CommonJS consumer is no
+  longer told the package is ESM-only. `attw --pack`: green for `node16` and `bundler` on every
+  entry (was "Internal resolution error" and "Masquerading as ESM").
+- **A passed `aria-describedby` no longer drops the hint** of `Checkbox`, `Switch` and `Radio`:
+  the description is the error, the hint and the passed ids, in that order, each id once (a
+  passed list that already names the hint, as `@handijit/forms` 1.0 builds it, does not repeat
+  it).
+- **`Alert`'s `action` no longer squeezes the text in a narrow container.** The action sits in
+  the body beside the text while the text keeps at least 16rem, and moves under it, aligned with
+  the text, below that. The phone-only rule is gone; the wrap is the rule at every width.
+- **`Button isLoading` no longer renders an empty `role="status"`.** The spinner is decorative;
+  the button announces the wait with `aria-busy`.
+- **`Combobox`**: pressing an option keeps the focus in the search box (or on the trigger when
+  the search is hidden) instead of dropping it on `<body>` before the choice arrives.
+
+### Changed
+
+- **`Spinner label=""`** draws a decorative spinner (`aria-hidden`, no `role="status"`). It drew
+  an empty live region, which never announced anything; a test querying `getByRole('status')`
+  for an empty-label spinner no longer finds one.
+- **`Alert`**: the action is inside the body element (after a new `alert__text` wrapper), not a
+  third child of the alert. The class names are hashed CSS-module names, so only a test or
+  stylesheet that walked the DOM structure notices.
+- **`exports`**: every JavaScript entry nests its types per condition (`import.types` → `.d.ts`,
+  `require.types` → `.d.cts`) instead of one top-level `types`. Bundlers and TypeScript resolve
+  the same files as before for ES modules.
+
+### Deprecated
+
+- **`TagInput.values`** → `value`. Both work until 3.0.
+
+### Deferred to 3.0
+
+- **`Button` defaults to `type="button"`.** Today a `Button` without `type` inside a `<form>`
+  submits, as an HTML `<button>` does, and applications rely on it. Changing the default would
+  turn those buttons into dead ones without a type error, so it waits for a major. Until then,
+  write `type="button"` on every non-submit `Button` inside a form.
+- **`TagInput.duplicateLabel` without a Turkish fallback**: 2.2 keeps the 2.0 text
+  (`"<value> zaten ekli"`) when neither the prop nor the provider gives one; 3.0 asks for the label
+  like every other text.
+- **`TagInput.values`** is removed.
+
 ## [2.1.1] — 2026-11-10
 
 ### Fixed

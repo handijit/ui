@@ -43,10 +43,16 @@ describe('metin çözümlemesi', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Fiyatlar getiriliyor');
   });
 
-  it('boş dize bilinçli bir seçim: config’i bastırır', () => {
-    render(withProvider(<Spinner label="" />));
+  /*
+   * 2.2: an empty string draws a DECORATIVE spinner. Until 2.1 it drew a `role="status"` with an
+   * empty name — a live region that could never say anything (`Button isLoading` rendered one).
+   */
+  it('boş dize bilinçli bir seçim: config’i bastırır ve süs çizer (2.2)', () => {
+    const { container } = render(withProvider(<Spinner label="" />));
 
-    expect(screen.getByRole('status')).toHaveTextContent('');
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
+    expect(container).not.toHaveTextContent('Yükleniyor');
   });
 
   it('sağlayıcı YOKSA prop hâlâ çalışır', () => {

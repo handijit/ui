@@ -10,7 +10,12 @@ import styles from './index.module.scss';
 
 type Props = {
   size?: 'sm' | 'md' | 'lg';
-  /** Ekran okuyucuya okunacak metin; görsel olarak gizli. */
+  /**
+   * Ekran okuyucuya okunacak metin; görsel olarak gizli. An empty string (2.2) draws a DECORATIVE
+   * spinner — no `role="status"`, hidden from assistive technology — for a spinner inside a
+   * control that announces its own busy state (`Button isLoading` → `aria-busy`). Until 2.1 it
+   * drew a status region with an empty name.
+   */
   label?: string;
   className?: string;
 };
@@ -18,9 +23,12 @@ type Props = {
 /** Yükleme göstergesi. */
 const Spinner: FC<Props> = ({ size = 'md', label, className }) => {
   const { labels } = useUi();
+  const classNames = cx(styles.spinner, styles[`spinner--${size}`], className);
+
+  if (label === '') return <span className={classNames} aria-hidden />;
 
   return (
-    <span className={cx(styles.spinner, styles[`spinner--${size}`], className)} role="status">
+    <span className={classNames} role="status">
       <span className={styles.spinner__label}>
         {label ?? resolveLabel('Spinner.label', labels?.loading)}
       </span>

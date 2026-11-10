@@ -603,8 +603,16 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     ),
   },
   Card: {
-    default: <Card>Kart gövdesi</Card>,
-    interactive: <Card isInteractive>Tıklanabilir kart</Card>,
+    default: (
+      <Card>
+        <CardBody>Kart gövdesi</CardBody>
+      </Card>
+    ),
+    interactive: (
+      <Card isInteractive>
+        <CardBody>Tıklanabilir kart</CardBody>
+      </Card>
+    ),
   },
   CardBody: {
     default: (
@@ -709,9 +717,9 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     ),
     withAction: (
       <EmptyState
-        title="Sepetiniz boş"
-        description="Beğendiğiniz ürünleri buraya ekleyin."
-        action={<Button variant={UIVariant.ACCENT}>Alışverişe başla</Button>}
+        title="Henüz bir programınız yok"
+        description="Deneme sürümü 14 gün ücretsiz."
+        action={<Button variant={UIVariant.ACCENT}>Ücretsiz dene</Button>}
       />
     ),
   },
@@ -1185,11 +1193,21 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         formatDotLabel={(index, total) => `${total} sayfadan ${index}.`}
         itemWidth={160}
       >
-        <Card>Kart 1</Card>
-        <Card>Kart 2</Card>
-        <Card>Kart 3</Card>
-        <Card>Kart 4</Card>
-        <Card>Kart 5</Card>
+        <Card>
+          <CardBody>Kart 1</CardBody>
+        </Card>
+        <Card>
+          <CardBody>Kart 2</CardBody>
+        </Card>
+        <Card>
+          <CardBody>Kart 3</CardBody>
+        </Card>
+        <Card>
+          <CardBody>Kart 4</CardBody>
+        </Card>
+        <Card>
+          <CardBody>Kart 5</CardBody>
+        </Card>
       </Carousel>
     ),
   },
@@ -1784,8 +1802,8 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
           </thead>
           <tbody>
             <tr>
-              <td>page</td>
-              <td>#faf9f5</td>
+              <td>bg-page</td>
+              <td>--hd-bg-page</td>
             </tr>
           </tbody>
         </table>

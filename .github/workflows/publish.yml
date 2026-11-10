@@ -1,41 +1,139 @@
-name: Publish to NPM
+name: Publish to npm
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write # push the release tag and create the GitHub Release
+  id-token: write # signs the npm provenance statement
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false # never let two releases race onto the registry
 
 jobs:
-  # ⚠ Kapi TEK YERDE: `ci.yml`.
-  ci:
-    uses: ./.github/workflows/ci.yml
-
   publish:
-    needs: [ci]
+    # A manual run from any other branch must not be able to release.
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
-      # ⚠ SURUM DEPOLAR ARASI TEK OLMALI.
-      - name: Checkout Repo
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
+      - uses: actions/setup-node@v7
         with:
-          # package.json `engines` >= 24 istiyor; 18.18 ile npm EBADENGINE uyarisi veriyor
-          # ve iki dosya birbiriyle celisiyordu.
-          node-version: 24
-          registry-url: "https://registry.npmjs.org/"
+          # package.json `engines` asks for >= 24; `ci.yml` runs the same version.
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          cache: npm
 
-      - name: Install Dependencies
-        run: npm install
+      # Dependency lifecycle scripts are an arbitrary-code-execution path during install.
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
 
-      # Tek kapi: tokens -> kontrast -> typecheck -> lint -> kapsam -> build -> boyut
-      # butcesi.
-      - name: Verify
-        run: npm run verify
+      # Two outcomes, neither of them a failure:
+      #   skip     this version is already on npm (the commit did not bump it)
+      #   publish  this version is new, or the package is not on npm at all (its first release)
+      - name: Decide whether this version needs publishing
+        id: check
+        run: |
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Publish to NPM
-        run: npm publish --access public
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "$NAME@$VERSION is already on npm; nothing to release."
+            echo "mode=skip" >> "$GITHUB_OUTPUT"
+          elif npm view "$NAME" name >/dev/null 2>"$RUNNER_TEMP/npm-view.log"; then
+            echo "$NAME@$VERSION is new; releasing."
+            echo "mode=publish" >> "$GITHUB_OUTPUT"
+          elif grep -q "E404" "$RUNNER_TEMP/npm-view.log"; then
+            echo "$NAME is not on npm yet; releasing its first version."
+            echo "mode=publish" >> "$GITHUB_OUTPUT"
+          else
+            # A registry outage must not be mistaken for a package that does not exist.
+            cat "$RUNNER_TEMP/npm-view.log" >&2
+            exit 1
+          fi
+
+      # A token npm does not accept surfaces otherwise only on the upload, as a 404 that reads
+      # like a missing package, after every check has already run.
+      - name: Check the npm token
+        if: steps.check.outputs.mode == 'publish'
+        run: npm whoami
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+
+      # The CHANGELOG section becomes the GitHub Release note; a release without one stops here,
+      # before anything reaches the registry.
+      - name: Read the release notes from CHANGELOG.md
+        if: steps.check.outputs.mode != 'skip'
+        env:
+          VERSION: ${{ steps.check.outputs.version }}
+        run: |
+          awk -v heading="## [$VERSION]" '
+            index($0, heading) == 1 { found = 1; next }
+            found && (/^## \[/ || /^\[.+\]: /) { exit }
+            found { print }
+          ' CHANGELOG.md > "$RUNNER_TEMP/release-notes.md"
+
+          if ! grep -q '[^[:space:]]' "$RUNNER_TEMP/release-notes.md"; then
+            echo "CHANGELOG.md has no section for $VERSION." >&2
+            exit 1
+          fi
+
+      # Formatting is a step of its own, as in `ci.yml`: it is diff noise, not a quality gate of
+      # `verify`, but a release must not ship unformatted source either.
+      - name: Format
+        if: steps.check.outputs.mode != 'skip'
+        run: npm run format:check
+
+      # The one gate, the same command as `ci.yml` and a local run: contrast -> typecheck -> lint
+      # -> tests with coverage -> build (with the exports check) -> public API -> animations
+      # -> size budget.
+      - name: Verify
+        if: steps.check.outputs.mode != 'skip'
+        run: npm run verify
+
+      # The gate measures the source and `build/`; this lists what the tarball really carries.
+      - name: Inspect the packed tarball
+        if: steps.check.outputs.mode != 'skip'
+        run: npm pack --dry-run
+
+      - name: Publish
+        if: steps.check.outputs.mode == 'publish'
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+
+      - name: Tag the release
+        if: steps.check.outputs.mode == 'publish'
+        run: |
+          TAG="v${{ steps.check.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "$TAG"
+          git push origin "$TAG"
+
+      - name: Create the GitHub Release
+        if: steps.check.outputs.mode == 'publish'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v${{ steps.check.outputs.version }}"
+          gh release create "$TAG" --verify-tag --title "$TAG" --notes-file "$RUNNER_TEMP/release-notes.md"
+
+      - name: Summary
+        env:
+          PACKAGE: ${{ steps.check.outputs.name }}@${{ steps.check.outputs.version }}
+          MODE: ${{ steps.check.outputs.mode }}
+        run: |
+          if [ "$MODE" = "publish" ]; then
+            echo "Published $PACKAGE" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Skipped: $PACKAGE is already on npm. Bump the version in package.json to release." >> "$GITHUB_STEP_SUMMARY"
+          fi

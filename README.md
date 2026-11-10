@@ -425,6 +425,57 @@ is one media query, exported as `SHEET_MEDIA_QUERY`:
 `(max-width: 640px) and (pointer: coarse)`. A narrow desktop window, an
 Electron window included, keeps the dropdown.
 
+### Form fields (2.2)
+
+Every field component speaks `Field`'s contract, so a form library binds them
+the same way: spread `FieldChildProps` (`id`, `aria-invalid`,
+`aria-describedby`, `required`) on the control and the label, error and hint
+are linked for a screen reader.
+
+```tsx
+<Field id="plan" label="Plan" hint="İstediğiniz zaman değiştirebilirsiniz" error={error}>
+  {props => <SegmentedControl {...props} label="Plan" options={PLANS} value={plan} onChange={setPlan} />}
+</Field>
+```
+
+- **`Field`** takes an `id` (the control's; the messages take `<id>-error` and
+  `<id>-hint`) and a `ReactNode` label.
+- **`Checkbox`, `Switch`, `Radio`** take `error`: the message under the label,
+  `aria-invalid` and the link. A passed `aria-describedby` is **merged** with
+  the error and the hint (until 2.1 it replaced the hint).
+- **Composites** take the four props of `FieldChildProps`. Where they land:
+
+| Component          | `id`                         | `aria-invalid` · `aria-describedby` | `required`                 |
+| ------------------ | ---------------------------- | ----------------------------------- | -------------------------- |
+| `QuantityStepper`  | the number box               | the number box                      | `aria-required`            |
+| `SegmentedControl` | the `radiogroup`             | the `radiogroup`                    | `aria-required`            |
+| `ChipGroup`        | the group                    | the group                           | single choice only         |
+| `RangeSlider`      | the low thumb (`<id>-high`)  | both thumbs                         | — (always holds a value)   |
+| `RatingInput`      | the `<fieldset>`             | the `<fieldset>`                    | native, on the five radios |
+| `DateRange`        | the start field (`<id>-end`) | both fields                         | native, on both fields     |
+
+- **`Select`** holds `null` (the placeholder shows) and, with **`Combobox`**,
+  takes `onBlur` (focus left the whole control: moving into its own list or
+  search box is not a blur) and a `ref` to the trigger.
+- **Read-only**: `isReadOnly` on `Select`, `Combobox`, `QuantityStepper`,
+  `SegmentedControl`, `ChipGroup`, `RangeSlider`, `RatingInput`, `DateRange`
+  and `TagInput`. The value stays focusable and readable (`aria-readonly` where
+  the role has it); nothing changes it.
+- **`SegmentedControl` and `ChipGroup`** take a group-wide `isDisabled`.
+- **`TagInput`** takes `value` like every other field (`values` still works,
+  deprecated until 3.0) and `duplicateLabel` for the "already added"
+  announcement (or `labels.tagInput.duplicate`).
+- **`Button`** has no default `type`: inside a `<form>` a button without one
+  submits, as in HTML. Write `type="button"` for every other button in a form.
+  The default becomes `"button"` in 3.0.
+
+### TypeScript resolution
+
+The declarations resolve under every `moduleResolution`: `bundler`, `node16`
+and `nodenext` (from ES modules and from CommonJS; the `require` condition has
+`.d.cts` files). `npm run check:types` compiles a `nodenext` consumer against
+the build with `skipLibCheck` off.
+
 ---
 
 ## Decisions the system carries
@@ -694,17 +745,18 @@ write `@use 'index' as ui`. An application that needs only the tokens can use
 ```bash
 nvm use            # .nvmrc → 24
 npm install
-npm run verify     # contrast → typecheck → lint → coverage → build → API → animations → size
+npm run verify     # contrast → typecheck → lint → coverage → build → types → API → animations → size
 npm run playground # component gallery → http://localhost:5273
 ```
 
 | Command                  |                                                                                             |
 | ------------------------ | ------------------------------------------------------------------------------------------- |
-| `npm run build`          | `build/`: main entry, `chat`, `charts` (ESM + CJS + `.d.ts` + CSS) and `build/scss/`        |
+| `npm run build`          | `build/`: main entry, `chat`, `charts` (ESM + CJS + `.d.ts` / `.d.cts` + CSS), `build/scss` |
 | `npm run test`           | Jest + Testing Library + `jest-axe`                                                         |
 | `npm run test:coverage`  | coverage gate over all of `src/`: lines 89 · statements 86 · functions 80 · branches 75     |
 | `npm run check:contrast` | WCAG contrast of the pairs the components draw, both themes (254 pairs)                     |
-| `npm run check:api`      | public API guard: four entries, four baselines (main 163 · chat 30 · charts 22 · SCSS 226)  |
+| `npm run check:api`      | public API guard: four entries, four baselines (main 163 · chat 30 · charts 22 · SCSS 227)  |
+| `npm run check:types`    | the built declarations as a `nodenext` consumer sees them, ESM and CJS, `skipLibCheck` off  |
 | `npm run size`           | bundle budget (`size-limit`)                                                                |
 | `npm run exports`        | writes the `exports` map of `package.json` (`check:exports` verifies; last step of `build`) |
 | `npm run lint`           | ESLint (TypeScript) + stylelint (SCSS)                                                      |

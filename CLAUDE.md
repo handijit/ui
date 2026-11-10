@@ -918,6 +918,41 @@ girişi etkilenmemişti (orada `export type {` satırı yok).
 kırılma yok. Nöbetçi: `__tests__/api-consistency.test.ts` — burada kayıtlı
 olmayan bir `@deprecated` prop derlemeyi kırar.
 
+### 2.2 — form fields speak `Field`'s contract (additive)
+
+Found while building `@handijit/forms` 1.0 and the desktop template, where every gap below had a
+workaround in the binder. Nothing is renamed or removed; `CHANGELOG.md` has the full list.
+
+| Gap | 2.2 |
+|---|---|
+| `Checkbox` / `Switch` / `Radio` had no error; a passed `aria-describedby` REPLACED the hint | `error` (message under the label, `aria-invalid`, the link); the description is `error · hint · passed`, merged by `helpers/aria.helper.ts` `idList` |
+| `Field` had no `id`, its label was a string | `id` (messages `<id>-error`, `<id>-hint`), `label: ReactNode` |
+| Composites took none of `FieldChildProps` | `id`, `aria-invalid`, `aria-describedby`, `required` on `QuantityStepper`, `SegmentedControl`, `ChipGroup`, `RangeSlider`, `RatingInput`, `DateRange`; where each lands is a table in `README.md` ("Form fields") |
+| `Select` / `Combobox`: no `onBlur`, no `ref`; `Select` could not hold `null` | `onBlur` (React's focus events bubble through the portal: the root hears the trigger AND the panel; focus moving between them, or into the open sheet, is not a blur), `ref` → trigger, `Select value: T \| null` |
+| No read-only composite; no group-wide disabled | `isReadOnly` on nine controls (`aria-readonly` where the role has it); `isDisabled` on `SegmentedControl`, `ChipGroup` |
+| `TagInput.values`, a hard-coded Turkish announcement | `value`; `duplicateLabel` → `labels.tagInput.duplicate` → the 2.0 text (see below) |
+| `Button isLoading` drew a `role="status"` with an empty name | `Spinner label=""` is DECORATIVE (`aria-hidden`, no role); the button keeps `aria-busy` |
+| `Progress` demanded `label` | `label` OR `aria-labelledby` (a union: one of the two) |
+| `Alert action` squeezed the text in a narrow box | the action moved INTO the body, a wrapping row: the text keeps `$alert-text-min` (16rem) beside it, below that the action goes under the text |
+| Declarations broke under `nodenext` | `scripts/build-declarations.mjs`: Node-resolvable specifiers (the `@/` alias of the sub-entries too) and `.d.cts` twins for `require`; `check:types` compiles a `nodenext` consumer with `skipLibCheck` off |
+
+**`@deprecated` in 2.2:** `TagInput.values` → `value`. Both work until 3.0; giving `value` wins.
+
+⚠ **`TagInput.duplicateLabel` falls back to Turkish — a measured exception to "Metin kütüphaneden
+gelmez".** 2.0 announced `"<value> zaten ekli"` hard-coded. Turning it into a label without a
+default would make every existing `TagInput` silent on a duplicate (and warn) after a MINOR
+update. The fallback stays until 3.0, where it goes through `resolveLabel` like every other text.
+`i18n/no-hardcoded-strings.test.ts` does not list "zaten ekli"; that is why it slipped in.
+
+⚠ **Deferred to 3.0: `Button` defaults to `type="button"`.** Today a `Button` without `type` inside
+a `<form>` submits (the HTML default), and applications rely on that: a "Kaydet" button with no
+`type` is a submit button. Defaulting to `"button"` would turn those into dead buttons with no
+type error — a silent break, so not in a minor.
+
+⚠ **`Spinner label=""` changed meaning.** It drew an empty live region; it draws a decorative
+spinner. An empty `role="status"` never announced anything, so no reader loses a message; a test
+that queried `getByRole('status')` for it does.
+
 ### 2.0 (`@handijit/ui`) — the tokens of `@handijit/design`; BREAKING, no alias
 
 The whole migration, old → new for every token, CSS variable, SCSS name, prop, variant, export and
@@ -940,7 +975,7 @@ what changed in the contract, so that the older entries below are read correctly
 gone), "5.6.3 — Tema ezmesi" (`UiProvider theme`, `initUi` and `<style id="ui-theme-overrides">`
 no longer exist; an application override is unlayered CSS and still wins over `@layer ui`), and
 the token and breakpoint names inside "5.3 — SCSS API" (`var(--ui-…)`, `_tokens.generated.scss`,
-`$breakpoint-tablet-portrait`; the SCSS surface is 226 names today, `scripts/api-baseline.scss.txt`).
+`$breakpoint-tablet-portrait`; the SCSS surface is 227 names today, `scripts/api-baseline.scss.txt`).
 The mechanics those entries describe (per-component modules, the client boundary, CSS delivery,
 the anchored surfaces) are unchanged.
 
@@ -1216,7 +1251,7 @@ breakpoints are `$breakpoint-sm` / `-md` / `-lg` / `-xl`, and the module is thre
 | Kaynak | `src/styles/_index.scss` → `variables` + `mixins` iletir |
 | Derleme | `scripts/build-scss.mjs` → `build/scss/` (2.0: 3 dosya, KAPALI liste) |
 | Dışa aktarım | `exports["./scss"]` — `sass` / `style` / `default` koşulları |
-| Ad taban çizgisi | `scripts/api-baseline.scss.txt` (`$değişken` + `@mixin`; 2.1'de 226 ad, 2.0'da 225, 5.5'te 253'tü) |
+| Ad taban çizgisi | `scripts/api-baseline.scss.txt` (`$değişken` + `@mixin`; 2.2'de 227 ad — `field-error` —, 2.1'de 226, 2.0'da 225, 5.5'te 253'tü) |
 | Nöbetçi | `__tests__/styles/scss-api.test.ts` |
 
 ⚠ **Modül KURAL BASMAZ.** `base.scss` (ve 1.x'te `_tokens.generated.scss`, `:root`
@@ -1379,7 +1414,7 @@ aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
 Ölçüm artık elle değil: `scripts/check-api.mjs` `build/index.d.ts`ten dışa
 aktarım adlarını çıkarır ve `scripts/api-baseline.txt` ile karşılaştırır
 (2.0'da **163 ad**; 5.6'da 177'ydi — tema nesneleri, `initUi` ve token tipleri kalktı, design'ın
-tema sabitleri eklendi. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22, SCSS 226). Kapı
+tema sabitleri eklendi. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22, SCSS 227). Kapı
 `verify` içinde, `build`ten hemen sonra.
 
 ```bash

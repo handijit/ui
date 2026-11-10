@@ -624,7 +624,7 @@ eklendi (ölçüldü: ana giriş 42 000 bayt, önce ve sonra).
 | Derleme | `vite.chat.config.ts` (`vite.subentry.ts`) → `build/chat.js`, `chat.cjs`, `chat.css` |
 | Tipler | `tsconfig.subentries.json` → `build/types/chat/` (dosya başına) |
 | Dışa aktarım | `exports["./chat"]`, `exports["./chat.css"]` |
-| Bütçe | `chat.js` 13 kB (2.0'da ölçülen 11,76; vurgulayıcıdan önce 6,29) · yalnızca `CodeBlock` 7 kB (6,25) · yalnızca `ChatThread` 1,3 kB (1,04) · `chat.css` 5 kB (4,03) |
+| Bütçe | `chat.js` 13 kB (2.0'da ölçülen 11,76; vurgulayıcıdan önce 6,29) · yalnızca `CodeBlock` 7 kB (6,25) · yalnızca `ChatThread` 1,3 kB (1,04) · `chat.css` 5 kB (4,06) |
 | API taban çizgisi | `scripts/api-baseline.chat.txt` (30 ad) |
 
 ⚠ **ANA GİRİŞ DIŞSAL — sohbet kodu onu PAKET ADIYLA alır.** Bir sohbet
@@ -774,7 +774,7 @@ On grafik, **sıfır bağımlılık**: ölçek, istatistik ve yol üretimi
 |---|---|
 | Kaynak | `src/charts/<Grafik>/` · ortak çekirdek `src/charts/core/` · cephe `src/charts/index.ts` |
 | Derleme | `vite.charts.config.ts` → `build/charts.js`, `charts.cjs`, `charts.css` |
-| Bütçe | tümü 16 kB (2.0'da ölçülen 14,17) · yalnızca `LineChart` 8,5 kB (7,36) · `charts.css` 2 kB (1,57) |
+| Bütçe | tümü 16 kB (2.0'da ölçülen 14,17) · yalnızca `LineChart` 8,5 kB (7,36) · `charts.css` 2 kB (1,6) |
 | API taban çizgisi | `scripts/api-baseline.charts.txt` (22 ad) |
 | Testler | `__tests__/charts/` — çekirdek (37), davranış (22), eksen taraması (her senaryo × {kapalı, ipucu açık}) |
 

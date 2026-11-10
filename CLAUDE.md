@@ -1,18 +1,24 @@
 # @handijit/ui
 
-Erişilebilir, tema güdümlü React tasarım sistemi. React 19 · TypeScript strict · SCSS Modules · Vite.
+Accessible React components of Han Dijit, drawn with the tokens of `@handijit/design`.
+React 19 · TypeScript strict · SCSS Modules · Vite.
 
-Bu dosya **tasarım sözleşmesini ve ölçülmüş kararları** tutar. Kurulum,
-kullanım, token ezme, metin sözleşmesi ve geliştirme komutları `README.md`
-içindedir.
+This file keeps the **design contract and the measured decisions**. Installation, usage, the theme
+contract, Content Security Policy, labels and the development commands are in `README.md`; the
+migration from 1.x is in `CHANGELOG.md`.
 
-⚠ Bu sözleşme kütüphaneyi kullanan uygulamalar için de **normatiftir**.
-Onların belgeleri yalnızca uygulamaya özgü sapmaları yazar.
+⚠ This contract is **normative** for the applications that use the library too. Their documents
+only record what deviates.
 
-⚠ **Bu dosya 5.x'i anlatır.** @handijit/ui'yi `^4.1.0` ile alan uygulamalar 5.x'e
-kendiliğinden geçmez; geçene kadar onlar için geçerli renk
-kararları `v4.1.0` etiketindeki CLAUDE.md'dedir. Geçiş tablosu: "Göç" →
-"5.0 token sözleşmesi".
+⚠ **This file describes 2.x.** The visual language (palette, type, radii, spacing, motion, layers,
+shadows) belongs to `@handijit/design`. This library declares no colour and decides no value; what
+it decides is WHICH token a component draws with, and that is what the sections below record.
+
+⚠ **Two languages, on purpose.** Everything written for 2.0 is in English. The measured history of
+earlier majors (5.x of `@ahmetilhn/hanui`, 1.0 of `@handijit/ui`) stays in Turkish as it was
+recorded: the measurements still explain the rules, but a token name inside such a note is the
+name of its time (`surface-2`, `action`, `shell`, `ring-color` …). The 2.0 name of every one of
+them is in the migration table of `CHANGELOG.md`. New text is written in English.
 
 ## Öğe seçimi — hangisi, ne zaman
 
@@ -38,366 +44,265 @@ kararları `v4.1.0` etiketindeki CLAUDE.md'dedir. Geçiş tablosu: "Göç" →
 | Parçaların toplamı mı zaman çizelgesi mi? | `SegmentBar` (`value`) / `SegmentBar` (`from`/`to`) | Tek görsel (`role="img"`); tam bir eksen gerekiyorsa `/charts` |
 | Hangi grafik? | `/charts` — bkz. "`@handijit/ui/charts`" | Eğilim, karşılaştırma, parça-bütün ve dağılım ayrı grafikler; ayrımlar orada ölçülü |
 
-## Yüzey ailesi ve yükseklik
+## Surfaces and elevation
 
-| Bileşen | Bağlam | Yükseklik |
-|---|---|---|
-| `Tile` · `SummaryCard` | Gezinme | durgunken kenarlık; hover'da bir kademe yükselir (`shadow-md`) |
-| `Card` | İçerik | kenarlık — gölge YOK |
-| `Panel` | Form / veri | kenarlık — gölge YOK |
-| `Popover` · `Menu` · `Tooltip` · `Select`/`Combobox` paneli · `Toast` | Geçici katman | `shadow-lg` |
-| `Modal` · `Drawer` · `BottomSheet` · `CommandPalette` | Kipsel | `shadow-xl` |
-
-**Önce renk bloğu, gölge nadir (5.0).** Kart ve panel durgun hâlde gölge
-taşımaz; derinliği krem sayfa ile açık kartın farkı ve kenarlık kurar
-(`card` / `panel` mixin'leri). 4.x'te her kart `shadow-sm` taşıyordu ve gölge
-"bir şey bu yüzeyin üstünde" sinyali olmaktan çıkmıştı.
-
-⚠ **Koyu temada derinliği gölge değil KENARLIK kurar** — koyu zeminde gölge
-okunmuyor ve 5.0'da kademeler bilinçle birbirine yakın (aşağıda).
-
-## Yarıçap ritmi
-
-**İç yarıçap = dış yarıçap − dolgu.** İç içe iki yüzey aynı yarıçapı paylaşmaz:
-`Panel` (12 px) içindeki bir `Input` da 12 px taşıdığında iki eğri eş merkezli
-olmuyor ve iç kutu optik olarak kaçık duruyor. Kural bugün elle uygulanır;
-bunu hesaplayan bir mixin YOK (bir dönem burada `nested-radius()` yazıyordu,
-öyle bir mixin hiç olmadı).
-
-## Durum katmanları
-
-Tek kural kümesi (`interactive-surface()`):
-
-- **hover** — zemin BİR kademe değişir, başka hiçbir şey
-- **active** — 1 px basılır (dokunsal geri bildirim, renk değil)
-- **selected** — kenarlık + zemin BİRLİKTE: `selected-tint` + `selected-line`
-  (mürekkep). Seçim yalnız zeminle verilmez.
-- **disabled** — dolgu geri çekilir, metin silinmez (`passive-surface()`:
-  `surface-2` zemin · `border` kenarlık · `text-3` metin). Pasif **seçim** seçim
-  mürekkebini bırakır ve `text-3` bir işaretle taşınır: `Chip` kenarlığı,
-  `RadioCard` noktası, `Switch` izinin kenarlığı, `RatingInput` dolu yıldızı
-
-Ölçüldü: hover geri bildirimi 28 bileşen dosyasında **altı farklı özellik
-yolundan** veriliyordu (`background-color` 30, `color` 18, `border-color` 16,
-`transform` 7, `box-shadow` 3, `opacity` 2). Aynı jest iki bileşende iki farklı
-şey yapıyordu.
-
-⚠ `opacity` ile soluklaştırma **yasak**: metni de soluklaştırıp kontrast eşiğini
-sessizce düşürüyor.
-
-⚠ **Kural yazılıydı ama on bir bileşende ÇİĞNENİYORDU** (2026-10-10): `Chip`,
-`Pagination`, `RadioCard`, `Switch`, `RangeSlider`, `FileUpload`, `RatingInput`,
-`QuantityStepper` pasif hâli; `DateField` takvim ikonu, `DataTable` sıralama oku
-ve `Spinner`ın azaltılmış hareket hâli. Hepsi token'a çevrildi. stylelint
-`opacity`yi yasaklayamaz (geçişlerde meşru); nöbetçi
-`__tests__/styles/passive-opacity.test.ts` — `0`/`1` dışındaki her `opacity`
-soluklaştırmadır ve kırar. İstisna listesi yok.
-
-⚠ **`DataTable`ın dinlenen sıralama oku pasif DEĞİL** — sütun sıralanabiliyor,
-yalnızca henüz sıralanmamış. `passive-*` mixin'leri bu yüzden kullanılmadı:
-dinlenme `text-3`, hover ve sıralanmış ok `text` (5.0'da seçim mürekkep).
-Ölçüldü: başlık zemininde (`surface-2`) dinlenen ok 4,83:1 (koyu 4,89), sıralı
-okla arası 3,16:1 (koyu 3,23). ⚠ 4.x'te sıralı ok rol YEŞİLİYDİ ve `text-3`le
-arası 1,08:1 kaldığı için dinlenme `border-strong` seçilmişti; 5.0 kreminde o
-değer başlık zemininde **1,37:1** — ok görünmüyordu. İki temanın değerleri
-değişince karar yeniden ölçüldü ve tersine döndü. Zorlanmış renk kipinde
-dinlenen ok `GrayText` yazar; yazmasaydı her renk `CanvasText`e ezilir ve
-dinlenen `▴` artan sıralamanın okuyla birebir aynı çizilirdi.
-
-⚠ **`opacity` zorlanmış renk kipinde de soluklaştırıyordu; token'lar
-soluklaştırmaz.** O kipte `text-3` `CanvasText`e eziliyor ve pasif hâl etkin
-hâlden ayırt edilemiyordu (ölçüldü: `Switch`, `FileUpload`, `RatingInput`,
-`RadioCard`). `passive-text()` / `passive-surface()` o kipte `GrayText` yazar.
-⚠ Sistem rengi **ebeveynden miras KALMAZ**: kendi rengini yazan her çocuk ayrı
-ister — pasif `fieldset` `GrayText` alırken içindeki `legend` `CanvasText`
-çiziliyordu. Yerel `:disabled` öğeleri `base.scss` zaten karşılıyor.
-
-⚠ **`Switch` pasif izi `track`tır, `surface-2` DEĞİL.** Kapalı etkin anahtarın
-izi zaten `action-soft` (pasif dolgu token'ı), ve koyu temada `surface-2` kulpla
-(`surface`) aynı aydınlıkta: 1,12:1, kulp kayboluyordu.
-
-Tek istisna **yükselen yüzeyler** (`Card`, `Tile`): tıklanabilir kart hover'da bir
-kademe yükselir, zemin değiştirmez — açık kartta bir kademe zemin değişimi
-neredeyse görünmez. Satır, menü öğesi ve düğme için geçerli DEĞİL.
-
-## Renk kararları (5.0)
-
-**Tek cümle: zemin mürekkep ve kâğıt, yeşil eylemdir.** Arayüzün nötrleri
-claude.com'un sıcak mürekkep ekseninden; markanın iki yeşili (çam, mint) yalnızca
-**birincil eylemde, bağlantıda, odak halkasında ve marka işaretinde** yaşar.
-
-Palet `palette.ts` içinde ÜRETİLİR (`scripts/lib/palette-recipe.mjs` →
-`npm run tokens`); dört değer ankor, geri kalan her şey onlardan OKLCH'te türer:
-
-| Ankor | Hex | `palette.ts` | Rolü |
+| Component | Context | Surface | Elevation |
 |---|---|---|---|
-| Çam | `#00322a` | `BRAND.pine` | Birincil eylem dolgusu, marka şeridi, açık zeminde logo |
-| Mint | `#43ff9c` | `BRAND.mint` | İmza; koyu zeminde logo, koyu temada birincil eylemin SINIRI |
-| Mürekkep | `#141413` | `BRAND.ink` = `NEUTRAL.n900` | Gövde metni, koyu temanın sayfası, seçim dolgusu |
-| Kâğıt | `#faf9f5` | `NEUTRAL.n25` | Açık temanın sayfası, koyu temada gövde metni |
+| `Tile` · `SummaryCard` · interactive `Card` | Navigation | `bg-surface` + `border` | a border at rest; hover lifts 2px with `shadow-2` and `border-strong`, pressed falls back to `shadow-1` |
+| `Card` | Content | `bg-surface` + `border` | NO shadow |
+| `Panel` | Form / data | `bg-surface` + `border` | NO shadow |
+| `Popover` · `Menu` · `Tooltip` · `Select`/`Combobox` list · `Toast` | Transient layer | `bg-overlay` | `shadow-2` |
+| `Modal` · `Drawer` · `BottomSheet` · `CommandPalette` | Modal | `bg-overlay` | `shadow-3` |
 
-### 4.x'ten 5.0'a: nötr eksen yeşilden çıktı
+**Colour block first, shadow rarely.** A card and a panel carry no shadow at rest; depth is the
+difference between the page and the surface, plus the border (`card` / `panel` mixins). When every
+card had a shadow (4.x) the shadow stopped meaning "this sits above the surface".
 
-4.x'in nötr merdiveni marka eksenindeydi (H 152-177) ve açık ucu bilinçle
-"doygun" yazılmıştı (chroma 0,05'e kadar). Sonuç ölçülmedi, **görüldü**:
-sayfa `#f7fcf8`, kart zemini `#e9f7ed`, kenarlık `#c0eacf`, koyu sayfa
-`#010f0b`, koyu kart `#071915` — arayüzün her yüzeyi açık bir yeşil çiziyordu
-ve rol rengi de yeşil olduğu için yeşil bir vurgu olmaktan çıkıp arayüzün genel
-rengine dönüşmüştü.
+⚠ **A floating layer sits on `bg-overlay`, never on `bg-surface`.** In dark a shadow does not read
+on the page; what separates a menu from the card under it is that `bg-overlay` is a step LIGHTER
+than `bg-surface`. In 1.x a dark dropdown had the colour of the card it covered.
 
-5.0'ın nötrleri sıcak mürekkep: **H 75-107, chroma 0,002-0,02**. Kademeler
-mutlak chroma ile yazılır (`{ l, c, h }`) — oranla yazılan bir nötr, erişilebilir
-tavan tona göre üç katına kadar değiştiği için kademeler arasında kayıyordu.
+⚠ **Known limit, measured:** a control that fills itself with `bg-surface` (a field, a `SECONDARY`
+button) inside a dark dialog is darker than the dialog. It reads as a well, which is acceptable for
+a field; there is no "surface on overlay" token in the design and none is invented here.
 
-⚠ **Nöbetçi:** `build-palette.mjs` nötr merdivende chroma > **0,025** gördüğünde
-patlar (`NEUTRAL_CHROMA_CEILING`). 4.x'te eksen hiçbir kapıya takılmadan
-renklendi; bir daha sessizce olamaz.
+Layers are design's (`$z-*`): dropdown 1000 · overlay 1100 · modal 1200 · popover 1300 ·
+toast 1400 · tooltip 1500. A component never writes a number.
 
-⚠ **Kurumsal kılavuz 2.0'dan BİLİNÇLİ SAPMA.** Kılavuzun kâğıt / slate / sis
-üçlüsü (`CORPORATE`) yeşil tonlu ve 4.x'te nötr merdivenin takma adıydı. 5.0'da
-üçlü **yalnızca marka şeridinde** (`band-*`) yaşıyor: çam zeminin üzerindeki yeşil
-tonlu metin markanın sesi, arayüzün zemini değil. Arayüz nötrleri kılavuzdan değil
-mürekkep ankorlarından türer.
+## Radius rhythm
 
-### Açık tema: sayfa KREM, kart AÇIK
+The scale is design's: `radius-xs` 6 · `radius-sm` 10 · `radius-md` 14 · `radius-lg` 20 ·
+`radius-pill`.
 
-| Token | Değer | Ölçüm |
+| Radius | Who |
+|---|---|
+| `radius-xs` | small marks and rows inside a surface (a menu item, the box of a checkbox) |
+| `radius-sm` | controls: `Button` (`--ui-button-radius`), fields (`input-base`), `Menu`; `Card` and `Panel` on a narrow screen |
+| `radius-md` | `Card`, `Panel`, `Popover` |
+| `radius-lg` | `Modal`; the top corners of a bottom sheet |
+| `radius-pill` | `Button shape="pill"`, the `Switch` track, `Badge` (`--ui-badge-radius`), a radio |
+
+**Inner radius = outer radius − padding.** Two nested surfaces never share a radius: a field with
+the radius of the panel around it is not concentric and looks off. The rule is applied by hand;
+there is NO mixin that computes it.
+
+## State layers
+
+One rule set (`interactive-surface()`):
+
+- **hover** — a veil of the text colour over the resting fill (`$state-hover`, 8%); nothing else
+- **active** — the veil deepens (`$state-pressed`, 14%) and the control is pressed 1px
+  (tactile feedback, not colour)
+- **selected** — cobalt, and never by fill alone: the soft fill `primary-soft` + a cobalt line
+  (`primary-line` on `RadioCard` and `Tile`, `primary` on `Chip`) + the label in `primary-text`.
+  The mark of a control or of progress (checked `Checkbox` / `Radio` / `Switch`, the `Tabs` line,
+  `Progress`, `Spinner`, `RangeSlider`, `Steps`, the current page) fills `primary`
+- **disabled** — the fill withdraws. A field: `passive-surface()` = `bg-raised` · `border` ·
+  `text-3`. A filled control (`Button`, `IconButton`, `Switch`): design's disabled pair
+  `bg-disabled` + `text-disabled`. A disabled **selection** drops cobalt and is carried by a
+  `text-3` mark (the border of a `Chip`)
+
+⚠ **Why a veil and not "one surface step up" (the 1.x rule).** A step is a fixed colour and only
+reads on the surface it was chosen for: in dark `bg-raised` is DARKER than `bg-overlay`, so a row
+hovered inside a menu or a dialog sank instead of lighting up. A translucent layer of the text
+colour darkens a light surface and lightens a dark one, on every surface, in both themes, with one
+token. Rows that had their own hover recipe (`Directory`, `Disclosure`, `Steps`) go through
+`interactive-surface`; guard for the row rules: `__tests__/styles/hover-surfaces.test.ts`.
+
+Measured (5.x): hover feedback came from **six different property paths** in 28 component files
+(`background-color` 30, `color` 18, `border-color` 16, `transform` 7, `box-shadow` 3, `opacity` 2).
+The same gesture did two different things in two components.
+
+⚠ Fading with `opacity` is **forbidden**: it fades the text too and silently drops the contrast
+threshold. The rule was written and still broken in eleven components (2026-10-10); stylelint
+cannot forbid `opacity` (it is legitimate in transitions), so the guard is
+`__tests__/styles/passive-opacity.test.ts` — every `opacity` other than `0` / `1` is a fade and
+fails. There is no exception list.
+
+⚠ **The resting sort arrow of `DataTable` is NOT passive** — the column can be sorted, it just is
+not yet. So no `passive-*` mixin: resting `text-3`, hovered and sorted `text`. In forced colours
+the resting arrow writes `GrayText`; otherwise every colour becomes `CanvasText` and the resting
+`▴` is drawn exactly like the arrow of an ascending sort.
+
+⚠ **`opacity` also faded in forced colours; tokens do not.** There `text-3` becomes `CanvasText`
+and the passive state could not be told from the active one (measured: `Switch`, `FileUpload`,
+`RatingInput`, `RadioCard`). `passive-text()` / `passive-surface()` write `GrayText` in that mode.
+⚠ A system colour is **not inherited**: every child that writes its own colour asks for it
+separately — a disabled `fieldset` got `GrayText` while its `legend` was drawn `CanvasText`.
+Native `:disabled` elements are covered by `base.scss`.
+
+⚠ **`Switch`: an OFF track is `text-3`, a disabled track is `bg-disabled` + a `border-strong`
+line.** An off switch still has to be seen as a control (`text-3` passes the 3:1 of a graphic on
+every surface); with a surface-coloured track the thumb disappeared in dark (measured in 5.x:
+1.12:1). On: `primary` track, `on-primary` thumb.
+
+The one exception is **rising surfaces** (`Card`, `Tile`): a clickable card lifts on hover and does
+not change its fill. Not valid for a row, a menu item or a button.
+
+## Colour roles (2.0)
+
+**One sentence: cobalt is the interface, coral is the button that converts, turquoise is a
+highlight.** The palette, both themes and every value live in `@handijit/design`; this library
+loads none of it (`styles.css` and `base.css` declare no token) and the application imports
+`@handijit/design/tokens.css` once.
+
+- There is **no palette, no recipe and no token build step** in this repository. `palette.ts`,
+  `scripts/lib/palette-recipe.mjs`, `build-palette.mjs`, `npm run tokens`, `check:palette`, the
+  `_*.generated.scss` files, `theme/tokens.ts` and the `--ui-*` design tokens of 1.x are gone.
+- `src/styles/_variables.scss` is a list of **aliases**: `$primary: var(--hd-primary)`. A component
+  writes the alias, never `var(--hd-…)` by hand and never a literal colour.
+- The `--ui-*` names that remain are **component-private hooks** (`--ui-button-radius`,
+  `--ui-chip-*`, `--ui-badge-*`, `--ui-stat-*`, `--ui-header-height`, `--ui-sheet-height`,
+  `--ui-ring-width` …) and animation names. None of them is a colour scale.
+- A brand override is the application's: a plain `--hd-*` declaration in its own stylesheet
+  (`:root[data-theme='dark']` for the dark value on `<html>`). The library never declares one.
+
+### Who draws with what
+
+| Family | Role | Where it lives |
 |---|---|---|
-| `page` | `#faf9f5` | `text` 17,50:1 |
-| `surface` (kart, girdi) | `#fffefc` | sayfaya 1,05:1 |
-| `surface-inset` | `#f5f0e8` | |
-| `surface-2` | `#efe9de` | sayfaya 1,15:1 |
-| `surface-3` | `#e8e0d3` | |
-| `border` / `border-strong` | `#ded8d0` / `#d0c8bd` | sayfaya 1,34 / kartta 1,64 (advisory) |
-| `text` / `text-2` / `text-3` | `#141413` / `#4d4b46` / `#67655e` | `surface-2` üzerinde 15,26 / 7,21 / 4,83:1 |
+| Cobalt — `primary`, `primary-hover/-active`, `on-primary`, `primary-soft`, `primary-line`, `primary-text`, `focus` | primary action, link, selection, focus | everywhere it is the interface colour: `Button` PRIMARY / OUTLINE / GHOST, links, selected states, progress, the focus ring |
+| Coral — `accent*`, `on-accent` | the CONVERSION action: download, try, subscribe | `Button` `UIVariant.ACCENT`, `IconButton variant="accent"` — **and nowhere else** |
+| Turquoise — `highlight*`, `on-highlight` | a highlight or a "live" / "new" mark, never an action | `Badge tone="highlight"`, `Avatar tone="highlight"`, type names in `CodeBlock` |
+| Brand band — `band-*` | the deep cobalt band of the brand, the SAME in both themes | `Button` `UIVariant.ON_BAND`, `Avatar tone="brand"`; the band itself is the application's |
+| Inverse — `inverse-*` | a dark technical surface, the SAME in both themes | `TerminalOutput`, `CodeBadge` |
+| Status — `success` / `warning` / `danger` / `info` × `-bg` `-fg` `-line` `-solid` `-on-solid` | a state, not an action | `Alert`, `Badge`, `Toast`, `StatusDot`, field errors; `danger-solid` is also the fill of a destructive BUTTON |
+| Series — `chart-1…6` | chart series, legend squares, category dots | `/charts`, `Legend`, `SegmentBar`; `muted` is the neutral tone |
+| Neutrals — `bg-page/-surface/-raised/-inset/-overlay/-disabled`, `border`, `border-strong`, `text`, `text-2`, `text-3`, `text-disabled` | everything else | |
 
-⚠ **Kart sayfadan dolguyla AYRIŞMAZ** (1,05:1) — ayrımı kenarlık taşır.
-Kenarlığı olmayan yeni bir yüzey krem üzerinde **görünmez** olur ve nöbetçisi
-yoktur: `check-contrast` kenarlık çiftlerini advisory listesinde tutar.
+⚠ **Guard `__tests__/styles/colour-footprint.test.ts`.** Coral, turquoise and the band are tied to
+an allow-list of components, each with its reason. A component outside the list that reaches for
+one of them fails the test; so does a stale allowance, and so does a 1.x role name coming back
+(`cart`, `oem`, `shell` …). No single declaration is ever wrong on its own: a coral chip here, a
+coral progress bar there, and coral stops meaning "this is the button that converts". Cobalt is not
+listed: it is the general interface colour. A new use enters the list **with its reason**.
 
-⚠ claude.com'un `muted` değeri (`#6c6a64`) `surface-2` üzerinde 4,48:1 —
-eşiğin altında; `text-3` bu yüzden bir tık koyu. `muted-soft` (`#8e8b82`,
-kremde 3,23:1) açık temada hiçbir metin token'ına girmez.
+⚠ **Guard `__tests__/styles/design-contract.test.ts`.** Every `--hd-*` name in a compiled
+stylesheet, in an alias and in TypeScript exists in the INSTALLED design package; the global
+stylesheet declares no palette; no stylesheet declares an `--hd-*` property; breakpoints and layers
+equal design's; no stylesheet carries a literal colour. A token renamed in design fails here, not
+in a consumer.
 
-⚠ Saf beyaz ve saf siyah palette YOK (`palette.contract.test.ts`).
+### Rules that do not move
 
-⚠ Değişiklik tüketicilerde **elle** izlenen iki yerde yankılanır:
-e-ticaret vitrininin `manifest.ts` → `background_color`ı ve uygulamaların
-`themeColor`'ı. hanration için: `layout.tsx` → `themeColor` açık/koyu çifti.
+- **A saturated fill is clickable.** A state label is always a tint (`@include tint($tone)`:
+  soft fill + matching line + readable text), an action is always filled or framed. When that line
+  blurs, users try to click a status label. `Badge variant="solid"` is the one filled label.
+- **One `PRIMARY` per screen.** `ACCENT` is the conversion action (download, try, subscribe)
+  and only that: not a second primary, not a decoration.
+- **Turquoise is never body text on a light surface** — use `highlight-text`, the readable step
+  (`highlight` itself is 2.79:1 on a light surface; `highlight-text` ≥ 4.93:1 on every surface).
+- **The price stays in the text colour** (`Price`): the current price inherits the text colour,
+  the struck-through old price is `$text-3`, the discount is a small solid badge.
+- **Selection is cobalt** (see "State layers"), **status is a tint with an icon or a text**
+  (1.4.1), **a link is text**: the three never look alike, so they are told apart by shape and not
+  by hue.
 
-### Koyu tema: zemin SICAK SİYAH, yeşil vurgudur
+### Buttons
 
-| Token | Değer | Ölçüm |
+| `UIVariant` | Drawn with | For |
 |---|---|---|
-| `surface-inset` | `#0e0e0d` | |
-| `page` | `#141413` | |
-| `surface` | `#181715` | sayfaya 1,03:1 |
-| `surface-2` | `#1f1e1b` | `surface`e 1,07:1 |
-| `surface-3` | `#2a2925` | `surface-2`ye 1,14:1 |
-| `border` / `border-strong` | `#33312d` / `#4a4843` | sayfaya 1,42:1 |
-| `text` / `text-2` / `text-3` | `#faf9f5` / `#b4b1a9` / `#8e8b82` | `surface-2` üzerinde 15,82 / 7,78 / 4,89:1 |
+| `PRIMARY` | `primary` fill, `on-primary` label | the primary action of the screen |
+| `ACCENT` | `accent` fill, `on-accent` label | the conversion action (download, try, subscribe) |
+| `SECONDARY` | `bg-surface` + `border-strong`, body text | the neutral second action ("Cancel") |
+| `OUTLINE` | cobalt frame | an encouraged navigation that is not the primary action ("See all") |
+| `SOFT` | neutral fill | a secondary action inside a card |
+| `GHOST` | no surface, link colour | toolbar and inline secondary actions |
+| `DANGER` | `danger-solid` fill | a destructive action: a delete confirmation |
+| `ON_BAND` | `band-*` | an action on the brand band |
 
-⚠ Kademeler arası fark **bilinçle küçük** (1,03-1,14:1): derinliği kenarlık
-kurar. `surface-3` claude.com'un `#252320`sinden bir tık açık, çünkü
-`interactive-surface`in hover'ı TEK kademe ve o değerde görünmüyordu.
+Heights: `UISize` XSMALL 28 · SMALL 32 · MEDIUM 40 · LARGE 48 (px). A field is 40px with 15px text
+on a desktop pointer and 44px with 16px text on a narrow or touch screen; `input-sm` is 32px. A
+MEDIUM button and a field share one line. Guard: `__tests__/components/control-size.test.tsx`.
 
-⚠ **Bant sayfayı ÖRTMEZ, sayfanın devamıdır** — iki temada da `nav-bg` = `page`,
-sınırı `nav-line` çizer. Alt bilgi bir kademe yukarı çıkar.
+Measured (`check:contrast`, light / dark): `on-primary` on `primary` 5.03 / 5.03:1;
+`on-accent` on `accent` 6.15 / 6.15:1. The tightest step of the two families is `on-primary` on
+`primary-hover` in dark: 4.60:1.
 
-### Yeşil nerede yaşar — ve nerede YAŞAMAZ
+### Theme-independent surfaces: `band-*` and `inverse-*`
 
-| Ne | Token | Açık | Koyu |
+Both are the same in light and dark **by token**, not by scoping a theme: a button on the brand
+band reads `band-text` / `band-line-strong`, terminal output reads `inverse-text` /
+`inverse-text-2` and `inverse-danger` for stderr (a light theme's `danger-fg` is unreadable on a
+dark surface). Nothing that sits on such a surface may read `text-2` or `border`.
+
+A subtree CAN be themed in 2.0 — `data-theme="dark"` on any element re-declares the tokens for
+that subtree (design's selectors). That is the application's tool for a dark section; a component
+never sets the attribute.
+
+### Link and focus
+
+- A link is `primary-text`. Inside running text (`Prose`, `Alert`, `Toast`, `SourceList`) it is
+  underlined: colour alone does not carry a link (1.4.1). `TextLink` stands alone with its arrow,
+  so its underline appears on hover.
+- **The focus ring is `focus` (cobalt), 2px, offset 2px, on `:focus-visible`** — `focus-ring()`.
+  The width and the offset are hooks (`--ui-ring-width`, `--ui-ring-offset`). Measured: 3.12 –
+  3.37:1 on page, surface, raised and overlay in light, 6.08 – 8.17:1 in dark.
+- ⚠ **In a well the ring is `$focus-inset`** (`primary-text`): `focus` is **2.95:1** on `bg-inset`
+  in light. `CodeBlock` and anything else that sits IN `bg-inset` passes `$focus-inset` to
+  `focus-ring()`.
+- A text field shows its focus on the border plus a 3px halo (`$focus-halo`); an invalid field the
+  same in red (`$danger-halo`). `outline: none` is written only where another indicator is drawn.
+
+### Status tints
+
+`@include tint($tone)` — `success`, `warning`, `danger`, `info`, `highlight`, `neutral`. An unknown
+tone is a **compile error** (in 1.x it fell back to neutral and a typo shipped as a grey label).
+
+- The shop tones are gone: `oem`, `alt`, `sale`, `off`, `action`, `link`. A domain tone is the
+  application's wording on a generic tone, not a new colour.
+- `info` is cobalt (`info-solid` is the value of `primary`), `neutral` is `bg-raised` +
+  `border` + `text-2`.
+- The line of a tint is advisory (1.22 – 1.29:1 in light, 1.57 – 1.63:1 in dark): it is not the only carrier of the meaning, the
+  text and the icon are. Forcing 3:1 would turn every badge into a framed label.
+
+### Contrast gate — `scripts/check-contrast.mjs`
+
+It measures **the pairs the components actually draw**, with the values of the installed design
+package, in both themes: 120 pairs per theme, 240 in total, text ≥ 4.5:1, focus and graphics
+≥ 3:1. `UI_CONTRAST_VERBOSE=1 npm run check:contrast` prints every number. A failing pair is fixed
+by drawing with **another token**, never with a one-off colour, and never by editing a value: the
+value is design's.
+
+Advisory pairs (measured and printed, never failing) and what they mean:
+
+| Pair | Light | Dark | Decision |
 |---|---|---|---|
-| Birincil düğme dolgusu | `action` | `#00322a` | `#00322a` |
-| Birincil düğmenin sınırı | `action-line` | `#00322a` | `#43ff9c` |
-| Bağlantı | `link` / `link-hover` | `#17704e` | `#60d4a1` |
-| Odak halkası | `ring-color` | `#1f7b56` | `#60d4a1` |
-| Marka şeridi, logo, marka madalyonu | `band-*` | çam + mint | aynı |
-| Dönüşüm eylemi ("sepete ekle") | `cart*` | `#1ba055` | `#37c971` |
-| Olumlu DURUM | `ok-*`, `green-accent` | anlamsal | anlamsal |
+| `text-disabled` on `bg-disabled` | 2.06 | 2.28 | The label of a disabled `Button` / `IconButton`. WCAG 1.4.3 exempts disabled controls and the pair is design's. ⚠ This REPLACES the 1.x rule "the disabled label is gated at 4.5:1": with design's tokens the nearest passing label is `text-2` (5.98:1), which no longer looks disabled; `text-3` is 4.35:1 |
+| `focus` on `bg-inset` | 2.95 | 8.48 | hence `$focus-inset` |
+| `text-3` on `bg-inset` | 4.35 | 6.97 | tertiary text is not written in a well; `CodeBlock` comments use `text-2` |
+| `primary` / `danger-solid` / `info-solid` on `bg-overlay` | 5.03 – 5.31 | **2.70 – 2.85** | Design gates these fills on page, surface and raised only. On a dark menu or dialog a filled control is never the only carrier (its glyph is measured as text on a fill), but a bare status ICON in that colour, e.g. in a dark toast, is under 3:1. Known limit; the fix belongs to design (an overlay-safe fill), not to a local colour |
+| `border` / `border-strong` on surfaces | 1.19 – 1.53 | 1.25 – 2.27 | hairlines; a card is separated from the page by the border AND the fill |
+| `highlight` on `bg-surface` | 2.79 | 8.91 | turquoise is a tint and a text colour here, never a state on its own |
 
-**Seçim mürekkeptir:** etkin sayfa, seçili çip/seçenek/satır, sekme çizgisi,
-ilerleme, döndürücü, kaydırıcı, onay kutusu, radyo, anahtar, adım, `Tile`
-madalyonu, `Button` OUTLINE çerçevesi → `selected*` (açıkta `#141413`, koyuda
-krem `#faf9f5` + siyah metin). 4.x'te bunların hepsi rol yeşilini taşıyordu:
-**28 bileşen dosyasında 87 bildirim.**
+## Typography roles
 
-⚠ **Nöbetçi `__tests__/styles/green-footprint.test.ts`.** Bileşen SCSS'indeki
-`action*`, `cart*`, `link*`, `green-accent*`, `band-*`/`glow-*` kullanımları bir
-izin listesine bağlı; listede olmayan bir bileşen yeşile uzanırsa test kırılır,
-listede olup artık kullanmayan da (bayat izin). 4.x rol ailesinin
-(`$role*`) geri gelmesi ayrıca kırar. Yeni bir yeşil kullanım listeye
-**gerekçesiyle** girer.
+The roles are design's; a component takes a whole role, never a size.
 
-- **Doygun dolgu = tıklanabilir.** Durum etiketleri **her zaman** tint zeminli
-  (`@include tint`), eylemler her zaman dolgulu veya çerçeveli. Bu ayrım
-  bozulursa kullanıcı durum etiketine tıklamayı dener.
-- **Bir ekranda tek `PRIMARY`.**
-- **Fiyat siyah kalır.** Güncel fiyat `$text`, üstü çizili eski fiyat `$text-3`,
-  indirim küçük bir rozet. Kırmızı fiyat bu sektörde ucuz durur ve kırmızıyı
-  "aracına uymaz" anlamından koparır.
-- ⚠ **Mint AÇIK ZEMİNDE METİN OLAMAZ** — krem üzerinde 1,24:1. Kılavuzdaki
-  tek kesin renk kuralı bu.
-- ⚠ **AÇIK YEŞİL ZEMİNLİ DÜĞME YOKTUR.** Mint kılavuzda **logonun** rengi; bir
-  dönem koyu temanın birincil eylemini mint dolguya çevirmiştik (ölçüm olarak
-  kusursuzdu: siyah metin 14,65:1) ve aynı ekranda mint logo ile mint düğme yan
-  yana geldiğinde imza rengi vurgu olmaktan çıkıyordu.
+| Role | Size | Used for |
+|---|---:|---|
+| `display` | 56px | marketing hero — not used by a component |
+| `h1` | 40px | |
+| `h2` | 30px | page title (`page-title`, balanced wrapping) |
+| `h3` | 22px | section heading (`heading()` default) |
+| `h4` | 18px | |
+| `lead` | 17px | intro paragraph |
+| `body` | 15px | body, field text on a desktop pointer |
+| `small` | 13px | interface text: labels, table, dense controls |
+| `caption` | 12px | help text, overline; the smallest size there is |
+| `code` | 13px | IBM Plex Mono |
 
-### Birincil eylem İKİ TEMADA DA çam — sınırı `action-line` taşır
-
-Çam koyu yüzeylerde kayboluyor; düğmeyi dolgusu değil **kenarı** görünür kılar:
-
-| Zemin | Çam dolgu (`action`) | Mint sınır (`action-line`) |
-|---|---|---|
-| `page` (`#141413`) | **1,31:1** | 14,06:1 |
-| `surface` | 1,27:1 | 13,67:1 |
-| `surface-2` | 1,18:1 | 12,72:1 |
-| `surface-3` | **1,03:1** | 11,11:1 |
-
-Metin beyaz (13,99:1). Çözüm bilinçli olarak dolguyu açmak değil sınır vermek:
-dolguyu bir kademe açmak çamdan çıkmak, iki kademe açmak mint dolguya varmak olurdu.
-
-- `action-line` **açık temada dolgunun kendisidir** — görünmez, ama 1 px'lik
-  kenarlık iki temada da yazıldığı için düğmenin ölçüsü değişmez.
-- `check-contrast.mjs`: `action-line` üç yüzeye karşı **`graphic`** katmanında
-  (≥3:1); dolgunun kendisi advisory listede (1,03:1 orada bilinçli bir kayıt).
-- Aynı kenarlığı `IconButton--solid` ve `Badge--action.solid` da taşır.
-- ⚠ `action-line` **teknik bir yüzeyin rengi değildir.** `CodeBadge` 4.x'te çam
-  dolgu + `action-line` sınır + `action-line` "kopyalandı" tiki taşıyordu ve açık
-  temada `action-line` = `action` olduğu için tik ile odak halkası dolguyla aynı
-  renkteydi (**1:1, görünmüyordu**). 5.0'da `CodeBadge` mürekkep yüzeyde (`shell`).
-
-### Dönüşüm düğmesi — ailenin en parlak yeşili
-
-`cart*` ("sepete ekle") birincil eylemden ton açısıyla değil **aydınlıkla**
-ayrışır: birincil **koyu dolgu + açık metin**, dönüşüm **açık dolgu + siyah
-metin**.
-
-| | Dolgu | Metin | Birincil eyleme karşı |
-|---|---|---|---|
-| Açık tema | `#1ba055` | siyah (5,61:1) | 4,17:1 |
-| Koyu tema | `#37c971` | siyah (8,82:1) | 6,55:1 |
-
-⚠ **Etkileşim yönü açık temada TERS**: hover **açılır**, active **koyulur**.
-Metin siyah olduğu için koyulaşan her kademe metin eşiğini aşağı çeker;
-`cart-active` 4,82:1 ile tabanın hemen üstünde.
-
-⚠ **Bu mint dolgu DEĞİL** — "açık yeşil zeminli düğme yok" kuralı logonun rengini
-korur; buradaki yeşil olumlu durum ailesinin ekseninde (H 152).
-
-### Mürekkep yüzey — `shell*`, temaya göre DÖNMEZ
-
-Terminal, teknik blok, koyu kod penceresi, `CodeBadge`. İki temada da sıcak
-siyah: `shell` / `shell-2` / `shell-3` = `#181715` / `#1f1e1b` / `#2a2925`,
-üzerine `on-shell` (`#faf9f5`, 17,00:1), `on-shell-2` (`#b4b1a9`) ve hata metni
-için `on-shell-danger` (`#f2a099`, 7,12-8,76:1 — açık temanın `bad-fg`i mürekkep
-üzerinde 2:1'in altında kalıyor).
-
-- 4.x'te `shell*` **çamdı** ve "uygulama kabuğu" diye tanımlıydı. Yeşil teknik bir
-  yüzeyin zemini değil, eylemin rengi.
-- ⚠ Koyu temada kabuk sayfadan 1,03:1 ayrışıyor — görünür kılan `shell-line`.
-
-### Marka şeridi — `band-*`, temaya göre DÖNMEZ
-
-`band-*` iki temada da birebir aynı: çam zemin + kâğıt gövde metni (12,75:1) +
-sis ikincil metin (6,46:1) + üçüncü kademe (5,20:1) + `BAND.darkLine` ayırıcı.
-Şeridin metinleri **marka ekseninde** kalır (`CORPORATE`, `BAND.fgThree`): çam
-üzerinde sıcak gri yazı kirli duruyor.
-
-⚠ Böyle bir yüzeyde `nav-fg-2` **kullanılamaz** — açık temada çam üzerinde
-**1,62:1**. Şerit üzerine yazan her şey `band-fg*` kullanır; hover zemini
-`band-hover`.
-
-⚠ Tema alt ağaca **kapsamlandırılamaz**: `_tokens.generated.scss` `light`/`dark`
-karışımlarını yalnızca `:root`a bağlar. "Bu şeridi koyu temaya sabitle" demek
-için `data-ui-theme`i bir `<div>`e yazmak **çalışmaz**; doğru yol tam olarak
-budur — temadan bağımsız bir token ailesi (`band-*`, `shell*`).
-
-### Bağlantı ve odak — yeşil kalan üç yerden ikisi
-
-Bağlantı ve odak halkası 4.x `role` ailesinin yeşil kalan yarısı (`LINK`, H 162).
-
-⚠ **H 162 GÖZLE ÖLÇÜLDÜ.** Rol rengi bir sürüm boyunca H 182'de durdu: ölçüm
-olarak temizdi ve düşen şey markaydı — ekranda **camgöbeği** okunuyordu. H 174
-hâlâ camgöbeği-teal, H 168 (çamın kendi açısı) yüksek aydınlıkta turkuaz, H 156
-olumlu durumla çakışıyor, H 150 mintin kendisi. H 162 dizideki ilk kesin yeşil.
-
-⚠ **Bağlantının alt çizgisi ZORUNLU** (satır içinde): bağlantı gövde metnine
-yalnızca **3,04:1** — 1.4.1'in eşiğinin hemen üstü. `TextLink` tek başına
-durduğu (oku ve kalınlığı var) için durgunken alt çizgisiz.
-
-⚠ **Odak halkası bağlantı yeşili ve çam OLAMAZ** — birincil düğmenin dolgusuyla
-aynı ton. Halka `focus-ring` varsayılan `outline-offset` **+2px** ile sayfanın
-üzerinde duruyor: açıkta 4,32-5,18:1, koyuda 9,07-10,03:1.
-
-⚠ **Olumlu durumla karışma ton açısıyla değil BİÇİMLE çözülür.** Durum her zaman
-tint zemin + kenarlık taşıyan bir rozet; bağlantı ise metin.
-
-### Durum tintleri
-
-Hepsi **tint zemin + koyu metin + eşleşen hairline**, asla doygun dolgu.
-
-| `tone` | Anlam | Aile |
-|---|---|---|
-| `success` | Stokta / aracına uyar | olumlu yeşil (H 152) |
-| `warning` | Son N adet | amber (H 72) |
-| `neutral` | Tükendi | **nötr eksen** (gri, kremden ayrı) |
-| `danger` | Aracınıza uymaz | kırmızı (H 25) |
-| `oem` | Orijinal OEM | yeşil (H 158) |
-| `alt` | Muadil | **menekşe** (H 300) |
-| `info` | Nötr bilgi | **nötr mürekkep** (`selected-tint` + `border-strong` + `text`) |
-
-⚠ **Durum zemini yüzeyle karışmaz — kapı var.** Krem yüzeyler (H 80-95) uyarı ve
-tehlike ailelerine ton açısıyla çok yakın; 4.x şablonuyla krem kartta (`surface-2`)
-uyarı tinti **ΔE 2,0**, tehlike **2,1** veriyordu — sayfa→kart kademesi 4,7.
-Zemin şablonu bir kademe aşağı ve doygun (l .928 → .91, s .62 → .8); uyarı 4,8,
-tehlike 4,2. Nöbetçi `build-palette.mjs`: her ailenin zemini temasının sayfa /
-yüzey / kart üçlüsüne karşı **ΔE×100 ≥ 4** (`MIN_TINT_DELTA_E`).
-
-⚠ **Olumlu zemin şablona İNMEZ** (`ok-bg` `#c2f6cf`): yeşil ton açısında s .8
-mint'e yaklaşan bir dolgu üretiyordu ve "Stokta" rozeti imza rengini taşımaya
-başlıyordu.
-
-⚠ **`info` artık yeşil değil.** 4.x'te rol tintiydi ve `Alert`in VARSAYILAN tonu
-olduğu için yeşili her uyarıya taşıyordu. Anlamı ikon taşır (1.4.1).
-
-⚠ **`alt` menekşe KALDI.** `oem` ile `alt` bir çiftin iki yarısı ("Orijinal" ↔
-"Muadil") ve ayrımı taşıyan tek görsel sinyal ton açısı.
-
-⚠ `$danger-solid` ayrıdır: yıkıcı bir **eylem** dolgusu (silme onayı), durum
-tinti değil.
-
-⚠ **Yıldız** (`star`, `#846310`) krem kartta metin eşiğini de geçer: 4.x
-değeriyle 4,15:1'e düşüyordu, 5.0'da 4,61:1.
-
-### Kategorik palet — `cat-1…5`, `series-1/2`
-
-Grafik serileri, kategori noktaları, lejant kareleri. Beş ton (mavi, kil
-turuncusu, yeşil, okra, erik) sabit L/C şablonundan, değişen yalnızca ton açısı.
-
-- Her ton iki temanın üç yüzeyinde **≥3:1** (`check:contrast`, grafik katmanı).
-- İki ton arasında **ΔE ≥ 8** (üreteç; en yakın çift 10,5).
-- ⚠ **Marka yeşilleri seri rengi OLMAZ.** `series-1` mürekkebin kendisi (açıkta
-  `#252523`, koyuda krem); `cat-3` orta aydınlıkta bir kategori yeşili, çam ya da
-  mint değil.
-- ⚠ `cat-2` kil **turuncusu** (H 42): H 30'da tehlike ailesiyle (H 25) karışıyordu.
-- Sözdizimi renkleri (`syntax-*`) aynı beş tondan, **metin** aydınlığında —
-  bkz. "`CodeBlock` — yerleşik vurgulayıcı ve biçimlendirici".
-
-## Tipografi rolleri
-
-| Rol | Kademe | Not |
-|---|---|---|
-| Sayfa başlığı | `page-title` | Akışkan: 640-1360 px arası kademesiz |
-| Bölüm başlığı | `heading(xl)` | |
-| Panel başlığı | `heading(base)` | 19 px altı → arayüz fontu |
-| Gövde | `font-size-base` | |
-| Arayüz metni | `font-size-sm` | Düğme, etiket, tablo |
-| Yardım metni | `font-size-xs` | |
-| Overline | `font-size-2xs` | Büyük harf + `tracking-wide` |
-
-⚠ `heading()` punto değil **kademe adı** alır: puntolar çalışma zamanında
-ezilebilir ve "19 px eşiği" sabit bir sayı olarak anlamını yitiriyor.
+- `@include type($role)` writes family, size, weight, stretch, line height and letter spacing of a
+  role; `@include heading($role)` is a heading role in the text colour. An unknown role is a
+  compile error. Headings are Archivo, text is Inter, code is IBM Plex Mono (`fonts.css` of the
+  design package; the application decides whether to load it).
+- ⚠ **A block title inside a surface is NOT a heading role** (`block-title`: body size, semibold,
+  body font). The smallest heading role is 18px and is too loud next to 13 – 15px content in a
+  panel, a dialog or a sheet.
+- The 1.x steps (`font-size-2xs … 4xl`, `font-size-base`, `heading(xl)`) are gone; the table in
+  `CHANGELOG.md` maps each one.
+- `$font-size-control` is `max(16px, body)`: the size of a text field on a narrow or touch screen
+  (see "Değişmez kurallar").
 
 ## Erişilebilirlik
 
@@ -413,12 +318,13 @@ ezilebilir ve "19 px eşiği" sabit bir sayı olarak anlamını yitiriyor.
 ayırt etmek için GEREKLİ" görsel bilgiyi kapsar; rozetin kenarlığı anlamın tek
 taşıyıcısı değil ve 3:1'e zorlamak her rozeti çerçeveli bir etikete çevirirdi.
 
-⚠ **Pasif denetimde tek istisna: ETİKET.** Pasif dolgu advisory kalır ama
-üzerindeki **metin** ölçülür ve eşiği tutmazsa derleme kırılır. WCAG bunu
-istemiyor (1.4.3/1.4.11 pasif bileşeni muaf tutuyor) ama muafiyetin bedeli
-ölçüldü: pasif düğme etiketi açık temada **1,55:1** çiziliyordu ve çift
-denetçinin listesinde hiç yoktu. Pasiflik **dolgunun geri çekilmesiyle**
-bildirilir, metnin silinmesiyle değil.
+⚠ **2.0 — the label of a disabled control is ADVISORY.** Through 1.x the text on a disabled fill
+was gated at 4.5:1 (the measured cost of the exemption then: a disabled button label drawn at
+**1.55:1** in light, absent from the checker's list). In 2.0 a disabled `Button` / `IconButton`
+draws design's disabled pair, `text-disabled` on `bg-disabled`: **2.06:1** light, **2.28:1** dark.
+WCAG 1.4.3 exempts disabled controls; the pair is still measured and printed on every run, so it
+cannot drift silently. The decision and the alternatives are in the table of "Contrast gate".
+A disabled FIELD (`passive-surface()`, `text-3` on `bg-raised`) stays readable.
 
 ### Değişmez kurallar
 
@@ -426,7 +332,7 @@ bildirilir, metnin silinmesiyle değil.
   bildirilir: `Switch` kulbun konumu, `Steps` üç ayrı işaret, `Timeline` tik ve
   çarpı, `Stat` ok yönü + okunan metin.
 - **Dokunma hedefi ≥ 44×44** (2.5.8) — görsel kutu büyütülmeden
-  `@include tap-target`. Yoğun kipte de küçülmez.
+  `@include tap-target`.
   ⚠ **KURAL İKİ BİLEŞENDE ÇİĞNENİYORDU ve nöbetçi bunu göremedi** (2026-09-22):
   `Chip` 40px, `Pagination` dar ekranda **36×40**. `__tests__/styles/tap-targets.test.ts`
   ELLE bakılan bir liste ve ikisi listede değildi — yani kural yazılıydı,
@@ -448,8 +354,9 @@ bildirilir, metnin silinmesiyle değil.
   "metin girdileri dar ekranda 16px ALTINA inmez": galerinin TAMAMINDA
   hesaplanmış stili ölçer (düzeltmeden önce `Input` 15,06px ile kırıyordu).
   Tüketicideki geçici ölçü (`MaskedInput`) 5.3'e geçince kaldırılabilir.
-- **Odak halkası `:focus-visible`**, bağlantı yeşili (`ring-color`), asla kaldırılmaz. `outline: none`
-  yalnızca yerine başka bir gösterge çizildiği dört yerde. `:focus` kullanmak
+- **Odak halkası `:focus-visible`**, kobalt (`$focus`; kuyuda `$focus-inset` — bkz. "Link and
+  focus"), asla kaldırılmaz. `outline: none`
+  yalnızca yerine başka bir gösterge çizildiği yerlerde. `:focus` kullanmak
   fareyle tıklandığında da halka gösteriyor ve kullanıcılar bunu hata sanıyordu.
 - **Kaydırılabilir bölge klavyeyle ulaşılabilir** (2.1.1). `ScrollArea` taşmayı
   ölçüp `tabindex`i yalnızca gerçekten gerekiyorsa yazar.
@@ -475,24 +382,28 @@ kapatıldı. Yeni bir yerde ham `<select>` yazılmaz.
 Bileşenler kendi sürelerini SEÇMEZ; ölçek dışı süre gerekiyorsa token'a eklenir.
 Nöbetçi `stylelint.config.mjs` — bileşen SCSS'inde ham `ms`/`s` yasak.
 
+2.0: the scale is design's (three steps; the 1.x `duration-instant` 80 ms and `duration-normal`
+are gone, `duration-fast` moved from 140 to 120 ms).
+
 | Token | Süre | Ne için |
 |---|---:|---|
-| `duration-instant` | 80 ms | Basma, tik, sayaç |
-| `duration-fast` | 140 ms | Hover, odak, renk, kenarlık |
-| `duration-normal` | 200 ms | Kip pencere, panel, açılır liste |
-| `duration-slow` | 320 ms | Dipten açılan panel, uzun kayma |
+| `duration-fast` | 120 ms | Hover, odak, renk, kenarlık, basma |
+| `duration-base` | 200 ms | Kip pencere, çekmece, dipten açılan panel, `Disclosure`, `Progress`, `Toast` |
+| `duration-slow` | 320 ms | Uzun kayma (`Card` görselinin büyümesi) |
 
 ⚠ **200 ms üzerindeki geçişler** tıklama ile sonuç arasında görünür gecikme
 yaratır ve arayüz yavaş hissedilir.
 
-**Döngü süreleri ölçekten AYRI**: `duration-spin` 700 ms, `duration-shimmer`
+**Döngü süreleri ölçekten AYRI** ve kütüphanenin kendi sabitleri (design'da karşılığı yok):
+`duration-spin` 700 ms, `duration-shimmer`
 1400 ms, `duration-pulse` 1600 ms (`StatusDot` nabzı — 700 ms telaş, 2 sn ölü gibi
 okunuyordu; nabız noktayı soluklaştırmaz, etrafında sönen bir HALE çizer). Sürekli dönen bir gösterge bir *geçiş* değil — 320 ms'lik dönüş baş
-döndürücü, 140 ms'lik parıltı titreşim gibi okunuyor. Ayrı isim vermenin sebebi
+döndürücü, 120 ms'lik parıltı titreşim gibi okunuyor. Ayrı isim vermenin sebebi
 ölçekten kaçmak değil **ölçeği korumak**.
 
-**Eğriler:** `ease-out` yüzey açılışı ve giriş · `ease-in-out` iki yönü de
-anlamlı geçiş · `ease-spring` **yalnızca** dipten açılan panel.
+**Eğriler (2.0, design'ın):** `ease-standard` her geçişin eğrisi. `ease-enter` / `ease-exit`
+takma ad olarak duruyor, bugün hiçbir bileşen kullanmıyor. 1.x'in `ease-out`, `ease-in-out` ve
+`ease-spring` eğrileri yok: dipten açılan panel de `ease-standard` ile açılır.
 
 **Giriş ve çıkış SİMETRİK.** Kipsel yüzeyler açılırken canlanıp kapanırken bir
 karede yok oluyordu; kullanıcı neyin kapandığını göremiyordu.
@@ -632,7 +543,8 @@ yalnızca burada vardı.
 koşuyordu (tek masaüstü projesi `visual` ekran görüntüsü alıyor) ve
 `Combobox`/`Select` dar ekranda **alt sayfa** açıyor. Yani bu iki bileşenin
 `popover` dalı — panelin konumlandırıldığı **tek** dal — hiçbir tarayıcı testi
-tarafından çalıştırılmıyordu.
+tarafından çalıştırılmıyordu. (2.0: alt sayfa yalnızca dar VE dokunmatik ekranda açılır,
+`SHEET_MEDIA_QUERY`; dar bir masaüstü penceresi de `popover` dalını çalıştırır.)
 
 ⚠ **Görsel nöbetçi arızayı ZATEN GÖRMÜŞTÜ, kimse bakmadı.** Depodaki
 `Combobox-light.png` **1232×155**; hatalı kod aynı bölümü **1232×180** çiziyor,
@@ -708,7 +620,7 @@ eklendi (ölçüldü: ana giriş 42 000 bayt, önce ve sonra).
 | Derleme | `vite.chat.config.ts` (`vite.subentry.ts`) → `build/chat.js`, `chat.cjs`, `chat.css` |
 | Tipler | `tsconfig.subentries.json` → `build/types/chat/` (dosya başına) |
 | Dışa aktarım | `exports["./chat"]`, `exports["./chat.css"]` |
-| Bütçe | `chat.js` 13 kB (ölçülen 11,78; vurgulayıcıdan önce 6,29) · yalnızca `CodeBlock` 7 kB (6,25) · yalnızca `ChatThread` 1,3 kB (1,03) · `chat.css` 5 kB (4,19) |
+| Bütçe | `chat.js` 13 kB (2.0'da ölçülen 11,76; vurgulayıcıdan önce 6,29) · yalnızca `CodeBlock` 7 kB (6,25) · yalnızca `ChatThread` 1,3 kB (1,04) · `chat.css` 5 kB (4,03) |
 | API taban çizgisi | `scripts/api-baseline.chat.txt` (30 ad) |
 
 ⚠ **ANA GİRİŞ DIŞSAL — sohbet kodu onu PAKET ADIYLA alır.** Bir sohbet
@@ -742,14 +654,14 @@ girişinin cephe dosyasındaki `export { … } from` satırlarını okur.
 | Grup | Bileşen | Not |
 |---|---|---|
 | İskelet | `ChatThread` | Sona yapışık kaydırma, "en yeniye in", alt dok. ⚠ Akan belirteçler OKUNMAZ (`aria-live` yok, `role="log"` değil); yanıt bitince TEK cümle duyurulur (`labels.chat.replyReady`) |
-| | `ChatMessage` (`author`) | Kullanıcı balonu `surface-2`; eylemler hover'da VE `:focus-within`de belirginleşir (renkle, `opacity` değil) |
-| | `PromptInput` | `Enter` gönderir, `Shift+Enter` satır, IME yazımında `Enter` GÖNDERMEZ; `Escape` akışı durdurur ama açık bir yüzey varken DOKUNMAZ (`hasOpenSurface`). Gönder = çam (ekranın tek PRIMARY'si) |
+| | `ChatMessage` (`author`) | Kullanıcı balonu `bg-raised`; eylemler hover'da VE `:focus-within`de belirginleşir (renkle, `opacity` değil) |
+| | `PromptInput` | `Enter` gönderir, `Shift+Enter` satır, IME yazımında `Enter` GÖNDERMEZ; `Escape` akışı durdurur ama açık bir yüzey varken DOKUNMAZ (`hasOpenSurface`). Gönder = kobalt dolgu (`IconButton variant="solid"`, ekranın tek birincil eylemi) |
 | | `PromptSuggestions` | EYLEM ızgarası, seçim değil (`ChipGroup` değil) |
 | Yanıt | `Prose` | Tipografi kabı; ayrıştırıcı İÇERMEZ (markdown/KaTeX tüketicide) |
 | | `CodeBlock` | Yerleşik vurgulayıcı + biçimlendirici, bağımlılıksız (aşağıda); `html` (Shiki) verilirse onun yerine geçer — güvenliği ÇAĞIRANIN |
 | | `ReasoningBlock` + `ReasoningText` | Tur sürerken açık, bitince kapanır — kullanıcı dokunduysa tercihine DOKUNULMAZ |
 | | `ToolCall` + `ToolCallSection` | Durum nokta + OKUNAN metin (`labels.chat.toolStatus`); çalışan nokta NÖTR nabız |
-| | `TerminalOutput` | Mürekkep yüzey (`shell*`), sona yapışık; stderr gizli önek taşır (renk tek başına anlam taşımaz) |
+| | `TerminalOutput` | Temadan bağımsız koyu yüzey (`inverse-*`), sona yapışık; stderr gizli önek taşır (renk tek başına anlam taşımaz) |
 | | `SourceList` + `Citation` | Atıfın okunan adı `labels.chat.citation(n)` |
 | | `MessageActions` | `role="toolbar"`, ok/`Home`/`End` |
 | Uygulama | `AppBar` | Kendi yüksekliğini `--ui-header-height`e yazar |
@@ -758,10 +670,11 @@ girişinin cephe dosyasındaki `export { … } from` satırlarını okur.
 | | `Legend` · `DescriptionList` | Kategorik palet; `tone` (`color` değil — tek ad kuralı) |
 
 **Plandan sapmalar:** `ChatMessage.role` → `author` (`role` HTML özniteliğiyle
-çakışıyordu); `StatusDot`ta `brand` tonu yok (yeşil seyrek); `SegmentBar`
+çakışıyordu); `StatusDot`ta `brand` tonu yok (tonlar: `neutral`, `success`, `warning`,
+`danger`); `SegmentBar`
 parça başına `Tooltip` yerine tek bir okunan özet (çubuğun içinde sekme durağı
 dizmek daha az bilgi verip daha çok tuş istiyordu); `code-bg` / `terminal-*`
-token'ları eklenmedi (`surface-inset` ve `shell*` karşılıyor).
+token'ları eklenmedi (2.0 adlarıyla `bg-inset` ve `inverse-*` karşılıyor).
 
 ### `CodeBlock` — yerleşik vurgulayıcı ve biçimlendirici (5.4)
 
@@ -807,35 +720,33 @@ kipi):
 - Kopyalanan metin ekranda görünendir. `html` verildiyse `code` biçimlendirilmez
   ve olduğu gibi kopyalanır — HTML ondan üretildi, ikisi ayrışmamalı.
 
-**Sözdizimi renkleri — `syntax-*`, yalnızca `chat.css`:**
+**Syntax colours (2.0) — semantic design tokens, no `syntax-*` family:**
 
-| Token | Ton | Açık | Koyu | Ne |
-|---|---|---|---|---|
-| `syntax-keyword` | erik (`cat5`) | `#a4277a` | `#f691cc` | anahtar kelime, HTML etiketi, fark başlığı |
-| `syntax-string` | kil (`cat2`) | `#9d451f` | `#f59e7c` | dize, düzenli ifade |
-| `syntax-number` | menekşe (`series2`) | `#7b2dcd` | `#c2a7f5` | sayı, değişmez (`true`, `null`), SABİT (`MAX_SIZE`) |
-| `syntax-name` | mavi (`cat1`) | `#2063b0` | `#8dbaf5` | işlev çağrısı, özellik/anahtar, öznitelik, değişken |
-| `syntax-type` | okra (`cat4`) | `#76611f` | `#d9b341` | tip, sınıf, JSX bileşeni |
+| Kind | Token | On the code well (`bg-inset`), light / dark |
+|---|---|---|
+| keyword, HTML tag, diff header | `primary-text` | 6.42 / 11.62:1 |
+| string, regular expression | `success-fg` | 4.88 / 13.00:1 |
+| number, literal (`true`, `null`), CONSTANT | `warning-fg` | 4.61 / 13.03:1 |
+| function call, property / key, attribute, variable | `text` | 16.47 / 18.04:1 |
+| type, class, JSX component | `highlight-text` | 4.93 / 12.82:1 |
+| comment (italic), punctuation | `text-2` | 5.98 / 11.08:1 |
+| diff `+` / `-` line | `success-fg` / `danger-fg` | 4.88 / 13.00 · 6.44 / 11.24:1 |
 
-Yorum `text-3` + eğik, noktalama `text-2`, fark satırları `ok-fg` / `bad-fg`
-(anlamı `+`/`-` öneki de taşır) — ayrı token değil.
-
-- Kontrast: kod gövdesinde (`surface-inset`) açıkta 5,28-5,97:1, koyuda
-  9,05-9,63:1; dört yüzeyde en düşük 4,96:1 (`check:contrast`, metin katmanı ≥4,5).
-- En yakın çift koyu temada sayı / ad: **ΔE 8,02**; kapı
-  `MIN_SYNTAX_DELTA_E = 8` (üreteç). Koyu temada açık tonlar birbirine yaklaşıyor:
-  doygunluk `.7`yken bu çift 5,7'ye düşüyordu.
-- ⚠ **Yeşil YOK.** Dize çoğu temada yeşil, ama kod bloğu bağlantının ve birincil
-  eylemin yanında duruyor.
-- ⚠ **Ana token tablosunda DEĞİL.** `LIGHT_THEME`e eklendiklerinde çalışma zamanı
-  tablosuyla HER bileşenin paketine biniyorlardı — ölçüldü: yalnızca `Button` alan
-  uygulama 5,12 → **5,28 kB** (bütçe 5,2), `Badge` 4,33 → 4,49, `styles.css`
-  +0,1 kB; vitrin kullanmadığı bir özelliğin bedelini ödüyordu. Yol:
-  `SYNTAX_LIGHT_THEME` / `SYNTAX_DARK_THEME` (`tokens.ts`) →
-  `_syntax.generated.scss` → yalnızca `CodeBlock` `@use` eder → `:root` kuralları
-  `chat.css`e iner. Ana pakete sıfır bayt (42,05 kB ve 23,09 kB, önce ve sonra).
-  Bedeli: ezme CSS'te (`--ui-syntax-keyword`); `UiProvider theme`,
-  `useUiTokens` ve SCSS API bu adları tanımaz.
+- The five `syntax-*` tokens of 1.x (plum, clay, violet, blue, ochre; generated into
+  `_syntax.generated.scss`, overridden through `--ui-syntax-*`) are gone with the palette recipe.
+  Design has no syntax family and none is invented here: a code block draws with text pairs that
+  `check:contrast` already measures, in both themes.
+- ⚠ The 1.x rule "no green in a code block" is gone with the green brand: a string is
+  `success-fg`. Type names are turquoise (`highlight-text`), which is why `CodeBlock` is on the
+  allow-list of `colour-footprint.test.ts`.
+- ⚠ A comment is `text-2`, NOT `text-3`: `text-3` is 4.35:1 on `bg-inset` in light. The italic
+  carries the difference from punctuation.
+- The Shiki path (`html`) is unchanged: `--shiki-light` / `--shiki-dark` picked with
+  `light-dark()`, which follows design's `color-scheme` on the root and on a `data-theme` island.
+  Its colours are the caller's and are not measured here.
+- The tightest pair is a number in light (4.61:1). 1.x also gated the distance BETWEEN the kinds
+  (ΔE ≥ 8); that gate is gone with the generator — keyword and name now differ by cobalt against
+  the text colour, string and number by green against amber.
 
 **Bütçe:** sohbet girişi 6,29 → 11,78 kB (vurgulayıcı 4,93, biçimlendirici 0,43);
 bütçe 8 → 13 kB. Bedeli yalnızca `CodeBlock` alan öder — diller ve kelime kümeleri
@@ -844,7 +755,7 @@ ilk kullanımda kurulur (fabrika), modül düzeyinde açıklamasız çağrı yok
 | nöbetçi | ne tutuyor |
 |---|---|
 | `__tests__/chat/code-block.test.tsx` | parçalar birleşince kodun KENDİSİ; hiçbir kural bayrak, yakalayan grup ya da boş eşleşme taşımaz; dil başına ölçülmüş kararlar; biçimlendiricinin `JSON.stringify` eşdeğerliği ve metni koruması; kopyalanan metin |
-| `__tests__/theme/tokens.contract.test.ts` "sözdizimi token'ları" | `_syntax.generated.scss` tabloyla birebir; ana token dosyasında `--ui-syntax-` geçerse kırar |
+| `__tests__/styles/design-contract.test.ts` · `scripts/check-contrast.mjs` | sözdizimi renkleri design'da VAR OLAN token'lar ve kod kuyusundaki (`bg-inset`) çiftleri ölçülüyor (2.0; 1.x'in `tokens.contract.test.ts` nöbetçisi üreteçle birlikte kalktı) |
 | `.size-limit.js` "yalnızca ChatThread" (1,3 kB) | vurgulayıcı başka bir sohbet bileşenine sızarsa |
 | `.size-limit.js` "yalnızca CodeBlock" (7 kB) | yeni bir dil buradan geçer |
 
@@ -859,7 +770,7 @@ On grafik, **sıfır bağımlılık**: ölçek, istatistik ve yol üretimi
 |---|---|
 | Kaynak | `src/charts/<Grafik>/` · ortak çekirdek `src/charts/core/` · cephe `src/charts/index.ts` |
 | Derleme | `vite.charts.config.ts` → `build/charts.js`, `charts.cjs`, `charts.css` |
-| Bütçe | tümü 16 kB (ölçülen 14,02) · yalnızca `LineChart` 8,5 kB (7,19) · `charts.css` 2 kB (1,55) |
+| Bütçe | tümü 16 kB (2.0'da ölçülen 14,17) · yalnızca `LineChart` 8,5 kB (7,36) · `charts.css` 2 kB (1,57) |
 | API taban çizgisi | `scripts/api-baseline.charts.txt` (22 ad) |
 | Testler | `__tests__/charts/` — çekirdek (37), davranış (22), eksen taraması (her senaryo × {kapalı, ipucu açık}) |
 
@@ -873,7 +784,7 @@ On grafik, **sıfır bağımlılık**: ölçek, istatistik ve yol üretimi
 | `Heatmap` / `ScatterPlot` | İki KATEGORİK eksen / iki SAYISAL eksen | |
 | `RadarChart` | Aynı ölçekte 3+ eksen | Birimleri farklı eksenler önce 0-100'e normalleştirilir — ortak ölçek yoksa alan bir şey söylemez |
 
-⚠ **Ana giriş bütçesi 42 → 43 kB (bu turda).** Aşım grafiklerden DEĞİL:
+⚠ **Ana giriş bütçesi 42 → 43 kB (5.3'te; bugün 44 kB, 2.0'da ölçülen 39,47).** Aşım grafiklerden DEĞİL:
 `UiThemeScript` (5.2) 42 000 baytlık girişi 42 050'ye taşıdı ve önceki dalda
 `size-limit` koşulmamıştı. Sohbet ve grafikler tam da bu bütçe yüzünden ayrı
 girişte; ana girişe eklenecek her yeni bileşen önce "alt girişe aday mı?"
@@ -908,8 +819,10 @@ kendisi yazmaz:
 - **İşaretçi**: tek dinleyici, kare başına bir isabet hesabı
   (`requestAnimationFrame`). Ağır çizim (`plot`) belleğe alınmış öğe; üzerine
   gelindiğinde yeniden çizilen yalnızca vurgu katmanı (`overlay`/`underlay`).
-- **Renk**: `var(--ui-cat-N)` + `color-mix` ile tint; yeşil marka ailesi
-  YOK (yeşil ayak izi nöbetçisi `src/charts`i de tarıyor).
+- **Renk (2.0)**: design'ın altı seri token'ı, `chart-1…6` (`core/palette.ts` → `cssVar`, yani
+  `var(--hd-chart-N)`; `muted` = `text-3`) + `color-mix` ile tint. Mercan, turkuaz ve bant
+  grafiklerde YOK (`colour-footprint.test.ts` `src/charts`i de tarıyor). 1.x'in `cat-*` /
+  `series-*` ton adları kalktı.
 
 ⚠ **İpucunun yatay konumu ÖLÇÜLEREK yazılır** (`useLayoutEffect`, boyamadan
 önce). Genişlik içeriğe bağlı; sabit bir varsayımla dar ekranda ipucu kutudan
@@ -969,7 +882,35 @@ girişi etkilenmemişti (orada `export type {` satırı yok).
 kırılma yok. Nöbetçi: `__tests__/api-consistency.test.ts` — burada kayıtlı
 olmayan bir `@deprecated` prop derlemeyi kırar.
 
+### 2.0 (`@handijit/ui`) — the tokens of `@handijit/design`; BREAKING, no alias
+
+The whole migration, old → new for every token, CSS variable, SCSS name, prop, variant, export and
+stylesheet path, is in `CHANGELOG.md` ("Migration from 1.x", nine steps and one table). Kept here:
+what changed in the contract, so that the older entries below are read correctly.
+
+| What | 1.x | 2.0 |
+|---|---|---|
+| Tokens | the library's own recipe and `--ui-*` palette, shipped in `base.css` / `styles.css` | `@handijit/design` (peer `^1.0.0`), `--hd-*`, loaded once by the application; the library ships none |
+| Theme attribute | `data-ui-theme`, absent when following the system | design's `data-theme`, always the resolved theme; stored choice in `localStorage["hd-theme"]` |
+| Boot script | written here | `THEME_BOOT_SCRIPT` and `THEME_BOOT_SCRIPT_HASH` of design, re-exported; `UiThemeScript` takes a `nonce` |
+| Theme API | `UiProvider theme`, `initUi`, `applyThemeConfig`, `buildThemeCss`, `resolveTokens`, an injected `<style>` | removed; an override is a `--hd-*` declaration in the application's stylesheet. The library injects no `<style>` |
+| Density | `data-ui-density`, `UiDensity` | removed |
+| Variants | `UIVariant.CART` / `LIGHT` / `DARK`, `IconButton` `cart`, `Badge` tones `oem` `alt` `sale` `action` `link` | `ACCENT` / `SOFT` / `ON_BAND`, `accent`; the shop tones are removed |
+| Control height | 30 / 36 / 44 / 52, fields always 44px / 16px | 28 / 32 / 40 / 48; fields 40px / 15px on a desktop pointer, 44px / 16px on a narrow or touch screen |
+| `Select` / `Combobox` | a bottom sheet under 640px, by width alone | a bottom sheet only when narrow AND touch (`SHEET_MEDIA_QUERY`); a dropdown everywhere else |
+| Layers | 200 – 500 | design's: 1000 – 1500 |
+
+⚠ **Superseded by 2.0, kept as history:** "5.0 token sözleşmesi" (every name in its table is
+gone), "5.6.3 — Tema ezmesi" (`UiProvider theme`, `initUi` and `<style id="ui-theme-overrides">`
+no longer exist; an application override is unlayered CSS and still wins over `@layer ui`), and
+the token and breakpoint names inside "5.3 — SCSS API" (`var(--ui-…)`, `_tokens.generated.scss`,
+`$breakpoint-tablet-portrait`; the SCSS surface is 225 names today, `scripts/api-baseline.scss.txt`).
+The mechanics those entries describe (per-component modules, the client boundary, CSS delivery,
+the anchored surfaces) are unchanged.
+
 ### 5.0 token sözleşmesi — KIRICI, takma ad YOK
+
+⚠ 2.0'da geçersiz (yukarıdaki not); tarihçe olarak duruyor.
 
 Renk token'ları prop değil, ama `--ui-*` adları tüketicinin sözleşmesi. 5.0
 büyük sürüm olduğu için eski adlar **bırakılmadı**: `role*` iki farklı renk
@@ -1042,6 +983,8 @@ Kararlar ve neden öyle:
   kapalıyken). Açıkken yan etkisiz modüllerin CSS içe aktarımlarını düşürdüğü de ölçüldü (Next 16.4.5).
 
 ### 5.6.3 — Tema ezmesi katmanda ve sunucu çiziminde
+
+⚠ 2.0'da geçersiz (bkz. "2.0" notu): sağlayıcı artık tema almıyor ve `<style>` çizmiyor. Tarihçe.
 
 Tüketicide ölçüldü (2026-11-02, yönetim paneli, koyu tema; JS kapalı ve açık çizimin hesaplanmış
 stilleri karşılaştırıldı): panel `<html>`e kendi paletini yazıyor
@@ -1221,9 +1164,13 @@ Tüketici token değişkenlerini ve mixin'leri KOPYALAMADAN alır:
 .panel {
   padding: ui.$space-4;
   @include ui.focus-ring;
-  @media (max-width: ui.$breakpoint-tablet-portrait) { … }
+  @media (max-width: ui.$breakpoint-md) { … }
 }
 ```
+
+⚠ 2.0: the variables are aliases of design tokens (`ui.$primary` is `var(--hd-primary)`), the
+breakpoints are `$breakpoint-sm` / `-md` / `-lg` / `-xl`, and the module is three files (`_index`,
+`_variables`, `_mixins`). Renamed and removed names: `CHANGELOG.md`.
 
 **Neden:** hanration değişkenleri kopyalamıştı ve değerler kaymıştı
 (`$tablet-breakpoint: 760px`; @handijit/ui'de 768 / 1024).
@@ -1231,12 +1178,12 @@ Tüketici token değişkenlerini ve mixin'leri KOPYALAMADAN alır:
 | Ne | Nerede |
 |---|---|
 | Kaynak | `src/styles/_index.scss` → `variables` + `mixins` iletir |
-| Derleme | `scripts/build-scss.mjs` → `build/scss/` (5 dosya, KAPALI liste) |
+| Derleme | `scripts/build-scss.mjs` → `build/scss/` (2.0: 3 dosya, KAPALI liste) |
 | Dışa aktarım | `exports["./scss"]` — `sass` / `style` / `default` koşulları |
-| Ad taban çizgisi | `scripts/api-baseline.scss.txt` (`$değişken` + `@mixin`, 253 ad — 5.5: `input-sm`) |
+| Ad taban çizgisi | `scripts/api-baseline.scss.txt` (`$değişken` + `@mixin`; 2.0'da 225 ad, 5.5'te 253'tü) |
 | Nöbetçi | `__tests__/styles/scss-api.test.ts` |
 
-⚠ **Modül KURAL BASMAZ.** `base.scss` ve `_tokens.generated.scss` (`:root`
+⚠ **Modül KURAL BASMAZ.** `base.scss` (ve 1.x'te `_tokens.generated.scss`, `:root`
 kuralları) bilerek dışarıda: tüketiciye `styles.css` zaten iniyor, modüle
 girselerdi her `@use` onları yeniden üretirdi (hanration'da her modül dosyasına
 `additionalData` ile enjekte ediliyor). Nöbetçi bunu ölçer: yalnızca `@use`
@@ -1245,7 +1192,7 @@ edilen modülün çıktısı BOŞ.
 ⚠ **Önce tüketicide denendi, sonra ihraç edildi** (kırılma yayından sonra
 görünürdü): hanration'da `npm pack` paketiyle Next 16.4 **Turbopack** ve
 **webpack** derlemelerinin ikisi de `exports` üzerinden çözdü; webpack çıktısında
-kırılma noktası `768px`. Değişkenler `var(--ui-…)` dizeleri olduğu için tema
+kırılma noktası `768px`. Değişkenler `var(--hd-…)` (o gün `var(--ui-…)`) dizeleri olduğu için tema
 çalışma zamanında döner — derleme anında sabitlenmez.
 
 ⚠ **SCSS'teki her ad da bir SÜRÜM TAAHHÜDÜ.** `check:api` dördüncü girişi
@@ -1324,18 +1271,26 @@ Nöbetçi: `__tests__/components/Carousel.track.test.ts` — `fr` biriminin ya d
 ## Kod düzeni ve tasarım prensipleri — ZORUNLU
 
 **Bundan sonraki her geliştirme bu prensiplere uyar; kurallar aşağıdaki
-otomatik denetçilerle zorlanır** — `npm run verify` zinciri: `check:palette` →
-`tokens` → `check:contrast` → `typecheck` → `lint` → `test:coverage` (satır 89 ·
+otomatik denetçilerle zorlanır** — `npm run verify` zinciri (2.0): `check:contrast` →
+`typecheck` → `lint` → `test:coverage` (satır 89 ·
 ifade 86 · fonksiyon 80 · dal 75) → `build` (ana giriş + `chat` + `charts` +
-`build/scss`) → **`check:api`** (dört giriş) → `check:animations` →
-`size-limit`. CI ayrıca `format:check` koşar.
+`build/scss` + `exports` denetimi) → **`check:api`** (dört giriş) → `check:animations` →
+`size-limit`. 1.x'in `check:palette` ve `tokens` adımları üreteçle birlikte kalktı. CI ve yayın
+iş akışı ayrıca `format:check` koşar.
+
+**Release (2.0).** A push to `master` runs `.github/workflows/publish.yml`: when the version in
+`package.json` is not on npm yet it reads the release notes from the `## [x.y.z]` section of
+`CHANGELOG.md` (no section, no release), runs `format:check` and `verify`, checks the token with
+`npm whoami` and publishes with `npm publish --access public --provenance`
+(`NODE_AUTH_TOKEN` = the repository secret `NPM_ACCESS_TOKEN`; no trusted publishing), then tags
+and creates the GitHub Release. A version that is already on npm is skipped, not failed.
 
 | Prensip | Ne demek |
 |---|---|
 | **KISS** | Uzun ve dolambaçlı yerine sade ve okunur. |
 | **DRY** | Aynı kural iki yerde yaşamaz. |
 | **SRP** | Bir dosya tek sebeple değişir. |
-| **SoC** | Konumlandırma/erişilebilirlik mantığı `hooks/`ta, çizim bileşende, renk `theme/`te. |
+| **SoC** | Konumlandırma/erişilebilirlik mantığı `hooks/`ta, çizim bileşende, renk ve her ölçek `@handijit/design`da (2.0; bileşen yalnızca hangi token'la çizeceğini seçer). |
 | **OCP** | Yeni görünüm yeni varyant token'ıdır; bileşen gövdesine `if` eklemek değil. |
 | **YAGNI** | Çağıranı olmayan prop eklenmez — her prop bir API taahhüdüdür. |
 | **Immutability** | Prop'lar ve token nesneleri yerinde değiştirilmez. |
@@ -1355,9 +1310,9 @@ ifade 86 · fonksiyon 80 · dal 75) → `build` (ana giriş + `chat` + `charts` 
 bileşen ile sözleşmesini ayırmak, tüketicinin iki dosya açmasını gerektirir
 ve bir bileşen kütüphanesinde okunurluğu **düşürür**.
 
-**Taşınanlar — gerçekten dağınık olanlar:** tema tipleri (`UiToken`,
-`UiThemeConfig`, `UiLabels`, `InitUiOptions`… — `theme/tokens.ts`
-480 satırlık bir **veri** dosyası, tip bildirmesi işi değildi), kanca
+**Taşınanlar — gerçekten dağınık olanlar:** tema tipleri (bugün `UiLabels`, `UiThemeState`,
+`UiColorScheme`, `UiColorPreference`; 1.x'in `UiToken`, `UiThemeConfig`, `InitUiOptions` tipleri
+ve `theme/tokens.ts` veri dosyası 2.0'da kalktı), kanca
 tipleri (`PositionSide`, `PositioningOptions`, `VirtualRange`,
 `AnnouncePoliteness`…) ve `ClassValue`.
 
@@ -1374,10 +1329,9 @@ export type { ComboboxLabels, ComboboxOption, ComboboxProps } from '../../types/
 çünkü çağıranlar (uygulamalar ve testler) `@/components/Combobox` yolundan
 alıyordu ve yalnızca dosya yeri değişti diye bir sürüm kırılması olmamalı.
 
-⚠ **`theme/tokens.ts` (422) BÖLÜNMEDİ.** O bir **veri tablosu**; renk/uzaklık
-adlarını iki dosyaya ayırmak "hangi token nerede" sorusunu üretir ve
-okunurluğu düşürür. Dosya boyu bir kapı değil sinyaldir — burada sinyal
-yanlış alarm.
+⚠ **Dosya boyu bir kapı değil sinyaldir.** 1.x'te `theme/tokens.ts` (422 satır) bölünmedi: bir
+**veri tablosuydu** ve iki dosyaya ayırmak "hangi token nerede" sorusunu üretirdi. Dosya 2.0'da
+yok (tablo `@handijit/design`da); ilke duruyor.
 
 ⚠ **Public API DEĞİŞMEDİ, ölçüldü.** `build/index.d.ts` içindeki dışa
 aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
@@ -1388,7 +1342,8 @@ aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
 
 Ölçüm artık elle değil: `scripts/check-api.mjs` `build/index.d.ts`ten dışa
 aktarım adlarını çıkarır ve `scripts/api-baseline.txt` ile karşılaştırır
-(**177 ad** — 5.6: `ContextMenu`; alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22). Kapı
+(2.0'da **163 ad**; 5.6'da 177'ydi — tema nesneleri, `initUi` ve token tipleri kalktı, design'ın
+tema sabitleri eklendi. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22, SCSS 225). Kapı
 `verify` içinde, `build`ten hemen sonra.
 
 ```bash
@@ -1448,7 +1403,7 @@ ikisinin de kütüphane dışında çağıranı yok (YAGNI).
 ⚠ **14 CSS varyant union'ı enum dönüşümünden KALICI MUAF.** `AlertTone`,
 `BadgeTone`, `BadgeVariant`, `ChipSize`, `CardMediaFit`, `ConfirmKind`,
 `IconButtonVariant`, `ModalTone`, `StatTrend`, `TimelineStatus`, `ToastTone`,
-`PositionSide`, `PositionAlign`, `UiDensity`, `UiColorScheme` —
+`PositionSide`, `PositionAlign`, `UiColorScheme` (`UiDensity` 2.0'da kalktı) —
 hepsi `className` besliyor ve tüketiciler düz dize geçiyor
 (`<Badge tone="success">`). Enum'a çevirmek o çağrıları **derlenmez** yapardı:
 `TS2322` ile, üstelik iki uygulamada onlarca yerde. Monorepodaki "tel değeri
@@ -1549,6 +1504,10 @@ ve **zaten güncel** — yani geçiş penceresinde kurumsal logo yeni, gövde
 renkleri eski görünür. Doğru sıra: `npm publish` → iki uygulamada dep bump.
 
 ### `ThemeToggle` ve `Logo` neden BURAYA TAŞINMADI
+
+⚠ 2.0: the `nav-*` tokens named below no longer exist in any package, and the brand assets now
+ship with the design package (`@handijit/design/logos/*`). The note is history; the two components
+are still the applications'.
 
 - **`ThemeToggle`** `nav-fg`, `nav-bg`, `nav-hover`, `nav-line` token'larını
   okuyor; bunlar uygulamanın üst bandına ait ve @handijit/ui'nin token

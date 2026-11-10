@@ -6,6 +6,16 @@ reads the section of the version being released and uses it as the GitHub Releas
 to 1.0.0 are in Turkish, as written at the time; the 5.x tables of `@ahmetilhn/hanui` live in the
 README of the 1.0.0 tarball.
 
+## [2.1.1] — 2026-11-10
+
+### Fixed
+
+- **`SegmentedControl` draws the chosen segment above its track in dark too.** The segment was
+  filled with `bg-surface`, which is a step DARKER than the `bg-raised` track in the dark theme,
+  so the choice looked pressed into the control. It is now `bg-overlay`: white on the light
+  track, a step lighter on the dark one. A test holds both the declaration and the order of the
+  two tokens in each theme.
+
 ## [2.1.0] — 2026-11-10
 
 **The edge of a form control is 3:1, and `IconButton` has the variants of `Button`.** Nothing is

@@ -1,6 +1,6 @@
 {
   "name": "@handijit/ui",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Accessible React component library on SCSS Modules, themed by @handijit/design: light and dark from one set of --hd-* tokens, a CSP-ready theme boot script, and Bootstrap Icons for iconography.",
   "author": "Ahmet ilhan <ahmetilhan.dev@gmail.com>",
   "license": "MIT",

@@ -2,17 +2,7 @@
 @use '../../styles/mixins' as *;
 
 .checkbox {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  display: block;
-  accent-color: $primary;
-  cursor: pointer;
-
+  @include choice-control;
   @include tap-target;
   @include focus-ring;
-
-  &:disabled {
-    cursor: not-allowed;
-  }
 }

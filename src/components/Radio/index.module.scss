@@ -20,12 +20,8 @@
   }
 
   &__input {
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    flex-shrink: 0;
-    accent-color: $primary;
-    cursor: pointer;
+    @include choice-control(radio);
+
     margin-top: 2px;
 
     @include focus-ring;

@@ -12,7 +12,7 @@
   flex: 1;
   min-width: 0;
   border-radius: $radius-pill;
-  background-color: $bg-inset;
+  background-color: $border;
   overflow: hidden;
 
   &--xs {
@@ -85,7 +85,7 @@
   }
 
   &__track {
-    stroke: $bg-inset;
+    stroke: $border;
   }
 
   &__fill {

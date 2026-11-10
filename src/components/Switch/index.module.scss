@@ -52,7 +52,8 @@
   width: 40px;
   height: 24px;
   border-radius: $radius-pill;
-  background-color: $bg-disabled;
+  // An OFF switch still has to be seen as a control: `text-3` is 4.9:1 / 6.2:1 on a surface.
+  background-color: $text-3;
   border: 1px solid transparent;
   transition:
     background-color $duration-fast $ease-standard,
@@ -74,7 +75,9 @@
   border-radius: $radius-pill;
   background-color: $bg-surface;
   box-shadow: $shadow-1;
-  transition: translate $duration-fast $ease-standard;
+  transition:
+    translate $duration-fast $ease-standard,
+    background-color $duration-fast $ease-standard;
 
   @include reduced-motion {
     transition: none;
@@ -85,6 +88,7 @@
   background-color: $primary;
 
   .switch__thumb {
+    background-color: $on-primary;
     translate: 16px 0;
 
     @include for-rtl {
@@ -93,18 +97,25 @@
   }
 }
 
-/*
- * Pasif iz `track` (bos iz): `action-soft` kapali ETKIN anahtarin izi, `surface-2` ise koyu
- * temada kulpla (`surface`) ayni aydinlikta.
- */
+/* Passive and off: a hollow track, the thumb withdrawn into the passive text colour. */
 .switch__input:disabled + .switch__track {
-  background-color: $bg-inset;
-  border-color: $border;
+  background-color: $bg-disabled;
+  border-color: $border-strong;
+
+  .switch__thumb {
+    background-color: $text-disabled;
+    box-shadow: none;
+  }
 }
 
-/* Pasif acik anahtar rol rengini birakir; acikligi kulbun konumu ve KENARLIK tasir. */
+/* Passive and on gives the role colour back; the FILLED track and the thumb position carry it. */
 .switch__input:checked:disabled + .switch__track {
-  border-color: $text-3;
+  background-color: $text-disabled;
+  border-color: transparent;
+
+  .switch__thumb {
+    background-color: $bg-surface;
+  }
 }
 
 @media (forced-colors: active) {

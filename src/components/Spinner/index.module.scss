@@ -4,7 +4,7 @@
 .spinner {
   display: inline-block;
   border-radius: $radius-pill;
-  border: 2px solid $bg-inset;
+  border: 2px solid $border;
   border-top-color: $primary;
   animation: $anim-spin $duration-spin linear infinite;
 

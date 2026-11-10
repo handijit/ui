@@ -40,12 +40,19 @@ const Alert: FC<Props> = ({ children, tone = 'info', title, action, className, t
   >
     <span className={styles.alert__icon}>{ICONS[tone]}</span>
 
+    {/*
+     * 2.2: the action sits INSIDE the body, beside the text while there is room for both and under
+     * it, aligned with the text, when there is not. As a third flex item it kept its width and
+     * squeezed the text into a narrow column in a narrow container (a paywall card, a sidebar).
+     */}
     <div className={styles.alert__body}>
-      {title && <strong className={styles.alert__title}>{title}</strong>}
-      <div className={styles.alert__content}>{children}</div>
-    </div>
+      <div className={styles.alert__text}>
+        {title && <strong className={styles.alert__title}>{title}</strong>}
+        <div className={styles.alert__content}>{children}</div>
+      </div>
 
-    {action && <div className={styles.alert__action}>{action}</div>}
+      {action && <div className={styles.alert__action}>{action}</div>}
+    </div>
   </div>
 );
 

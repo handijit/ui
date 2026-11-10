@@ -1,6 +1,9 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
+// The narrowest the text gets beside the action before the action moves under it.
+$alert-text-min: 16rem;
+
 .alert {
   display: flex;
   align-items: flex-start;
@@ -20,10 +23,21 @@
     font-size: $icon-lg;
   }
 
+  // The text and the action share one wrapping row: the text keeps at least `$alert-text-min`
+  // beside the action, and below that the action wraps under the text, at its start edge.
   &__body {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: $space-2 $space-3;
+    min-width: 0;
+  }
+
+  &__text {
     @include stack($space-1);
 
-    flex: 1;
+    flex: 1 1 $alert-text-min;
     min-width: 0;
     padding-top: 3px;
   }
@@ -53,16 +67,8 @@
   }
 
   &__action {
-    flex-shrink: 0;
-
-    @include for-mobile {
-      width: 100%;
-      margin-top: $space-2;
-    }
-  }
-
-  @include for-mobile {
-    flex-wrap: wrap;
+    flex: 0 0 auto;
+    max-width: 100%;
   }
 
   &--info {

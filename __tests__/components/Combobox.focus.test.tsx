@@ -2,20 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Combobox, { type ComboboxOption } from '@/components/Combobox';
-
-const mockViewport = (isAboveMobile: boolean): void => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: (query: string) => ({
-      matches: isAboveMobile,
-      media: query,
-      onchange: null,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      dispatchEvent: () => false,
-    }),
-  });
-};
+import { DESKTOP, mockViewport, PHONE } from '@tests/support/viewport';
 
 const OPTIONS: ComboboxOption[] = [
   { value: 'bmw', label: 'BMW' },
@@ -36,7 +23,7 @@ const renderCombobox = () =>
 
 describe('Combobox otomatik odak', () => {
   it('dar ekranda alt sayfa açılınca arama kutusu ODAKLANMAZ', async () => {
-    mockViewport(false);
+    mockViewport(PHONE);
     const user = userEvent.setup();
     renderCombobox();
 
@@ -49,7 +36,7 @@ describe('Combobox otomatik odak', () => {
   });
 
   it('dar ekranda kullanıcı kutuya kendisi dokununca yazabilir', async () => {
-    mockViewport(false);
+    mockViewport(PHONE);
     const user = userEvent.setup();
     renderCombobox();
 
@@ -64,7 +51,7 @@ describe('Combobox otomatik odak', () => {
   });
 
   it('masaüstü panelinde arama kutusu odaklanmaya devam eder', async () => {
-    mockViewport(true);
+    mockViewport(DESKTOP);
     const user = userEvent.setup();
     renderCombobox();
 

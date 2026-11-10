@@ -11,6 +11,7 @@ import RatingInput from '@/components/RatingInput';
 import Select, { type SelectOption } from '@/components/Select';
 import TableCheckbox from '@/components/TableCheckbox';
 import Tabs from '@/components/Tabs';
+import { DESKTOP, mockViewport } from '@tests/support/viewport';
 
 const OPTIONS: ComboboxOption[] = [
   { value: 'a', label: 'Birinci' },
@@ -29,27 +30,13 @@ const COMBOBOX_LABELS = {
   closeLabel: 'Kapat',
 };
 
-const mockViewport = (isAboveMobile: boolean): void => {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: (query: string) => ({
-      matches: isAboveMobile,
-      media: query,
-      onchange: null,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      dispatchEvent: () => false,
-    }),
-  });
-};
-
 const activeOptionText = (owner: HTMLElement): string | null => {
   const id = owner.getAttribute('aria-activedescendant');
   return id ? (document.getElementById(id)?.textContent ?? null) : null;
 };
 
 describe('Combobox klavye sözleşmesi', () => {
-  beforeEach(() => mockViewport(true));
+  beforeEach(() => mockViewport(DESKTOP));
 
   const open = async () => {
     const user = userEvent.setup();
@@ -131,7 +118,7 @@ describe('Combobox klavye sözleşmesi', () => {
 });
 
 describe('Select klavye sözleşmesi', () => {
-  beforeEach(() => mockViewport(true));
+  beforeEach(() => mockViewport(DESKTOP));
 
   const setup = () => {
     const user = userEvent.setup();

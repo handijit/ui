@@ -18,7 +18,7 @@ import useListboxNavigation from '../../hooks/useListboxNavigation';
 import usePortalSurface from '../../hooks/usePortalSurface';
 import usePositioning from '../../hooks/usePositioning';
 
-import { ABOVE_MOBILE_MEDIA_QUERY } from '../../constants/breakpoint.constants';
+import { SHEET_MEDIA_QUERY } from '../../constants/breakpoint.constants';
 import { cx } from '../../helpers/class-name.helper';
 import { resolveLabel } from '../../helpers/label.helper';
 import { useUi } from '../../theme/context';
@@ -122,7 +122,8 @@ const Select = <T extends string>({
      * Etkin secenek SECILI olandan baslar (kancanin `initialIndex`i); kullanici listeyi bastan
      * taramaz.
      */
-    setOpenMode(window.matchMedia(ABOVE_MOBILE_MEDIA_QUERY).matches ? 'popover' : 'sheet');
+    /* A sheet only on a narrow TOUCH screen; a desktop window gets the dropdown at any width. */
+    setOpenMode(window.matchMedia(SHEET_MEDIA_QUERY).matches ? 'sheet' : 'popover');
   }, [isDisabled, options.length]);
 
   const selectOption = (option: SelectOption<T>) => {

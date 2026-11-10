@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Combobox, { type ComboboxOption } from '@/components/Combobox';
+import { DESKTOP, mockViewport } from '@tests/support/viewport';
 
 const LABELS = {
   placeholder: 'Şehir seçin',
@@ -18,17 +19,7 @@ const OPTIONS: ComboboxOption[] = [
   { value: 'izmir', label: 'İzmir' },
 ];
 
-const useDesktopViewport = () =>
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: (query: string) => ({
-      matches: true,
-      media: query,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      dispatchEvent: () => false,
-    }),
-  });
+const useDesktopViewport = () => mockViewport(DESKTOP);
 
 describe('Combobox yerel filtreleme', () => {
   beforeEach(useDesktopViewport);

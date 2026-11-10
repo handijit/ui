@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import Combobox from '@/components/Combobox';
+import { DESKTOP, mockViewport } from '@tests/support/viewport';
 
 const measureLists = (height = 400) =>
   Object.defineProperty(HTMLUListElement.prototype, 'clientHeight', {
@@ -32,16 +33,7 @@ const renderBox = (list: ReturnType<typeof options>) =>
 
 beforeEach(() => {
   measureLists();
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: (query: string) => ({
-      matches: true,
-      media: query,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      dispatchEvent: () => false,
-    }),
-  });
+  mockViewport(DESKTOP);
 });
 
 describe('Combobox — sanallaştırma', () => {

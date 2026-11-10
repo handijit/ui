@@ -1,0 +1,18 @@
+{
+  // `npm run check:types` (2.2): the built declarations as a consumer on Node's own resolution
+  // sees them. The package imports itself by name, so `exports` decides every path, as in a
+  // consumer's `node_modules`. `skipLibCheck` is OFF on purpose: under it an unresolvable import
+  // in a declaration file silently turns a component's props into `any`.
+  "compilerOptions": {
+    "target": "es2023",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["es2023", "dom"],
+    "jsx": "react-jsx",
+    "types": [],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": false
+  },
+  "files": ["consumer.mts", "consumer.cts"]
+}

@@ -4,7 +4,9 @@
  *
  * `src/index.ts`in `./components/<Ad>` dizinlerinden yeniden dışa aktardığı her bileşen bir alt yol
  * alır: `@handijit/ui/button` → `build/components/Button/index.{js,cjs,d.ts}`. Alt yol adı dizin
- * adının kebab hâlidir (`ChipGroup` → `chip-group`). Sabit girişler (`.`, `./base.css`, `./styles.css`,
+ * adının kebab hâlidir (`ChipGroup` → `chip-group`). Her koşul kendi tipini taşır (2.2): `import` →
+ * `.d.ts`, `require` → `.d.cts` (`scripts/build-declarations.mjs`); tek bir üst düzey `types`
+ * CommonJS tüketicisine ES modülü bildiriyordu. Sabit girişler (`.`, `./base.css`, `./styles.css`,
  * `./chat`, `./charts`, `./scss`) burada tanımlıdır; harita ELLE DÜZENLENMEZ.
  *
  *   node scripts/build-exports.mjs          → package.json'u yazar
@@ -20,11 +22,13 @@ const isCheck = process.argv.includes('--check');
 
 const kebab = name => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
-const entry = base => ({
-  types: `./build/${base}.d.ts`,
-  import: `./build/${base}.js`,
-  require: `./build/${base}.cjs`,
+/** `types` is the declaration path without its extension; `js` the module without `.js`/`.cjs`. */
+const conditions = (types, js) => ({
+  import: { types: `./build/${types}.d.ts`, default: `./build/${js}.js` },
+  require: { types: `./build/${types}.d.cts`, default: `./build/${js}.cjs` },
 });
+
+const entry = base => conditions(base, base);
 
 const index = readFileSync(join(ROOT, 'src/index.ts'), 'utf8');
 const components = [...index.matchAll(/from '\.\/components\/([A-Z]\w*)'/g)]
@@ -44,17 +48,9 @@ const exportsMap = {
   './base.css': './build/base.css',
   './components/*/style.css': './build/components/*/style.css',
   ...subpaths,
-  './chat': {
-    types: './build/types/chat/index.d.ts',
-    import: './build/chat.js',
-    require: './build/chat.cjs',
-  },
+  './chat': conditions('types/chat/index', 'chat'),
   './chat.css': './build/chat.css',
-  './charts': {
-    types: './build/types/charts/index.d.ts',
-    import: './build/charts.js',
-    require: './build/charts.cjs',
-  },
+  './charts': conditions('types/charts/index', 'charts'),
   './charts.css': './build/charts.css',
   './scss': {
     sass: './build/scss/_index.scss',
@@ -68,6 +64,10 @@ const pkg = JSON.parse(readFileSync(PACKAGE, 'utf8'));
 const current = JSON.stringify(pkg.exports);
 const next = JSON.stringify(exportsMap);
 
+/** Every target path of a condition tree (`{ import: { types, default }, … }`). */
+const leaves = value =>
+  typeof value === 'string' ? [value] : Object.values(value).flatMap(leaves);
+
 if (isCheck) {
   if (current !== next) {
     console.error(
@@ -78,7 +78,7 @@ if (isCheck) {
 
   // `*` kalıpları her bileşen diziniyle açılır (bileşen başına `style.css` → 68 dosya).
   const targets = Object.values(exportsMap)
-    .flatMap(value => (typeof value === 'string' ? [value] : Object.values(value)))
+    .flatMap(leaves)
     .flatMap(target =>
       target.includes('*') ? components.map(name => target.replace('*', name)) : [target],
     );
@@ -86,7 +86,7 @@ if (isCheck) {
      dosyaya oturmalı, tek tek eksikler hata değil. */
   const patterned = new Set(
     Object.values(exportsMap)
-      .flatMap(value => (typeof value === 'string' ? [value] : Object.values(value)))
+      .flatMap(leaves)
       .filter(target => target.includes('*'))
       .flatMap(target => components.map(name => target.replace('*', name))),
   );

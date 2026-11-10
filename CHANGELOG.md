@@ -1,10 +1,381 @@
-# Değişiklik günlüğü
+# Changelog
 
-Biçim: sürüm başına **kırıcı** / **eklenen** / **düzeltilen**. Ölçülmüş gerekçeler `CLAUDE.md`de
-("Göç ve `@deprecated` yollar"), kullanım `README.md`de. 5.x ve öncesi `README.md` → "5.0'a geçiş"
-ve "5.1 – 5.6'da eklenenler" tablolarında.
+One section per version: **breaking**, **added**, **fixed**, and for a major version a migration
+section that can be followed line by line. Headings are `## [x.y.z] — date`: the publish workflow
+reads the section of the version being released and uses it as the GitHub Release note. Sections up
+to 1.0.0 are in Turkish, as written at the time; the 5.x tables of `@ahmetilhn/hanui` live in the
+README of the 1.0.0 tarball.
 
-## 1.0.0 — 2026-11-07 — `@handijit/ui`
+## [2.0.0] — 2026-11-10
+
+**The library draws with the tokens of `@handijit/design` and owns none.** Han Dijit's site, staff
+panel and desktop programs share one theme (cobalt, coral, turquoise; light and dark), defined once
+in `@handijit/design`. Until 1.x this library generated its own palette (`--ui-*`, an OKLCH recipe,
+a token build step) and carried roles named after a parts shop (`cart`, `oem`, `off`, `sale`). All
+of that is gone: component styles read `--hd-*`, the theme switch is design's `data-theme`
+contract, and the roles have the names of the design system.
+
+Nothing in 1.x is kept as an alias. An application moves in one step, with the tables below.
+
+### Breaking
+
+- **Tokens.** `@handijit/ui/styles.css` and `base.css` no longer declare a palette. The application
+  loads `@handijit/design/tokens.css` once (and `fonts.css` for Archivo, Inter and IBM Plex Mono).
+  Every `--ui-*` design token is removed; component-private hooks (`--ui-button-radius`,
+  `--ui-chip-*`, `--ui-badge-*`, `--ui-stat-*`, `--ui-header-height`, `--ui-sheet-height`, …) keep
+  their names.
+- **Peer dependencies.** `@handijit/design ^1.0.0` is new. `@handijit/utils` moves from `^1.0.0` to
+  `^2.0.0`.
+- **Theme contract.** `data-ui-theme` → `data-theme`; the stored choice lives in
+  `localStorage["hd-theme"]`; the attribute always carries the resolved theme (`light` or `dark`),
+  also when the user follows the system. `data-ui-density` and the compact density are removed.
+- **Theme API.** `initUi`, `applyThemeConfig`, `buildThemeCss`, `resolveTokens`, the theme objects
+  and their types are removed. `UiProvider` lost `theme` and renders no `<style>`. A brand override
+  is a plain `--hd-*` declaration in the application's stylesheet.
+- **Variants and tones.** `UIVariant.CART` → `ACCENT`, `LIGHT` → `SOFT`, `DARK` → `ON_BAND`;
+  `IconButton` `cart` → `accent`; `Badge` tones `oem`, `alt`, `sale`, `action`, `link` are removed;
+  chart and legend tones `cat-*` / `series-*` → `chart-1…6`.
+- **SCSS API** (`@use '@handijit/ui/scss' as ui`). 128 variables renamed or removed, 7 kept their
+  name with a different meaning, `for-dark` removed, `heading()` takes a role.
+- **Sizes.** Buttons are 28 / 32 / 40 / 48px tall (were 30 / 36 / 44 / 52). Fields are 40px with
+  15px text on a desktop pointer and 44px with 16px text on a narrow or touch screen (were always
+  44px / 16px). Dense fields (`input-sm`) are 32px (were 36px). Touch targets stay 44px through the
+  invisible `tap-target` area.
+- **Select and Combobox** open a bottom sheet only when the viewport is at most 640px wide **and**
+  the pointer is coarse. A desktop window, however narrow, gets the anchored dropdown. In 1.x the
+  rule was width alone.
+- **Layers.** z-index values are design's: dropdown 1000, overlay 1100, modal 1200, popover 1300,
+  toast 1400, tooltip 1500 (were 200 – 500). An application layer that had to sit above or below
+  the library needs a new number, or better, a `--hd-z-*` token.
+
+### Added
+
+- `UIVariant.ACCENT`: the coral conversion button (download, try, subscribe). Coral appears on
+  `Button` and `IconButton` and nowhere else; a test holds that line.
+- `UiThemeScript` takes `nonce` and inlines design's boot script unchanged, so a policy can also
+  allow it by hash: `THEME_BOOT_SCRIPT_HASH`. `THEME_BOOT_SCRIPT`, `THEME_BOOT_SCRIPT_HASH` and
+  `THEME_STORAGE_KEY` are re-exported from `@handijit/design`.
+- `SHEET_MEDIA_QUERY`: the media query of the sheet rule above.
+- `useUiTheme()` stores the choice where the boot script reads it; `UiThemeState` is its return
+  type. `useUiTokens()` takes design token names (`'chart-1'`, `'border'`), typed by design's
+  `TokenName`.
+- SCSS: `type($role)` (a whole design type role), `block-title`, `choice-control($shape)`,
+  `$state-hover` / `$state-pressed` (state layers that work on any surface), `$focus`,
+  `$focus-halo`, `$focus-inset`, the `$primary-*`, `$accent-*`, `$highlight-*`, `$success-*`,
+  `$warning-*`, `$danger-*`, `$info-*`, `$chart-1…6`, `$bg-*`, `$inverse-*` families and the
+  `$z-*` layers of the design package.
+- `Badge` tone `highlight` (turquoise: new, live).
+- Guard tests: every `--hd-*` name the library writes exists in the installed design package, no
+  stylesheet carries a literal colour or declares a token, coral / turquoise / band stay inside
+  their components, and no 1.x role name comes back.
+
+### Fixed
+
+- Floating surfaces (menu, popover, select and combobox lists, dialog, drawer, command palette,
+  toast) sit on `bg-overlay`, which is lighter than the page in dark mode; in 1.x a dark dropdown
+  was the colour of the card under it.
+- Checkbox and radio are drawn with tokens instead of an embedded image, so the mark follows the
+  theme; forced-colours mode gets the native control.
+- Hover and pressed states are a text-colour layer, visible on every surface in both themes.
+- Slider, progress and switch tracks are visible in dark mode.
+
+### Migration from 1.x
+
+Work through the steps in order. Each table is old → new.
+
+#### 1. Dependencies
+
+```sh
+npm install @handijit/ui@^2.0.0 @handijit/design@^1.0.0 @handijit/utils@^2.0.0
+```
+
+`@handijit/design` is a peer dependency: the application installs it, so the page has one copy of
+the tokens no matter how many packages draw with them.
+
+#### 2. Stylesheets
+
+Stylesheet paths of this package did not change (`styles.css`, `base.css`,
+`components/*/style.css`, `chat.css`, `charts.css`, `scss`). What changed is that the tokens are a
+separate import, **before** the library's:
+
+```ts
+import '@handijit/design/tokens.css'; // every --hd-* token, light and dark
+import '@handijit/design/fonts.css'; // optional: Archivo, Inter, IBM Plex Mono
+import '@handijit/ui/styles.css';
+```
+
+Without `tokens.css` every component renders without colour, radius and spacing.
+
+#### 3. Theme attribute, storage and boot script
+
+| 1.x | 2.0 |
+| --- | --- |
+| `<html data-ui-theme="dark">` | `<html data-theme="dark">` |
+| `[data-ui-theme='dark'] .x { … }` | `[data-theme='dark'] .x { … }` |
+| no attribute = follow the system | the boot script and `useUiTheme` write the resolved theme; without either, `tokens.css` still follows `prefers-color-scheme` |
+| `<UiThemeScript storageKey="theme" />` | `<UiThemeScript />` or `<UiThemeScript nonce={nonce} />`; the key is always `hd-theme` |
+| the application's own storage key | `localStorage["hd-theme"]` (`THEME_STORAGE_KEY`), values `light` / `dark`, absent = system. Copy a stored choice over once if it must survive the upgrade. |
+| `data-ui-density="compact"`, `COMPACT_DENSITY`, `DENSITY_ATTRIBUTE` | removed, no replacement |
+| `THEME_ATTRIBUTE` (`'data-ui-theme'`) | `THEME_ATTRIBUTE` (`'data-theme'`), re-exported from design |
+| `<style id="ui-theme-overrides">` | no longer rendered |
+
+Content-Security-Policy: pass the request nonce to `UiThemeScript`, or add
+`THEME_BOOT_SCRIPT_HASH` (`'sha256-…'`, already quoted for the header) to `script-src`. The library
+injects nothing else: no `<style>` element, no other script.
+
+#### 4. Theme overrides
+
+| 1.x | 2.0 |
+| --- | --- |
+| `initUi({ theme, colorScheme, density })` | delete the call; see the rows below |
+| `<UiProvider theme={{ light: { link: '#0a58ca' } }}>` | `:root { --hd-primary-text: #0a58ca; }` in the application's stylesheet (per theme: `[data-theme='dark'] { … }`) |
+| `applyThemeConfig(config)`, `buildThemeCss(config)`, `resolveTokens(config)` | removed; write `--hd-*` declarations |
+| `LIGHT_THEME`, `DARK_THEME` | `themes.light`, `themes.dark` from `@handijit/design` |
+| `DEFAULT_FONTS`, `UiFonts` | `--hd-font-display`, `--hd-font-body`, `--hd-font-mono` |
+| `METRIC_TOKENS`, `UiMetrics`, `UiMetricToken` | `radii`, `spacing`, `typography`, `motion` from `@handijit/design` |
+| `UiToken`, `UiThemeTokens`, `UiResolvedTokens` | `TokenName` from `@handijit/design` |
+| `UiThemeConfig`, `InitUiOptions`, `UiDensity` | removed |
+| `useUi().theme` | removed; `useUi()` returns `linkComponent` and `labels` |
+| `useUiTokens(['series-1', 'border'])` | `useUiTokens(['chart-1', 'border'])`: design token names without `--hd-` |
+| `setScheme('system')` removed the attribute | removes the stored key and writes the system's theme to the attribute |
+
+#### 5. Variants, tones and props
+
+| Component | 1.x | 2.0 |
+| --- | --- | --- |
+| `Button` | `UIVariant.CART` | `UIVariant.ACCENT` |
+| `Button` | `UIVariant.LIGHT` | `UIVariant.SOFT` |
+| `Button` | `UIVariant.DARK` | `UIVariant.ON_BAND` |
+| `Button` | `PRIMARY`, `SECONDARY`, `OUTLINE`, `GHOST`, `DANGER` | unchanged names; `PRIMARY` is cobalt, `OUTLINE` a cobalt frame, `GHOST` link-coloured text |
+| `IconButton` | `variant="cart"` | `variant="accent"` |
+| `Badge` | `tone="oem"` | `tone="info"` |
+| `Badge` | `tone="alt"` | `tone="highlight"` |
+| `Badge` | `tone="sale"` | `tone="danger" variant="solid"` (a discount) or `tone="success"` (a positive change) |
+| `Badge` | `tone="action"` | `tone="info" variant="solid"` |
+| `Badge` | `tone="link"` | `tone="info"` |
+| charts, `Legend`, `SegmentBar` | `tone="cat-1"` … `"cat-5"` | `"chart-1"` … `"chart-5"` |
+| charts, `Legend`, `SegmentBar` | `tone="series-1"` | `"chart-1"` |
+| charts, `Legend`, `SegmentBar` | `tone="series-2"` | `"chart-6"` |
+| `UiThemeScript` | `storageKey` (required) | removed; `nonce` (optional) added |
+| `UiProvider` | `theme` | removed |
+
+`UISize` kept its four members; the heights changed (see Breaking).
+
+#### 6. Removed and added exports of `@handijit/ui`
+
+Removed: `COMPACT_DENSITY`, `DARK_THEME`, `DEFAULT_FONTS`, `DENSITY_ATTRIBUTE`, `InitUiOptions`,
+`LIGHT_THEME`, `METRIC_TOKENS`, `UiDensity`, `UiFonts`, `UiMetricToken`, `UiMetrics`,
+`UiResolvedTokens`, `UiThemeConfig`, `UiThemeTokens`, `UiToken`, `applyThemeConfig`,
+`buildThemeCss`, `initUi`, `resolveTokens` (replacements in step 4).
+
+Added: `SHEET_MEDIA_QUERY`, `THEME_BOOT_SCRIPT`, `THEME_BOOT_SCRIPT_HASH`, `THEME_STORAGE_KEY`,
+`UiThemeState`.
+
+`@handijit/ui/chat` and `@handijit/ui/charts` export the same names as in 1.0.0.
+
+#### 7. Custom properties and SCSS variables
+
+In 1.x every SCSS variable `$name` was `var(--ui-name)`, so one table serves both: a stylesheet that
+wrote `var(--ui-action)` follows the row of `$action` and writes the custom property of the third
+column.
+
+**Rename in a single pass.** Seven names exist on both sides with different meanings
+(`$radius-sm`, `$radius-md`, `$radius-lg`, `$space-8`, `$font-size-body`, `$z-base`, `$z-raised`);
+applying the rows one after another would rename a value twice.
+
+| 1.x (`$name` and `--ui-name`) | 2.0 SCSS variable | 2.0 custom property | Note |
+| --- | --- | --- | --- |
+| `$action` | `$primary` | `--hd-primary` |  |
+| `$action-active` | `$primary-active` | `--hd-primary-active` |  |
+| `$action-hover` | `$primary-hover` | `--hd-primary-hover` |  |
+| `$action-line` | `$primary` | `--hd-primary` | the primary fill has no separate line |
+| `$action-soft` | `$bg-disabled` | `--hd-bg-disabled` | the disabled fill |
+| `$alt-bg` | `$highlight-soft` | `--hd-highlight-soft` |  |
+| `$alt-fg` | `$highlight-text` | `--hd-highlight-text` |  |
+| `$alt-line` | `$highlight` | `--hd-highlight` |  |
+| `$bad-bg` | `$danger-bg` | `--hd-danger-bg` |  |
+| `$bad-fg` | `$danger-fg` | `--hd-danger-fg` |  |
+| `$bad-line` | `$danger-line` | `--hd-danger-line` |  |
+| `$band-accent` | `$highlight` | `--hd-highlight` |  |
+| `$band-fg` | `$band-text` | `--hd-band-text` |  |
+| `$band-fg-2` | `$band-text-2` | `--hd-band-text-2` |  |
+| `$band-fg-3` | `$band-text-2` | `--hd-band-text-2` |  |
+| `$band-hover` | `$band-line` | `--hd-band-line` |  |
+| `$breakpoint-desktop` | `$breakpoint-xl` | — (SCSS only) |  |
+| `$breakpoint-mobile` | `$breakpoint-sm` | — (SCSS only) |  |
+| `$breakpoint-tablet` | `$breakpoint-lg` | — (SCSS only) |  |
+| `$breakpoint-tablet-portrait` | `$breakpoint-md` | — (SCSS only) |  |
+| `$cart` | `$accent` | `--hd-accent` |  |
+| `$cart-active` | `$accent-active` | `--hd-accent-active` |  |
+| `$cart-hover` | `$accent-hover` | `--hd-accent-hover` |  |
+| `$cart-soft` | `$bg-disabled` | `--hd-bg-disabled` | the disabled fill |
+| `$cat-1` | `$chart-1` | `--hd-chart-1` |  |
+| `$cat-2` | `$chart-2` | `--hd-chart-2` |  |
+| `$cat-3` | `$chart-3` | `--hd-chart-3` |  |
+| `$cat-4` | `$chart-4` | `--hd-chart-4` |  |
+| `$cat-5` | `$chart-5` | `--hd-chart-5` |  |
+| `$danger-solid-hover` | — | — | no token; `color-mix(in oklab, #{ui.$danger-solid} 88%, black)` is what `Button` uses |
+| `$duration-instant` | `$duration-fast` | `--hd-duration-fast` |  |
+| `$duration-normal` | `$duration-base` | `--hd-duration-base` |  |
+| `$ease-in-out` | `$ease-standard` | `--hd-ease-standard` |  |
+| `$ease-out` | `$ease-standard` | `--hd-ease-standard` | or `$ease-enter` for something that appears |
+| `$ease-spring` | `$ease-standard` | `--hd-ease-standard` | no overshoot curve in the design |
+| `$font-heading` | `$font-display` | `--hd-font-display` |  |
+| `$font-size-2xl` | `$font-size-h2` | `--hd-type-h2-size` |  |
+| `$font-size-2xs` | `$font-size-caption` | `--hd-type-caption-size` | 12px; the design has nothing smaller |
+| `$font-size-3xl` | `$font-size-h2` | `--hd-type-h2-size` | or `$font-size-h1` |
+| `$font-size-4xl` | `$font-size-h1` | `--hd-type-h1-size` |  |
+| `$font-size-base` | `$font-size-body` | `--hd-type-body-size` |  |
+| `$font-size-body` | `$font-size-lead` | `--hd-type-lead-size` | 17px; `$font-size-body` is now 15px |
+| `$font-size-lg` | `$font-size-h4` | `--hd-type-h4-size` |  |
+| `$font-size-sm` | `$font-size-small` | `--hd-type-small-size` |  |
+| `$font-size-xl` | `$font-size-h3` | `--hd-type-h3-size` |  |
+| `$font-size-xs` | `$font-size-caption` | `--hd-type-caption-size` |  |
+| `$font-steps` | `$type-roles` | — (SCSS only) | the list of type roles |
+| `$font-ui` | `$font-body` | `--hd-font-body` |  |
+| `$footer-bg` | `$bg-raised` | `--hd-bg-raised` |  |
+| `$glass` | `$bg-overlay` | `--hd-bg-overlay` | opaque; the design has no translucent surface |
+| `$glass-solid` | `$bg-overlay` | `--hd-bg-overlay` |  |
+| `$glow-1` | — | — | removed, no replacement: decorative glows are gone |
+| `$glow-2` | — | — | removed, no replacement |
+| `$glow-cart` | — | — | removed, no replacement |
+| `$green-accent` | `$success-solid` | `--hd-success-solid` |  |
+| `$green-accent-hover` | `$success-solid` | `--hd-success-solid` | one success fill |
+| `$leading-relaxed` | `$leading-normal` | `--hd-type-body-line-height` |  |
+| `$link` | `$primary-text` | `--hd-primary-text` |  |
+| `$link-hover` | `$primary-text` | `--hd-primary-text` | the hover is an underline, not a second colour |
+| `$media-bg` | `$bg-inset` | `--hd-bg-inset` |  |
+| `$nav-bg` | `$bg-surface` | `--hd-bg-surface` | a plain surface; `$band-*` is the cobalt brand band |
+| `$nav-bg-2` | `$bg-raised` | `--hd-bg-raised` |  |
+| `$nav-fg` | `$text` | `--hd-text` |  |
+| `$nav-fg-2` | `$text-2` | `--hd-text-2` |  |
+| `$nav-fg-3` | `$text-3` | `--hd-text-3` |  |
+| `$nav-hover` | `$state-hover` | — (SCSS only) |  |
+| `$nav-line` | `$border` | `--hd-border` |  |
+| `$nav-line-strong` | `$border-strong` | `--hd-border-strong` |  |
+| `$oem-bg` | `$info-bg` | `--hd-info-bg` |  |
+| `$oem-fg` | `$info-fg` | `--hd-info-fg` |  |
+| `$oem-line` | `$info-line` | `--hd-info-line` |  |
+| `$off-bg` | `$bg-raised` | `--hd-bg-raised` | the "off" role is the neutral tone |
+| `$off-fg` | `$text-2` | `--hd-text-2` |  |
+| `$off-line` | `$border` | `--hd-border` |  |
+| `$ok-bg` | `$success-bg` | `--hd-success-bg` |  |
+| `$ok-fg` | `$success-fg` | `--hd-success-fg` |  |
+| `$ok-line` | `$success-line` | `--hd-success-line` |  |
+| `$on-action` | `$on-primary` | `--hd-on-primary` |  |
+| `$on-action-soft` | `$text-disabled` | `--hd-text-disabled` | text on the disabled fill |
+| `$on-cart` | `$on-accent` | `--hd-on-accent` |  |
+| `$on-danger` | `$danger-on-solid` | `--hd-danger-on-solid` |  |
+| `$on-green` | `$success-on-solid` | `--hd-success-on-solid` |  |
+| `$on-scrim` | `$inverse-text` | `--hd-slate-50` | light text on a dark, theme-independent backdrop |
+| `$on-selected` | `$on-primary` | `--hd-on-primary` |  |
+| `$on-shell` | `$inverse-text` | `--hd-slate-50` |  |
+| `$on-shell-2` | `$inverse-text-2` | `--hd-slate-300` |  |
+| `$on-shell-danger` | `$inverse-danger` | `--hd-danger-300` |  |
+| `$page` | `$bg-page` | `--hd-bg-page` |  |
+| `$radius-lg` | `$radius-md` | `--hd-radius-md` | 12px → 14px |
+| `$radius-md` | `$radius-sm` | `--hd-radius-sm` | 8px → 10px |
+| `$radius-sm` | `$radius-xs` | `--hd-radius-xs` | 6px stays 6px |
+| `$radius-xl` | `$radius-lg` | `--hd-radius-lg` |  |
+| `$red-accent` | `$danger-solid` | `--hd-danger-solid` |  |
+| `$ring` | `$focus-halo` | — (SCSS only) | the 3px focus halo of fields |
+| `$ring-color` | `$focus` | `--hd-focus` | the 2px focus outline |
+| `$ring-danger` | `$danger-halo` | — (SCSS only) |  |
+| `$ring-ok` | — | — | removed, no replacement: a valid field has no halo |
+| `$sale-bg` | `$danger-solid` | `--hd-danger-solid` | the "sale" role is `Badge tone="danger" variant="solid"` |
+| `$sale-fg` | `$danger-on-solid` | `--hd-danger-on-solid` |  |
+| `$scrim-soft` | `$scrim` | `--hd-scrim` |  |
+| `$selected` | `$primary` | `--hd-primary` |  |
+| `$selected-active` | `$primary-active` | `--hd-primary-active` |  |
+| `$selected-hover` | `$primary-hover` | `--hd-primary-hover` |  |
+| `$selected-line` | `$primary-line` | `--hd-primary-line` |  |
+| `$selected-tint` | `$primary-soft` | `--hd-primary-soft` |  |
+| `$series-1` | `$chart-1` | `--hd-chart-1` |  |
+| `$series-2` | `$chart-6` | `--hd-chart-6` |  |
+| `$shadow-lg` | `$shadow-2` | `--hd-shadow-2` |  |
+| `$shadow-md` | `$shadow-2` | `--hd-shadow-2` |  |
+| `$shadow-sm` | `$shadow-1` | `--hd-shadow-1` |  |
+| `$shadow-xl` | `$shadow-3` | `--hd-shadow-3` |  |
+| `$shadow-xs` | `$shadow-1` | `--hd-shadow-1` |  |
+| `$shell` | `$inverse-bg` | `--hd-slate-900` |  |
+| `$shell-2` | `$inverse-bg-2` | `--hd-slate-800` |  |
+| `$shell-3` | `$inverse-bg-2` | `--hd-slate-800` |  |
+| `$shell-line` | `$inverse-line` | `--hd-slate-700` |  |
+| `$skeleton-a` | `$bg-disabled` | `--hd-bg-disabled` | use `@include ui.skeleton` |
+| `$skeleton-b` | `$border` | `--hd-border` | use `@include ui.skeleton` |
+| `$space-7` | `$space-10` | `--hd-space-10` |  |
+| `$space-8` | `$space-12` | `--hd-space-12` | up to 64px → 48px |
+| `$space-9` | `$space-16` | `--hd-space-16` |  |
+| `$space-scale` | — | — | removed with the density setting |
+| `$star` | `$warning-solid` | `--hd-warning-solid` |  |
+| `$surface` | `$bg-surface` | `--hd-bg-surface` |  |
+| `$surface-2` | `$bg-raised` | `--hd-bg-raised` |  |
+| `$surface-3` | `$bg-inset` | `--hd-bg-inset` |  |
+| `$surface-inset` | `$bg-inset` | `--hd-bg-inset` |  |
+| `$track` | `$bg-inset` | `--hd-bg-inset` |  |
+| `$tracking-logo` | — | — | removed, no replacement: the logo is an asset of `@handijit/design` |
+| `$type-scale` | — | — | removed with the density setting |
+| `$warn-bg` | `$warning-bg` | `--hd-warning-bg` |  |
+| `$warn-fg` | `$warning-fg` | `--hd-warning-fg` |  |
+| `$warn-line` | `$warning-line` | `--hd-warning-line` |  |
+| `$z-base` | `$z-raised` | `--hd-z-raised` | 1; `$z-base` is now 0 |
+| `$z-raised` | `$z-sticky` | `--hd-z-sticky` | a sticky layer; `$z-raised` is now 1 |
+
+Names that stayed and now carry the design value (no edit needed, but the pixels moved):
+
+| Variable | 1.x | 2.0 |
+| --- | --- | --- |
+| `$space-1` … `$space-6` | 4, 8, then fluid up to 12 / 16 / 24 / 32px | 4, 8, 12, 16, 20, 24px (`$space-8` is 32px) |
+| `$radius-xs` | 4px | 6px |
+| `$radius-pill` | 999px | 999px |
+| `$container-max-width` | 1360px | 1280px (`$breakpoint-xl`) |
+| `$duration-fast` / `$duration-slow` | 140ms / 320ms | 120ms / 320ms |
+| `$z-dropdown` / `$z-toast` / `$z-tooltip` | 200 / 500 / 450 | 1000 / 1400 / 1500 |
+| `$font-size-control` | at least 16px | at least 16px (unchanged rule, design body size) |
+| `$weight-*`, `$leading-*`, `$tracking-tight`, `$tracking-snug` | constants | the design type tokens |
+| `$text`, `$text-2`, `$text-3`, `$border`, `$border-strong`, `$scrim`, `$band-bg`, `$band-line`, `$danger-solid`, `$font-body`, `$font-mono` | `var(--ui-…)` | `var(--hd-…)` of the same name |
+
+Custom properties without an SCSS twin:
+
+| 1.x | 2.0 |
+| --- | --- |
+| `--ui-font-size-<step>` | `--hd-type-<role>-size` (roles in the table above) |
+| `--ui-syntax-keyword`, `-name`, `-number`, `-string`, `-type` | removed; `CodeBlock` colours its tokens from the design palette |
+| `--ui-anim-*` | unchanged (`$anim-*`) |
+
+#### 8. Mixins
+
+| 1.x | 2.0 |
+| --- | --- |
+| `@include ui.for-dark { … }` | removed. Tokens change with the theme; for a rule that really differs, `[data-theme='dark'] & { … }` |
+| `@include ui.heading(4xl)` | `@include ui.heading(h1)` |
+| `@include ui.heading(3xl)`, `heading(2xl)` | `@include ui.heading(h2)` |
+| `@include ui.heading(xl)` (the default) | `@include ui.heading(h3)` (the default) |
+| `@include ui.heading(lg)` | `@include ui.heading(h4)` |
+| `@include ui.heading(base)`, `(sm)`, `(xs)`, `(2xs)`, `(body)` | `@include ui.block-title`, or `@include ui.type(body)` / `type(small)` / `type(caption)` / `type(lead)` plus a weight |
+| `heading($step, $weight)` | the second argument is gone: the role carries its weight |
+| `@include ui.tint(oem)` | `@include ui.tint(info)` |
+| `@include ui.tint(alt)` | `@include ui.tint(highlight)` |
+| `@include ui.tint(info)` (neutral in 1.x) | `tint(info)` is cobalt now; for the old look use `tint(neutral)` |
+| `tint(<unknown>)` fell back to neutral | a compile error |
+| `interactive-surface($hover: $surface-2, $pressed: $surface-3)` | the defaults are `$state-hover` / `$state-pressed` |
+| `card($radius: $radius-lg)`, `panel($radius: $radius-lg)` | default `$radius-md` (14px) |
+| `muted($size: $font-size-sm)`, `technical-text(…)`, `money($size: $font-size-lg)` | defaults `$font-size-small`, `$font-size-small`, `$font-size-h4` |
+| `focus-ring($color: $ring-color)` | default `$focus` |
+| `bottom-sheet($duration: $duration-normal)` | default `$duration-base` |
+
+New: `type($role)`, `block-title`, `choice-control($shape)`.
+
+#### 9. Check the result
+
+- Search the application for `--ui-`, `data-ui-`, `ui.$` followed by a name of the first column,
+  and the removed exports; nothing should be left except component hooks.
+- Sass fails on a removed variable or an unknown `heading` / `tint` argument, and TypeScript on a
+  removed export, variant or tone, so a clean build covers most of the list. Custom properties are
+  the exception: a misspelt `var(--hd-…)` is silently dropped, so search for them.
+- Look at one screen in both themes at desktop and phone width.
+
+## [1.0.0] — 2026-11-07 — `@handijit/ui`
 
 **Paket ve marka adı değişti.** `@ahmetilhn/hanui` (son sürüm 5.6.3) handijit organizasyonuna taşındı:
 npm adı `@handijit/ui`, depo `github.com/handijit/ui`, sürüm 1.0.0'dan başlar. İç adlar da yeni

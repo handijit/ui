@@ -488,7 +488,7 @@ $header-offset: var(--ui-header-height, 0px);
   width: 18px;
   height: 18px;
   margin: 0;
-  border: 1.5px solid $text-3;
+  border: 1.5px solid $border-control;
   border-radius: $radius-xs;
   background-color: $bg-surface;
   cursor: pointer;
@@ -625,7 +625,8 @@ $header-offset: var(--ui-header-height, 0px);
   line-height: $leading-snug;
   color: $text;
   background-color: $bg-surface;
-  border: 1px solid $border-strong;
+  // `border-control`, not `border-strong`: the edge is all that marks an empty field (1.4.11, 3:1).
+  border: 1px solid $border-control;
   border-radius: $radius-sm;
   padding: $space-2 $space-3;
   // The height of a MEDIUM button: a field and a button on one row share one line.
@@ -656,7 +657,7 @@ $header-offset: var(--ui-header-height, 0px);
    * temalarda hover'da alan kalin cerceveli gorunuyordu. Karisim token tanimlamaz; tema degerlerini izler.
    */
   &:hover:not(:disabled):not([aria-invalid='true']) {
-    border-color: color-mix(in oklab, #{$border-strong}, #{$text} 30%);
+    border-color: color-mix(in oklab, #{$border-control}, #{$text} 40%);
   }
 
   &:focus {

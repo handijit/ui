@@ -131,10 +131,33 @@ and the passive state could not be told from the active one (measured: `Switch`,
 separately — a disabled `fieldset` got `GrayText` while its `legend` was drawn `CanvasText`.
 Native `:disabled` elements are covered by `base.scss`.
 
-⚠ **`Switch`: an OFF track is `text-3`, a disabled track is `bg-disabled` + a `border-strong`
-line.** An off switch still has to be seen as a control (`text-3` passes the 3:1 of a graphic on
-every surface); with a surface-coloured track the thumb disappeared in dark (measured in 5.x:
-1.12:1). On: `primary` track, `on-primary` thumb.
+⚠ **The resting boundary of a form control is `border-control` (2.1), never `border` or
+`border-strong`.** The edge is all that marks an EMPTY control, so WCAG 1.4.11 asks 3:1 of it;
+`border-strong` on a surface is 1.53:1 in light and 2.11:1 in dark (2.0 drew fields with it).
+`border-control` is design 1.1's role for exactly this: 3.08 – 3.52:1 in light, 3.10 – 4.32:1 in
+dark on every surface and on `bg-disabled`.
+
+| Control | Drawn with `border-control` | Hover | Disabled |
+|---|---|---|---|
+| `Input` · `PasswordInput` · `Textarea` · `Select` · `Combobox` · `DateField` · `TagInput` (`input-base`) | the 1px edge | the edge mixed 40% towards `text` (`color-mix`, follows the theme) | `passive-surface()` |
+| `Checkbox` · `Radio` · `TableCheckbox` (`choice-control`) | the 1.5px edge | `text-2` | `bg-disabled` + `border-strong` |
+| `Switch` | the OFF track (the thumb is `bg-surface`: same ratio on the track) | the row veil | `bg-disabled` + a `border-strong` line |
+| `QuantityStepper` · `SegmentedControl` | the outer frame (inner separators stay `border`) | the button / segment | per button / segment |
+| `FileUpload` | the dashed edge of the drop zone | `primary` | `passive-surface()` |
+| `RadioCard` | the indicator circle (the card outline stays `border`, it is a card) | card `border-strong` | `border` |
+| `PromptInput` | the box | — (focus-within) | `passive-surface()` |
+
+Focus (`focus` + halo) and invalid (`danger-solid`) are unchanged and still read against the
+resting edge. Separators, cards, table rules, popups and the BUTTON family (`Button` SECONDARY,
+`IconButton`, `Chip`, `Pagination`) keep `border` / `border-strong`: a button is identified by its
+label, not by its edge. Guard: `__tests__/styles/control-boundary.test.ts` lists every control and
+fails when a stylesheet outside the list reaches for the role; the pairs are in the contrast gate.
+A new form control is added to both.
+
+⚠ **`Switch`: an OFF track is `border-control`, a disabled track is `bg-disabled` + a
+`border-strong` line.** An off switch still has to be seen as a control (`border-control` passes
+the 3:1 of a graphic on every surface; 2.0 used `text-3`); with a surface-coloured track the thumb
+disappeared in dark (measured in 5.x: 1.12:1). On: `primary` track, `on-primary` thumb.
 
 The one exception is **rising surfaces** (`Card`, `Tile`): a clickable card lifts on hover and does
 not change its fill. Not valid for a row, a menu item or a button.
@@ -168,7 +191,7 @@ loads none of it (`styles.css` and `base.css` declare no token) and the applicat
 | Inverse — `inverse-*` | a dark technical surface, the SAME in both themes | `TerminalOutput`, `CodeBadge` |
 | Status — `success` / `warning` / `danger` / `info` × `-bg` `-fg` `-line` `-solid` `-on-solid` | a state, not an action | `Alert`, `Badge`, `Toast`, `StatusDot`, field errors; `danger-solid` is also the fill of a destructive BUTTON |
 | Series — `chart-1…6` | chart series, legend squares, category dots | `/charts`, `Legend`, `SegmentBar`; `muted` is the neutral tone |
-| Neutrals — `bg-page/-surface/-raised/-inset/-overlay/-disabled`, `border`, `border-strong`, `text`, `text-2`, `text-3`, `text-disabled` | everything else | |
+| Neutrals — `bg-page/-surface/-raised/-inset/-overlay/-disabled`, `border`, `border-strong`, `border-control`, `text`, `text-2`, `text-3`, `text-disabled` | everything else | `border-control` is the resting edge of a form control and nothing else (see "State layers") |
 
 ⚠ **Guard `__tests__/styles/colour-footprint.test.ts`.** Coral, turquoise and the band are tied to
 an allow-list of components, each with its reason. A component outside the list that reaches for
@@ -259,7 +282,7 @@ tone is a **compile error** (in 1.x it fell back to neutral and a typo shipped a
 ### Contrast gate — `scripts/check-contrast.mjs`
 
 It measures **the pairs the components actually draw**, with the values of the installed design
-package, in both themes: 120 pairs per theme, 240 in total, text ≥ 4.5:1, focus and graphics
+package, in both themes: 127 pairs per theme, 254 in total, text ≥ 4.5:1, focus and graphics
 ≥ 3:1. `UI_CONTRAST_VERBOSE=1 npm run check:contrast` prints every number. A failing pair is fixed
 by drawing with **another token**, never with a one-off colour, and never by editing a value: the
 value is design's.
@@ -272,7 +295,7 @@ Advisory pairs (measured and printed, never failing) and what they mean:
 | `focus` on `bg-inset` | 2.95 | 8.48 | hence `$focus-inset` |
 | `text-3` on `bg-inset` | 4.35 | 6.97 | tertiary text is not written in a well; `CodeBlock` comments use `text-2` |
 | `primary` / `danger-solid` / `info-solid` on `bg-overlay` | 5.03 – 5.31 | **2.70 – 2.85** | Design gates these fills on page, surface and raised only. On a dark menu or dialog a filled control is never the only carrier (its glyph is measured as text on a fill), but a bare status ICON in that colour, e.g. in a dark toast, is under 3:1. Known limit; the fix belongs to design (an overlay-safe fill), not to a local colour |
-| `border` / `border-strong` on surfaces | 1.19 – 1.53 | 1.25 – 2.27 | hairlines; a card is separated from the page by the border AND the fill |
+| `border` / `border-strong` on surfaces | 1.19 – 1.53 | 1.25 – 2.27 | hairlines; a card is separated from the page by the border AND the fill. A form control is NOT drawn with them: its edge is `border-control`, gated at 3:1 |
 | `highlight` on `bg-surface` | 2.79 | 8.91 | turquoise is a tint and a text colour here, never a state on its own |
 
 ## Typography roles
@@ -908,7 +931,7 @@ what changed in the contract, so that the older entries below are read correctly
 gone), "5.6.3 — Tema ezmesi" (`UiProvider theme`, `initUi` and `<style id="ui-theme-overrides">`
 no longer exist; an application override is unlayered CSS and still wins over `@layer ui`), and
 the token and breakpoint names inside "5.3 — SCSS API" (`var(--ui-…)`, `_tokens.generated.scss`,
-`$breakpoint-tablet-portrait`; the SCSS surface is 225 names today, `scripts/api-baseline.scss.txt`).
+`$breakpoint-tablet-portrait`; the SCSS surface is 226 names today, `scripts/api-baseline.scss.txt`).
 The mechanics those entries describe (per-component modules, the client boundary, CSS delivery,
 the anchored surfaces) are unchanged.
 
@@ -1035,7 +1058,7 @@ gelip basarak stil farkını ölçen betikle): üçü "Durum katmanları" ve "Ya
 | `DirectoryRow` hover | zemin `surface` + kenarlık `border` + ad `link`: satır kutusunda bir çerçeve belirip kayboluyordu | `interactive-surface`: yalnız zemin bir kademe (`surface-2`), basılınca 1 px. Saydam 1 px kenarlığın yeri dolguya katıldı, satır ölçüsü aynı |
 | `Disclosure` başlığı hover | kare `surface-2` zemin kenardan kenara; `Accordion`un ortadaki bölümlerinde yuvarlak çerçevenin içinde köşesiz bir bant | Zemin `space-1` içeride (saydam kenarlık + `background-clip: padding-box`), yarıçap `radius-lg − 1px` (çerçevenin iç eğrisiyle eş merkezli). Dolgu kenarlık kadar azaldı; başlık ve içerik hizası aynı |
 | Önek/sonek payı (`Input`) | `space-8 − space-2`: akışkan bölüm aralığı; 18 px ikonla metin arası dar ekranda 2 px, geniş ekranda 26 px; tek karakterli para simgesinde tutar simgeden kopuk | `space-3` + ölçülen genişlik + `space-2`. `Input` önek/soneki `ResizeObserver` ile ölçüp `--ui-input-prefix-width` / `--ui-input-suffix-width` yazar; ölçüm yokken (sunucu, jsdom) `icon-md` varsayılır |
-| Alan hover çizgisi (`input-base`) | `text-3`e atlıyordu: ince çizgili temalarda hover'da kalın çerçeve | `color-mix(in oklab, border-strong, text 30%)` — bir ton koyu; token tanımlamaz, temayı izler. `Input`, `Textarea`, `Select`, `Combobox`, `DateField`, `TagInput` aynı mixin'den |
+| Alan hover çizgisi (`input-base`) | `text-3`e atlıyordu: ince çizgili temalarda hover'da kalın çerçeve | `color-mix(in oklab, border-control, text 40%)` (2.1; 2.0'da `border-strong`, %30) — bir ton koyu; token tanımlamaz, temayı izler. `Input`, `Textarea`, `Select`, `Combobox`, `DateField`, `TagInput` aynı mixin'den |
 
 ⚠ `prefix={0}` artık hiçbir şey basmaz; eskiden `prefix && …` girdinin yanına başıboş bir "0" metni
 yazıyordu.
@@ -1184,7 +1207,7 @@ breakpoints are `$breakpoint-sm` / `-md` / `-lg` / `-xl`, and the module is thre
 | Kaynak | `src/styles/_index.scss` → `variables` + `mixins` iletir |
 | Derleme | `scripts/build-scss.mjs` → `build/scss/` (2.0: 3 dosya, KAPALI liste) |
 | Dışa aktarım | `exports["./scss"]` — `sass` / `style` / `default` koşulları |
-| Ad taban çizgisi | `scripts/api-baseline.scss.txt` (`$değişken` + `@mixin`; 2.0'da 225 ad, 5.5'te 253'tü) |
+| Ad taban çizgisi | `scripts/api-baseline.scss.txt` (`$değişken` + `@mixin`; 2.1'de 226 ad, 2.0'da 225, 5.5'te 253'tü) |
 | Nöbetçi | `__tests__/styles/scss-api.test.ts` |
 
 ⚠ **Modül KURAL BASMAZ.** `base.scss` (ve 1.x'te `_tokens.generated.scss`, `:root`
@@ -1347,7 +1370,7 @@ aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
 Ölçüm artık elle değil: `scripts/check-api.mjs` `build/index.d.ts`ten dışa
 aktarım adlarını çıkarır ve `scripts/api-baseline.txt` ile karşılaştırır
 (2.0'da **163 ad**; 5.6'da 177'ydi — tema nesneleri, `initUi` ve token tipleri kalktı, design'ın
-tema sabitleri eklendi. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22, SCSS 225). Kapı
+tema sabitleri eklendi. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22, SCSS 226). Kapı
 `verify` içinde, `build`ten hemen sonra.
 
 ```bash

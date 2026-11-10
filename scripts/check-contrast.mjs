@@ -18,6 +18,13 @@ const THRESHOLD = { text: 4.5, graphic: 3 };
 /** Everything a component can sit on. */
 const SURFACES = ['bg-page', 'bg-surface', 'bg-raised', 'bg-inset', 'bg-overlay'];
 
+/**
+ * What a form control can sit on: every surface, plus the passive fill a neighbouring control
+ * shows. The resting edge of a field, a checkbox, a radio and the off track of a switch are drawn
+ * with `border-control`, the only thing that marks an EMPTY control (WCAG 1.4.11).
+ */
+const CONTROL_SURFACES = [...SURFACES, 'bg-disabled'];
+
 /** Where the default focus ring is drawn — every surface but the well. */
 const GRAPHIC_SURFACES = ['bg-page', 'bg-surface', 'bg-raised', 'bg-overlay'];
 
@@ -93,6 +100,11 @@ const buildPairs = () => {
    */
   for (const surface of GRAPHIC_SURFACES) add('focus', surface, 'graphic');
   add('primary-text', 'bg-inset', 'graphic');
+
+  // --- The boundary of a form control at rest (1.4.11) ---
+  for (const surface of CONTROL_SURFACES) add('border-control', surface, 'graphic');
+  /* The thumb of an OFF switch on its track. */
+  add('bg-surface', 'border-control', 'graphic');
 
   // --- Fills that carry a state on their own: checkbox, switch, radio, progress, slider ---
   /*

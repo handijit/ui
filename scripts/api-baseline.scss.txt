@@ -24,6 +24,7 @@ $bg-page
 $bg-raised
 $bg-surface
 $border
+$border-control
 $border-strong
 $breakpoint-lg
 $breakpoint-md

@@ -700,8 +700,8 @@ npm run playground # component gallery → http://localhost:5273
 | `npm run build`          | `build/`: main entry, `chat`, `charts` (ESM + CJS + `.d.ts` + CSS) and `build/scss/`        |
 | `npm run test`           | Jest + Testing Library + `jest-axe`                                                         |
 | `npm run test:coverage`  | coverage gate over all of `src/`: lines 89 · statements 86 · functions 80 · branches 75     |
-| `npm run check:contrast` | WCAG contrast of the pairs the components draw, both themes (240 pairs)                     |
-| `npm run check:api`      | public API guard: four entries, four baselines (main 163 · chat 30 · charts 22 · SCSS 225)  |
+| `npm run check:contrast` | WCAG contrast of the pairs the components draw, both themes (254 pairs)                     |
+| `npm run check:api`      | public API guard: four entries, four baselines (main 163 · chat 30 · charts 22 · SCSS 226)  |
 | `npm run size`           | bundle budget (`size-limit`)                                                                |
 | `npm run exports`        | writes the `exports` map of `package.json` (`check:exports` verifies; last step of `build`) |
 | `npm run lint`           | ESLint (TypeScript) + stylelint (SCSS)                                                      |

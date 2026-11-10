@@ -52,8 +52,9 @@
   width: 40px;
   height: 24px;
   border-radius: $radius-pill;
-  // An OFF switch still has to be seen as a control: `text-3` is 4.9:1 / 6.2:1 on a surface.
-  background-color: $text-3;
+  // An OFF switch still has to be seen as a control: `border-control` is 3.5:1 / 3.9:1 on a
+  // surface, and the thumb (`bg-surface`) keeps the same ratio on the track.
+  background-color: $border-control;
   border: 1px solid transparent;
   transition:
     background-color $duration-fast $ease-standard,

@@ -47,6 +47,10 @@ Nothing in 1.x is kept as an alias. An application moves in one step, with the t
 - **Layers.** z-index values are design's: dropdown 1000, overlay 1100, modal 1200, popover 1300,
   toast 1400, tooltip 1500 (were 200 – 500). An application layer that had to sit above or below
   the library needs a new number, or better, a `--hd-z-*` token.
+- **Disabled controls.** A disabled `Button`, `IconButton` and `Switch` draw design's disabled pair
+  (`text-disabled` on `bg-disabled`: 2.06:1 in light, 2.28:1 in dark). 1.x gated the label of a
+  disabled control at 4.5:1; WCAG 1.4.3 exempts disabled controls, and `check:contrast` now prints
+  the number without failing on it. A disabled field keeps readable text (`text-3` on `bg-raised`).
 
 ### Added
 

@@ -11,15 +11,30 @@ const toPercent = (value: number, max: number): number => {
   return Math.min(100, Math.max(0, (value / max) * 100));
 };
 
-type Props = {
+/**
+ * The accessible name (2.2): `label` (written as `aria-label`), or `aria-labelledby` pointing at
+ * text already on screen — a heading or the file name above the bar — so it is not written twice.
+ * One of the two is required.
+ */
+export type ProgressNameProps =
+  | {
+      /** Çubuğun erişilebilir adı ("Yükleme", "Ödeme adımı"). */
+      label: string;
+      'aria-labelledby'?: never;
+    }
+  | {
+      label?: never;
+      /** The id(s) of visible text that names the bar (2.2). */
+      'aria-labelledby': string;
+    };
+
+type Props = ProgressNameProps & {
   /**
    * Tamamlanan miktar. `undefined` → BELİRSİZ ilerleme (sonu bilinmiyor); çubuk kendi kendine akar.
    */
   value?: number;
   /** Ölçeğin üst ucu. */
   max?: number;
-  /** Çubuğun erişilebilir adı ("Yükleme", "Ödeme adımı"). */
-  label: string;
   /** Ekran okuyucuya okunan METİN karşılığı ("3 / 5 dosya"). */
   valueText?: string;
   /** Yüzdeyi çubuğun yanında GÖRÜNÜR olarak yazar. */
@@ -41,6 +56,7 @@ const Progress = ({
   value,
   max = 100,
   label,
+  'aria-labelledby': labelledBy,
   valueText,
   isValueVisible,
   tone = 'brand',
@@ -56,6 +72,7 @@ const Progress = ({
       <div
         role="progressbar"
         aria-label={label}
+        aria-labelledby={labelledBy}
         /* BELIRSIZ kipte `aria-valuenow` YAZILMAZ. */
         aria-valuenow={isIndeterminate ? undefined : Math.round(percent)}
         aria-valuemin={isIndeterminate ? undefined : 0}
@@ -88,12 +105,10 @@ const Progress = ({
 
 export default /*#__PURE__*/ memo(/*#__PURE__*/ named(Progress, 'Progress')) as typeof Progress;
 
-type CircleProps = {
+type CircleProps = ProgressNameProps & {
   /** Tamamlanan miktar. `undefined` → BELİRSİZ; çember döner. */
   value?: number;
   max?: number;
-  /** Erişilebilir ad. */
-  label: string;
   valueText?: string;
   /** Yüzdeyi çemberin ortasına yazar. */
   isValueVisible?: boolean;
@@ -114,6 +129,7 @@ const ProgressCircleBase = ({
   value,
   max = 100,
   label,
+  'aria-labelledby': labelledBy,
   valueText,
   isValueVisible,
   tone = 'brand',
@@ -145,6 +161,7 @@ const ProgressCircleBase = ({
         viewBox={`0 0 ${size} ${size}`}
         role="progressbar"
         aria-label={label}
+        aria-labelledby={labelledBy}
         aria-valuenow={isIndeterminate ? undefined : Math.round(percent)}
         aria-valuemin={isIndeterminate ? undefined : 0}
         aria-valuemax={isIndeterminate ? undefined : 100}

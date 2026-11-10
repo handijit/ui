@@ -77,6 +77,21 @@ describe('design contract', () => {
     expect(declaredTokens).toContain('--hd-primary');
   });
 
+  /*
+   * The range is written twice in `package.json`: the peer range is what an application is held
+   * to, the dev range is what this suite runs against. `npm install --save-dev @handijit/design@^x`
+   * moves only the second, and the library would then ship styles that need tokens its peer range
+   * does not ask for. Both move together: `npm pkg set` on the two keys, then `npm install`.
+   */
+  it('the peer range of the design package is the range the suite runs against', () => {
+    const { peerDependencies, devDependencies } = JSON.parse(
+      readFileSync(join(ROOT, 'package.json'), 'utf8'),
+    ) as Record<'peerDependencies' | 'devDependencies', Record<string, string>>;
+
+    expect(peerDependencies['@handijit/design']).toBeDefined();
+    expect(peerDependencies['@handijit/design']).toBe(devDependencies['@handijit/design']);
+  });
+
   it('every --hd-* name in a compiled stylesheet exists in @handijit/design', () => {
     const unknown = compiled.flatMap(({ path, css }) =>
       [...new Set(referenced(css))]

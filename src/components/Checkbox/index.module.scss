@@ -33,4 +33,8 @@
     color: $text-2;
     line-height: $leading-normal;
   }
+
+  &__error {
+    @include field-error;
+  }
 }

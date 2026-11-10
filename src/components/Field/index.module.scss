@@ -33,19 +33,8 @@
   }
 
   &__error {
-    display: flex;
-    align-items: center;
-    gap: $space-1;
-    font-size: $font-size-caption;
-    font-weight: $weight-medium;
-    color: $danger-fg;
-    line-height: $leading-normal;
-    margin: 0;
-    order: var(--ui-field-message-order, 0);
-  }
+    @include field-error;
 
-  &__errorIcon {
-    font-size: $icon-xs;
-    flex-shrink: 0;
+    order: var(--ui-field-message-order, 0);
   }
 }

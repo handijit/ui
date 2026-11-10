@@ -2,6 +2,9 @@
 
 import { forwardRef, type InputHTMLAttributes, memo, type ReactNode, useId } from 'react';
 
+import { ExclamationCircleFill } from 'react-bootstrap-icons';
+
+import { idList } from '../../helpers/aria.helper';
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';
 
@@ -12,6 +15,11 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'role'> & {
   label: ReactNode;
   /** Etiketin altındaki açıklama; `aria-describedby` ile bağlanır. */
   hint?: string;
+  /**
+   * The error under the label (2.2): the switch is marked invalid (`aria-invalid`) and the message
+   * is linked with `aria-describedby`, next to the hint and any `aria-describedby` passed in.
+   */
+  error?: string;
   /** Etiket anahtarın SOLUNDA durur — ayar listelerinin yaygın düzeni. */
   isLabelFirst?: boolean;
   testId?: string;
@@ -22,7 +30,21 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'role'> & {
  * @example <Switch label="Kampanya bildirimleri" hint="E-posta ile ayda en fazla iki…
  */
 const Switch = forwardRef<HTMLInputElement, Props>(
-  ({ label, hint, isLabelFirst, className, id, testId, ...rest }, ref) => {
+  (
+    {
+      label,
+      hint,
+      error,
+      isLabelFirst,
+      className,
+      id,
+      testId,
+      'aria-describedby': describedBy,
+      'aria-invalid': isInvalid,
+      ...rest
+    },
+    ref,
+  ) => {
     /*
      * Prop'un dokumani `aria-describedby` diyordu ama hicbir `id` uretilmiyor, metin yalnizca
      * sarmalayan `<label>`in icinde duruyordu
@@ -32,6 +54,7 @@ const Switch = forwardRef<HTMLInputElement, Props>(
     const baseId = id ?? generatedId;
     const labelId = `${baseId}-label`;
     const hintId = `${baseId}-hint`;
+    const errorId = `${baseId}-error`;
 
     return (
       <label
@@ -49,7 +72,9 @@ const Switch = forwardRef<HTMLInputElement, Props>(
           id={baseId}
           className={styles.switch__input}
           aria-labelledby={labelId}
-          aria-describedby={hint ? hintId : rest['aria-describedby']}
+          /* 2.2: the links are MERGED; a passed `aria-describedby` no longer drops the hint. */
+          aria-describedby={idList(error && errorId, hint && hintId, describedBy)}
+          aria-invalid={error ? true : isInvalid}
           {...rest}
         />
 
@@ -65,6 +90,12 @@ const Switch = forwardRef<HTMLInputElement, Props>(
           {hint && (
             <span id={hintId} className={styles.switch__hint}>
               {hint}
+            </span>
+          )}
+          {error && (
+            <span id={errorId} className={styles.switch__error} role="alert">
+              <ExclamationCircleFill aria-hidden />
+              {error}
             </span>
           )}
         </span>

@@ -98,6 +98,15 @@
   }
 }
 
+/*
+ * Invalid and off (2.2): a 2px danger edge around the track, the colour of an invalid field's
+ * border. The message under the label carries the meaning; the edge points at the control.
+ */
+.switch__input[aria-invalid='true']:not(:checked) + .switch__track {
+  border-color: $danger-solid;
+  box-shadow: 0 0 0 1px $danger-solid;
+}
+
 /* Passive and off: a hollow track, the thumb withdrawn into the passive text colour. */
 .switch__input:disabled + .switch__track {
   background-color: $bg-disabled;
@@ -159,4 +168,8 @@
 .switch__hint {
   font-size: $font-size-caption;
   color: $text-2;
+}
+
+.switch__error {
+  @include field-error;
 }

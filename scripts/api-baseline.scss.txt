@@ -182,6 +182,7 @@ $z-tooltip
 @mixin container
 @mixin custom-scrollbar
 @mixin data-table
+@mixin field-error
 @mixin filter-surface
 @mixin focus-ring
 @mixin focus-ring-shape

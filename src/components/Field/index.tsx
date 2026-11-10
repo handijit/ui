@@ -4,6 +4,7 @@ import { type FC, memo, type ReactNode, useId } from 'react';
 
 import { ExclamationCircleFill } from 'react-bootstrap-icons';
 
+import { idList } from '../../helpers/aria.helper';
 import { cx } from '../../helpers/class-name.helper';
 import { resolveLabel } from '../../helpers/label.helper';
 import { useUi } from '../../theme/context';
@@ -19,7 +20,13 @@ export type FieldChildProps = {
 };
 
 type BaseProps = {
-  label: string;
+  /** The visible label. Text, or an element (a link, a badge) inside the `<label>`. */
+  label: ReactNode;
+  /**
+   * The id of the control (the `id` of `FieldChildProps`); generated when left out. The error
+   * and hint take `<id>-error` and `<id>-hint`.
+   */
+  id?: string;
   /** Girdi bileşenini alan `id` ve `aria-*` bağlarıyla üretir. */
   children: (props: FieldChildProps) => ReactNode;
   hint?: string;
@@ -42,6 +49,7 @@ type Props = BaseProps & {
  */
 const Field: FC<Props> = ({
   label,
+  id: ownId,
   children,
   hint,
   error,
@@ -51,7 +59,8 @@ const Field: FC<Props> = ({
   className,
 }) => {
   const { labels } = useUi();
-  const id = useId();
+  const generatedId = useId();
+  const id = ownId ?? generatedId;
   const errorId = `${id}-error`;
   const hintId = `${id}-hint`;
 
@@ -79,8 +88,7 @@ const Field: FC<Props> = ({
         required: isRequired || undefined,
         'aria-invalid': error ? true : undefined,
         /* HATA VE YARDIM BIRLIKTE baglanir, biri digerini EZMEZ. */
-        'aria-describedby':
-          [error && errorId, hint && hintId].filter(Boolean).join(' ') || undefined,
+        'aria-describedby': idList(error && errorId, hint && hintId),
       })}
 
       {/*
@@ -94,7 +102,7 @@ const Field: FC<Props> = ({
       */}
       {error && (
         <p id={errorId} className={styles.field__error} role="alert">
-          <ExclamationCircleFill aria-hidden className={styles.field__errorIcon} />
+          <ExclamationCircleFill aria-hidden />
           {error}
         </p>
       )}

@@ -433,6 +433,24 @@ $header-offset: var(--ui-header-height, 0px);
   color: $text;
 }
 
+// The error message of a control: a danger icon and the text, linked by `aria-describedby`.
+// `Field` draws it under a field; `Checkbox`, `Switch` and `Radio` under their label.
+@mixin field-error {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  margin: 0;
+  font-size: $font-size-caption;
+  font-weight: $weight-medium;
+  line-height: $leading-normal;
+  color: $danger-fg;
+
+  > svg {
+    flex-shrink: 0;
+    font-size: $icon-xs;
+  }
+}
+
 @mixin muted($size: $font-size-small) {
   font-size: $size;
   line-height: $leading-normal;
@@ -519,6 +537,12 @@ $header-offset: var(--ui-header-height, 0px);
 
   &:hover:not(:disabled) {
     border-color: $text-2;
+  }
+
+  // Invalid (2.2): the danger edge of an invalid field. A checked box keeps its fill; the message
+  // under the label carries the meaning.
+  &[aria-invalid='true']:not(:disabled) {
+    border-color: $danger-solid;
   }
 
   // The mixed state belongs to the checkbox. `:indeterminate` ALSO matches every radio of a group

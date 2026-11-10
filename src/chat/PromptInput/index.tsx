@@ -126,7 +126,7 @@ const PromptInput = /*#__PURE__*/ forwardRef<HTMLTextAreaElement, Props>(
             <IconButton
               icon={<StopFill aria-hidden />}
               label={resolveLabel('PromptInput.stop', labels?.chat?.stop)}
-              variant="outline"
+              variant="secondary"
               shape="round"
               onClick={onStop}
               disabled={!onStop}

@@ -114,7 +114,7 @@ const Carousel: FC<Props> = ({
         <IconButton
           icon={<CaretLeftFill aria-hidden className={styles.carousel__arrowIcon} />}
           label={previousLabel}
-          variant="outline"
+          variant="secondary"
           size="sm"
           disabled={!canScrollBack}
           onClick={() => scrollByPage(-1)}
@@ -122,7 +122,7 @@ const Carousel: FC<Props> = ({
         <IconButton
           icon={<CaretRightFill aria-hidden className={styles.carousel__arrowIcon} />}
           label={nextLabel}
-          variant="outline"
+          variant="secondary"
           size="sm"
           disabled={!canScrollForward}
           onClick={() => scrollByPage(1)}

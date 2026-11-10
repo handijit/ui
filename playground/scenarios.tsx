@@ -320,9 +320,10 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   },
   IconButton: {
     ghost: <IconButton icon={<HeartFill aria-hidden />} label="Favorilere ekle" />,
-    outline: (
-      <IconButton icon={<HeartFill aria-hidden />} label="Favorilere ekle" variant="outline" />
+    secondary: (
+      <IconButton icon={<HeartFill aria-hidden />} label="Favorilere ekle" variant="secondary" />
     ),
+    outline: <IconButton icon={<HeartFill aria-hidden />} label="Tümünü gör" variant="outline" />,
     /* The filled variants belong in the gallery: a colour decision has to show up in a visual diff. */
     solid: <IconButton icon={<HeartFill aria-hidden />} label="Favorilere ekle" variant="solid" />,
     accent: <IconButton icon={<HeartFill aria-hidden />} label="İndir" variant="accent" />,

@@ -400,7 +400,10 @@ and changes when an announcement strip appears.
 are 40px with 15px text on desktop and 44px with 16px text on a narrow or touch
 screen (no iOS zoom, a full touch target).
 
-`IconButton variant`: `ghost` · `outline` · `solid` · `accent` · `danger`.
+`IconButton variant`: `ghost` · `secondary` · `outline` · `solid` · `accent` ·
+`danger`. `secondary` and `outline` are drawn exactly like the `Button` variants
+of the same name: the neutral frame and the cobalt frame. (Until 2.1 `outline`
+was the neutral frame; use `secondary` for that look.)
 `Badge tone`: `neutral` · `success` · `danger` · `warning` · `info` ·
 `highlight`, each as `soft`, `solid` or `outline`.
 

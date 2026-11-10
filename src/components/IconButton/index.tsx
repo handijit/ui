@@ -14,7 +14,11 @@ import UiLink from '../Link';
 
 import styles from './index.module.scss';
 
-export type IconButtonVariant = 'ghost' | 'outline' | 'solid' | 'accent' | 'danger';
+/**
+ * `secondary` and `outline` are drawn exactly like `Button` `UIVariant.SECONDARY` (the neutral
+ * frame) and `UIVariant.OUTLINE` (the cobalt frame). Until 2.1 `outline` was the neutral frame.
+ */
+export type IconButtonVariant = 'ghost' | 'secondary' | 'outline' | 'solid' | 'accent' | 'danger';
 
 /** Köşe biçimi. `round` tam daire — sohbet girdisindeki gönder / durdur gibi. Ölçü değişmez. */
 export type IconButtonShape = 'rounded' | 'round';

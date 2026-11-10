@@ -56,18 +56,50 @@
     color: $text;
   }
 
-  &--outline {
-    border-color: $border-strong;
+  /*
+   * `secondary` and `outline` are the variants of the same name on `Button`, value for value: an
+   * icon button next to a button of that variant is drawn as its pair. Until 2.1 `outline` was the
+   * NEUTRAL frame here and the cobalt frame on `Button`, and there was no `secondary`.
+   */
+  &--secondary {
     background-color: $bg-surface;
+    border-color: $border-strong;
+    color: $text;
 
     &:hover:not(:disabled) {
       border-color: $text-3;
-      color: $text;
+      background-color: $bg-raised;
+    }
+
+    &:active:not(:disabled) {
+      background-color: $bg-inset;
     }
 
     &:disabled {
-      background-color: $bg-raised;
+      background-color: $bg-disabled;
+      border-color: transparent;
+      color: $text-disabled;
+    }
+  }
+
+  // Cobalt frame: an encouraged action that is not the primary one.
+  &--outline {
+    background-color: transparent;
+    border-color: $primary;
+    color: $primary-text;
+
+    &:hover:not(:disabled) {
+      background-color: $primary-soft;
+    }
+
+    &:active:not(:disabled) {
+      background-color: $primary-soft-hover;
+    }
+
+    &:disabled {
+      background-color: transparent;
       border-color: $border;
+      color: $text-disabled;
     }
   }
 
@@ -106,7 +138,7 @@
     }
   }
 
-  // The glyph is red at rest: without it the button is the `outline` one until it is hovered.
+  // The glyph is red at rest: without it the button is the neutral framed one until it is hovered.
   &--danger {
     border-color: $border-strong;
     background-color: $bg-surface;

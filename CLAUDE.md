@@ -234,6 +234,15 @@ in a consumer.
 | `DANGER` | `danger-solid` fill | a destructive action: a delete confirmation |
 | `ON_BAND` | `band-*` | an action on the brand band |
 
+`IconButton variant`: `ghost` (default) · `secondary` · `outline` · `solid` · `accent` · `danger`.
+`secondary` and `outline` are `SECONDARY` and `OUTLINE` of the table above, value for value in
+every state (resting, hover, pressed, disabled): an icon button next to a button of that variant is
+its pair. ⚠ Until 2.1 `IconButton` `outline` was the NEUTRAL frame (while `Button` `OUTLINE` was
+cobalt) and `secondary` did not exist. 2.1 made `outline` cobalt; the neutral look is `secondary`.
+The library's own chrome (the arrows of `Pagination` and `Carousel`, "scroll to latest" of
+`ChatThread`, "stop" of `PromptInput`) is `secondary`. Guard:
+`__tests__/styles/button-pairs.test.ts` compiles both stylesheets and compares the colours.
+
 Heights: `UISize` XSMALL 28 · SMALL 32 · MEDIUM 40 · LARGE 48 (px). A field is 40px with 15px text
 on a desktop pointer and 44px with 16px text on a narrow or touch screen; `input-sm` is 32px. A
 MEDIUM button and a field share one line. Guard: `__tests__/components/control-size.test.tsx`.

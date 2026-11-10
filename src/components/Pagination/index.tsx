@@ -161,7 +161,7 @@ const Pagination: FC<Props> = ({
         className={styles.pagination__arrow}
         icon={icon}
         label={arrowLabel}
-        variant="outline"
+        variant="secondary"
         disabled={isDisabled}
         onClick={() => goTo(target)}
       />

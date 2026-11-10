@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { FocusEvent, ReactNode } from 'react';
 
 export type ComboboxOption<T extends string = string> = {
   value: T;
@@ -28,6 +28,12 @@ export type ComboboxProps<T extends string> = {
   options: ComboboxOption<T>[];
   value: T | null;
   onChange: (value: T | null) => void;
+  /**
+   * Focus left the combobox (2.2): the trigger, the clear button and the open panel count as one
+   * control, so moving between them is not a blur. While the bottom sheet is open the combobox is
+   * still being used; the trigger takes the focus back when the sheet closes.
+   */
+  onBlur?: (event: FocusEvent<HTMLElement>) => void;
   labels: ComboboxLabels;
   /**
    * Verilirse arama sunucuda yapılır: bileşen listeyi kendisi filtrelemez, yazılanı 300 ms bekleyip
@@ -36,6 +42,11 @@ export type ComboboxProps<T extends string> = {
   onSearch?: (query: string) => void;
   isLoading?: boolean;
   isDisabled?: boolean;
+  /**
+   * Read-only (2.2): the value is shown, focusable and announced (`aria-readonly`), but the panel
+   * does not open and the clear button is not drawn.
+   */
+  isReadOnly?: boolean;
   /** Seçimi kaldıran çarpı düğmesi gösterilir. */
   isClearable?: boolean;
   /** Arama kutusu GİZLENİR. */

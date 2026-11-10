@@ -1,9 +1,14 @@
 'use client';
 
 import {
+  type FocusEvent,
+  type ForwardedRef,
+  forwardRef,
   type KeyboardEvent,
   memo,
+  type ReactElement,
   type ReactNode,
+  type Ref,
   useCallback,
   useEffect,
   useId,
@@ -20,6 +25,8 @@ import usePositioning from '../../hooks/usePositioning';
 
 import { SHEET_MEDIA_QUERY } from '../../constants/breakpoint.constants';
 import { cx } from '../../helpers/class-name.helper';
+import { named } from '../../helpers/component.helper';
+import { assignRef } from '../../helpers/ref.helper';
 import { resolveLabel } from '../../helpers/label.helper';
 import { useUi } from '../../theme/context';
 import BottomSheet from '../BottomSheet';
@@ -37,8 +44,15 @@ type OpenMode = 'popover' | 'sheet';
 
 type Props<T extends string> = {
   options: SelectOption<T>[];
-  value: T;
+  /** The chosen value. `null` (2.2), or a value no option has, shows the placeholder. */
+  value: T | null;
   onChange: (value: T) => void;
+  /**
+   * Focus left the select (2.2): the trigger and its open list count as one control, so moving
+   * between them is not a blur. While the bottom sheet is open the select is still being used;
+   * the trigger takes the focus back when the sheet closes.
+   */
+  onBlur?: (event: FocusEvent<HTMLElement>) => void;
   /** Alanın adı. */
   label: string;
   /** Seçim yokken tetikleyicide görünen metin. */
@@ -52,6 +66,11 @@ type Props<T extends string> = {
   /** Panelin hangi kenardan hizalanacağı. */
   align?: 'start' | 'end';
   isDisabled?: boolean;
+  /**
+   * Read-only (2.2): the value is shown, focusable and announced (`aria-readonly`), but the list
+   * does not open. A disabled select drops out of the tab order; a read-only one does not.
+   */
+  isReadOnly?: boolean;
   id?: string;
   /**
    * Zorunluluk — `Field`in `FieldChildProps` sözleşmesinden gelir.
@@ -65,25 +84,30 @@ type Props<T extends string> = {
   testId?: string;
 };
 
-/** Seçim kutusu. */
-const Select = <T extends string>({
-  options,
-  value,
-  onChange,
-  label,
-  placeholder,
-  closeLabel,
-  icon,
-  size = 'md',
-  align = 'start',
-  isDisabled,
-  id,
-  className,
-  testId,
-  required,
-  'aria-describedby': describedBy,
-  'aria-invalid': isInvalid,
-}: Props<T>) => {
+/** Seçim kutusu. `ref` reaches the trigger (2.2): the element to focus for an error. */
+const SelectBase = <T extends string>(
+  {
+    options,
+    value,
+    onChange,
+    onBlur,
+    label,
+    placeholder,
+    closeLabel,
+    icon,
+    size = 'md',
+    align = 'start',
+    isDisabled,
+    isReadOnly,
+    id,
+    className,
+    testId,
+    required,
+    'aria-describedby': describedBy,
+    'aria-invalid': isInvalid,
+  }: Props<T>,
+  ref: ForwardedRef<HTMLButtonElement>,
+) => {
   const { labels } = useUi();
   const emptyText = resolveLabel('Select.placeholder', placeholder, labels?.selectPlaceholder);
   const generatedId = useId();
@@ -94,6 +118,14 @@ const Select = <T extends string>({
   const rootRef = useRef<HTMLSpanElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  /* The caller's `ref` and the inner one hold the same trigger. */
+  const setTrigger = useCallback(
+    (node: HTMLButtonElement | null) => {
+      triggerRef.current = node;
+      assignRef(ref, node);
+    },
+    [ref],
+  );
   const [openMode, setOpenMode] = useState<OpenMode | null>(null);
 
   /* PANEL SABIT KONUMLU, MUTLAK DEGIL — gerekce SCSS'te (`.panel`). */
@@ -116,7 +148,7 @@ const Select = <T extends string>({
   const close = useCallback(() => setOpenMode(null), []);
 
   const open = useCallback(() => {
-    if (isDisabled || options.length === 0) return;
+    if (isDisabled || isReadOnly || options.length === 0) return;
 
     /*
      * Etkin secenek SECILI olandan baslar (kancanin `initialIndex`i); kullanici listeyi bastan
@@ -124,7 +156,7 @@ const Select = <T extends string>({
      */
     /* A sheet only on a narrow TOUCH screen; a desktop window gets the dropdown at any width. */
     setOpenMode(window.matchMedia(SHEET_MEDIA_QUERY).matches ? 'sheet' : 'popover');
-  }, [isDisabled, options.length]);
+  }, [isDisabled, isReadOnly, options.length]);
 
   const selectOption = (option: SelectOption<T>) => {
     if (option.isDisabled) return;
@@ -177,6 +209,23 @@ const Select = <T extends string>({
        olmasi etkiyi yeniden calistirmaz, denetci ise kancadan gelen bir
        degerin referans oldugunu kanitlayamiyor. */
   }, [openMode, listRef]);
+
+  /*
+   * 2.2 `onBlur`: React's focus events bubble through the portal, so the root hears the trigger
+   * AND the list. Focus moving to the other part, or into the open sheet, is not a blur.
+   */
+  const openModeRef = useRef(openMode);
+  openModeRef.current = openMode;
+  const handleBlur = (event: FocusEvent<HTMLElement>) => {
+    if (!onBlur || openModeRef.current === 'sheet') return;
+    const next = event.relatedTarget;
+    if (
+      next instanceof Node &&
+      (rootRef.current?.contains(next) || panelRef.current?.contains(next))
+    )
+      return;
+    onBlur(event);
+  };
 
   /* KAPALIYKEN ok/Enter/Space paneli ACAR. */
   const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
@@ -241,9 +290,14 @@ const Select = <T extends string>({
   );
 
   return (
-    <span ref={rootRef} className={cx(styles.select, className)} data-testid={testId}>
+    <span
+      ref={rootRef}
+      className={cx(styles.select, className)}
+      data-testid={testId}
+      onBlur={handleBlur}
+    >
       <button
-        ref={triggerRef}
+        ref={setTrigger}
         id={baseId}
         type="button"
         role="combobox"
@@ -253,6 +307,7 @@ const Select = <T extends string>({
           !selectedOption && styles['trigger--empty'],
           isOpen && styles['trigger--open'],
           isInvalid && styles['trigger--invalid'],
+          isReadOnly && styles['trigger--readOnly'],
         )}
         disabled={isDisabled}
         aria-haspopup="listbox"
@@ -267,6 +322,7 @@ const Select = <T extends string>({
         aria-invalid={isInvalid}
         /* Tetikleyici bir `<button>`; yerel `required` yok, karsiligi bu. */
         aria-required={required || undefined}
+        aria-readonly={isReadOnly || undefined}
         onClick={() => (isOpen ? close() : open())}
         onKeyDown={onKeyDown}
       >
@@ -290,10 +346,13 @@ const Select = <T extends string>({
          * iki hairline cizgiye iniyor ve kutunun acilir oldugu uzaktan
          * okunmuyordu. Acikken 180° donuyor — yon hâlâ durumu bildiriyor.
          */}
-        <CaretDownFill
-          aria-hidden
-          className={cx(styles.trigger__chevron, isOpen && styles['trigger__chevron--open'])}
-        />
+        {/* A read-only select does not open: no caret promising a list. */}
+        {!isReadOnly && (
+          <CaretDownFill
+            aria-hidden
+            className={cx(styles.trigger__chevron, isOpen && styles['trigger__chevron--open'])}
+          />
+        )}
       </button>
 
       {openMode === 'popover' &&
@@ -328,4 +387,9 @@ const Select = <T extends string>({
   );
 };
 
-export default /*#__PURE__*/ memo(Select) as typeof Select;
+/* A generic component keeps its type parameter through `forwardRef` only with this cast. */
+const Select = /*#__PURE__*/ forwardRef(SelectBase) as <T extends string>(
+  props: Props<T> & { ref?: Ref<HTMLButtonElement> },
+) => ReactElement;
+
+export default /*#__PURE__*/ memo(/*#__PURE__*/ named(Select, 'Select')) as typeof Select;

@@ -29,6 +29,11 @@
     border-color: $danger-solid;
   }
 
+  // Read-only (2.2): an ordinary field that does not open.
+  &--readOnly {
+    cursor: default;
+  }
+
   // Dense size, 32px: the invisible `::after` completes the tap target to 44px (WCAG 2.5.8, as in
   // `Chip`). The box does not grow; the toolbar keeps one height.
   &--sm {

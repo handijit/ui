@@ -1,8 +1,13 @@
 'use client';
 
 import {
+  type FocusEvent,
+  type ForwardedRef,
+  forwardRef,
   type KeyboardEvent,
   memo,
+  type ReactElement,
+  type Ref,
   useCallback,
   useEffect,
   useId,
@@ -16,6 +21,8 @@ import { CaretDownFill, CheckLg, Search, XLg } from 'react-bootstrap-icons';
 
 import { SHEET_MEDIA_QUERY } from '../../constants/breakpoint.constants';
 import { cx } from '../../helpers/class-name.helper';
+import { named } from '../../helpers/component.helper';
+import { assignRef } from '../../helpers/ref.helper';
 import { resolveLabel } from '../../helpers/label.helper';
 import { matchesSearch } from '../../helpers/text.helper';
 import useAsyncSearch from '../../hooks/useAsyncSearch';
@@ -42,25 +49,30 @@ import styles from './index.module.scss';
  */
 export type { ComboboxLabels, ComboboxOption, ComboboxProps } from '../../types/combobox.type';
 
-/** Aranabilir seçim kutusu. */
-const Combobox = <T extends string>({
-  options,
-  value,
-  onChange,
-  labels,
-  isSearchHidden,
-  onSearch,
-  isLoading,
-  isDisabled,
-  isClearable,
-  icon,
-  id,
-  required,
-  className,
-  testId,
-  'aria-describedby': describedBy,
-  'aria-invalid': isInvalid,
-}: ComboboxProps<T>) => {
+/** Aranabilir seçim kutusu. `ref` reaches the trigger (2.2): the element to focus for an error. */
+const ComboboxBase = <T extends string>(
+  {
+    options,
+    value,
+    onChange,
+    onBlur,
+    labels,
+    isSearchHidden,
+    onSearch,
+    isLoading,
+    isDisabled,
+    isReadOnly,
+    isClearable,
+    icon,
+    id,
+    required,
+    className,
+    testId,
+    'aria-describedby': describedBy,
+    'aria-invalid': isInvalid,
+  }: ComboboxProps<T>,
+  ref: ForwardedRef<HTMLButtonElement>,
+) => {
   const { labels: config } = useUi();
 
   /* Metinler TEMBEL cozulur: cizilmeyen bir ogenin metnini istemek yanlis alarm uretiyordu */
@@ -99,6 +111,14 @@ const Combobox = <T extends string>({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  /* The caller's `ref` and the inner one hold the same trigger. */
+  const setTrigger = useCallback(
+    (node: HTMLButtonElement | null) => {
+      triggerRef.current = node;
+      assignRef(ref, node);
+    },
+    [ref],
+  );
 
   /*
    * Panel NEREDE acilir: masaustunde tetikleyicinin altinda, dar ekranda ekranin dibinde bir alt
@@ -141,7 +161,7 @@ const Combobox = <T extends string>({
   }, []);
 
   const open = useCallback(() => {
-    if (isDisabled) return;
+    if (isDisabled || isReadOnly) return;
     /* A sheet only on a narrow TOUCH screen; a desktop window gets the dropdown at any width. */
     setOpenMode(window.matchMedia(SHEET_MEDIA_QUERY).matches ? 'sheet' : 'popover');
     /*
@@ -149,7 +169,7 @@ const Combobox = <T extends string>({
      * bastan taramak zorunda kalmaz.
      */
     setQuery('');
-  }, [isDisabled]);
+  }, [isDisabled, isReadOnly]);
 
   /*
    * Disari tiklamada kapanir. `mousedown` kullanilir: `click` beklerken kullanici surukleyerek
@@ -265,6 +285,24 @@ const Combobox = <T extends string>({
     handleKeyDown(event);
   };
 
+  /*
+   * 2.2 `onBlur`: React's focus events bubble through the portal, so the root hears the trigger,
+   * the clear button AND the panel. Focus moving between them, or into the open sheet, is not a
+   * blur.
+   */
+  const openModeRef = useRef(openMode);
+  openModeRef.current = openMode;
+  const handleBlur = (event: FocusEvent<HTMLElement>) => {
+    if (!onBlur || openModeRef.current === 'sheet') return;
+    const next = event.relatedTarget;
+    if (
+      next instanceof Node &&
+      (rootRef.current?.contains(next) || panelRef.current?.contains(next))
+    )
+      return;
+    onBlur(event);
+  };
+
   const clearSelection = () => {
     onChange(null);
     setCachedLabel(null);
@@ -348,6 +386,12 @@ const Combobox = <T extends string>({
               // Fare imleci seçeneğin üstündeyken etkin seçenek de oraya taşınır; iki ayrı vurgu
               // kullanıcıyı şaşırtıyordu.
               onMouseEnter={() => setActiveIndex(index)}
+              /*
+               * 2.2: pressing an option keeps the focus where it is (the search box, or the
+               * trigger when it is hidden). The option is not focusable, so the press used to drop
+               * the focus on `<body>` — a blur before the choice even arrived.
+               */
+              onMouseDown={event => event.preventDefault()}
               onClick={() => selectOption(option)}
             >
               <span className={styles.combobox__optionText}>
@@ -374,9 +418,14 @@ const Combobox = <T extends string>({
   };
 
   return (
-    <div ref={rootRef} className={cx(styles.combobox, className)} data-testid={testId}>
+    <div
+      ref={rootRef}
+      className={cx(styles.combobox, className)}
+      data-testid={testId}
+      onBlur={handleBlur}
+    >
       <button
-        ref={triggerRef}
+        ref={setTrigger}
         id={baseId}
         type="button"
         className={cx(
@@ -384,7 +433,12 @@ const Combobox = <T extends string>({
           !displayLabel && styles['combobox__trigger--empty'],
           isOpen && styles['combobox__trigger--open'],
           isInvalid && styles['combobox__trigger--invalid'],
-          isClearable && displayLabel && !isDisabled && styles['combobox__trigger--clearable'],
+          isReadOnly && styles['combobox__trigger--readOnly'],
+          isClearable &&
+            displayLabel &&
+            !isDisabled &&
+            !isReadOnly &&
+            styles['combobox__trigger--clearable'],
         )}
         disabled={isDisabled}
         /*
@@ -408,6 +462,7 @@ const Combobox = <T extends string>({
         aria-invalid={isInvalid || undefined}
         /* Tetikleyici bir `<button>`; yerel `required` yok, karsiligi bu. */
         aria-required={required || undefined}
+        aria-readonly={isReadOnly || undefined}
         onClick={() => (isOpen ? close() : open())}
         onKeyDown={handleTriggerKeyDown}
       >
@@ -427,10 +482,13 @@ const Combobox = <T extends string>({
         </span>
 
         {/* Dolu caret — gerekcesi `Select` ile ayni. */}
-        <CaretDownFill
-          aria-hidden
-          className={cx(styles.combobox__chevron, isOpen && styles['combobox__chevron--open'])}
-        />
+        {/* A read-only combobox does not open: no caret promising a list. */}
+        {!isReadOnly && (
+          <CaretDownFill
+            aria-hidden
+            className={cx(styles.combobox__chevron, isOpen && styles['combobox__chevron--open'])}
+          />
+        )}
       </button>
 
       {/*
@@ -445,7 +503,7 @@ const Combobox = <T extends string>({
         kullanıcısı için YOK. Kardeş olarak çizilip tetikleyicinin üzerine
         konumlandırılıyor; görsel yer aynı, ağaçtaki yeri doğru.
       */}
-      {isClearable && displayLabel && !isDisabled && (
+      {isClearable && displayLabel && !isDisabled && !isReadOnly && (
         <button
           type="button"
           className={styles.combobox__clear}
@@ -502,4 +560,9 @@ const Combobox = <T extends string>({
   );
 };
 
-export default /*#__PURE__*/ memo(Combobox) as typeof Combobox;
+/* A generic component keeps its type parameter through `forwardRef` only with this cast. */
+const Combobox = /*#__PURE__*/ forwardRef(ComboboxBase) as <T extends string>(
+  props: ComboboxProps<T> & { ref?: Ref<HTMLButtonElement> },
+) => ReactElement;
+
+export default /*#__PURE__*/ memo(/*#__PURE__*/ named(Combobox, 'Combobox')) as typeof Combobox;

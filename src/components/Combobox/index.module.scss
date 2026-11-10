@@ -30,6 +30,11 @@ $clear-size: 22px;
       border-color: $danger-solid;
     }
 
+    // Read-only (2.2): an ordinary field that does not open.
+    &--readOnly {
+      cursor: default;
+    }
+
     &--clearable .combobox__chevron {
       margin-inline-start: calc(#{$clear-size} + #{$space-2});
     }

@@ -1,5 +1,11 @@
+/**
+ * @jest-environment node
+ */
+/* dart2js Sass fails under jsdom; compiling needs no DOM. */
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+
+import { compile } from 'sass';
 
 const read = (path: string): string => readFileSync(path, 'utf8');
 
@@ -123,5 +129,28 @@ describe('the resting boundary of a form control', () => {
     expect(read('src/styles/_variables.scss')).toContain(
       '$border-control: var(--hd-border-control);',
     );
+  });
+});
+
+/*
+ * `:indeterminate` matches a mixed checkbox AND every radio of a group in which nothing is chosen
+ * yet. Until 2.1 the shared mixin filled both, so an unanswered radio group was drawn with all of
+ * its options selected.
+ */
+describe('the filled state of a choice control', () => {
+  const css = (path: string): string => compile(path, { loadPaths: ['src/styles'] }).css;
+
+  it('a radio is filled by `:checked` alone', () => {
+    const radio = css('src/components/Radio/index.module.scss');
+
+    expect(radio).toContain('.radio__input:checked');
+    expect(radio).not.toContain(':indeterminate');
+  });
+
+  it('a checkbox keeps its mixed state', () => {
+    expect(css('src/components/Checkbox/index.module.scss')).toContain(
+      '.checkbox__input:indeterminate',
+    );
+    expect(css('src/components/TableCheckbox/index.module.scss')).toContain(':indeterminate');
   });
 });

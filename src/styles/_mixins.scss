@@ -521,8 +521,17 @@ $header-offset: var(--ui-header-height, 0px);
     border-color: $text-2;
   }
 
-  &:checked,
-  &:indeterminate {
+  // The mixed state belongs to the checkbox. `:indeterminate` ALSO matches every radio of a group
+  // in which nothing is chosen yet (HTML), and such a group was drawn with all its radios filled.
+  $filled: '&:checked, &:indeterminate';
+  $filled-disabled: '&:checked:disabled, &:indeterminate:disabled';
+
+  @if $shape == radio {
+    $filled: '&:checked';
+    $filled-disabled: '&:checked:disabled';
+  }
+
+  #{$filled} {
     background-color: $primary;
     border-color: $primary;
 
@@ -549,8 +558,7 @@ $header-offset: var(--ui-header-height, 0px);
   }
 
   // A passive checked control gives the role colour back; the MARK carries the choice.
-  &:checked:disabled,
-  &:indeterminate:disabled {
+  #{$filled-disabled} {
     background-color: $text-disabled;
     border-color: transparent;
 

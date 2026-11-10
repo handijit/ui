@@ -24,6 +24,15 @@
     background-color: $bg-raised;
     cursor: not-allowed;
   }
+
+  // Read-only (2.2): the tags without their remove buttons, so the tag closes evenly.
+  &--readOnly {
+    cursor: default;
+
+    .tagInput__tag {
+      padding-inline-end: $space-2;
+    }
+  }
 }
 
 .tagInput__tag {

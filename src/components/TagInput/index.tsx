@@ -7,14 +7,38 @@ import { XLg } from 'react-bootstrap-icons';
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';
 import { resolveFormatter } from '../../helpers/label.helper';
+import type { Formatter } from '../../types/theme.type';
 import useAnnounce from '../../hooks/useAnnounce';
 
 import { useUi } from '../../theme/context';
 
 import styles from './index.module.scss';
 
-type Props = {
-  values: string[];
+/**
+ * The tags. `value` (2.2) is the name every other field uses; `values` is the 2.0 name, kept
+ * until 3.0. Give one of the two.
+ */
+type ValueProps =
+  | {
+      /** The tags (2.2). */
+      value: string[];
+      /**
+       * @deprecated 2.2: use `value`, the name every other field uses. Removed in 3.0.
+       */
+      values?: never;
+    }
+  | {
+      value?: never;
+      /**
+       * @deprecated 2.2: use `value`, the name every other field uses. Removed in 3.0.
+       */
+      values: string[];
+    };
+
+/** What a tag already in the list announces (2.2); the 2.0 text when nothing is given. */
+const DEFAULT_DUPLICATE_LABEL: Formatter<[value: string]> = value => `${value} zaten ekli`;
+
+type Props = ValueProps & {
   onChange: (values: string[]) => void;
   /** Alanın erişilebilir adı. */
   label: string;
@@ -25,7 +49,19 @@ type Props = {
   separators?: string[];
   /** En fazla kaç etiket. */
   maxTags?: number;
+  /**
+   * What a screen reader hears when the typed tag is already in the list (2.2). Falls back to
+   * `labels.tagInput.duplicate` of `UiProvider`, then to the Turkish text of 2.0
+   * (`"<value> zaten ekli"`) so that an update stays silent; 3.0 drops that fallback and asks for
+   * the label like every other text.
+   */
+  duplicateLabel?: Formatter<[value: string]>;
   isDisabled?: boolean;
+  /**
+   * Read-only (2.2): the tags are shown and the box stays focusable (native `readOnly`), but
+   * nothing can be typed or removed; the remove buttons are not drawn.
+   */
+  isReadOnly?: boolean;
   id?: string;
   /** Zorunluluk — `Field`in `FieldChildProps` sözleşmesi. */
   required?: boolean;
@@ -37,14 +73,17 @@ type Props = {
 
 /** Etiket girdisi — yazılan metni kaldırılabilir çiplere çevirir. */
 const TagInput = ({
-  values,
+  value: tags,
+  values: legacyTags,
   onChange,
   label,
   placeholder,
   removeLabel,
   separators = ['Enter', ','],
   maxTags,
+  duplicateLabel,
   isDisabled,
+  isReadOnly,
   id,
   required,
   className,
@@ -52,6 +91,7 @@ const TagInput = ({
   'aria-describedby': describedBy,
   'aria-invalid': isInvalid,
 }: Props) => {
+  const values = tags ?? legacyTags ?? [];
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -76,14 +116,17 @@ const TagInput = ({
 
   const commit = (raw: string) => {
     const value = raw.trim();
-    if (value === '') return;
+    if (value === '' || isReadOnly) return;
 
     if (values.includes(value)) {
       /* Sessizce yutmak yerine GOSTER: kullanici "yazdim, kayboldu" diyordu. */
       setDuplicate(value);
       if (duplicateTimerRef.current) window.clearTimeout(duplicateTimerRef.current);
       duplicateTimerRef.current = window.setTimeout(() => setDuplicate(null), 1_000);
-      announce(`${value} zaten ekli`, 'assertive');
+      announce(
+        (duplicateLabel ?? labels?.tagInput?.duplicate ?? DEFAULT_DUPLICATE_LABEL)(value),
+        'assertive',
+      );
       setDraft('');
       return;
     }
@@ -101,6 +144,8 @@ const TagInput = ({
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (isReadOnly) return;
+
     if (separators.includes(event.key)) {
       event.preventDefault();
       commit(draft);
@@ -120,6 +165,7 @@ const TagInput = ({
         styles.tagInput,
         isDisabled && styles['tagInput--disabled'],
         isInvalid && styles['tagInput--invalid'],
+        isReadOnly && styles['tagInput--readOnly'],
         className,
       )}
       data-testid={testId}
@@ -139,22 +185,24 @@ const TagInput = ({
         >
           {value}
 
-          <button
-            type="button"
-            className={styles.tagInput__remove}
-            /*
-             * Ad degeri ICERIR: on bes cipin hepsi "Kaldir" diye okundugunda hangisi oldugu belli
-             * olmuyordu.
-             */
-            aria-label={`${value} — ${removeLabel}`}
-            disabled={isDisabled}
-            onClick={event => {
-              event.stopPropagation();
-              remove(value);
-            }}
-          >
-            <XLg aria-hidden />
-          </button>
+          {!isReadOnly && (
+            <button
+              type="button"
+              className={styles.tagInput__remove}
+              /*
+               * Ad degeri ICERIR: on bes cipin hepsi "Kaldir" diye okundugunda hangisi oldugu belli
+               * olmuyordu.
+               */
+              aria-label={`${value} — ${removeLabel}`}
+              disabled={isDisabled}
+              onClick={event => {
+                event.stopPropagation();
+                remove(value);
+              }}
+            >
+              <XLg aria-hidden />
+            </button>
+          )}
         </span>
       ))}
 
@@ -164,7 +212,7 @@ const TagInput = ({
         type="text"
         className={styles.tagInput__field}
         value={draft}
-        placeholder={values.length === 0 ? placeholder : undefined}
+        placeholder={values.length === 0 && !isReadOnly ? placeholder : undefined}
         aria-label={label}
         aria-describedby={describedBy}
         aria-invalid={isInvalid}
@@ -174,6 +222,7 @@ const TagInput = ({
          */
         aria-required={required || undefined}
         disabled={isDisabled || isFull}
+        readOnly={isReadOnly}
         onChange={event => setDraft(event.target.value)}
         onKeyDown={handleKeyDown}
         /*

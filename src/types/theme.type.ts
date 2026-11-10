@@ -175,6 +175,8 @@ export type UiLabels = Partial<{
   tagInput: Partial<{
     added: Formatter<[value: string]>;
     removed: Formatter<[value: string]>;
+    /** The typed tag is already in the list (2.2), e.g. `value => value + ' zaten ekli'`. */
+    duplicate: Formatter<[value: string]>;
   }>;
 
   rating: Partial<{

@@ -6,6 +6,57 @@ reads the section of the version being released and uses it as the GitHub Releas
 to 1.0.0 are in Turkish, as written at the time; the 5.x tables of `@ahmetilhn/hanui` live in the
 README of the 1.0.0 tarball.
 
+## [2.1.0] — 2026-11-10
+
+**The edge of a form control is 3:1, and `IconButton` has the variants of `Button`.** Nothing is
+renamed or removed. Two things look different after the update: every form control has a darker
+resting edge, and `IconButton variant="outline"` is cobalt.
+
+> **`IconButton variant="outline"` changed colour.** In 2.0 it was a neutral frame, while `Button`
+> `OUTLINE` was the cobalt one, so the two variants of the same name did not match. It is now the
+> cobalt frame of `Button` `OUTLINE`. **Migration, one line: use `variant="secondary"` for the
+> neutral look.**
+
+### Requires
+
+- **`@handijit/design ^1.1.0`** (was `^1.0.0`). The control edge is design 1.1's `border-control`;
+  with design 1.0 the custom property does not exist and a field is drawn without a border.
+
+### Added
+
+- **`IconButton` `secondary`**: the neutral framed button, the colours of `Button` `SECONDARY` in
+  every state (resting, hover, pressed, disabled). `IconButtonVariant` is now `ghost` ·
+  `secondary` · `outline` · `solid` · `accent` · `danger`.
+- **`$border-control`** in `@handijit/ui/scss` (`var(--hd-border-control)`): the resting edge of a
+  form control, for an application that draws a control of its own. The SCSS API is 226 names.
+
+### Changed
+
+- **`IconButton` `outline`** is the cobalt frame of `Button` `OUTLINE` (see above). The library's
+  own chrome moved to `secondary` and stays neutral: the arrows of `Carousel`, the stop button of
+  `PromptInput`, the scroll-to-latest button of `ChatThread` (and the arrows of `Pagination`, which
+  draw their own colours and look as before). Their glyph is `text` (was `text-2`), and a disabled
+  `Carousel` arrow or stop button has the disabled look of `Button` `SECONDARY` (`bg-disabled`, no
+  frame).
+- **The resting edge of every form control is `border-control`** (WCAG 1.4.11, 3:1 against the
+  background it sits on; `border-strong` was 1.5:1 in light and 2.1:1 in dark). Fields: `Input`,
+  `PasswordInput`, `Textarea`, `Select`, `Combobox`, `DateField`, `DateRange`, `TagInput`,
+  `QuantityStepper`, `PromptInput`. Choices: `Checkbox`, `Radio`, `TableCheckbox`, the indicator of
+  `RadioCard`, the off track of `Switch`, the frame of `SegmentedControl`. The drop zone of
+  `FileUpload`. Separators, cards, table rules and popups keep `border` / `border-strong`.
+- **A field on hover** mixes its edge 40% towards `text` (was `border-strong`, 30%), so hover is
+  still a visible step from the darker resting edge. Focus, invalid and disabled are unchanged.
+- `Checkbox`, `Radio` and the off track of `Switch` were already above 3:1 (`text-3`); they take
+  the same role as the fields and are a little lighter than in 2.0.
+- `check:contrast` gates `border-control` against every surface and `bg-disabled`: 127 pairs per
+  theme, 254 in total.
+
+### Fixed
+
+- **`Radio`: a group with nothing chosen is no longer drawn with every option selected.**
+  `:indeterminate` matches each radio of an unanswered group, and the shared style filled it. Only
+  `:checked` fills a radio now; `Checkbox` keeps its mixed state.
+
 ## [2.0.0] — 2026-11-10
 
 **The library draws with the tokens of `@handijit/design` and owns none.** Han Dijit's site, staff

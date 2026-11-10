@@ -23,7 +23,7 @@ of [`@handijit/design`](https://www.npmjs.com/package/@handijit/design).
 npm install @handijit/ui @handijit/design @handijit/utils react-bootstrap-icons
 ```
 
-`react`, `react-dom`, `@handijit/design` (`^1.0.0`), `@handijit/utils`
+`react`, `react-dom`, `@handijit/design` (`^1.1.0`), `@handijit/utils`
 (`^2.0.0`) and `react-bootstrap-icons` are **peer** dependencies. The design
 package is a peer on purpose: an application has exactly one copy of the tokens,
 and the site, the panel and the components all read the same custom properties.

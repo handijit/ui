@@ -439,7 +439,7 @@
     "exports": "node scripts/build-exports.mjs"
   },
   "peerDependencies": {
-    "@handijit/design": "^1.0.0",
+    "@handijit/design": "^1.1.0",
     "@handijit/utils": "^2.0.0",
     "react": ">=18",
     "react-bootstrap-icons": ">=1.11.0",
@@ -447,7 +447,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
-    "@handijit/design": "^1.0.0",
+    "@handijit/design": "^1.1.0",
     "@handijit/utils": "^2.0.0",
     "@playwright/test": "^1.62.1",
     "@size-limit/preset-small-lib": "^13.0.3",

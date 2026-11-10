@@ -47,8 +47,10 @@
 
   @include focus-ring($focus, -1px);
 
+  // A step ABOVE the `bg-raised` track in both themes: `bg-surface` is darker than the track
+  // in dark, which drew the chosen segment as a hole.
   &--selected {
-    background-color: $bg-surface;
+    background-color: $bg-overlay;
     color: $text;
     box-shadow: $shadow-1;
   }

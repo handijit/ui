@@ -31,7 +31,7 @@
 
   padding: $space-3;
   border-radius: $radius-sm;
-  background-color: $bg-surface;
+  background-color: $bg-overlay;
   border: 1px solid $border;
   box-shadow: $shadow-2;
 
@@ -120,7 +120,7 @@
   text-underline-offset: 3px;
 
   &:hover {
-    background-color: $bg-raised;
+    background-color: $state-hover;
   }
 
   @include focus-ring($focus, 1px);

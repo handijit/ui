@@ -12,11 +12,12 @@
   padding: 0;
   border: 1px solid $border;
   border-radius: $radius-md;
-  background-color: $bg-surface;
+  background-color: $bg-overlay;
   color: $text;
   box-shadow: $shadow-3;
   overflow: hidden;
 
+  @include focus-ring($focus, -2px);
   @include surface-transition;
   @include backdrop-transition;
 
@@ -100,7 +101,7 @@
     min-height: 40px;
 
     &--active {
-      background-color: $bg-raised;
+      background-color: $state-hover;
     }
   }
 

@@ -13,10 +13,12 @@
   margin: 0;
   padding: 0;
   border: none;
-  background-color: $bg-surface;
+  background-color: $bg-overlay;
   color: $text;
   box-shadow: $shadow-3;
   overflow: hidden;
+
+  @include focus-ring($focus, -2px);
 
   &--sm {
     width: min(92vw, 360px);

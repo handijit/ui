@@ -73,7 +73,7 @@ $clear-size: 22px;
       color $duration-fast $ease-standard;
 
     &:hover {
-      background-color: $bg-raised;
+      background-color: $state-hover;
       color: $text;
     }
 
@@ -101,8 +101,8 @@ $clear-size: 22px;
   }
 
   &__panel {
-    z-index: $z-dropdown;
-    background-color: $bg-surface;
+    z-index: $z-popover;
+    background-color: $bg-overlay;
     border: 1px solid $border;
     border-radius: $radius-md;
     box-shadow: $shadow-2;
@@ -119,7 +119,7 @@ $clear-size: 22px;
 
     padding: $space-2 $space-3;
     border-bottom: 1px solid $border;
-    background-color: $bg-surface;
+    background-color: $bg-overlay;
 
     :global(dialog) & {
       padding: $space-1 $space-2;
@@ -191,7 +191,7 @@ $clear-size: 22px;
     min-height: 40px;
 
     &--active {
-      background-color: $bg-raised;
+      background-color: $state-hover;
     }
 
     &--selected {

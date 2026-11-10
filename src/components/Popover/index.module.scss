@@ -2,14 +2,14 @@
 @use '../../styles/mixins' as *;
 
 .popover {
-  z-index: $z-dropdown;
+  z-index: $z-popover;
 
   min-width: 200px;
   max-width: min(360px, calc(100vw - #{$space-6}));
 
   padding: $space-3;
   border-radius: $radius-md;
-  background-color: $bg-surface;
+  background-color: $bg-overlay;
   border: 1px solid $border;
   box-shadow: $shadow-2;
   color: $text;

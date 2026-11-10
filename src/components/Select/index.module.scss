@@ -29,8 +29,8 @@
     border-color: $danger-solid;
   }
 
-  // Yoğun ölçü 36 px: görünmez `::after` ile dokunma alanı 44 px'e tamamlanır (WCAG 2.5.8; `Chip` ile
-  // aynı kurgu). Kutu büyümez; şeritteki tek yükseklik korunur.
+  // Dense size, 32px: the invisible `::after` completes the tap target to 44px (WCAG 2.5.8, as in
+  // `Chip`). The box does not grow; the toolbar keeps one height.
   &--sm {
     @include input-sm;
     @include tap-target;
@@ -73,9 +73,9 @@
 
 .panel {
   position: fixed;
-  z-index: $z-dropdown;
+  z-index: $z-popover;
   min-width: 200px;
-  background-color: $bg-surface;
+  background-color: $bg-overlay;
   border: 1px solid $border;
   border-radius: $radius-md;
   box-shadow: $shadow-2;
@@ -127,7 +127,7 @@
   transition: background-color $duration-fast $ease-standard;
 
   &--active {
-    background-color: $bg-raised;
+    background-color: $state-hover;
   }
 
   &--selected {

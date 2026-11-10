@@ -4,7 +4,7 @@
 .menu {
   @include stack(2px);
 
-  z-index: $z-dropdown;
+  z-index: $z-popover;
 
   min-width: 180px;
   max-width: min(320px, calc(100vw - #{$space-6}));
@@ -13,7 +13,7 @@
 
   padding: $space-1;
   border-radius: $radius-sm;
-  background-color: $bg-surface;
+  background-color: $bg-overlay;
   border: 1px solid $border;
   box-shadow: $shadow-2;
 
@@ -71,7 +71,7 @@
   font-size: $font-size-small;
   color: $text;
 
-  @include interactive-surface($rest: transparent, $hover: $bg-raised, $pressed: $bg-inset);
+  @include interactive-surface;
 
   &:focus {
     outline: none;
@@ -80,7 +80,7 @@
   @include focus-ring($offset: -2px);
 
   &:focus-visible {
-    background-color: $bg-raised;
+    background-color: $state-hover;
   }
 
   &:disabled {

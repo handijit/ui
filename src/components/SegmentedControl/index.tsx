@@ -24,6 +24,21 @@ type Props<T extends string> = {
   /** Etiketler gizlenir, yalnızca ikon çizilir. `label` yine okunur. */
   isIconOnly?: boolean;
   size?: 'sm' | 'md';
+  /** Every segment disabled at once (2.2); `SegmentOption.isDisabled` still disables one. */
+  isDisabled?: boolean;
+  /**
+   * Read-only (2.2): the choice stays focusable and announced (`aria-readonly` on the group), but
+   * neither a press nor the arrow keys change it.
+   */
+  isReadOnly?: boolean;
+  /** The id of the `radiogroup` (2.2) — the `id` of `Field`'s `FieldChildProps`. */
+  id?: string;
+  /** Zorunluluk — `Field`in `FieldChildProps` sözleşmesi (2.2); `aria-required` on the group. */
+  required?: boolean;
+  /** On the `radiogroup` (2.2), with the error and hint ids of `Field`. */
+  'aria-describedby'?: string;
+  /** On the `radiogroup` (2.2), which takes `aria-invalid`; the frame turns danger. */
+  'aria-invalid'?: boolean;
   className?: string;
   testId?: string;
 };
@@ -36,6 +51,12 @@ const SegmentedControl = <T extends string>({
   label,
   isIconOnly,
   size = 'md',
+  isDisabled,
+  isReadOnly,
+  id,
+  required,
+  'aria-describedby': describedBy,
+  'aria-invalid': isInvalid,
   className,
   testId,
 }: Props<T>) => {
@@ -51,6 +72,7 @@ const SegmentedControl = <T extends string>({
 
     if (offset === 0) return;
     event.preventDefault();
+    if (isReadOnly || isDisabled) return;
 
     const enabled = options.filter(option => !option.isDisabled);
     if (enabled.length === 0) return;
@@ -67,9 +89,19 @@ const SegmentedControl = <T extends string>({
   return (
     <div
       ref={listRef}
+      id={id}
       role="radiogroup"
       aria-label={label}
-      className={cx(styles.segmented, styles[`segmented--${size}`], className)}
+      aria-describedby={describedBy}
+      aria-invalid={isInvalid || undefined}
+      aria-required={required || undefined}
+      aria-readonly={isReadOnly || undefined}
+      className={cx(
+        styles.segmented,
+        styles[`segmented--${size}`],
+        isReadOnly && styles['segmented--readOnly'],
+        className,
+      )}
       data-testid={testId}
       onKeyDown={handleKeyDown}
     >
@@ -84,7 +116,7 @@ const SegmentedControl = <T extends string>({
             aria-checked={isSelected}
             aria-label={isIconOnly ? option.label : undefined}
             data-value={option.value}
-            disabled={option.isDisabled}
+            disabled={isDisabled || option.isDisabled}
             /* Donen `tabindex`: grup Tab sirasinda TEK durak. */
             tabIndex={isSelected ? 0 : -1}
             className={cx(
@@ -95,7 +127,7 @@ const SegmentedControl = <T extends string>({
              * Secili ogeye ikinci kez basmak HICBIR SEY yapmaz: gorunum anahtarinda "hicbiri" diye
              * bir hal yok. `ChipGroup`ta ayni hareket secimi kaldiriyor ve iki…
              */
-            onClick={() => !isSelected && onChange(option.value)}
+            onClick={() => !isSelected && !isReadOnly && onChange(option.value)}
           >
             {option.icon && (
               <span className={styles.segmented__icon} aria-hidden>

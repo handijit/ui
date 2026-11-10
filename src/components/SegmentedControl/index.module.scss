@@ -15,6 +15,11 @@
   &--md {
     font-size: $font-size-small;
   }
+
+  // Invalid (2.2): the danger edge of an invalid field.
+  &[aria-invalid='true'] {
+    border-color: $danger-solid;
+  }
 }
 
 .segmented__item {
@@ -43,6 +48,15 @@
 
   &:hover:not(:disabled):not(.segmented__item--selected) {
     color: $text;
+  }
+
+  // Read-only (2.2): nothing to press.
+  .segmented--readOnly & {
+    cursor: default;
+  }
+
+  .segmented--readOnly &:hover:not(.segmented__item--selected) {
+    color: $text-2;
   }
 
   @include focus-ring($focus, -1px);

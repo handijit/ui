@@ -28,6 +28,17 @@
     }
   }
 
+  // Read-only (2.2): the thumbs do not move, so they do not offer a grip.
+  &--readOnly .range__input::-webkit-slider-thumb,
+  &--readOnly .range__input:active::-webkit-slider-thumb {
+    cursor: default;
+  }
+
+  &--readOnly .range__input::-moz-range-thumb,
+  &--readOnly .range__input:active::-moz-range-thumb {
+    cursor: default;
+  }
+
   &__readout {
     @include row($space-2);
 

@@ -25,6 +25,19 @@ type Props = {
   /** Ekran okuyucuda yıldız sayısını okuyan biçimlendirici ("4 yıldız"). */
   formatStarCount?: (star: number) => string;
   isDisabled?: boolean;
+  /**
+   * Read-only (2.2): the stars stay focusable and readable, but neither a press nor the arrow keys
+   * change the rating, and hovering previews nothing.
+   */
+  isReadOnly?: boolean;
+  /** The id of the `<fieldset>` (2.2) — the `id` of `Field`'s `FieldChildProps`. */
+  id?: string;
+  /** Zorunluluk (2.2): the native `required` of the five radios — the group of one name. */
+  required?: boolean;
+  /** On the `<fieldset>` (2.2), with the error and hint ids of `Field`. */
+  'aria-describedby'?: string;
+  /** On the `<fieldset>` (2.2). */
+  'aria-invalid'?: boolean;
   className?: string;
   testId?: string;
 };
@@ -39,6 +52,11 @@ const RatingInput = ({
   ratingLabels,
   formatStarCount,
   isDisabled,
+  isReadOnly,
+  id,
+  required,
+  'aria-describedby': describedBy,
+  'aria-invalid': isInvalid,
   className,
   testId,
 }: Props) => {
@@ -52,8 +70,16 @@ const RatingInput = ({
 
   return (
     <fieldset
-      className={cx(styles.rating, isDisabled && styles['rating--disabled'], className)}
+      id={id}
+      className={cx(
+        styles.rating,
+        isDisabled && styles['rating--disabled'],
+        isReadOnly && styles['rating--readOnly'],
+        className,
+      )}
       disabled={isDisabled}
+      aria-describedby={describedBy}
+      aria-invalid={isInvalid || undefined}
       data-testid={testId}
     >
       <legend className={styles.rating__legend}>{label}</legend>
@@ -66,14 +92,16 @@ const RatingInput = ({
               styles.rating__star,
               shown !== null && star <= shown && styles['rating__star--filled'],
             )}
-            onMouseEnter={() => setHovered(star)}
+            onMouseEnter={() => !isReadOnly && setHovered(star)}
           >
             <input
               type="radio"
               name={name}
               value={star}
               checked={value === star}
-              onChange={() => onChange(star)}
+              required={required}
+              /* Read-only: the controlled `checked` is not handed on, so React restores it. */
+              onChange={() => !isReadOnly && onChange(star)}
               className={styles.rating__input}
             />
             <StarFill aria-hidden />

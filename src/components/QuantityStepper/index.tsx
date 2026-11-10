@@ -22,7 +22,23 @@ type Props = {
   min?: number;
   max?: number;
   isDisabled?: boolean;
+  /**
+   * Read-only (2.2): the number stays focusable and readable (`aria-readonly`); typing, the arrow
+   * keys and the two buttons do not change it.
+   */
+  isReadOnly?: boolean;
   size?: 'sm' | 'md';
+  /**
+   * The id of the number box (2.2) — the `id` of `Field`'s `FieldChildProps`, so the field's label
+   * and a form's focus reach the box.
+   */
+  id?: string;
+  /** Zorunluluk — `Field`in `FieldChildProps` sözleşmesi (2.2); `aria-required` on the box. */
+  required?: boolean;
+  /** On the number box (2.2), with the error and hint ids of `Field`. */
+  'aria-describedby'?: string;
+  /** On the number box (2.2): `spinbutton` takes `aria-invalid`. */
+  'aria-invalid'?: boolean;
   className?: string;
   testId?: string;
 };
@@ -37,7 +53,12 @@ const QuantityStepper: FC<Props> = ({
   min = 1,
   max = 99,
   isDisabled,
+  isReadOnly,
   size = 'md',
+  id,
+  required,
+  'aria-describedby': describedBy,
+  'aria-invalid': isInvalid,
   className,
   testId,
 }) => {
@@ -49,6 +70,7 @@ const QuantityStepper: FC<Props> = ({
 
   const commit = (raw: string) => {
     setDraft(null);
+    if (isReadOnly) return;
 
     /*
      * Onceki bicim `if (!parsed) return;` diyordu ve `0` falsy: `min={0}` ile kurulmus bir alanda
@@ -72,7 +94,7 @@ const QuantityStepper: FC<Props> = ({
         type="button"
         className={styles.stepper__button}
         onClick={() => onChange(Math.max(value - 1, min))}
-        disabled={isDisabled || value <= min}
+        disabled={isDisabled || isReadOnly || value <= min}
         aria-label={resolveLabel(
           'QuantityStepper.decreaseLabel',
           decreaseLabel,
@@ -83,12 +105,15 @@ const QuantityStepper: FC<Props> = ({
       </button>
 
       <input
+        id={id}
         className={styles.stepper__input}
         value={draft ?? String(value)}
         onChange={event => setDraft(event.target.value.replace(/\D/g, '').slice(0, 2))}
         onBlur={event => commit(event.target.value)}
         /* ⚠ `spinbutton` ROLU BIR SOZ VERIR: */
         onKeyDown={event => {
+          if (isReadOnly) return;
+
           const step = event.key === 'ArrowUp' ? 1 : event.key === 'ArrowDown' ? -1 : 0;
 
           if (step !== 0) {
@@ -121,6 +146,11 @@ const QuantityStepper: FC<Props> = ({
         }}
         inputMode="numeric"
         disabled={isDisabled}
+        readOnly={isReadOnly}
+        aria-readonly={isReadOnly || undefined}
+        aria-required={required || undefined}
+        aria-invalid={isInvalid || undefined}
+        aria-describedby={describedBy}
         /* ⚠ ARALIK ETIKETE GOMULMEZ, ROLE ILE BILDIRILIR. */
         role="spinbutton"
         aria-valuenow={value}
@@ -133,7 +163,7 @@ const QuantityStepper: FC<Props> = ({
         type="button"
         className={styles.stepper__button}
         onClick={() => onChange(Math.min(value + 1, max))}
-        disabled={isDisabled || value >= max}
+        disabled={isDisabled || isReadOnly || value >= max}
         aria-label={resolveLabel(
           'QuantityStepper.increaseLabel',
           increaseLabel,

@@ -13,3 +13,8 @@
     padding-block: 2px;
   }
 }
+
+// Read-only (2.2): nothing to press. Two classes: the chip's own `cursor` must not win by order.
+.group.group--readOnly > * {
+  cursor: default;
+}

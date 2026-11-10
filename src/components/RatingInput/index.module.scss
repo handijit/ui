@@ -30,6 +30,15 @@
     }
   }
 
+  // Read-only (2.2): the rating is shown, nothing invites a press.
+  &--readOnly .rating__star {
+    cursor: default;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
   &__legend {
     padding: 0;
     font-size: $font-size-small;

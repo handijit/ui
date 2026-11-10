@@ -30,6 +30,25 @@ type Props = {
   /** Üst kulbun erişilebilir ad eki. */
   maxLabel?: string;
   isDisabled?: boolean;
+  /**
+   * Read-only (2.2): both thumbs stay focusable and announce their value (`aria-readonly`), but
+   * dragging and the arrow keys do not move them.
+   */
+  isReadOnly?: boolean;
+  /**
+   * The id of the LOW thumb (2.2) — the `id` of `Field`'s `FieldChildProps`, so a form's focus
+   * reaches the slider. The high thumb takes `<id>-high`.
+   */
+  id?: string;
+  /**
+   * Accepted so `Field`'s `FieldChildProps` can be spread (2.2). A range always holds a value and
+   * ARIA gives a slider no required state, so it writes nothing.
+   */
+  required?: boolean;
+  /** On both thumbs (2.2), with the error and hint ids of `Field`. */
+  'aria-describedby'?: string;
+  /** On both thumbs (2.2). */
+  'aria-invalid'?: boolean;
   className?: string;
   testId?: string;
 };
@@ -47,6 +66,10 @@ const RangeSlider = ({
   minLabel,
   maxLabel,
   isDisabled,
+  isReadOnly,
+  id,
+  'aria-describedby': describedBy,
+  'aria-invalid': isInvalid,
   className,
   testId,
 }: Props) => {
@@ -55,17 +78,29 @@ const RangeSlider = ({
   const highName = resolveLabel('RangeSlider.maxLabel', maxLabel, labels?.range?.max);
   const [low, high] = value;
 
+  /* Read-only: the controlled value is not handed on, so React puts the thumb back. */
   const handleLowChange = useCallback(
-    (raw: number) => onChange([Math.min(raw, high), high]),
-    [high, onChange],
+    (raw: number) => !isReadOnly && onChange([Math.min(raw, high), high]),
+    [high, isReadOnly, onChange],
   );
 
   const handleHighChange = useCallback(
-    (raw: number) => onChange([low, Math.max(raw, low)]),
-    [low, onChange],
+    (raw: number) => !isReadOnly && onChange([low, Math.max(raw, low)]),
+    [low, isReadOnly, onChange],
   );
 
-  const commit = useCallback(() => onCommit?.([low, high]), [low, high, onCommit]);
+  const commit = useCallback(
+    () => !isReadOnly && onCommit?.([low, high]),
+    [low, high, isReadOnly, onCommit],
+  );
+
+  /* The same links on both thumbs: each is a stop of its own for a screen reader. */
+  const thumbProps = {
+    disabled: isDisabled,
+    'aria-readonly': isReadOnly || undefined,
+    'aria-invalid': isInvalid || undefined,
+    'aria-describedby': describedBy,
+  };
 
   /*
    * `normalize` yuzdeyi verir ve 100'de kirpar; olcek sifir genislikte oldugunda (min === max) 0
@@ -80,7 +115,12 @@ const RangeSlider = ({
 
   return (
     <div
-      className={cx(styles.range, isDisabled && styles['range--disabled'], className)}
+      className={cx(
+        styles.range,
+        isDisabled && styles['range--disabled'],
+        isReadOnly && styles['range--readOnly'],
+        className,
+      )}
       role="group"
       aria-label={label}
       data-testid={testId}
@@ -102,6 +142,8 @@ const RangeSlider = ({
         />
 
         <input
+          {...thumbProps}
+          id={id}
           type="range"
           className={styles.range__input}
           style={{ zIndex: isLowOnTop ? 4 : 3 }}
@@ -109,7 +151,6 @@ const RangeSlider = ({
           max={max}
           step={step}
           value={low}
-          disabled={isDisabled}
           aria-label={`${label} — ${lowName}`}
           aria-valuetext={formatValue(low)}
           onChange={event => handleLowChange(Number(event.target.value))}
@@ -118,6 +159,8 @@ const RangeSlider = ({
         />
 
         <input
+          {...thumbProps}
+          id={id === undefined ? undefined : `${id}-high`}
           type="range"
           className={styles.range__input}
           style={{ zIndex: isLowOnTop ? 3 : 4 }}
@@ -125,7 +168,6 @@ const RangeSlider = ({
           max={max}
           step={step}
           value={high}
-          disabled={isDisabled}
           aria-label={`${label} — ${highName}`}
           aria-valuetext={formatValue(high)}
           onChange={event => handleHighChange(Number(event.target.value))}

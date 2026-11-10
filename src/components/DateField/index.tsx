@@ -55,6 +55,19 @@ type RangeProps = {
   /** İki alanın ölçüsü — `DateField.size`. */
   size?: Props['size'];
   isDisabled?: boolean;
+  /** Read-only (2.2): the native `readOnly` of both fields — focusable and readable, not editable. */
+  isReadOnly?: boolean;
+  /**
+   * The id of the START field (2.2) — the `id` of `Field`'s `FieldChildProps`, so a form's focus
+   * reaches the range. The end field takes `<id>-end`.
+   */
+  id?: string;
+  /** Zorunluluk — `Field`in `FieldChildProps` sözleşmesi (2.2); native `required` on both fields. */
+  required?: boolean;
+  /** On both fields (2.2), with the error and hint ids of `Field`. */
+  'aria-describedby'?: string;
+  /** On both fields (2.2); each draws the danger edge of an invalid field. */
+  'aria-invalid'?: boolean;
   className?: string;
   testId?: string;
 };
@@ -71,6 +84,11 @@ const DateRangeBase = ({
   isSummaryVisible,
   size,
   isDisabled,
+  isReadOnly,
+  id,
+  required,
+  'aria-describedby': describedBy,
+  'aria-invalid': isInvalid,
   className,
   testId,
 }: RangeProps) => {
@@ -89,18 +107,28 @@ const DateRangeBase = ({
     }
   })();
 
+  /* The same state and links on both fields: each is a stop of its own for a screen reader. */
+  const fieldProps = {
+    className: styles.range__field,
+    size,
+    disabled: isDisabled,
+    readOnly: isReadOnly,
+    required,
+    'aria-describedby': describedBy,
+    'aria-invalid': isInvalid || undefined,
+  };
+
   return (
     <div className={cx(styles.range, className)} data-testid={testId}>
       <div className={styles.range__row}>
         <DateField
-          className={styles.range__field}
+          {...fieldProps}
+          id={id}
           aria-label={startLabel}
-          size={size}
           value={value.start}
           min={min}
           /* Baslangic bitisi GECEMEZ: tarayici gecersiz araligi en bastan sectirmiyor. */
           max={value.end || max}
-          disabled={isDisabled}
           onChange={event => onChange({ ...value, start: event.target.value })}
         />
 
@@ -109,13 +137,12 @@ const DateRangeBase = ({
         </span>
 
         <DateField
-          className={styles.range__field}
+          {...fieldProps}
+          id={id === undefined ? undefined : `${id}-end`}
           aria-label={endLabel}
-          size={size}
           value={value.end}
           min={value.start || min}
           max={max}
-          disabled={isDisabled}
           onChange={event => onChange({ ...value, end: event.target.value })}
         />
       </div>

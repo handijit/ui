@@ -9,6 +9,11 @@
   background-color: $bg-surface;
   overflow: hidden;
 
+  // Invalid (2.2): the danger edge of an invalid field, set by the box's `aria-invalid`.
+  &:has(.stepper__input[aria-invalid='true']) {
+    border-color: $danger-solid;
+  }
+
   &__button {
     display: flex;
     align-items: center;

@@ -22,6 +22,25 @@ type BaseProps<T extends string> = {
   size?: ChipSize;
   /** Taşan çipleri alta sarmak yerine yatay kaydırır (mobil filtre şeridi). */
   isScrollable?: boolean;
+  /** Every chip disabled at once (2.2); `ChipOption.isDisabled` still disables one. */
+  isDisabled?: boolean;
+  /**
+   * Read-only (2.2): the chips stay focusable and readable but a press does not change the
+   * choice. A single choice announces it (`aria-readonly` on the `radiogroup`); `group`, the role
+   * of a multiple choice, has no read-only state in ARIA.
+   */
+  isReadOnly?: boolean;
+  /** The id of the group (2.2) — the `id` of `Field`'s `FieldChildProps`. */
+  id?: string;
+  /**
+   * Zorunluluk — `Field`in `FieldChildProps` sözleşmesi (2.2); `aria-required` on a single
+   * choice's `radiogroup` (a multiple choice's `group` has no required state in ARIA).
+   */
+  required?: boolean;
+  /** On the group (2.2), with the error and hint ids of `Field`. */
+  'aria-describedby'?: string;
+  /** On the group (2.2). */
+  'aria-invalid'?: boolean;
   className?: string;
 };
 
@@ -46,6 +65,12 @@ const ChipGroup = <T extends string>({
   label,
   size = 'md',
   isScrollable,
+  isDisabled,
+  isReadOnly,
+  id,
+  required,
+  'aria-describedby': describedBy,
+  'aria-invalid': isInvalid,
   className,
   ...selection
 }: Props<T>) => {
@@ -55,6 +80,8 @@ const ChipGroup = <T extends string>({
     selection.isMultiple ? selection.value.includes(value) : selection.value === value;
 
   const handleSelect = (value: T) => {
+    if (isReadOnly) return;
+
     if (selection.isMultiple) {
       const next = selection.value.includes(value)
         ? selection.value.filter(item => item !== value)
@@ -81,6 +108,7 @@ const ChipGroup = <T extends string>({
     if (offset === 0) return;
 
     event.preventDefault();
+    if (isReadOnly || isDisabled) return;
 
     const enabled = options.filter(option => !option.isDisabled);
     if (enabled.length === 0) return;
@@ -100,9 +128,19 @@ const ChipGroup = <T extends string>({
   return (
     <div
       ref={listRef}
-      className={cx(styles.group, isScrollable && styles['group--scrollable'], className)}
+      className={cx(
+        styles.group,
+        isScrollable && styles['group--scrollable'],
+        isReadOnly && styles['group--readOnly'],
+        className,
+      )}
+      id={id}
       role={selection.isMultiple ? 'group' : 'radiogroup'}
       aria-label={label}
+      aria-describedby={describedBy}
+      aria-invalid={isInvalid || undefined}
+      aria-required={(!selection.isMultiple && required) || undefined}
+      aria-readonly={(!selection.isMultiple && isReadOnly) || undefined}
       onKeyDown={handleKeyDown}
     >
       {options.map(option => (
@@ -112,7 +150,7 @@ const ChipGroup = <T extends string>({
           icon={option.icon}
           count={option.count}
           isSelected={isSelected(option.value)}
-          disabled={option.isDisabled}
+          disabled={isDisabled || option.isDisabled}
           role={selection.isMultiple ? undefined : 'radio'}
           tabIndex={selection.isMultiple || option.value === tabbableValue ? 0 : -1}
           data-chip-value={option.value}

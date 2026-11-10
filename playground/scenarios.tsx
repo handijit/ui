@@ -371,6 +371,8 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     multiple: (
       <ChipGroup isMultiple label="Süzgeç" options={OPTIONS} value={['a', 'c']} onChange={noop} />
     ),
+    disabled: <ChipGroup label="Sıralama" options={OPTIONS} value="a" onChange={noop} isDisabled />,
+    readOnly: <ChipGroup label="Sıralama" options={OPTIONS} value="b" onChange={noop} isReadOnly />,
   },
   Combobox: {
     empty: (
@@ -399,20 +401,40 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         labels={{ placeholder: 'Marka seçin' }}
       />
     ),
+    readOnly: (
+      <Combobox
+        options={OPTIONS}
+        value="b"
+        onChange={noop}
+        isReadOnly
+        isClearable
+        labels={{ placeholder: 'Marka seçin' }}
+      />
+    ),
   },
   Select: {
     default: <Select options={OPTIONS} value="a" onChange={noop} label="Sıralama" />,
     small: <Select options={OPTIONS} value="b" onChange={noop} label="Sıralama" size="sm" />,
     disabled: <Select options={OPTIONS} value="a" onChange={noop} label="Sıralama" isDisabled />,
+    empty: <Select options={OPTIONS} value={null} onChange={noop} label="Sıralama" />,
+    readOnly: <Select options={OPTIONS} value="a" onChange={noop} label="Sıralama" isReadOnly />,
   },
   Checkbox: {
     default: <Checkbox label="Kampanyalardan haberdar ol" defaultChecked />,
     hint: <Checkbox label="Sözleşmeyi okudum" hint="Metin yeni sekmede açılır" />,
     disabled: <Checkbox label="Pasif seçim" disabled />,
+    error: (
+      <Checkbox
+        label="Mesafeli satış sözleşmesini okudum"
+        hint="Metin yeni sekmede açılır"
+        error="Devam etmek için sözleşmeyi onaylayın"
+      />
+    ),
   },
   Radio: {
     default: <Radio name="teslimat" label="Kargo" defaultChecked />,
     count: <Radio name="teslimat" label="Mağazadan teslim" count={3} />,
+    error: <Radio name="fatura" label="Kurumsal fatura" error="Vergi numarası eksik" />,
   },
   RadioCard: {
     selected: (
@@ -458,15 +480,30 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         isDisabled
       />
     ),
+    readOnly: (
+      <RangeSlider
+        min={0}
+        max={100000}
+        step={500}
+        value={[20000, 70000]}
+        onChange={noop}
+        label="Fiyat aralığı"
+        formatValue={value => `${value.toLocaleString('tr-TR')} TL`}
+        isReadOnly
+      />
+    ),
   },
   RatingInput: {
     selected: <RatingInput value={4} onChange={noop} label="Ürün puanı" />,
     empty: <RatingInput value={null} onChange={noop} label="Ürün puanı" />,
     disabled: <RatingInput value={3} onChange={noop} label="Ürün puanı" isDisabled />,
+    readOnly: <RatingInput value={4} onChange={noop} label="Ürün puanı" isReadOnly />,
   },
   QuantityStepper: {
     default: <QuantityStepper value={2} onChange={noop} />,
     atMin: <QuantityStepper value={1} onChange={noop} min={1} />,
+    invalid: <QuantityStepper value={0} onChange={noop} min={0} aria-invalid />,
+    readOnly: <QuantityStepper value={4} onChange={noop} isReadOnly />,
   },
   TableCheckbox: {
     default: (
@@ -536,6 +573,33 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       <Alert tone="danger" title="İşlem tamamlanamadı">
         Kart bankası isteği reddetti.
       </Alert>
+    ),
+    action: (
+      <Alert
+        title="Ödeme sayfası açık"
+        action={
+          <Button size={UISize.SMALL} variant={UIVariant.SECONDARY}>
+            Yeniden aç
+          </Button>
+        }
+      >
+        Ödemeyi tarayıcıda tamamlayın; bu pencere kendiliğinden güncellenir.
+      </Alert>
+    ),
+    /* 2.2: in a narrow card the action moves under the text instead of squeezing it. */
+    narrowAction: (
+      <div style={{ maxWidth: 320 }}>
+        <Alert
+          title="Ödeme sayfası açık"
+          action={
+            <Button size={UISize.SMALL} variant={UIVariant.SECONDARY}>
+              Yeniden aç
+            </Button>
+          }
+        >
+          Ödemeyi tarayıcıda tamamlayın; bu pencere kendiliğinden güncellenir.
+        </Alert>
+      </div>
     ),
   },
   Avatar: {
@@ -855,6 +919,9 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     labelFirst: <Switch label="Koyu tema" isLabelFirst />,
     disabled: <Switch label="Pasif ayar" disabled />,
     checkedDisabled: <Switch label="Pasif açık ayar" defaultChecked disabled />,
+    error: (
+      <Switch label="Otomatik yenileme" hint="Her ay kartınızdan" error="Önce bir kart ekleyin" />
+    ),
   },
   Progress: {
     determinate: <Progress value={60} label="Yükleme" isValueVisible />,
@@ -964,6 +1031,42 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
           { value: 'week', label: 'Hafta' },
           { value: 'month', label: 'Ay' },
           { value: 'year', label: 'Yıl' },
+        ]}
+      />
+    ),
+    invalid: (
+      <SegmentedControl
+        label="Teslimat"
+        value=""
+        onChange={noop}
+        aria-invalid
+        options={[
+          { value: 'cargo', label: 'Kargo' },
+          { value: 'store', label: 'Mağaza' },
+        ]}
+      />
+    ),
+    disabled: (
+      <SegmentedControl
+        label="Görünüm"
+        value="list"
+        onChange={noop}
+        isDisabled
+        options={[
+          { value: 'list', label: 'Liste' },
+          { value: 'grid', label: 'Izgara' },
+        ]}
+      />
+    ),
+    readOnly: (
+      <SegmentedControl
+        label="Görünüm"
+        value="grid"
+        onChange={noop}
+        isReadOnly
+        options={[
+          { value: 'list', label: 'Liste' },
+          { value: 'grid', label: 'Izgara' },
         ]}
       />
     ),
@@ -1132,7 +1235,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   TagInput: {
     withTags: (
       <TagInput
-        values={['fren balatası', 'OEM']}
+        value={['fren balatası', 'OEM']}
         onChange={noop}
         label="Etiketler"
         removeLabel="Kaldır"
@@ -1141,11 +1244,20 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     ),
     empty: (
       <TagInput
-        values={[]}
+        value={[]}
         onChange={noop}
         label="Etiketler"
         removeLabel="Kaldır"
         placeholder="Etiket ekleyin"
+      />
+    ),
+    readOnly: (
+      <TagInput
+        value={['fren balatası', 'OEM']}
+        onChange={noop}
+        label="Etiketler"
+        removeLabel="Kaldır"
+        isReadOnly
       />
     ),
   },

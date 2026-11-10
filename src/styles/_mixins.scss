@@ -79,7 +79,9 @@
   }
 }
 
-@mixin interactive-surface($rest: transparent, $hover: $bg-raised, $pressed: $bg-inset) {
+// The defaults are state layers: a transparent row darkens (light) or lightens (dark) on ANY
+// surface, a floating one included. A row with a fill of its own passes its own three colours.
+@mixin interactive-surface($rest: transparent, $hover: $state-hover, $pressed: $state-pressed) {
   background-color: $rest;
   transition:
     background-color $duration-fast $ease-standard,
@@ -277,11 +279,13 @@ $header-offset: var(--ui-header-height, 0px);
   padding: 0;
   border: none;
   border-radius: $radius-lg $radius-lg 0 0;
-  background-color: $bg-surface;
+  background-color: $bg-overlay;
   color: $text;
   box-shadow: $shadow-3;
   overflow: hidden;
   animation: $anim-slide-up $duration $ease-standard;
+
+  @include focus-ring($focus, -2px);
 
   &::backdrop {
     background-color: $scrim;
@@ -472,6 +476,106 @@ $header-offset: var(--ui-header-height, 0px);
   }
 }
 
+// A checkbox or a radio DRAWN with the theme. The native control keeps the browser's own greys in
+// the dark theme and only takes the checked fill from `accent-color`. The mark is a clip-path, not
+// an image: nothing here needs `img-src data:` in a Content-Security-Policy.
+// Forced colours: the native control comes back, it already follows the system palette.
+@mixin choice-control($shape: check) {
+  appearance: none;
+  display: inline-grid;
+  place-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1.5px solid $text-3;
+  border-radius: $radius-xs;
+  background-color: $bg-surface;
+  cursor: pointer;
+  transition:
+    background-color $duration-fast $ease-standard,
+    border-color $duration-fast $ease-standard;
+
+  @if $shape == radio {
+    border-radius: $radius-pill;
+  }
+
+  &::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: $on-primary;
+    scale: 0;
+    transition: scale $duration-fast $ease-standard;
+
+    @if $shape == radio {
+      width: 8px;
+      height: 8px;
+      border-radius: $radius-pill;
+    } @else {
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    }
+  }
+
+  &:hover:not(:disabled) {
+    border-color: $text-2;
+  }
+
+  &:checked,
+  &:indeterminate {
+    background-color: $primary;
+    border-color: $primary;
+
+    &::before {
+      scale: 1;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+
+  @if $shape != radio {
+    &:indeterminate::before {
+      clip-path: inset(40% 5%);
+    }
+  }
+
+  &:disabled {
+    background-color: $bg-disabled;
+    border-color: $border-strong;
+    cursor: not-allowed;
+  }
+
+  // A passive checked control gives the role colour back; the MARK carries the choice.
+  &:checked:disabled,
+  &:indeterminate:disabled {
+    background-color: $text-disabled;
+    border-color: transparent;
+
+    &::before {
+      background-color: $bg-surface;
+    }
+  }
+
+  @include reduced-motion {
+    transition: none;
+
+    &::before {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    appearance: auto;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
 @mixin tap-target($size: $tap-target-size) {
   position: relative;
 
@@ -517,14 +621,26 @@ $header-offset: var(--ui-header-height, 0px);
 @mixin input-base {
   width: 100%;
   font-family: $font-body;
-  font-size: $font-size-control;
+  font-size: $font-size-body;
   line-height: $leading-snug;
   color: $text;
   background-color: $bg-surface;
   border: 1px solid $border-strong;
   border-radius: $radius-sm;
-  padding: $space-3 $space-4;
-  min-height: $tap-target-size;
+  padding: $space-2 $space-3;
+  // The height of a MEDIUM button: a field and a button on one row share one line.
+  min-height: 40px;
+
+  // A finger needs the full tap target, and iOS Safari zooms into a field smaller than 16px.
+  @include for-mobile {
+    min-height: $tap-target-size;
+    font-size: $font-size-control;
+  }
+
+  @include for-touch {
+    min-height: $tap-target-size;
+    font-size: $font-size-control;
+  }
   transition:
     border-color $duration-fast $ease-standard,
     box-shadow $duration-fast $ease-standard;
@@ -566,26 +682,33 @@ $header-offset: var(--ui-header-height, 0px);
   }
 }
 
-// YOGUN OLCU (`size="sm"`): arac cubugu ve filtre seridi icin 36px — `Button` SMALL ile ayni
-// yukseklik, yani ayni seritteki dugme, secim ve girdi tek hizada durur. `input-base`ten SONRA
-// gelir. 5.5'e kadar yalniz `Select`te vardi: `DateField` 44px'te kaliyor ve `Select sm` ile ayni
-// seritte 36 / 45,7px'lik kutular cikiyordu (olculdu: bir backtest panelinin ust cubugu, Chrome).
+// DENSE SIZE (`size="sm"`): 32px — the height of a SMALL button, so a button, a select and a field
+// in one toolbar or filter bar share one line. Comes AFTER `input-base`.
 //
-// `$is-text-entry`: metin girdisi dar ekranda ve dokunmatikte `font-size-control`a (>= 16px)
-// doner — iOS Safari 16px altindaki girdiye odaklaninca sayfayi buyutur ve geri kucultmez.
-// `Select` tetikleyicisi bir dugme; odakta buyutme yok, o yuzden bayrak onda kapali.
+// `$is-text-entry`: a text field goes back to `font-size-control` (>= 16px) on a narrow or touch
+// screen — iOS Safari zooms the page when a focused field is smaller and never zooms back. A
+// `Select` trigger is a button: no zoom on focus, so the flag is off there.
 @mixin input-sm($is-text-entry: false) {
-  min-height: 36px;
+  min-height: 32px;
   padding-block: 0;
   padding-inline: $space-3;
   font-size: $font-size-small;
 
-  @if $is-text-entry {
-    @include for-mobile {
+  // The dense size stays dense on a phone too; `input-base` raised the box there.
+  @include for-mobile {
+    min-height: 32px;
+    font-size: $font-size-small;
+
+    @if $is-text-entry {
       font-size: $font-size-control;
     }
+  }
 
-    @include for-touch {
+  @include for-touch {
+    min-height: 32px;
+    font-size: $font-size-small;
+
+    @if $is-text-entry {
       font-size: $font-size-control;
     }
   }
@@ -692,8 +815,9 @@ $header-offset: var(--ui-header-height, 0px);
   }
 }
 
+// `bg-inset` is a WELL — near black in the dark theme, where a placeholder would read as a hole.
 @mixin skeleton {
-  background: linear-gradient(90deg, #{$bg-inset} 0%, #{$bg-raised} 50%, #{$bg-inset} 100%);
+  background: linear-gradient(90deg, #{$bg-disabled} 0%, #{$border} 50%, #{$bg-disabled} 100%);
   background-size: 200% 100%;
   animation: $anim-shimmer $duration-shimmer ease-in-out infinite;
   border-radius: $radius-xs;

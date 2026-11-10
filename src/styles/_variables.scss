@@ -32,6 +32,8 @@ $primary-soft-hover: var(--hd-primary-soft-hover);
 $primary-line: var(--hd-primary-line);
 $primary-text: var(--hd-primary-text);
 $focus: var(--hd-focus);
+// The ring of a control that sits IN a well (`bg-inset`): `focus` is 2.95:1 there in the light theme.
+$focus-inset: var(--hd-primary-text);
 $selection-bg: var(--hd-selection-bg);
 
 // --- Coral: the conversion button and nothing else ---
@@ -103,6 +105,12 @@ $shadow-3: var(--hd-shadow-3);
 // colour and strength.
 $shadow-up: 0 -12px 32px -12px rgb(var(--hd-shadow-color) / calc(var(--hd-shadow-alpha) * 2));
 $scrim: var(--hd-scrim);
+
+// State layers for a row inside a floating surface (menu item, option, command). `bg-raised` is the
+// hover fill on a page surface, but it is DARKER than `bg-overlay` in the dark theme; a veil of the
+// text colour lightens the row in the dark theme and darkens it in the light one, on any surface.
+$state-hover: color-mix(in srgb, var(--hd-text) 8%, transparent);
+$state-pressed: color-mix(in srgb, var(--hd-text) 14%, transparent);
 
 // The soft halo a text field shows around its focused border, next to the focus outline colour.
 $focus-halo: 0 0 0 3px color-mix(in srgb, var(--hd-focus) 32%, transparent);

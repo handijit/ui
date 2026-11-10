@@ -57,6 +57,7 @@ $ease-exit
 $ease-standard
 $focus
 $focus-halo
+$focus-inset
 $font-body
 $font-display
 $font-mono
@@ -136,6 +137,8 @@ $space-4
 $space-5
 $space-6
 $space-8
+$state-hover
+$state-pressed
 $success-bg
 $success-fg
 $success-line
@@ -174,6 +177,7 @@ $z-tooltip
 @mixin block-title
 @mixin bottom-sheet
 @mixin card
+@mixin choice-control
 @mixin container
 @mixin custom-scrollbar
 @mixin data-table

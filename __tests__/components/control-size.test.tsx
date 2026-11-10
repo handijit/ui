@@ -8,7 +8,7 @@ const noop = () => {};
 const read = (path: string): string => readFileSync(path, 'utf8');
 
 /*
- * `size="sm"` — ayni seritteki `Select sm`, `Button` SMALL ve girdiler tek yukseklikte (36px).
+ * `size="sm"` — ayni seritteki `Select sm`, `Button` SMALL ve girdiler tek yukseklikte (32px).
  * Olcu `input-sm` mixin'inde TEK yerde; bilesenler yalniz sinifi takar.
  */
 describe('yoğun ölçü (`size="sm"`)', () => {
@@ -62,9 +62,11 @@ describe('yoğun ölçü (`size="sm"`)', () => {
 
   it('metin girdisi dar ekranda ve dokunmatikte 16px altına İNMEZ', () => {
     const mixins = read('src/styles/_mixins.scss');
-    const block = mixins.slice(mixins.indexOf('@mixin input-sm'));
+    const start = mixins.indexOf('@mixin input-sm');
+    /* The mixin only: up to the next one, so a later mixin cannot satisfy the match. */
+    const block = mixins.slice(start, mixins.indexOf('@mixin', start + 1));
 
-    expect(block.slice(0, 500)).toMatch(/@include\s+for-mobile[\s\S]*font-size-control/);
-    expect(block.slice(0, 500)).toMatch(/@include\s+for-touch[\s\S]*font-size-control/);
+    expect(block).toMatch(/@include\s+for-mobile[\s\S]*font-size-control/);
+    expect(block).toMatch(/@include\s+for-touch[\s\S]*font-size-control/);
   });
 });

@@ -6,6 +6,95 @@ reads the section of the version being released and uses it as the GitHub Releas
 to 1.0.0 are in Turkish, as written at the time; the 5.x tables of `@ahmetilhn/hanui` live in the
 README of the 1.0.0 tarball.
 
+## [2.3.0] — 2026-11-11
+
+**What the first desktop program needed.** The gaps found while building the Stok Takip Programı
+(Electron, a sidebar, keyboard-first), each of which had a workaround in the program. Everything is
+additive except three behaviours, listed under "Changed" with the line that restores the old one.
+
+### Added
+
+- **`ToastHub` / `ToastPortal` `placement`**: `bottom-end` (default), `bottom-start`,
+  `bottom-center`, `top-end`, `top-start`, `top-center`. `start` and `end` follow the writing
+  direction. New types `ToastPlacement` and `ToastInset`.
+- **`ToastHub` / `ToastPortal` `inset`**: `{ top, bottom, inlineStart, inlineEnd }` as CSS lengths
+  (`'232px'`, `'var(--app-sidebar-width)'`), the stack's distance from the window's edges. An
+  application with a sidebar keeps its notices over the content. Written as `--ui-toast-inset-*`
+  on the stack (an inline `style`, covered by `style-src-attr 'unsafe-inline'`).
+- **`ToastPortal` passes every `ToastHub` prop** (`placement`, `inset`, `closeLabel`,
+  `regionLabel`, `className`); it took none.
+- **`hasOpenSurface({ includeTransient: true })`**: also counts a visible toast and an open
+  tooltip, for a page-level `Escape` listener (both still take that key first).
+- **`Popover` `initialFocus`**, **`Modal` `initialFocus`**, **`Drawer` `initialFocus`**: a ref to
+  the element that takes the focus on open (inside the surface). Order: `initialFocus`, then
+  `data-ui-autofocus`, then the first focusable element (the close button skipped). React's
+  `autoFocus` cannot do this inside them: it runs before the dialog is shown.
+- **`Combobox` `size="sm"`**: 32px, the box of `Select size="sm"` and `Input size="sm"` from the
+  same mixin. At each size the three controls are one height (measured in Chromium: 40px and
+  32px).
+
+### Changed
+
+- **A visible toast and an open tooltip are no longer open surfaces.** `hasOpenSurface()` counts
+  only what takes the keyboard: modal dialogs (`Modal`, `Drawer`, `BottomSheet`, `ConfirmDialog`,
+  `PromptDialog`), the `CommandPalette` and an open `Popover`. In 2.2 ⌘K and every shortcut that
+  asks `hasOpenSurface()` were dead for the 4–8 seconds a notice stayed on screen. `Escape` is
+  unchanged: one stack, the newest surface closes first, the key is marked (`defaultPrevented`).
+  Old answer: `hasOpenSurface({ includeTransient: true })`.
+- **Toasts stand at the bottom end at every width.** 2.2 centred them below 1025px, where they
+  covered a sidebar and took its clicks. Centred notices: `placement="bottom-center"`.
+- **`Modal` and `Drawer` keep a first text field focused on a desktop.** 2.2 pulled the focus back
+  to the `<dialog>` on every device to avoid an on-screen keyboard nobody asked for; the guard now
+  runs only on a touch screen (`(hover: none) and (pointer: coarse)`) and never after an
+  `initialFocus`. `BottomSheet` keeps it everywhere.
+
+### Fixed
+
+- **`Popover` gives its first focus once it is placed.** The surface is hidden until
+  `usePositioning` has measured it and the browser ignores `focus()` on a hidden element, so the
+  keyboard stayed on the trigger (measured in Chromium; jsdom cannot see it). A later re-placement
+  (scroll, resize) does not take the focus back.
+- **Tab no longer falls out of a `Popover`.** Past the last element the focus goes to the stop
+  after the trigger, before the first it goes back to the trigger; the popover closes and
+  `onOpenChange(false)` fires once. The surface is portalled to the end of `<body>`, so the
+  browser's own order left the page.
+- **`Popover` gives the focus back to the trigger only when it would be lost.** On close the focus
+  returns when it was inside the surface or fell to `<body>` with it; a user who tabbed away or
+  clicked into a field keeps it there.
+- **`Modal` and `Drawer` close the dialog before giving the focus back.** Outside an open modal
+  dialog nothing can take the focus; the return worked only through the browser's own dialog
+  focus restore.
+- **`Combobox`'s clear button is 24px** (was 22px): the visible box meets WCAG 2.5.8 by itself, as
+  axe measures it. The 44px tap area is unchanged.
+- **The placeholder of an `isTechnical` `Input` is drawn in the body font**, without the letter
+  spacing. It is an instruction ("Barkod okutun"), and in monospace with 0.06em it ran about a
+  third wider and was cut short in a 320px scan field. The typed value stays monospace.
+- **`PromptInput`'s `Escape`** asks `hasOpenSurface({ includeTransient: true })`: a visible toast
+  still takes the key before the stream is stopped, as in 2.2.
+
+### Migration
+
+Nothing has to change to update. To drop the workarounds this release makes unnecessary:
+
+1. **Toasts beside a sidebar.** Replace a class that moved the stack (`inset-inline-start`,
+   `align-items`) with props:
+   `<ToastPortal inset={{ inlineStart: '232px' }} />` (or `ToastHub` with the same props). The
+   default placement is already `bottom-end`.
+2. **Shortcuts.** Replace a home-made "is a dialog open" check
+   (`document.querySelector('dialog[open], [role="dialog"]')`) with `hasOpenSurface()`. It also
+   answers for the command palette and an open `Popover`, and no longer for a toast or a tooltip.
+   A page-level `Escape` listener writes
+   `event.defaultPrevented || hasOpenSurface({ includeTransient: true })`.
+3. **Opening focus.** Replace `setTimeout`/`requestAnimationFrame` focus calls and `autoFocus` in
+   a `Modal`, `Drawer` or `Popover` with `initialFocus={ref}` (or `data-ui-autofocus` on the
+   element). With a text field first, nothing at all: on a desktop it keeps the focus now.
+4. **Popover Tab handling.** Delete a `keydown` handler that closed the popover and refocused the
+   trigger on Tab from the last control.
+5. **Small combobox.** Replace a stylesheet override of the trigger (`min-height: 32px`,
+   `padding-block: 0`) with `size="sm"`.
+6. **A test** that expected `hasOpenSurface()` to be `true` while only a toast or a tooltip was
+   open asks `hasOpenSurface({ includeTransient: true })`.
+
 ## [2.2.0] — 2026-11-10
 
 **Form fields speak `Field`'s contract.** The gaps found while building `@handijit/forms` 1.0 and

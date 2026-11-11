@@ -18,3 +18,6 @@ export const ABOVE_MOBILE_MEDIA_QUERY = `(min-width: ${MOBILE_BREAKPOINT + 1}px)
  * next to the trigger faster than a sheet at the bottom edge of the window.
  */
 export const SHEET_MEDIA_QUERY = `(max-width: ${MOBILE_BREAKPOINT}px) and (pointer: coarse)`;
+
+/** A touch screen is the primary pointer: a focused text field opens the on-screen keyboard. */
+export const TOUCH_MEDIA_QUERY = '(hover: none) and (pointer: coarse)';

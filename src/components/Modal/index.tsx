@@ -15,9 +15,9 @@ import { XLg } from 'react-bootstrap-icons';
 import { cx } from '../../helpers/class-name.helper';
 import {
   captureFocus,
-  focusFirstMeaningful,
+  focusDialogContent,
+  type FocusTarget,
   isTopModal,
-  preventAutoKeyboard,
   pushModal,
 } from '../../helpers/focus.helper';
 import { resolveLabel } from '../../helpers/label.helper';
@@ -48,6 +48,12 @@ type Props = {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   /** `false` iken arka plana tıklama, Escape ve kapatma düğmesi kapatmaz. */
   isDismissable?: boolean;
+  /**
+   * Açılınca odaklanacak öğe (pencerenin içinde). Verilmezse `data-ui-autofocus` taşıyan öğe, o da
+   * yoksa kapatma düğmesinden sonraki ilk odaklanabilir öğe. ⚠ İçerikteki React `autoFocus`u
+   * `showModal()`dan ÖNCE koştuğu için etkisizdir; yerine bu prop.
+   */
+  initialFocus?: FocusTarget;
   className?: string;
   testId?: string;
 };
@@ -65,6 +71,7 @@ const Modal = ({
   tone = 'neutral',
   size = 'md',
   isDismissable = true,
+  initialFocus,
   className,
   testId,
 }: Props) => {
@@ -72,6 +79,9 @@ const Modal = ({
   const dialogRef = useRef<HTMLDialogElement>(null);
   /* Yigindaki yerimiz: */
   const tokenRef = useRef<symbol | null>(null);
+  /* Acilis etkisi yalnizca `isOpen`a bagli; hedef her cizimde guncel okunur. */
+  const initialFocusRef = useRef(initialFocus);
+  initialFocusRef.current = initialFocus;
   const titleId = useId();
   const descriptionId = useId();
 
@@ -89,20 +99,22 @@ const Modal = ({
     if (!dialog.open) dialog.showModal();
 
     /*
-     * Odak KAPATMA DUGMESINE degil ilk anlamli ogeye. `showModal()` DOM sirasindaki ilk
-     * odaklanabilir ogeye gidiyor ve o neredeyse her zaman basliktaki…
+     * Odak KAPATMA DUGMESINE degil ilk anlamli ogeye (ya da `initialFocus`a). `showModal()` DOM
+     * sirasindaki ilk odaklanabilir ogeye gidiyor ve o neredeyse her zaman basliktaki kapatma dugmesi.
+     * Ilk oge bir metin alaniysa odak YALNIZCA dokunmatik cihazda geri alinir (ekran klavyesi
+     * kullanici istemeden aciliyordu); masaustunde alan odakta kalir (bkz. `helpers/focus.helper`).
      */
-    focusFirstMeaningful(dialog, `.${styles.modal__close}`);
-    /*
-     * Odak bir metin alanina dustuyse geri alinir: telefonda ekran klavyesi kullanici istemeden
-     * aciliyordu (bkz. `helpers/focus.helper`).
-     */
-    preventAutoKeyboard(dialog);
+    focusDialogContent(dialog, initialFocusRef.current, `.${styles.modal__close}`);
 
     const { token, pop } = pushModal();
     tokenRef.current = token;
 
     return () => {
+      /*
+       * Siralama ZORUNLU (`CommandPalette` gibi): kipsel pencere acikken disaridaki oge odak ALAMAZ.
+       * Pencere once kapanir, sonra odak acan ogeye doner.
+       */
+      if (dialog.open) dialog.close();
       pop();
       tokenRef.current = null;
       restoreFocus();

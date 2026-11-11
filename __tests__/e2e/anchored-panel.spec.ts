@@ -147,6 +147,8 @@ test.describe('tetikleyici içi süsler — caret ve temizleme düğmesi', () =>
         const x = clear?.getBoundingClientRect();
 
         return {
+          /* A read-only trigger (2.2) does not open: it draws no caret, by contract. */
+          isReadOnly: trigger.getAttribute('aria-readonly') === 'true',
           rootHeight: Math.round(root.getBoundingClientRect().height),
           triggerHeight: Math.round(t.height),
           caret: c
@@ -182,6 +184,11 @@ test.describe('tetikleyici içi süsler — caret ve temizleme düğmesi', () =>
         `#${index}: kök tetikleyiciden yüksek — akışta kalan bir çocuk var`,
       ).toBe(box.triggerHeight);
 
+      if (box.isReadOnly) {
+        expect(box.caret, `#${index}: salt okunur tetikleyicide caret var`).toBeNull();
+        continue;
+      }
+
       expect(box.caret, `#${index}: caret bulunamadı`).not.toBeNull();
       expect(box.caret!.isInside, `#${index}: caret tetikleyicinin dışına düşmüş`).toBe(true);
       expect(box.caret!.insetEnd, `#${index}: caret sağ kenardan kopmuş`).toBeLessThanOrEqual(
@@ -212,6 +219,7 @@ test.describe('tetikleyici içi süsler — caret ve temizleme düğmesi', () =>
     const triggers = await readTriggers(page);
 
     for (const [index, box] of triggers.entries()) {
+      if (box.isReadOnly) continue;
       expect(box.caret!.isInside, `#${index}: caret kökün dolgusuyla birlikte kaymış`).toBe(true);
       expect(
         box.caret!.verticalDrift,
@@ -237,6 +245,66 @@ test.describe('menü açılışında odak', () => {
     await page.goto('/?theme=light&solo=ContextMenu');
 
     await expect(page.getByRole('menuitem', { name: 'Verisini kopyala' })).toBeFocused();
+  });
+});
+
+/*
+ * 2.3: `Popover` gave its first focus while the surface was still `visibility: hidden`, so the
+ * browser ignored it and the keyboard stayed on the trigger (the desktop program waited two frames
+ * and focused the panel itself). Tab off the portalled surface fell out of the page.
+ */
+test.describe('Popover odağı', () => {
+  test('klavyeyle açılınca odak yüzeyde, Escape ile tetikleyiciye döner', async ({ page }) => {
+    await page.goto('/?theme=light&solo=Popover');
+    const trigger = page.getByRole('button', { name: 'Popover aç' });
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+
+    const surface = page.getByRole('dialog', { name: 'Yardım' });
+    await expect(surface).toBeVisible();
+    await expect(surface).toBeFocused();
+
+    await page.keyboard.press('Escape');
+
+    await expect(surface).toBeHidden();
+    await expect(trigger).toBeFocused();
+  });
+
+  test('Tab yüzeyden çıkınca odak sayfada kalır, `<body>`ye düşmez', async ({ page }) => {
+    await page.goto('/?theme=light&solo=Popover');
+    await page.getByRole('button', { name: 'Popover aç' }).click();
+    const surface = page.getByRole('dialog', { name: 'Yardım' });
+    await expect(surface).toBeFocused();
+
+    await page.keyboard.press('Tab');
+
+    await expect(surface).toBeHidden();
+    expect(await page.evaluate(() => document.activeElement?.tagName.toLowerCase())).not.toBe(
+      'body',
+    );
+  });
+});
+
+/* 2.3: one height per size for the three field-like controls (a contact picker beside selects). */
+test.describe('alan yüksekliği ölçü başına tek', () => {
+  const heights = async (page: Page, solo: string, selector: string) => {
+    await page.goto(`/?theme=light&solo=${solo}`);
+    await page.evaluate(() => document.fonts.ready);
+    return page.evaluate(
+      sel => [...document.querySelectorAll(sel)].map(el => el.getBoundingClientRect().height),
+      selector,
+    );
+  };
+
+  test('Combobox, Select ve Input: `md` 40px, `sm` 32px', async ({ page }) => {
+    const combobox = await heights(page, 'Combobox', '[role="combobox"]');
+    const select = await heights(page, 'Select', '[role="combobox"]');
+    const input = await heights(page, 'Input', 'input');
+
+    expect(new Set([...combobox, ...select, ...input])).toEqual(new Set([40, 32]));
+    expect(combobox).toContain(32);
+    expect(select).toContain(32);
+    expect(input).toContain(32);
   });
 });
 

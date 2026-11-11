@@ -16,9 +16,9 @@ import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';
 import {
   captureFocus,
-  focusFirstMeaningful,
+  focusDialogContent,
+  type FocusTarget,
   isTopModal,
-  preventAutoKeyboard,
   pushModal,
 } from '../../helpers/focus.helper';
 import { resolveLabel } from '../../helpers/label.helper';
@@ -43,6 +43,12 @@ type Props = {
   footer?: ReactNode;
   /** Başlığın altında duran, gövdeyle birlikte kaymayan şerit. */
   toolbar?: ReactNode;
+  /**
+   * Açılınca odaklanacak öğe (pencerenin içinde). Verilmezse `data-ui-autofocus` taşıyan öğe, o da
+   * yoksa kapatma düğmesinden sonraki ilk odaklanabilir öğe. ⚠ İçerikteki React `autoFocus`u
+   * `showModal()`dan ÖNCE koştuğu için etkisizdir; yerine bu prop.
+   */
+  initialFocus?: FocusTarget;
   className?: string;
   testId?: string;
 };
@@ -58,6 +64,7 @@ const Drawer = ({
   size = 'md',
   footer,
   toolbar,
+  initialFocus,
   className,
   testId,
 }: Props) => {
@@ -65,6 +72,9 @@ const Drawer = ({
   const dialogRef = useRef<HTMLDialogElement>(null);
   /* Yigindaki yerimiz: */
   const tokenRef = useRef<symbol | null>(null);
+  /* Acilis etkisi yalnizca `isOpen`a bagli; hedef her cizimde guncel okunur. */
+  const initialFocusRef = useRef(initialFocus);
+  initialFocusRef.current = initialFocus;
   const titleId = useId();
 
   useEffect(() => {
@@ -79,13 +89,17 @@ const Drawer = ({
     const restoreFocus = captureFocus();
     if (!dialog.open) dialog.showModal();
 
-    focusFirstMeaningful(dialog, `.${styles.drawer__close}`);
-    preventAutoKeyboard(dialog);
+    focusDialogContent(dialog, initialFocusRef.current, `.${styles.drawer__close}`);
 
     const { token, pop } = pushModal();
     tokenRef.current = token;
 
     return () => {
+      /*
+       * Siralama ZORUNLU (`CommandPalette` gibi): kipsel pencere acikken disaridaki oge odak ALAMAZ.
+       * Pencere once kapanir, sonra odak acan ogeye doner.
+       */
+      if (dialog.open) dialog.close();
       pop();
       tokenRef.current = null;
       restoreFocus();

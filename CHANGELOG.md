@@ -6,9 +6,34 @@ reads the section of the version being released and uses it as the GitHub Releas
 to 1.0.0 are in Turkish, as written at the time; the 5.x tables of `@ahmetilhn/hanui` live in the
 README of the 1.0.0 tarball.
 
+## [Unreleased]
+
+## [2.3.1] — 2026-11-11
+
+Repository hygiene; the code and styles are those of 2.3.0. 2.3.0 was not published to npm, so
+this is the first release of the 2.3 line and carries everything listed under 2.3.0.
+
+### Fixed
+
+- **No machine-specific file in the repository.** `.claude/launch.json` (a local launch
+  configuration with an absolute path and the name of an unrelated private project) was tracked; it
+  is removed and `.claude/` is ignored.
+- **No private project names in the notes and tests.** The design contract (`CLAUDE.md`), the 2.3.0
+  entry below, one SCSS comment, one end-to-end test comment, two chat tests and the playground
+  named the applications the measurements were taken in; they now describe them (“a chat
+  application”, “a desktop program”). The playground's `AppBar` brand is “Acme Chat”, and its four
+  visual baselines are redrawn.
+
+### Added
+
+- **`__tests__/public-hygiene.test.ts`**: every file `git ls-files` lists is scanned for an
+  absolute path into one machine (a home directory, a temporary folder) and for a denylist of
+  private names, kept as SHA-256 digests so the test does not publish them; `.claude/` must stay
+  untracked and ignored.
+
 ## [2.3.0] — 2026-11-11
 
-**What the first desktop program needed.** The gaps found while building the Stok Takip Programı
+**What the first desktop program needed.** The gaps found while building a desktop program
 (Electron, a sidebar, keyboard-first), each of which had a workaround in the program. Everything is
 additive except three behaviours, listed under "Changed" with the line that restores the old one.
 
@@ -749,3 +774,12 @@ Lighthouse medyan) 1,9 s → 2,5 s. Tek dosya ile LCP ölçümü tüketici rapor
 4. Bağlantı düğmesinde `isLoading`/`disabled` iken `onClick`in çağrılmamasına güveniyorsan davranış
    aynı; `preventDefault`e güveniyorsan artık `pointer-events: none` + `tabIndex=-1` ile sağlanır.
 5. Test ortamı değişmez: JS çıktısı CSS içe aktarmadığı için Node ESM modülleri doğrudan yükler.
+
+[Unreleased]: https://github.com/handijit/ui/compare/v2.3.1...HEAD
+[2.3.1]: https://github.com/handijit/ui/compare/v2.2.0...v2.3.1
+[2.3.0]: https://github.com/handijit/ui/compare/v2.2.0...v2.3.1
+[2.2.0]: https://github.com/handijit/ui/compare/v2.1.1...v2.2.0
+[2.1.1]: https://github.com/handijit/ui/compare/v2.1.0...v2.1.1
+[2.1.0]: https://github.com/handijit/ui/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/handijit/ui/releases/tag/v2.0.0
+[1.0.0]: https://www.npmjs.com/package/@handijit/ui/v/1.0.0

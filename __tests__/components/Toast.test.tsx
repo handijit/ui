@@ -1,5 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ComponentProps } from 'react';
 
 import { UiProvider, ToastPortal, toast } from '../../src';
 import { LABELS } from '../fixtures/labels';
@@ -137,5 +138,55 @@ describe('Toast', () => {
 
   it('portal YOKKEN `toast.*` PATLAMAZ', () => {
     expect(() => act(() => void toast.error('portalsız'))).not.toThrow();
+  });
+});
+
+describe('ToastHub — placement and inset (2.3)', () => {
+  const region = () => screen.getByRole('region', { name: 'Bildirimler' });
+  const renderHub = (props: ComponentProps<typeof ToastPortal> = {}) =>
+    render(
+      <UiProvider labels={LABELS}>
+        <ToastPortal regionLabel="Bildirimler" {...props} />
+      </UiProvider>,
+    );
+
+  it('`bottom-end` by default, at every width: no centring class', () => {
+    renderHub();
+
+    expect(region()).toHaveClass('hub', 'hub--bottom');
+    expect(region()).not.toHaveClass('hub--center');
+    expect(region()).not.toHaveClass('hub--start');
+  });
+
+  it.each([
+    ['bottom-start', 'hub--bottom', 'hub--start'],
+    ['bottom-center', 'hub--bottom', 'hub--center'],
+    ['top-end', 'hub--top', null],
+    ['top-start', 'hub--top', 'hub--start'],
+    ['top-center', 'hub--top', 'hub--center'],
+  ] as const)('`%s` picks the edge and the alignment', (placement, edge, align) => {
+    renderHub({ placement });
+
+    expect(region()).toHaveClass(edge, ...(align ? [align] : []));
+  });
+
+  it('`inset` writes CSS lengths to the stack box (a sidebar stays clear)', () => {
+    renderHub({ inset: { inlineStart: '232px', bottom: 'var(--status-bar)' } });
+
+    expect(region().style.getPropertyValue('--ui-toast-inset-start')).toBe('232px');
+    expect(region().style.getPropertyValue('--ui-toast-inset-bottom')).toBe('var(--status-bar)');
+    expect(region().style.getPropertyValue('--ui-toast-inset-top')).toBe('');
+  });
+
+  it('no `inset`, no inline style', () => {
+    renderHub({ inset: {} });
+
+    expect(region()).not.toHaveAttribute('style');
+  });
+
+  it('`ToastPortal` passes the labels and the class name through', () => {
+    renderHub({ regionLabel: 'Uyarılar', className: 'app-toasts' });
+
+    expect(screen.getByRole('region', { name: 'Uyarılar' })).toHaveClass('app-toasts');
   });
 });

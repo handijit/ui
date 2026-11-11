@@ -143,7 +143,14 @@ export { default as Stat, type StatTrend } from './components/Stat';
 export { default as SummaryCard, type SummaryCardHeadingLevel } from './components/SummaryCard';
 export { default as Progress, ProgressCircle } from './components/Progress';
 export { default as Spinner } from './components/Spinner';
-export { default as ToastHub, toast, type ToastOptions, type ToastTone } from './components/Toast';
+export {
+  default as ToastHub,
+  toast,
+  type ToastInset,
+  type ToastOptions,
+  type ToastPlacement,
+  type ToastTone,
+} from './components/Toast';
 export { default as ToastPortal } from './components/ToastPortal';
 export { default as Accordion, type AccordionItem } from './components/Accordion';
 export { default as Disclosure, type DisclosureVariant } from './components/Disclosure';

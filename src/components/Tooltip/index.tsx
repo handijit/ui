@@ -155,7 +155,8 @@ const Tooltip = ({
    * veriyordu.
    */
   const closeNow = useCallback(() => close(0), [close]);
-  useDismissOnEscape(isOpen, closeNow);
+  /* Geçici: ipucu klavyeyi almaz, açıkken ⌘K ve kısayollar çalışır (`hasOpenSurface`). */
+  useDismissOnEscape(isOpen, closeNow, { isTransient: true });
 
   /*
    * Dokunmatikte ekranin herhangi bir yerine dokunmak kapatir: balonun kendi kapatma yolu yok ve

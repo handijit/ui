@@ -1,24 +1,41 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
+// The stack's box. `placement` picks the edge and the alignment; `inset` moves the box off the
+// window's edges (`--ui-toast-inset-*`, written by `ToastHub`), so an application with a sidebar
+// keeps its notices over the content. 2.2 centred the notices below 1025px whatever the app wanted;
+// since 2.3 the placement decides at every width (`bottom-end` by default).
 .hub {
   position: fixed;
-  inset-inline: 0;
-  bottom: 0;
+  inset-inline-start: var(--ui-toast-inset-start, 0);
+  inset-inline-end: var(--ui-toast-inset-end, 0);
   z-index: $z-toast;
 
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   gap: $space-2;
 
   padding: $space-4;
   pointer-events: none;
 
-  @include safe-bottom($space-4);
+  &--bottom {
+    bottom: var(--ui-toast-inset-bottom, 0);
 
-  @include for-desktop-up {
-    align-items: flex-end;
+    @include safe-bottom($space-4);
+  }
+
+  &--top {
+    top: var(--ui-toast-inset-top, 0);
+    padding-top: max(#{$space-4}, env(safe-area-inset-top, 0px));
+  }
+
+  &--start {
+    align-items: flex-start;
+  }
+
+  &--center {
+    align-items: center;
   }
 }
 
@@ -37,8 +54,17 @@
 
   animation: $anim-fade-in-up $duration-base $ease-standard;
 
+  // From the top edge a notice comes down, not up.
+  .hub--top & {
+    animation-name: $anim-fade-in-down;
+  }
+
   @include reduced-motion {
     animation: none;
+
+    .hub--top & {
+      animation: none;
+    }
   }
 
   &--info {

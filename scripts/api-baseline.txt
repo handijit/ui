@@ -131,7 +131,9 @@ Timeline
 TimelineEvent
 TimelineStatus
 ToastHub
+ToastInset
 ToastOptions
+ToastPlacement
 ToastPortal
 ToastTone
 Tooltip

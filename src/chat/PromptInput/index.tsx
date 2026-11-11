@@ -50,7 +50,7 @@ type Props = {
  * Klavye: `Enter` gönderir · `Shift+Enter` yeni satır · `Escape` (akış sürerken) durdurur.
  * - ⚠ IME yazımı sırasında (`isComposing`, Türkçe dışı klavyeler) `Enter` GÖNDERMEZ: harf seçimini
  *   onaylıyor, mesajı değil.
- * - ⚠ `Escape` açık bir yüzey (modal, menü, bildirim) varken DOKUNMAZ (`hasOpenSurface`): kullanıcı
+ * - ⚠ `Escape` açık bir yüzey (modal, menü, bildirim) varken DOKUNMAZ (`hasOpenSurface({ includeTransient: true })`): kullanıcı
  *   yalnızca o yüzeyi kapatmak istiyordu, arkadaki akış da duruyordu.
  * - Gönder düğmesi ekranın TEK birincil eylemi: çam dolgu, koyu temada mint sınır.
  * - Odak göstergesini çerçeve çizer (`:focus-within`); alan çerçevesiz (`variant="bare"`).
@@ -85,7 +85,9 @@ const PromptInput = /*#__PURE__*/ forwardRef<HTMLTextAreaElement, Props>(
       if (!isBusy || !onStop) return;
 
       const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-        if (event.key !== 'Escape' || event.defaultPrevented || hasOpenSurface()) return;
+        if (event.key !== 'Escape' || event.defaultPrevented) return;
+        /* Bildirim ve ipucu da `Escape`i tuketir: onlar da sayilir (2.3). */
+        if (hasOpenSurface({ includeTransient: true })) return;
         onStop();
       };
 

@@ -108,6 +108,16 @@ describe('PromptInput — klavye', () => {
     expect(onStop).not.toHaveBeenCalled();
     pop();
   });
+
+  it('a visible toast or tooltip also takes Escape first: the stream is not stopped (2.3)', () => {
+    const { onStop } = setup({ isBusy: true });
+    const { pop } = pushModal({ isTransient: true });
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+
+    expect(onStop).not.toHaveBeenCalled();
+    pop();
+  });
 });
 
 describe('ChatThread', () => {

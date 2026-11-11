@@ -1,6 +1,14 @@
 'use client';
 
-import { memo, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  memo,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 import {
@@ -33,6 +41,38 @@ export type ToastOptions = {
 };
 
 type ToastRecord = ToastOptions & { id: number; message: string };
+
+/**
+ * Yığının pencerede durduğu kenar ve hizası. `start`/`end` yazı yönünü izler (sağdan sola dilde
+ * `end` soldur). Her genişlikte AYNI: 2.2 1025px altında bildirimleri kendiliğinden ortalıyordu.
+ */
+export type ToastPlacement =
+  'bottom-end' | 'bottom-start' | 'bottom-center' | 'top-end' | 'top-start' | 'top-center';
+
+/**
+ * Yığının pencere kenarlarından uzaklığı, CSS uzunluğu olarak (`'240px'`, `'var(--app-sidebar)'`).
+ * Kenar çubuğu olan uygulama `inlineStart` verir: bildirimler çubuğun üstüne binmez.
+ */
+export type ToastInset = {
+  top?: string;
+  bottom?: string;
+  inlineStart?: string;
+  inlineEnd?: string;
+};
+
+/** `inset` → yığının okuduğu özel özellikler (`--ui-toast-inset-*`). */
+const insetStyle = (inset: ToastInset | undefined): CSSProperties | undefined => {
+  if (!inset) return undefined;
+
+  const entries = [
+    ['--ui-toast-inset-top', inset.top],
+    ['--ui-toast-inset-bottom', inset.bottom],
+    ['--ui-toast-inset-start', inset.inlineStart],
+    ['--ui-toast-inset-end', inset.inlineEnd],
+  ].filter((entry): entry is [string, string] => entry[1] !== undefined);
+
+  return entries.length > 0 ? (Object.fromEntries(entries) as CSSProperties) : undefined;
+};
 
 /** Ton başına ikon: renk TEK BAŞINA anlam taşımaz (WCAG 1.4.1). */
 const ICONS: Record<ToastTone, ReactNode> = {
@@ -197,11 +237,21 @@ type HubProps = {
    * "bölge" diye okunur.
    */
   regionLabel?: string;
+  /** Yığının kenarı ve hizası; varsayılan `bottom-end` (her genişlikte). */
+  placement?: ToastPlacement;
+  /** Pencere kenarlarından uzaklık (CSS uzunlukları); kenar çubuğunu boş bırakmak için. */
+  inset?: ToastInset;
   className?: string;
 };
 
 /** Bildirim yığını — uygulamada BİR KEZ çizilir. */
-const ToastHub = ({ closeLabel, regionLabel, className }: HubProps) => {
+const ToastHub = ({
+  closeLabel,
+  regionLabel,
+  placement = 'bottom-end',
+  inset,
+  className,
+}: HubProps) => {
   const { labels } = useUi();
   const [toasts, setToasts] = useState<ToastRecord[]>([]);
 
@@ -224,7 +274,11 @@ const ToastHub = ({ closeLabel, regionLabel, className }: HubProps) => {
     if (latest) dismiss(latest.id);
   }, [toasts]);
 
-  useDismissOnEscape(toasts.length > 0, dismissLatest);
+  /*
+   * Gecici kayit: bildirim klavyeyi ALMAZ. Kipsel sayildiginda bildirim ekranda durdugu 4-8 saniye
+   * boyunca ⌘K ve uygulama kisayollari olu kaliyordu (`hasOpenSurface`).
+   */
+  useDismissOnEscape(toasts.length > 0, dismissLatest, { isTransient: true });
 
   /* HIDRASYON: `isClient()` RENDER İÇİNDE OKUNAMAZ */
   const [isMounted, setIsMounted] = useState(false);
@@ -233,13 +287,21 @@ const ToastHub = ({ closeLabel, regionLabel, className }: HubProps) => {
 
   if (!isMounted) return null;
 
+  const [edge, align] = placement.split('-') as ['top' | 'bottom', 'start' | 'center' | 'end'];
+
   return createPortal(
     /*
      * Bildirimin üzerindeki `role="status"`/`role="alert"` öğe DOM'a girdiği ANDA yaratılıyordu
      * ⚠ CANLI BÖLGE YIĞININ KENDİSİNDE, tek tek bildirimlerde DEĞİL.
      */
     <div
-      className={cx(styles.hub, className)}
+      className={cx(
+        styles.hub,
+        styles[`hub--${edge}`],
+        align !== 'end' && styles[`hub--${align}`],
+        className,
+      )}
+      style={insetStyle(inset)}
       role="region"
       aria-label={resolveLabel('ToastHub.regionLabel', regionLabel, labels?.notifications)}
       aria-live="polite"
@@ -258,4 +320,5 @@ const ToastHub = ({ closeLabel, regionLabel, className }: HubProps) => {
   );
 };
 
+export type { HubProps as ToastHubProps };
 export default /*#__PURE__*/ memo(/*#__PURE__*/ named(ToastHub, 'ToastHub')) as typeof ToastHub;

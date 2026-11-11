@@ -144,3 +144,35 @@ describe('hasOpenSurface', () => {
     expect(hasOpenSurface()).toBe(false);
   });
 });
+
+describe('hasOpenSurface — transient entries (2.3)', () => {
+  beforeEach(() => resetModalStack());
+
+  it('a transient entry (toast, tooltip) is not an open surface', () => {
+    const { pop } = pushModal({ isTransient: true });
+
+    expect(hasOpenSurface()).toBe(false);
+    expect(hasOpenSurface({ includeTransient: true })).toBe(true);
+
+    pop();
+    expect(hasOpenSurface({ includeTransient: true })).toBe(false);
+  });
+
+  it('a modal entry under a transient one still counts', () => {
+    pushModal();
+    pushModal({ isTransient: true });
+
+    expect(hasOpenSurface()).toBe(true);
+  });
+
+  it('Escape order is one stack: the newest entry is on top whatever its kind', () => {
+    const modal = pushModal();
+    const notice = pushModal({ isTransient: true });
+
+    expect(isTopModal(notice.token)).toBe(true);
+    expect(isTopModal(modal.token)).toBe(false);
+
+    notice.pop();
+    expect(isTopModal(modal.token)).toBe(true);
+  });
+});

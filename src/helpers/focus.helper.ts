@@ -1,3 +1,5 @@
+import { TOUCH_MEDIA_QUERY } from '../constants/breakpoint.constants';
+
 /** Kipsel panel açılırken ekran klavyesinin kendiliğinden açılmasını engeller. */
 
 /** Odaklanınca ekran klavyesi AÇMAYAN giriş türleri. */
@@ -108,35 +110,130 @@ export const focusFirstMeaningful = (
   container.focus({ preventScroll: true });
 };
 
+/** `initialFocus` prop'unun biçimi: bir `useRef` ya da `createRef` sonucu. */
+export type FocusTarget = { readonly current: HTMLElement | null };
+
+/**
+ * Açılan yüzeyin İLK odağı: verilmişse `initialFocus` (yüzeyin İÇİNDE ve belgede olmalı), yoksa
+ * `focusFirstMeaningful`.
+ * ⚠ React'in `autoFocus`u `showModal()` ile açılan bir `<dialog>`ın ya da konumlanana kadar gizli
+ * duran bir panelin içinde ÇALIŞMAZ: React odağı kendi işleme anında verir, o an kap henüz görünür
+ * değildir ve tarayıcı isteği sessizce yok sayar. Yol `initialFocus` ya da `data-ui-autofocus`.
+ * @returns `initialFocus` uygulandıysa `true` (çağıran ekran klavyesi korumasını atlar).
+ */
+export const focusInitial = (
+  container: HTMLElement,
+  initialFocus?: FocusTarget,
+  skipSelector?: string,
+): boolean => {
+  const explicit = initialFocus?.current;
+  if (explicit?.isConnected && container.contains(explicit)) {
+    explicit.focus({ preventScroll: true });
+    if (explicit.ownerDocument.activeElement === explicit) return true;
+  }
+
+  focusFirstMeaningful(container, skipSelector);
+  return false;
+};
+
+/** Birincil işaretçi dokunmatik mi — odaklanan metin alanının ekran klavyesi açtığı cihaz. */
+export const isTouchPrimary = (): boolean =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia(TOUCH_MEDIA_QUERY).matches;
+
+/**
+ * Kipsel `<dialog>`ın açılış odağı (`Modal`, `Drawer`): `focusInitial` + YALNIZCA dokunmatik cihazda
+ * ekran klavyesi koruması.
+ * ⚠ 2.2'ye kadar koruma HER cihazda koşuyordu: ilk alanı metin kutusu olan bir pencere masaüstünde
+ * de odağı `<dialog>`ın kendisine veriyordu ve kullanıcı yazmaya başlamak için alana tıklamak
+ * zorundaydı (masaüstü programı her pencerede `setTimeout(focus, 50)` ile atlatıyordu).
+ */
+export const focusDialogContent = (
+  dialog: HTMLDialogElement,
+  initialFocus?: FocusTarget,
+  skipSelector?: string,
+): void => {
+  const isExplicit = focusInitial(dialog, initialFocus, skipSelector);
+  if (!isExplicit && isTouchPrimary()) preventAutoKeyboard(dialog);
+};
+
+/**
+ * Belge sırasında `anchor`dan SONRA gelen ilk odaklanabilir öğe (`exclude`un içindekiler hariç).
+ * Portallanmış bir panelden `Tab` ile çıkarken sıradaki durak: panel `<body>`nin sonunda durduğu
+ * için tarayıcının kendi sırası odağı sayfanın dışına (adres çubuğuna) atıyordu.
+ */
+export const nextFocusableAfter = (anchor: Element, exclude?: Element | null): HTMLElement | null =>
+  [...anchor.ownerDocument.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].find(
+    element =>
+      !anchor.contains(element) &&
+      !exclude?.contains(element) &&
+      Boolean(anchor.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING),
+  ) ?? null;
+
+/** Kabın içindeki odaklanabilir öğeler, belge sırasıyla. */
+export const focusableWithin = (container: ParentNode): HTMLElement[] => [
+  ...container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+];
+
 /**
  * KİPSEL YIĞIN — üst üste binen paneller. Sahiplik LIFO: en son açılan yüzey tuşu tüketir.
  * ⚠ Yığın yalnızca `<dialog>` tabanlı kipsel yüzeyleri DEĞİL, `Escape` ile kapanan HER yüzeyi taşır
- * (`Popover`, `Toast`, `Tooltip`).
+ * (`Popover`, `Toast`, `Tooltip`). `Escape` sırası hepsi için tek: en son açılan önce kapanır.
+ * ⚠ 2.3: `Toast` ve `Tooltip` GEÇİCİ (`isTransient`) kayıttır. `Escape`i yine sırayla tüketirler ama
+ * klavyeyi SAHİPLENMEZLER: `hasOpenSurface()` onları saymaz. Saydığında bir bildirim ekranda durduğu
+ * 4–8 saniye boyunca ⌘K ve uygulamanın kısayolları ölüydü (masaüstü programı, `hasOpenDialog()`
+ * geçici çözümü).
  */
-const modalStack: symbol[] = [];
+type StackEntry = { token: symbol; isTransient: boolean };
+
+const modalStack: StackEntry[] = [];
+
+/** Yığına katılma seçenekleri. */
+export type SurfaceOptions = {
+  /** Klavyeyi sahiplenmeyen yüzey (bildirim, araç ipucu): `Escape` sırasında var, `hasOpenSurface()`ta yok. */
+  isTransient?: boolean;
+};
 
 /** Yığına katılır; dönen fonksiyon çıkarır. */
-export const pushModal = (): { token: symbol; pop: () => void } => {
+export const pushModal = ({ isTransient = false }: SurfaceOptions = {}): {
+  token: symbol;
+  pop: () => void;
+} => {
   const token = Symbol('ui-modal');
-  modalStack.push(token);
+  modalStack.push({ token, isTransient });
 
   return {
     token,
     pop: () => {
-      const index = modalStack.indexOf(token);
+      const index = modalStack.findIndex(entry => entry.token === token);
       if (index >= 0) modalStack.splice(index, 1);
     },
   };
 };
 
 /** Verilen panel yığının EN ÜSTÜNDE mi. */
-export const isTopModal = (token: symbol): boolean => modalStack.at(-1) === token;
+export const isTopModal = (token: symbol): boolean => modalStack.at(-1)?.token === token;
+
+/** `hasOpenSurface` seçenekleri. */
+export type OpenSurfaceQuery = {
+  /**
+   * Geçici yüzeyleri (görünen bildirim, açık araç ipucu) de say. YALNIZCA `Escape` dinleyen kod için:
+   * o tuşu bir bildirim ya da ipucu da tüketir (WCAG 1.4.13). Kısayollar bunu VERMEZ.
+   */
+  includeTransient?: boolean;
+};
 
 /**
- * `Escape`i tüketecek AÇIK bir yüzey var mı — kipsel pencere, açılır panel, bildirim.
+ * Klavyeyi sahiplenen AÇIK bir yüzey var mı — kipsel pencere (`Modal`, `Drawer`, `BottomSheet`,
+ * `ConfirmDialog`, `PromptDialog`), `CommandPalette`, odağı içine alan `Popover`.
+ * ⚠ 2.3'ten beri görünen bir `Toast` ve açık bir `Tooltip` SAYILMAZ: ikisi de klavyeyi almıyor ve
+ * sayıldıklarında ⌘K ve uygulama kısayolları bildirim süresince çalışmıyordu. Uygulama kısayolu
+ * (⌘S, ⌘N, F2…) yalnızca `hasOpenSurface()` sorar.
  * ⚠ Sayfa düzeyinde `Escape` dinleyen her kod (sohbetin "akışı durdur" kısayolu gibi) İKİSİNİ BİRDEN
- * sorar: `event.defaultPrevented || hasOpenSurface()`. Sormayan bir dinleyici, kullanıcı yalnızca bir
- * yüzeyi kapatmak isterken arkadaki işi de iptal ediyordu.
+ * sorar ve geçicileri de sayar: `event.defaultPrevented || hasOpenSurface({ includeTransient: true })`.
+ * Sormayan bir dinleyici, kullanıcı yalnızca bir yüzeyi kapatmak isterken arkadaki işi de iptal
+ * ediyordu.
  * - `Popover`, `Tooltip` ve `Toast` tuşu belge düzeyindeki kendi dinleyicilerinde tüketir, işaretler
  *   (`preventDefault`) ve AYNI tuş vuruşunda yığından düşer: gerçek tarayıcıda React ayrık olayın
  *   güncellemesini dinleyiciler arasında boşaltır. Yüzeyin dinleyicisinden SONRA koşan kod (pencerede
@@ -148,7 +245,8 @@ export const isTopModal = (token: symbol): boolean => modalStack.at(-1) === toke
  * - `<dialog>` tabanlı kipsel yüzeyler (`Modal`, `Drawer`, `BottomSheet`, `CommandPalette`) tuş olayı
  *   bittikten sonra `cancel` ile kapanır: tuş boyunca burada `true`.
  */
-export const hasOpenSurface = (): boolean => modalStack.length > 0;
+export const hasOpenSurface = ({ includeTransient = false }: OpenSurfaceQuery = {}): boolean =>
+  includeTransient ? modalStack.length > 0 : modalStack.some(entry => !entry.isTransient);
 
 /** Yalnızca test içindir: modül düzeyindeki yığın testler arasında sızmamalı. */
 export const resetModalStack = (): void => {

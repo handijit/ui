@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { isTopModal, pushModal } from '../helpers/focus.helper';
+import { isTopModal, pushModal, type SurfaceOptions } from '../helpers/focus.helper';
 
 /**
  * `Escape` ile kapanma — dinleyici BELGE düzeyinde.
@@ -11,14 +11,21 @@ import { isTopModal, pushModal } from '../helpers/focus.helper';
  * kendi eylemine saymaz (bkz. `hasOpenSurface`).
  * ⚠ Kipsel yüzeyler (`Modal`, `Drawer`, `BottomSheet`) bu kancayı KULLANMAZ: onlar yerel `<dialog>`
  * üzerinden `cancel` olayını işler.
+ * ⚠ Klavyeyi sahiplenmeyen yüzey (`Toast`, `Tooltip`) `isTransient` verir: `Escape` sırasına girer,
+ * `hasOpenSurface()` onu saymaz ve ⌘K ile uygulama kısayolları açık kalır.
  * @param isActive Yüzey açık mı.
  * @param onDismiss Kapatma.
+ * @param options Yığın kaydının türü.
  */
-const useDismissOnEscape = (isActive: boolean, onDismiss: () => void): void => {
+const useDismissOnEscape = (
+  isActive: boolean,
+  onDismiss: () => void,
+  { isTransient = false }: SurfaceOptions = {},
+): void => {
   useEffect(() => {
     if (!isActive) return;
 
-    const { token, pop } = pushModal();
+    const { token, pop } = pushModal({ isTransient });
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
@@ -37,7 +44,7 @@ const useDismissOnEscape = (isActive: boolean, onDismiss: () => void): void => {
       document.removeEventListener('keydown', handleKeyDown);
       pop();
     };
-  }, [isActive, onDismiss]);
+  }, [isActive, onDismiss, isTransient]);
 };
 
 export default useDismissOnEscape;

@@ -469,6 +469,53 @@ are linked for a screen reader.
   submits, as in HTML. Write `type="button"` for every other button in a form.
   The default becomes `"button"` in 3.0.
 
+### Notices, shortcuts and focus (2.3)
+
+**Where the notices stand.** `ToastPortal` (and `ToastHub`) take a
+`placement` — `bottom-end` (the default), `bottom-start`, `bottom-center`,
+`top-end`, `top-start`, `top-center` — that holds at **every** width, and an
+`inset` of CSS lengths that moves the stack off the window's edges. An
+application with a sidebar keeps the notices over its content:
+
+```tsx
+<ToastPortal placement="bottom-end" inset={{ inlineStart: 'var(--app-sidebar-width)' }} />
+```
+
+`start` and `end` follow the writing direction. Until 2.2 the stack centred
+its notices below 1025px whatever the application wanted.
+
+**Which surfaces own the keyboard.** `hasOpenSurface()` is true while a
+surface that takes the keyboard is open: a modal dialog (`Modal`, `Drawer`,
+`BottomSheet`, `ConfirmDialog`, `PromptDialog`), the `CommandPalette`, an open
+`Popover`. A visible toast and an open tooltip do **not** count: they still
+close on `Escape` (newest first), but ⌘K and the application's shortcuts keep
+working while they are on screen.
+
+```ts
+// An application shortcut (⌘S, ⌘N, F2…)
+if (hasOpenSurface()) return;
+// A page-level Escape listener: a toast or a tooltip takes that key first
+if (event.defaultPrevented || hasOpenSurface({ includeTransient: true })) return;
+```
+
+**Opening focus.** `Modal`, `Drawer` and `Popover` focus, in this order, the
+element of `initialFocus` (a ref inside the surface), the element marked
+`data-ui-autofocus`, or the first focusable element (the close button skipped).
+React's `autoFocus` does not work inside them: it runs before the dialog is
+shown, and the browser ignores focus on a hidden element. In a `Modal` or a
+`Drawer` a first text field keeps the focus on a desktop; only on a touch
+screen does the dialog take it instead (no on-screen keyboard nobody asked
+for; `BottomSheet` always does). Closing gives the focus back
+to the element that opened the surface. A `Popover` gives its first focus once
+it is placed (it is hidden until then), and Tab at either edge leaves it for a
+real stop: past the last element to the one after the trigger, before the
+first back to the trigger; it closes in both cases.
+
+**Field heights.** `Combobox` takes `size="sm"`: at each size `Combobox`,
+`Select` and `Input` are one height (40px and 32px). The placeholder of an
+`isTechnical` input is drawn in the body font: it is an instruction, not code,
+and in monospace it was cut short in a narrow scan field.
+
 ### TypeScript resolution
 
 The declarations resolve under every `moduleResolution`: `bundler`, `node16`
@@ -577,8 +624,10 @@ the server did not write; the warning is silenced for that element only.
 The same three stylesheet imports in the renderer entry, and the boot script in
 the HTML shell. With the usual strict policy of a packaged program, allow the
 script by hash (`THEME_BOOT_SCRIPT_HASH`), and keep `style-src-attr
-'unsafe-inline'` for the positioned components. With a mouse or a trackpad
-`Select` and `Combobox` open dropdowns whatever the window width.
+'unsafe-inline'` for the positioned components (and for `ToastPortal`'s
+`inset`). With a mouse or a trackpad `Select` and `Combobox` open dropdowns
+whatever the window width. A window with a sidebar gives `ToastPortal` an
+`inset` (see "Notices, shortcuts and focus").
 
 ---
 

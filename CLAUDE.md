@@ -918,6 +918,33 @@ girişi etkilenmemişti (orada `export type {` satırı yok).
 kırılma yok. Nöbetçi: `__tests__/api-consistency.test.ts` — burada kayıtlı
 olmayan bir `@deprecated` prop derlemeyi kırar.
 
+### 2.3 — the first desktop program's findings (additive, three behaviours change)
+
+Found while building the Stok Takip Programı (Electron, a 232px sidebar, keyboard-first); each had
+a workaround in the program (`docs/dev/PAKET_NOTLARI.md` there). `CHANGELOG.md` has the migration.
+
+| Gap | 2.3 |
+|---|---|
+| Toasts centred below 1025px and covered the sidebar's last buttons | `ToastHub`/`ToastPortal` `placement` (six, default `bottom-end` at EVERY width) + `inset` (CSS lengths → `--ui-toast-inset-*` on the stack box). The `for-desktop-up` rule of `.hub` is gone |
+| `hasOpenSurface()` counted a visible toast and an open tooltip: ⌘K and app shortcuts were dead for 4–8 s after every notice | The stack keeps ONE `Escape` order but entries carry `isTransient` (`pushModal({ isTransient })`, `useDismissOnEscape(…, { isTransient })`). `hasOpenSurface()` counts only keyboard owners; `hasOpenSurface({ includeTransient: true })` is the 2.2 answer, for page-level `Escape` listeners (`PromptInput` uses it) |
+| `Popover` focused while `visibility: hidden` (before `usePositioning` measured): the browser ignored it | first focus in an effect gated on `isPositioned`, once per opening (`hasFocusedRef`: a later re-placement does not steal it back) |
+| Tab off the portalled `Popover` fell out of the page | `onKeyDown` at the edges: last → `nextFocusableAfter(trigger)` (else the trigger), first → the trigger; closes, notifies once (`isLeavingRef` silences the following `blur`) |
+| `Popover` pulled the focus back to the trigger on any close | restores only when the focus fell to `<body>` with the surface or is still inside |
+| `Modal`/`Drawer`: `preventAutoKeyboard` ran on EVERY device, so a first text field never kept the focus on a desktop; React `autoFocus` cannot work (it runs before `showModal()`) | `focusDialogContent`: `initialFocus` ref → `data-ui-autofocus` → first meaningful; the keyboard guard only under `TOUCH_MEDIA_QUERY`, never after an explicit `initialFocus`. `BottomSheet` keeps the guard always |
+| `Modal`/`Drawer` restored focus while the dialog was still modal (worked only through the browser's own dialog focus restore) | cleanup closes the dialog first, then restores (the `CommandPalette` order) |
+| `Combobox` had no small size; its clear button was 22px (axe `target-size`) | `size="sm"` from `input-sm` (32px, as `Select`/`Input`); `$clear-size: 24px` |
+| `isTechnical` placeholder in monospace + 0.06em was cut in a 320px scan field | `::placeholder` in `$font-body`, `letter-spacing: normal` |
+
+⚠ **Semver.** "Toasts and tooltips no longer count" and "bottom-end below 1025px" are observable
+changes; they ship in a minor because the 2.2 behaviour was the defect every consumer worked
+around. `includeTransient` gives the old `hasOpenSurface` answer back; the 2.2 width switch has no
+prop (an app that wants centred notices on a narrow window passes `placement` from a media query).
+⚠ **`for-desktop-up` has no caller left** but stays: it is in the SCSS API (`check:api`). The
+dead-mixin test lists it in `KEPT_FOR_CONSUMERS` until 3.0.
+⚠ **Measured in Chromium, not jsdom**: the hidden-surface focus (`anchored-panel.spec.ts` →
+"Popover odağı", red before the fix) and the field heights per size (same file). jsdom cannot see
+`visibility`; `Popover.positioning.test.tsx` holds `usePositioning` to prove the order.
+
 ### 2.2 — form fields speak `Field`'s contract (additive)
 
 Found while building `@handijit/forms` 1.0 and the desktop template, where every gap below had a
@@ -1124,7 +1151,7 @@ dinleyiciler arasında mikro görev boşaltılmıyor.
 | Ne | Nasıl |
 |---|---|
 | Kanca | En üstteki yüzey tuşu tüketince `event.preventDefault()`; üç yüzey tek yerden |
-| Sayfa dinleyicisi | `event.defaultPrevented \|\| hasOpenSurface()`: yüzeyden ÖNCE koşan dinleyici yığını, SONRA koşan işareti görür. `PromptInput` ikisini zaten soruyordu, şimdi doğru cevap alıyor |
+| Sayfa dinleyicisi | `event.defaultPrevented \|\| hasOpenSurface()`: yüzeyden ÖNCE koşan dinleyici yığını, SONRA koşan işareti görür. `PromptInput` ikisini zaten soruyordu, şimdi doğru cevap alıyor. (2.3: `Escape` dinleyicisi `hasOpenSurface({ includeTransient: true })` sorar; bildirim ve ipucu artık varsayılan cevapta yok) |
 | `<dialog>` yüzeyleri | `Modal`, `Drawer`, `BottomSheet`, `CommandPalette` tuş olayı bittikten sonra `cancel` ile kapanır; tuş boyunca yığında. Değişmedi |
 | Nöbetçi | `anchored-panel.spec.ts` → "Escape — sayfa düzeyindeki dinleyici" (`desktop-behavior`): düzeltmeden önce `Popover` ve `Tooltip` kırmızıydı. Kanca: `__tests__/hooks/useDismissOnEscape.test.tsx` |
 

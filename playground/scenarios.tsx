@@ -1789,7 +1789,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       <AppBar
         brand={
           <>
-            <StarFill aria-hidden /> Hanration
+            <StarFill aria-hidden /> Acme Chat
           </>
         }
         start={<StatusDot tone="success" label="Bağlı" />}

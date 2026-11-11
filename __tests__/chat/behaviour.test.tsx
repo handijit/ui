@@ -319,7 +319,7 @@ describe('AppBar', () => {
     }
     globalThis.ResizeObserver = Stub as unknown as typeof ResizeObserver;
 
-    const { unmount } = wrap(<AppBar brand="Hanration" />);
+    const { unmount } = wrap(<AppBar brand="Acme Chat" />);
     expect(document.documentElement.style.getPropertyValue('--ui-header-height')).toBe('64px');
 
     unmount();

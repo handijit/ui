@@ -182,7 +182,7 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   AppBar: {
     default: (
       <AppBar
-        brand="Hanration"
+        brand="Acme Chat"
         start={<ui.StatusDot tone="success" label="Bağlı" />}
         end={<ui.IconButton icon={<span>t</span>} label="Tema" />}
       />

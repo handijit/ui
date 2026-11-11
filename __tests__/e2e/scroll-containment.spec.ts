@@ -8,7 +8,7 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
  * o ata kabın DIŞINDADIR: etiket kırpılmaz, kabın içindeki statik yerinde (katlamanın çok altında)
  * durur ve her atanın kaydırılabilir taşmasını uzatır.
  *
- * ⚠ TÜKETİCİDE ÖLÇÜLDÜ (hanration, 2026-10-10): `ChatThread` içindeki `ToolCall` kartlarının nokta
+ * ⚠ TÜKETİCİDE ÖLÇÜLDÜ (bir sohbet uygulaması, 2026-10-10): `ChatThread` içindeki `ToolCall` kartlarının nokta
  * adları ana bölgenin `scrollHeight`ini 843 → 1053 px'e çıkardı; `overflow: hidden` uygulama
  * çerçevesi programla kaydırılabilir oldu ve kipsel pencere kapanıp odağı geri verdiğinde tüm
  * yerleşim ~210 px yukarı kaydı.

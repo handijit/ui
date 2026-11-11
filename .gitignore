@@ -19,3 +19,6 @@ npm-debug.log*
 !.vscode/extensions.json
 .env
 .env.local
+
+# Editor and agent workspace settings: local launch commands, never published.
+.claude/

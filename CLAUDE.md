@@ -604,7 +604,7 @@ yerleşir. Kaydırma kabı konumlu değilse o ata kabın DIŞINDADIR: etiket kab
 kabın içindeki statik yerinde (katlamanın çok altında) durur ve her atanın kaydırılabilir taşmasını
 uzatır.
 
-⚠ **Tüketicide ölçüldü (hanration, 2026-10-10):** `ChatThread`in KÖKÜ (`.thread`) konumluydu,
+⚠ **Tüketicide ölçüldü (bir sohbet uygulaması, 2026-10-10):** `ChatThread`in KÖKÜ (`.thread`) konumluydu,
 kaydırma kabı (`.thread__scroll`) değil. `ToolCall` kartlarındaki nokta adları ana bölgenin
 `scrollHeight`ini 843 → 1053 px'e çıkardı; `overflow: hidden` uygulama çerçevesi programla
 kaydırılabilir oldu ve kipsel pencere kapanıp odağı geri verdiğinde tüm yerleşim ~210 px yukarı
@@ -723,7 +723,7 @@ paletiyle hiçbir bağı yok.
 |---|---|
 | Bağımlılıksız sözcük çözümleyici: dilin kuralları TEK birleşik düzenli ifadede, tek geçiş | Shiki bunun onlarca katı ve eşzamansız (ilk boyama renksiz, sunucu çiziminde renk yok). Grafikler de sıfır bağımlılıkla kuruldu |
 | Dilbilgisi çözümleyicisi DEĞİL — bilinen yaklaşıklıklar | JSX metnindeki büyük harfli kelime tip boyanır; kesme işaretli JSX metni (`Don't`) satırın kalanını dize sayar; YAML düz değerleri boyanmaz. Shiki doğruluğu gerekiyorsa `html` |
-| Diller: ts/tsx/js/jsx, json, bash/sh/zsh, python, ruby, yaml, toml, css/scss/less, html/xml/svg, markdown, sql, diff, graphql, dockerfile, c/c++/c#, java, kotlin, swift, go, rust, php (takma adlarla 56 ad) | hanration'ın Shiki'ye verdiği listenin tamamı. Tanınmayan dil düz |
+| Diller: ts/tsx/js/jsx, json, bash/sh/zsh, python, ruby, yaml, toml, css/scss/less, html/xml/svg, markdown, sql, diff, graphql, dockerfile, c/c++/c#, java, kotlin, swift, go, rust, php (takma adlarla 56 ad) | bir tüketicinin Shiki'ye verdiği listenin tamamı. Tanınmayan dil düz |
 | Geriye bakış (`(?<=…)`) YOK | Safari 16.4 öncesinde ifade kurulurken `SyntaxError` — kod bloğu hiç çizilmezdi. Önceki karaktere bağlı kurallar `reject` ile (`a#b` yorum değil, `useState<string>` etiket değil) |
 | `/` bağlama göre düzenli ifade ya da bölme | Bağlamsız kural `a / b / c`yi düzenli ifade boyuyordu. Karakter sınıfının kapanışı tam kuralda zorunlu: isteğe bağlı `]` birkaç bin `[`de üstel geri dönüş yapıp sayfayı kilitliyordu |
 | Özellik erişimi anahtar kelime değil (`map.get`, `obj.type`) | Bağlamsal anahtar kelimeler (`get`, `type`, `of`) en sık özellik adı |
@@ -749,7 +749,7 @@ kipi):
   `JSON.stringify(…, null, 2)` ile birebir. Geçersiz JSON (akan yarım blok, JSONC)
   dokunulmaz.
 - Kenarlardaki boş satırlar atılır: çitli bloğun son `\n`i gövdede boş bir satır
-  çiziyordu (hanration bunu `replace(/\n$/, '')` ile elle yapıyordu).
+  çiziyordu (bir tüketici bunu `replace(/\n$/, '')` ile elle yapıyordu).
 - ⚠ **Başka dilde girinti DEĞİŞMEZ.** Ortak girintiyi atan bir biçimlendirici
   reddedildi: dosyadan alınmış parçanın girintisi o dosyadaki derinliği anlatıyor,
   Python'da anlamın kendisi.
@@ -884,7 +884,7 @@ Fiziksel `left`: SVG koordinatları RTL'de aynalanmaz.
 | Bant ölçekleri DİZİNLE anahtarlanır | Aynı adlı iki satır ("Pzt", "Pzt") tek banda çöküyordu |
 | Bir sayfada iki ısı haritası farklı `linearGradient` kimliği (`useId`) | Aynı kimlik ikinci haritanın ölçeğini ilkinin rengiyle boyar |
 | Radar ölçek sayıları halkalar sıkışınca seyrelir (en dıştaki kalır) | 300 px'te halka aralığı 14 px, yazı 11 px — beş sayı üst üste biniyordu |
-| Eksen bölmesinin basamağı bölme LİSTESİNDEN (`tickLabels`) | Sabit "en çok bir ondalık" 0,1'in altındaki her adımı sıfıra çökertiyordu: 0,001-0,014 USD'lik maliyet ekseni "0 · 0 · 0" (ölçüldü: hanration, 5.3.2'de düzeldi); kısa gösterimde 12 050 ile 12 100 ikisi de "12,1 B" |
+| Eksen bölmesinin basamağı bölme LİSTESİNDEN (`tickLabels`) | Sabit "en çok bir ondalık" 0,1'in altındaki her adımı sıfıra çökertiyordu: 0,001-0,014 USD'lik maliyet ekseni "0 · 0 · 0" (ölçüldü: bir tüketicide, 5.3.2'de düzeldi); kısa gösterimde 12 050 ile 12 100 ikisi de "12,1 B" |
 
 ⚠ **Kayan nokta payı iki yerde ölçüldü ve ikisi de SESSİZDİ:**
 `ticks(0.1, 0.3)` → `0.3 / 0.1 = 2.9999999999999996` → uçtaki bölme
@@ -920,8 +920,8 @@ olmayan bir `@deprecated` prop derlemeyi kırar.
 
 ### 2.3 — the first desktop program's findings (additive, three behaviours change)
 
-Found while building the Stok Takip Programı (Electron, a 232px sidebar, keyboard-first); each had
-a workaround in the program (`docs/dev/PAKET_NOTLARI.md` there). `CHANGELOG.md` has the migration.
+Found while building a desktop program (Electron, a 232px sidebar, keyboard-first); each had
+a workaround in the program. `CHANGELOG.md` has the migration.
 
 | Gap | 2.3 |
 |---|---|
@@ -1210,7 +1210,7 @@ yanındaki `DateField` **45,7px** çiziliyordu (ölçüldü: bir backtest paneli
 
 ⚠ **Yerel `size` niteliği `Input`, `DateField` ve `PasswordInput` tiplerinden
 ÇIKTI.** Yerelde karakter genişliği (`number`), burada ölçü adı — `Select.size`
-ile aynı. Kütüphanede ve iki tüketicide (hanration, backtest paneli) sayısal
+ile aynı. Kütüphanede ve iki tüketicide (sohbet uygulaması, backtest paneli) sayısal
 `size` geçen çağrı yok (aranarak ölçüldü); genişlik CSS'ten gelir. Sayısal
 geçen bir tüketici varsa derleme kırılır: `style={{ width: '12ch' }}` yazılır.
 
@@ -1234,7 +1234,7 @@ metin kenarları). Temiz `master`da aynı koşu 40/40 geçiyordu.
 
 API değişmedi (yeni prop yok), çizim değişti: `html` verilmeyen blok artık renkli,
 JSON yeniden girintili, kenar boş satırları atılmış ve **kopyalanan metin ekranda
-görünen** metin. `html` veren tüketicide (hanration'ın Shiki sarmalayıcısı) Shiki
+görünen** metin. `html` veren tüketicide (sohbet uygulamasının Shiki sarmalayıcısı) Shiki
 yanıtı gelene kadar @handijit/ui renkleri görünür, sonra Shiki'ninkiler — iki palet arasında
 bir renk sıçraması. Sarmalayıcıyı kaldırıp `language` + `code` geçmek bu sıçramayı ve
 Shiki'nin tembel yüklemesini birlikte kaldırır; Shiki doğruluğu gerekiyorsa kalır.
@@ -1270,7 +1270,7 @@ Tüketici token değişkenlerini ve mixin'leri KOPYALAMADAN alır:
 breakpoints are `$breakpoint-sm` / `-md` / `-lg` / `-xl`, and the module is three files (`_index`,
 `_variables`, `_mixins`). Renamed and removed names: `CHANGELOG.md`.
 
-**Neden:** hanration değişkenleri kopyalamıştı ve değerler kaymıştı
+**Neden:** bir tüketici değişkenleri kopyalamıştı ve değerler kaymıştı
 (`$tablet-breakpoint: 760px`; @handijit/ui'de 768 / 1024).
 
 | Ne | Nerede |
@@ -1283,12 +1283,12 @@ breakpoints are `$breakpoint-sm` / `-md` / `-lg` / `-xl`, and the module is thre
 
 ⚠ **Modül KURAL BASMAZ.** `base.scss` (ve 1.x'te `_tokens.generated.scss`, `:root`
 kuralları) bilerek dışarıda: tüketiciye `styles.css` zaten iniyor, modüle
-girselerdi her `@use` onları yeniden üretirdi (hanration'da her modül dosyasına
+girselerdi her `@use` onları yeniden üretirdi (bir tüketicide her modül dosyasına
 `additionalData` ile enjekte ediliyor). Nöbetçi bunu ölçer: yalnızca `@use`
 edilen modülün çıktısı BOŞ.
 
 ⚠ **Önce tüketicide denendi, sonra ihraç edildi** (kırılma yayından sonra
-görünürdü): hanration'da `npm pack` paketiyle Next 16.4 **Turbopack** ve
+görünürdü): bir tüketicide `npm pack` paketiyle Next 16.4 **Turbopack** ve
 **webpack** derlemelerinin ikisi de `exports` üzerinden çözdü; webpack çıktısında
 kırılma noktası `768px`. Değişkenler `var(--hd-…)` (o gün `var(--ui-…)`) dizeleri olduğu için tema
 çalışma zamanında döner — derleme anında sabitlenmez.
@@ -1474,13 +1474,13 @@ Taban çizgisi bu yüzden repoda duruyor. (Bu satır bir dönem "iki tüketici d
 
 | Ad | Neden dışa açık | Çağıran |
 |---|---|---|
-| `useUiTokens` | Çizim kütüphaneleri (recharts) `stroke`/`fill` için `var(--…)` okuyamıyor; çözülmüş değer gerekiyor ve tema değişince yenilenmeli | hanration `MetricsPanel` (kendi `useCssVars` kopyasıyla yapıyordu) |
-| `UiThemeScript` | Tema ilk boyamadan ÖNCE yazılmalı; iki tüketici aynı betiği elle yazıyordu. ⚠ BİLEŞEN, fonksiyon değil: paket `'use client'` taşıdığı için dışa verilen düz bir fonksiyon Next'in sunucu bileşeninde çağrılamıyor (ölçüldü: `next build` "Attempted to call themeBootScript() from the server" ile kırıldı). Bileşen sunucuda da çizilir | hanration `layout.tsx` (`THEME_BOOT_SCRIPT`) |
-| `hasOpenSurface` | Sayfa düzeyinde `Escape` dinleyen kod `event.defaultPrevented \|\| hasOpenSurface()` sormalı; sormayan, yüzeyi kapatan tuşla arkadaki akışı da durduruyordu. Tek başına yetmez — bkz. 5.6.1 | hanration `Composer` |
-| `Disclosure` (+ `DisclosureVariant`) | Tek başına açılır bölüm; aynı kalıp hanration'da üç kez elle yazılmıştı | hanration `Disclosure`, `ProcessBlock`, `ToolCallCard` |
-| `StatusDot` (+ `StatusDotTone`) | Adı olan durum noktası; dört yerde elle çiziliyordu ve hiçbiri durumu okutmuyordu | hanration `Header`, `LiveStatusBar`, `ToolCallCard`, `EventsPanel` |
-| `Kbd` | Klavye kısayolu; `CommandPalette`in kısayolu da artık bunu kullanıyor | hanration `Composer` ipucu satırı |
-| `useStickToBottom` | Kaydırma kutusunu sona yapışık tutar, kullanıcı yukarı kaydırınca bırakır; `ScrollArea isFollowingEnd` de bunu kullanır | hanration `ChatView` (kendi kopyası vardı) |
+| `useUiTokens` | Çizim kütüphaneleri (recharts) `stroke`/`fill` için `var(--…)` okuyamıyor; çözülmüş değer gerekiyor ve tema değişince yenilenmeli | sohbet uygulaması `MetricsPanel` (kendi `useCssVars` kopyasıyla yapıyordu) |
+| `UiThemeScript` | Tema ilk boyamadan ÖNCE yazılmalı; iki tüketici aynı betiği elle yazıyordu. ⚠ BİLEŞEN, fonksiyon değil: paket `'use client'` taşıdığı için dışa verilen düz bir fonksiyon Next'in sunucu bileşeninde çağrılamıyor (ölçüldü: `next build` "Attempted to call themeBootScript() from the server" ile kırıldı). Bileşen sunucuda da çizilir | sohbet uygulaması `layout.tsx` (`THEME_BOOT_SCRIPT`) |
+| `hasOpenSurface` | Sayfa düzeyinde `Escape` dinleyen kod `event.defaultPrevented \|\| hasOpenSurface()` sormalı; sormayan, yüzeyi kapatan tuşla arkadaki akışı da durduruyordu. Tek başına yetmez — bkz. 5.6.1 | sohbet uygulaması `Composer` |
+| `Disclosure` (+ `DisclosureVariant`) | Tek başına açılır bölüm; aynı kalıp bir tüketicide üç kez elle yazılmıştı | sohbet uygulaması `Disclosure`, `ProcessBlock`, `ToolCallCard` |
+| `StatusDot` (+ `StatusDotTone`) | Adı olan durum noktası; dört yerde elle çiziliyordu ve hiçbiri durumu okutmuyordu | sohbet uygulaması `Header`, `LiveStatusBar`, `ToolCallCard`, `EventsPanel` |
+| `Kbd` | Klavye kısayolu; `CommandPalette`in kısayolu da artık bunu kullanıyor | sohbet uygulaması `Composer` ipucu satırı |
+| `useStickToBottom` | Kaydırma kutusunu sona yapışık tutar, kullanıcı yukarı kaydırınca bırakır; `ScrollArea isFollowingEnd` de bunu kullanır | sohbet uygulaması `ChatView` (kendi kopyası vardı) |
 
 ⚠ **Paket bütçesi SINIRDA (2026-10-10):** 5.1'in eklemeleri tüm girişi 40,17 →
 **42,00 kB** taşıdı (bütçe 42 kB) ve `styles.css`i 23,07 / 24 kB'a. Sohbet

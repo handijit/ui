@@ -17,7 +17,7 @@
 }
 
 // Çerçevesiz alan: çerçeveyi ve odak göstergesini kapsayıcı çizer (bkz. `TextareaVariant`).
-// Hanration'da bu dört `!important` ile ezilerek yapılıyordu.
+// Bir tüketicide bu dört `!important` ile ezilerek yapılıyordu.
 .textarea--bare {
   min-height: 0;
   padding: 0;

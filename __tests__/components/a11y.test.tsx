@@ -157,6 +157,16 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         labels={{ placeholder: 'Marka seçin' }}
       />
     ),
+    small: (
+      <Combobox
+        options={OPTIONS}
+        value="a"
+        onChange={() => {}}
+        isClearable
+        size="sm"
+        labels={{ placeholder: 'Marka seçin' }}
+      />
+    ),
   },
   Select: {
     default: <Select options={OPTIONS} value="a" onChange={() => {}} label="Sıralama" />,
@@ -200,7 +210,11 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     ),
   },
 
-  Input: { default: <Input aria-label="Ad" />, invalid: <Input aria-label="Ad" aria-invalid /> },
+  Input: {
+    default: <Input aria-label="Ad" />,
+    invalid: <Input aria-label="Ad" aria-invalid />,
+    technical: <Input aria-label="Barkod" placeholder="Barkod okutun" isTechnical />,
+  },
   PasswordInput: {
     default: <PasswordInput aria-label="Şifre" />,
     filled: <PasswordInput aria-label="Şifre" defaultValue="cok-gizli-parola" />,
@@ -426,6 +440,11 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         Gövde
       </Popover>
     ),
+    open: (
+      <Popover label="Yardım" isOpen trigger={<button type="button">Aç</button>}>
+        <button type="button">Başla</button>
+      </Popover>
+    ),
   },
   Menu: {
     closed: (
@@ -454,7 +473,10 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       />
     ),
   },
-  ToastHub: { default: <ToastHub /> },
+  ToastHub: {
+    default: <ToastHub />,
+    placed: <ToastHub placement="top-start" inset={{ top: '48px', inlineStart: '240px' }} />,
+  },
 
   SegmentedControl: {
     default: (

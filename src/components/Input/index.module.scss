@@ -59,5 +59,17 @@
     @include technical-text($font-size-control);
 
     letter-spacing: 0.06em;
+
+    /*
+     * Yer tutucu bir YONERGE, teknik veri degil ("Barkod okutun ya da yazin"): govde yazi tipinde ve
+     * harf araligi olmadan cizilir. Es aralikli 16px + 0.06em ile ayni cumle %30'dan fazla genis
+     * cikiyor ve 320px'lik bir okutma alaninda sondan kirpiliyordu (olculdu, 2.3: masaustu programi).
+     * Yazilan deger es aralikli kalir.
+     */
+    &::placeholder {
+      font-family: $font-body;
+      letter-spacing: normal;
+      font-variant-numeric: normal;
+    }
   }
 }

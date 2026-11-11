@@ -1,7 +1,10 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
-$clear-size: 22px;
+// 24px, not 22: the visible box meets WCAG 2.5.8 (target size, minimum) by itself. The `::after` of
+// `tap-target` completes it to 44px for a finger, but axe measures the box and flagged 22px
+// (desktop program review, finding 30).
+$clear-size: 24px;
 
 .combobox {
   position: relative;
@@ -33,6 +36,16 @@ $clear-size: 22px;
     // Read-only (2.2): an ordinary field that does not open.
     &--readOnly {
       cursor: default;
+    }
+
+    // Dense size (2.3), 32px — the box of `Select size="sm"` and `Input size="sm"` from the same
+    // mixin, so a contact picker beside small selects no longer stands 8px taller. The invisible
+    // `::after` completes the tap target to 44px (WCAG 2.5.8, as in `Select`).
+    &--sm {
+      @include input-sm;
+      @include tap-target;
+
+      font-weight: $weight-medium;
     }
 
     &--clearable .combobox__chevron {

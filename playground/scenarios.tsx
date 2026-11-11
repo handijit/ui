@@ -411,6 +411,16 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         labels={{ placeholder: 'Marka seçin' }}
       />
     ),
+    small: (
+      <Combobox
+        options={OPTIONS}
+        value="b"
+        onChange={noop}
+        isClearable
+        size="sm"
+        labels={{ placeholder: 'Marka seçin' }}
+      />
+    ),
   },
   Select: {
     default: <Select options={OPTIONS} value="a" onChange={noop} label="Sıralama" />,

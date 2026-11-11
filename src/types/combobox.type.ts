@@ -53,6 +53,11 @@ export type ComboboxProps<T extends string> = {
   isSearchHidden?: boolean;
   /** Tetikleyicinin solundaki ikon. */
   icon?: ReactNode;
+  /**
+   * `sm` yoğun şeritler içindir (`Select size="sm"`, `Input size="sm"` yanında, 32px); varsayılan
+   * form ölçüsü `md` (40px). Yükseklik her ölçüde `Select` ve `Input` ile aynı (`input-sm` mixin'i).
+   */
+  size?: 'sm' | 'md';
   id?: string;
   /** Zorunluluk — `Field`in `FieldChildProps` sözleşmesi. */
   required?: boolean;

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { render, screen } from '@testing-library/react';
 
+import Combobox from '@/components/Combobox';
 import DateField, { DateRange } from '@/components/DateField';
 import Input from '@/components/Input';
 
@@ -52,8 +53,38 @@ describe('yoğun ölçü (`size="sm"`)', () => {
     expect(screen.getByLabelText('Bitiş')).toHaveClass('dateField--sm');
   });
 
-  it('ölçü TEK yerde: `Select`, `Input` ve `DateField` aynı mixin', () => {
+  it('`Combobox` sınıfı takar (2.3): bir cari seçici küçük `Select`lerin yanında 32px', () => {
+    render(
+      <Combobox
+        options={[{ value: 'a', label: 'Birinci' }]}
+        value="a"
+        onChange={noop}
+        size="sm"
+        labels={{ placeholder: 'Cari' }}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveClass('combobox__trigger--sm');
+  });
+
+  it('`Combobox` varsayılanı `md`: yoğun sınıf YOK', () => {
+    render(
+      <Combobox
+        options={[{ value: 'a', label: 'Birinci' }]}
+        value={null}
+        onChange={noop}
+        labels={{ placeholder: 'Cari' }}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).not.toHaveClass('combobox__trigger--sm');
+  });
+
+  it('ölçü TEK yerde: `Select`, `Combobox`, `Input` ve `DateField` aynı mixin', () => {
     expect(read('src/components/Select/index.module.scss')).toMatch(/@include\s+input-sm;/);
+    expect(read('src/components/Combobox/index.module.scss')).toMatch(
+      /&--sm\s*\{\s*@include\s+input-sm;/,
+    );
     expect(read('src/components/Input/index.module.scss')).toMatch(/@include\s+input-sm\(true\)/);
     expect(read('src/components/DateField/index.module.scss')).toMatch(
       /@include\s+input-sm\(true\)/,
@@ -68,5 +99,29 @@ describe('yoğun ölçü (`size="sm"`)', () => {
 
     expect(block).toMatch(/@include\s+for-mobile[\s\S]*font-size-control/);
     expect(block).toMatch(/@include\s+for-touch[\s\S]*font-size-control/);
+  });
+});
+
+describe('desktop program findings (2.3)', () => {
+  it('the clear button of `Combobox` is at least 24px by itself (WCAG 2.5.8, what axe measures)', () => {
+    const size = /\$clear-size:\s*(\d+)px/.exec(read('src/components/Combobox/index.module.scss'));
+
+    expect(Number(size?.[1])).toBeGreaterThanOrEqual(24);
+  });
+
+  it('a technical input draws its placeholder in the body font, without letter spacing', () => {
+    const scss = read('src/components/Input/index.module.scss');
+    const block = scss.slice(scss.indexOf('&--technical'));
+
+    expect(block).toMatch(
+      /&::placeholder\s*\{[^}]*font-family:\s*\$font-body;[^}]*letter-spacing:\s*normal;/,
+    );
+  });
+
+  it('the toast stack has no width rule of its own: the placement decides at every width', () => {
+    const scss = read('src/components/Toast/index.module.scss');
+    const hub = scss.slice(scss.indexOf('.hub {'), scss.indexOf('.toast {'));
+
+    expect(hub).not.toMatch(/for-desktop-up|for-mobile|min-width|max-width/);
   });
 });

@@ -64,6 +64,7 @@ const ComboboxBase = <T extends string>(
     isReadOnly,
     isClearable,
     icon,
+    size = 'md',
     id,
     required,
     className,
@@ -430,6 +431,7 @@ const ComboboxBase = <T extends string>(
         type="button"
         className={cx(
           styles.combobox__trigger,
+          size === 'sm' && styles['combobox__trigger--sm'],
           !displayLabel && styles['combobox__trigger--empty'],
           isOpen && styles['combobox__trigger--open'],
           isInvalid && styles['combobox__trigger--invalid'],

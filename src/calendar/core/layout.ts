@@ -1,5 +1,5 @@
-import { dateOf, MINUTES_PER_DAY, minutesOf } from './time';
-import type { CalendarDay, CalendarEvent, CalendarResource } from './types';
+import { dateOf, MINUTES_PER_DAY, minutesOf, toMinutes } from './time';
+import type { CalendarBand, CalendarDay, CalendarEvent, CalendarResource } from './types';
 
 /** One column of the time grid: a day, or a day of one resource. */
 export type CalendarColumn = {
@@ -184,3 +184,24 @@ export const placeMonthEvents = (
 
   return placed;
 };
+
+/** A band as drawn: its stretch in minutes, clipped to the drawn hours. */
+export type PlacedBand = {
+  key: string;
+  label: string;
+  startMin: number;
+  endMin: number;
+};
+
+/** The bands inside the drawn hours, clipped to them; one that falls outside them is left out. */
+export const placeBands = (
+  bands: readonly CalendarBand[] | undefined,
+  rangeStart: number,
+  rangeEnd: number,
+): PlacedBand[] =>
+  (bands ?? []).flatMap((band, index) => {
+    const startMin = Math.max(toMinutes(band.start), rangeStart);
+    const endMin = Math.min(toMinutes(band.end), rangeEnd);
+
+    return endMin > startMin ? [{ key: `${index}`, label: band.label, startMin, endMin }] : [];
+  });

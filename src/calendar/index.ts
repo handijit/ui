@@ -11,6 +11,7 @@
 
 export { default as Calendar } from './Calendar';
 export type {
+  CalendarBand,
   CalendarDay,
   CalendarEvent,
   CalendarEventChange,

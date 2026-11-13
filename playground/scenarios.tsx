@@ -1986,6 +1986,25 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         onEventChange={noop}
       />
     ),
+    dayPlan: (
+      <Calendar
+        label="Gün planı — teknisyenler"
+        days={WEEK_DAYS.slice(0, 1)}
+        resources={[
+          { id: 'r1', label: 'Ali Yılmaz', detail: '7 / 8 iş · %88', tone: 'warning' },
+          { id: 'r2', label: 'Ayşe Kaya', detail: '3 / 8 iş · %38' },
+        ]}
+        bands={[
+          { label: 'Sabah', start: '08:00', end: '12:00' },
+          { label: 'Öğle', start: '12:00', end: '17:00' },
+          { label: 'Akşam', start: '17:00', end: '20:00' },
+        ]}
+        events={LESSONS.filter(lesson => lesson.start.startsWith(WEEK_DAYS[0].date))}
+        startTime="08:00"
+        endTime="20:00"
+        onEventChange={noop}
+      />
+    ),
     month: (
       <Calendar
         label="Vade takvimi"

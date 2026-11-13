@@ -978,6 +978,22 @@ they only fix props of `ScaledInput`, the client module.
   5.x, `Combobox` uses it); app-kit's `VirtualTable` keeps its own row virtualisation, and a kanban
   column of hundreds of cards can use `useVirtualList`. A second primitive would be a second owner.
 
+
+### 2.5 — Teknik Servis's day plan (additive)
+
+Asked by Teknik Servis's EKRAN_OZETI §3.7: the column header of a technician turns to the warning
+tone at 80% of the day's capacity, and the morning, noon and evening bands show beside the hour
+blocks. Both live inside the calendar's own sticky grid, so app-kit's `takvim` cannot add them
+from outside.
+
+| Need | 2.5 |
+|---|---|
+| A resource header that says "nearly full" | `CalendarResource.detail` (second line) + `.tone` (the event tones; `data-tone`), or `renderResource` |
+| Morning / noon / evening beside the hours | `Calendar` `bands` (`CalendarBand { label, start, end }`) — a strip in the hours column, a shaded stretch across the columns; `pointer-events: none`, so slots under it still take clicks and drops |
+
+⚠ **The tone is never alone**: the percentage is in `detail` (or in `renderResource`).
+⚠ **With no `detail` and no `renderResource` the header is the bare label text**, as in 2.4 — a
+test or a style that reads `.resource`'s text keeps working.
 ### 2.3 — the first desktop program's findings (additive, three behaviours change)
 
 Found while building a desktop program (Electron, a 232px sidebar, keyboard-first); each had
@@ -1502,7 +1518,7 @@ aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
 aktarım adlarını çıkarır ve `scripts/api-baseline.txt` ile karşılaştırır
 (2.0'da **163 ad**; 5.6'da 177'ydi — tema nesneleri, `initUi` ve token tipleri kalktı, design'ın
 tema sabitleri eklendi; 2.4'te 170. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22,
-takvim 8, SCSS 227). Kapı
+takvim 8 → 2.5'te 9 (`CalendarBand`), SCSS 227). Kapı
 `verify` içinde, `build`ten hemen sonra.
 
 ```bash

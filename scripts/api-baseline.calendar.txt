@@ -1,4 +1,5 @@
 Calendar
+CalendarBand
 CalendarDay
 CalendarEvent
 CalendarEventChange

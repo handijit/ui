@@ -1,4 +1,9 @@
-import { buildColumns, placeMonthEvents, placeTimeEvents } from '@/calendar/core/layout';
+import {
+  buildColumns,
+  placeBands,
+  placeMonthEvents,
+  placeTimeEvents,
+} from '@/calendar/core/layout';
 import {
   changeOf,
   isArrowKey,
@@ -360,5 +365,32 @@ describe('keyboard', () => {
     expect(keyboardTarget(item, 'ArrowDown', false, month)?.column).toBe(7);
     expect(keyboardTarget(item, 'ArrowUp', false, month)).toBe(undefined);
     expect(keyboardTarget(item, 'ArrowDown', true, month)).toBe(undefined);
+  });
+});
+
+describe('placeBands', () => {
+  it('clips the bands to the drawn hours and leaves out the ones outside them', () => {
+    expect(
+      placeBands(
+        [
+          { label: 'Gece', start: '00:00', end: '08:00' },
+          { label: 'Sabah', start: '07:00', end: '12:00' },
+          { label: 'Öğle', start: '12:00', end: '17:00' },
+          { label: 'Akşam', start: '17:00', end: '24:00' },
+          { label: 'Ters', start: '15:00', end: '14:00' },
+        ],
+        toMinutes('08:00'),
+        toMinutes('20:00'),
+      ),
+    ).toEqual([
+      { key: '1', label: 'Sabah', startMin: 480, endMin: 720 },
+      { key: '2', label: 'Öğle', startMin: 720, endMin: 1020 },
+      { key: '3', label: 'Akşam', startMin: 1020, endMin: 1200 },
+    ]);
+  });
+
+  it('gives no band without bands', () => {
+    expect(placeBands(undefined, 480, 1200)).toEqual([]);
+    expect(placeBands([], 480, 1200)).toEqual([]);
   });
 });

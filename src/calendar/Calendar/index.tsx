@@ -19,7 +19,13 @@ import { useAnnounce, useUi } from '@handijit/ui';
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';
 import { resolveFormatter, resolveLabel } from '../../helpers/label.helper';
-import { buildColumns, type PlacedEvent, placeMonthEvents, placeTimeEvents } from '../core/layout';
+import {
+  buildColumns,
+  placeBands,
+  type PlacedEvent,
+  placeMonthEvents,
+  placeTimeEvents,
+} from '../core/layout';
 import {
   type CalendarTarget,
   type CalendarView,
@@ -31,6 +37,7 @@ import {
 } from '../core/moves';
 import { timeRange, toMinutes } from '../core/time';
 import type {
+  CalendarBand,
   CalendarDay,
   CalendarEvent,
   CalendarEventChange,
@@ -52,8 +59,18 @@ type Props = {
   events: readonly CalendarEvent[];
   /** `time` (default): days as columns, hours as rows — day and week. `month`: day cells. */
   view?: CalendarView;
-  /** Time grid: a column per resource under every day (teacher, room, technician). */
+  /**
+   * Time grid: a column per resource under every day (teacher, room, technician). A resource's
+   * `detail` is a second header line and its `tone` tints the header (a full day: `warning`).
+   */
   resources?: readonly CalendarResource[];
+  /** Time grid (2.5): the header of a resource column; its label and detail by default. */
+  renderResource?: (resource: CalendarResource) => ReactNode;
+  /**
+   * Time grid (2.5): named stretches of the day ("Sabah", "Öğle", "Akşam") drawn beside the hours
+   * and shaded across the columns, under the events and the hour blocks.
+   */
+  bands?: readonly CalendarBand[];
   /** Time grid: the first drawn hour, `HH:MM`. */
   startTime?: string;
   /** Time grid: the end of the drawn hours, `HH:MM` (at most "24:00"). */
@@ -109,6 +126,8 @@ const Calendar = ({
   events,
   view = 'time',
   resources,
+  renderResource,
+  bands,
   startTime = '08:00',
   endTime = '20:00',
   slotMinutes = 30,
@@ -137,6 +156,10 @@ const Calendar = ({
   const rangeEnd = toMinutes(endTime);
 
   const columns = useMemo(() => buildColumns(days, resources), [days, resources]);
+  const placedBands = useMemo(
+    () => placeBands(bands, rangeStart, rangeEnd),
+    [bands, rangeStart, rangeEnd],
+  );
   const placed = useMemo(
     () =>
       view === 'time'
@@ -281,6 +304,7 @@ const Calendar = ({
           days={days}
           resources={resources}
           columns={columns}
+          bands={placedBands}
           placed={placed}
           rangeStart={rangeStart}
           rangeEnd={rangeEnd}
@@ -291,6 +315,7 @@ const Calendar = ({
           isEditable={isEditable}
           cancelledLabel={cancelledLabel}
           renderEvent={renderEvent}
+          renderResource={renderResource}
           handlers={handlers}
           isClickSwallowed={drag.isClickSwallowed}
           onSlotSelect={onSlotSelect}

@@ -43,6 +43,27 @@ export type CalendarResource = {
   id: string;
   /** The column header ("Ali Yılmaz", "Derslik 2"). */
   label: string;
+  /** A second header line under the label ("6 / 8 iş", "%85 dolu") (2.5). */
+  detail?: string;
+  /**
+   * Tints the column header (2.5): a technician at 80% of the day's capacity is `warning`. Never
+   * the only signal — say why in `detail` (or in `renderResource`).
+   */
+  tone?: CalendarEventTone;
+};
+
+/**
+ * A named stretch of the drawn hours (2.5): "Sabah 08:00–12:00", "Öğle", "Akşam". Drawn as a
+ * labelled band beside the hours and a shaded stretch across the columns, under the events; it
+ * catches no click, so a slot under it is still selected and dropped on.
+ */
+export type CalendarBand = {
+  /** The band's name, shown beside the hours ("Sabah"). */
+  label: string;
+  /** `HH:MM`; clipped to the drawn hours. */
+  start: string;
+  /** `HH:MM`, exclusive; clipped to the drawn hours. */
+  end: string;
 };
 
 /** Where an event goes: a drop, a resize, a keyboard move. The caller decides whether it may. */

@@ -819,7 +819,8 @@ import { Calendar, type CalendarEvent } from '@handijit/ui/calendar';
 <Calendar
   label="Ders planı"
   days={week} // [{ date: '2026-11-09', label: 'Pazartesi 9 Kasım', shortLabel: 'Pzt 9', isToday, isOff }]
-  resources={rooms} // optional: [{ id: 'r1', label: 'Derslik 1' }]
+  resources={rooms} // optional: [{ id: 'r1', label: 'Derslik 1', detail: '7 / 8', tone: 'warning' }]
+  bands={[{ label: 'Sabah', start: '08:00', end: '12:00' }]} // optional, 2.5
   events={lessons} // [{ id, title, start: '2026-11-09T09:00', end: '2026-11-09T10:30', resourceId, tone, isCancelled, isLocked }]
   startTime="08:00"
   endTime="22:00"
@@ -851,6 +852,15 @@ import { Calendar, type CalendarEvent } from '@handijit/ui/calendar';
   event, Enter opens it, ⌘/Ctrl + arrows move it one slot or one column (month:
   a day or a week), ⌘/Ctrl ⇧ ↑ ↓ shorten or lengthen it. The new place is
   announced (`labels.calendar.moved`) and the focus follows the event.
+- **Resource headers and bands (2.5).** A resource's `detail` is a second
+  header line and its `tone` tints the header (Teknik Servis: `warning` at 80%
+  of the day's capacity — the percentage goes in `detail`, colour is never
+  alone); `renderResource` draws the header instead. `bands` (`CalendarBand`:
+  `{ label, start, end }`, `HH:MM`) draws named stretches of the day ("Sabah",
+  "Öğle", "Akşam") as a labelled strip beside the hours and a shaded stretch
+  across the columns, under the events; clipped to the drawn hours, they catch
+  no click or drop. The band labels are visual only (the hours column is
+  `aria-hidden`); every event's name already carries its time.
 - **Colour is never alone**: `tone` tints an event; a cancelled one is struck
   through _and_ read as `labels.calendar.cancelled`; today is underlined and
   `aria-current="date"`.
@@ -859,7 +869,8 @@ import { Calendar, type CalendarEvent } from '@handijit/ui/calendar';
   technicians and 200 jobs in ~16–30 ms (budget 500 ms). No virtualisation:
   the grid is bounded by its days and hours.
 - Sizes are component variables: `--ui-calendar-hour-height` (3rem),
-  `--ui-calendar-column-min` (7rem), `--ui-calendar-gutter` (3.5rem).
+  `--ui-calendar-column-min` (7rem), `--ui-calendar-gutter` (3.5rem; 4.75rem
+  with `bands`).
 
 ## SCSS API: `@handijit/ui/scss`
 

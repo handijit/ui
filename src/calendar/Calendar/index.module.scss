@@ -43,6 +43,11 @@
   grid-template-columns: var(--ui-calendar-gutter, 3.5rem) minmax(0, 1fr);
   grid-template-rows: auto auto;
   min-width: min-content;
+
+  // With bands the hours column also holds their labelled strip.
+  &--bands {
+    grid-template-columns: var(--ui-calendar-gutter, 4.75rem) minmax(0, 1fr);
+  }
 }
 
 .corner {
@@ -87,6 +92,49 @@
 .resource {
   font-weight: $weight-regular;
   border-block-start: 1px solid $border;
+
+  // The second line (2.5): under the label, truncated on its own.
+  &__detail {
+    @include truncate;
+
+    display: block;
+    font-size: $font-size-caption;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // A resource's tone (2.5, a technician near capacity): a tint; `detail` says why.
+  &--primary {
+    background-color: $primary-soft;
+    color: $primary-text;
+  }
+
+  &--neutral {
+    @include tint(neutral);
+  }
+
+  &--success {
+    @include tint(success);
+  }
+
+  &--warning {
+    @include tint(warning);
+  }
+
+  &--danger {
+    @include tint(danger);
+  }
+
+  &--info {
+    @include tint(info);
+  }
+
+  &--neutral,
+  &--success,
+  &--warning,
+  &--danger,
+  &--info {
+    font-weight: $weight-semibold;
+  }
 }
 
 .gutter {
@@ -108,6 +156,37 @@
     &:first-child {
       translate: 0 0;
     }
+  }
+
+  // The bands of the day (2.5): a labelled strip on the inline start, the hours beside it.
+  &__band {
+    position: absolute;
+    inset-inline-start: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 1.25rem;
+    overflow: hidden;
+    padding-block: $space-1;
+    font-size: $font-size-caption;
+    font-weight: $weight-semibold;
+    color: $text-2;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+    border-inline-end: 2px solid $border;
+  }
+}
+
+// A band of the day across a column: the grid lines and the off-day shade show through.
+.band {
+  position: absolute;
+  inset-inline: 0;
+  border-block-start: 2px solid $border;
+  pointer-events: none;
+
+  &--alternate {
+    background-color: color-mix(in srgb, #{$bg-raised} 60%, transparent);
   }
 }
 

@@ -480,12 +480,113 @@ describe('Calendar — time grid', () => {
     expect(screen.queryByText(/Gece/)).toBeNull();
   });
 
+  it('a resource header shows its detail and its tone; renderResource draws it instead', () => {
+    const { container, rerender } = wrap(
+      <Calendar
+        label="Gün planı"
+        days={DAYS.slice(0, 1)}
+        resources={[
+          { id: 't1', label: 'Ali', detail: '7 / 8 iş', tone: 'warning' },
+          { id: 't2', label: 'Ayşe', detail: '2 / 8 iş' },
+        ]}
+        events={[]}
+      />,
+    );
+    const headers = [...container.querySelectorAll<HTMLElement>('.resource')];
+
+    expect(headers.map(header => header.textContent)).toEqual(['Ali7 / 8 iş', 'Ayşe2 / 8 iş']);
+    expect(headers[0]).toHaveClass('resource--warning');
+    expect(headers[0]).toHaveAttribute('data-tone', 'warning');
+    expect(headers[1].className).not.toMatch(/resource--/);
+    expect(headers[1]).not.toHaveAttribute('data-tone');
+    expect(screen.getByText('7 / 8 iş')).toHaveClass('resource__detail');
+
+    rerender(
+      <UiProvider labels={LABELS}>
+        <Calendar
+          label="Gün planı"
+          days={DAYS.slice(0, 1)}
+          resources={[{ id: 't1', label: 'Ali', tone: 'danger' }]}
+          renderResource={resource => <strong>{`${resource.label} · dolu`}</strong>}
+          events={[]}
+        />
+      </UiProvider>,
+    );
+    expect(screen.getByText('Ali · dolu').closest('.resource')).toHaveClass('resource--danger');
+    expect(container.querySelector('.resource__detail')).toBeNull();
+  });
+
+  it('draws the bands of the day beside the hours and across every column, clipped to the hours', () => {
+    mockLayout();
+    const onSlotSelect = jest.fn();
+    const { container } = wrap(
+      <Calendar
+        label="Gün planı"
+        days={DAYS.slice(0, 1)}
+        resources={[
+          { id: 't1', label: 'Ali' },
+          { id: 't2', label: 'Ayşe' },
+        ]}
+        events={[{ ...EVENTS[0], resourceId: 't1' }]}
+        bands={[
+          { label: 'Erken', start: '06:00', end: '07:00' },
+          { label: 'Sabah', start: '07:00', end: '12:00' },
+          { label: 'Öğle', start: '12:00', end: '17:00' },
+          { label: 'Akşam', start: '17:00', end: '22:00' },
+        ]}
+        onSlotSelect={onSlotSelect}
+      />,
+    );
+
+    /* "Erken" is outside 08:00–20:00; "Sabah" starts at the top, "Akşam" stops at the bottom. */
+    const labels = [...container.querySelectorAll<HTMLElement>('.gutter__band')];
+    expect(labels.map(band => band.textContent)).toEqual(['Sabah', 'Öğle', 'Akşam']);
+    expect(labels.map(band => [band.style.top, band.style.height])).toEqual([
+      ['0%', `${(240 / 720) * 100}%`],
+      [`${(240 / 720) * 100}%`, `${(300 / 720) * 100}%`],
+      [`${(540 / 720) * 100}%`, `${(180 / 720) * 100}%`],
+    ]);
+    expect(container.querySelector('.time')).toHaveClass('time--bands');
+    /* The hour labels keep their place: the first one still sits on the top edge. */
+    expect(container.querySelector('.gutter')?.firstElementChild).toHaveClass('gutter__hour');
+
+    for (const name of ['Pazartesi 9 Kasım, Ali', 'Pazartesi 9 Kasım, Ayşe']) {
+      const stripes = [...screen.getByRole('group', { name }).querySelectorAll('.band')];
+      expect(stripes).toHaveLength(3);
+      expect(stripes.map(stripe => stripe.classList.contains('band--alternate'))).toEqual([
+        false,
+        true,
+        false,
+      ]);
+      expect(stripes.every(stripe => stripe.getAttribute('aria-hidden') === 'true')).toBe(true);
+    }
+
+    /* The bands sit under the events and catch no slot: the event is still there to open. */
+    expect(eventButton(/İngilizce/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('group', { name: 'Pazartesi 9 Kasım, Ayşe' }), {
+      clientY: 300,
+    });
+    expect(onSlotSelect).toHaveBeenCalledWith({
+      start: '2026-11-09T13:00',
+      end: '2026-11-09T13:30',
+      resourceId: 't2',
+    });
+  });
+
+  it('without bands the grid draws none and keeps its narrow hours column', () => {
+    const { container } = wrap(<Calendar label="Ders planı" days={DAYS} events={EVENTS} />);
+
+    expect(container.querySelector('.band, .gutter__band')).toBeNull();
+    expect(container.querySelector('.time')).not.toHaveClass('time--bands');
+  });
+
   it('has no axe violation', async () => {
     const { container } = wrap(
       <Calendar
         label="Ders planı"
         days={DAYS}
-        resources={[{ id: 'r', label: 'Derslik' }]}
+        resources={[{ id: 'r', label: 'Derslik', detail: '%85 dolu', tone: 'warning' }]}
+        bands={[{ label: 'Sabah', start: '08:00', end: '12:00' }]}
         events={EVENTS.map(event => ({ ...event, resourceId: 'r' }))}
         onEventChange={() => {}}
       />,

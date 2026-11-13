@@ -9,7 +9,7 @@ import {
 } from 'react';
 
 import { cx } from '../../helpers/class-name.helper';
-import type { CalendarColumn, PlacedEvent } from '../core/layout';
+import type { CalendarColumn, PlacedBand, PlacedEvent } from '../core/layout';
 import { clamp, timeRange, toTime, toWall } from '../core/time';
 import type { CalendarDay, CalendarEvent, CalendarResource, CalendarSlot } from '../core/types';
 import type { DragPreview } from '../core/useCalendarDrag';
@@ -22,6 +22,7 @@ type Props = {
   days: readonly CalendarDay[];
   resources?: readonly CalendarResource[];
   columns: readonly CalendarColumn[];
+  bands: readonly PlacedBand[];
   placed: readonly (readonly PlacedEvent[])[];
   rangeStart: number;
   rangeEnd: number;
@@ -32,6 +33,7 @@ type Props = {
   isEditable: boolean;
   cancelledLabel: string;
   renderEvent?: (event: CalendarEvent) => ReactNode;
+  renderResource?: (resource: CalendarResource) => ReactNode;
   handlers: EventHandlers;
   /** True for the click that ends a drag: released on an empty slot, it is not a new event. */
   isClickSwallowed: () => boolean;
@@ -57,6 +59,29 @@ const DayHeader = ({ day, span }: { day: CalendarDay; span: number }) => (
   </div>
 );
 
+/** The header of a resource column: its label and detail, tinted by its tone. */
+const ResourceHeader = ({
+  resource,
+  renderResource,
+}: {
+  resource: CalendarResource;
+  renderResource?: (resource: CalendarResource) => ReactNode;
+}) => (
+  <div
+    className={cx(styles.resource, resource.tone && styles[`resource--${resource.tone}`])}
+    data-tone={resource.tone}
+  >
+    {renderResource ? (
+      renderResource(resource)
+    ) : (
+      <>
+        {resource.label}
+        {resource.detail && <span className={styles.resource__detail}>{resource.detail}</span>}
+      </>
+    )}
+  </div>
+);
+
 /**
  * The time grid — days (and their resources) as columns, the drawn hours as rows. Events sit at
  * their time; overlapping ones share the column side by side. One scroll box: the headers stay
@@ -67,6 +92,7 @@ const TimeGrid = ({
   days,
   resources,
   columns,
+  bands,
   placed,
   rangeStart,
   rangeEnd,
@@ -77,6 +103,7 @@ const TimeGrid = ({
   isEditable,
   cancelledLabel,
   renderEvent,
+  renderResource,
   handlers,
   isClickSwallowed,
   onSlotSelect,
@@ -89,6 +116,9 @@ const TimeGrid = ({
     { length: Math.floor((rangeEnd - 1) / 60) - Math.ceil(rangeStart / 60) + 1 },
     (_, index) => (Math.ceil(rangeStart / 60) + index) * 60,
   );
+  /** A length of minutes as a share of the drawn hours; `percent(t)` is where time `t` sits. */
+  const share = (minutes: number) => `${(minutes / rangeLength) * 100}%`;
+  const percent = (minutes: number) => share(minutes - rangeStart);
   const previewItem = preview ? placed.flat().find(item => item.key === preview.key) : undefined;
 
   /** The slot under a pointer in a column, snapped down to the slot. */
@@ -122,7 +152,7 @@ const TimeGrid = ({
         ? {}
         : { tabIndex: 0, role: 'region', 'aria-label': label })}
     >
-      <div className={styles.time} style={style}>
+      <div className={cx(styles.time, bands.length > 0 && styles['time--bands'])} style={style}>
         <div className={styles.corner} />
         <div className={styles.headers}>
           {days.map(day => (
@@ -130,20 +160,27 @@ const TimeGrid = ({
           ))}
           {hasResources &&
             columns.map(column => (
-              <div key={column.index} className={styles.resource}>
-                {column.resource?.label}
-              </div>
+              <ResourceHeader
+                key={column.index}
+                resource={column.resource as CalendarResource}
+                renderResource={renderResource}
+              />
             ))}
         </div>
 
         <div className={styles.gutter} aria-hidden>
           {hours.map(minutes => (
-            <span
-              key={minutes}
-              className={styles.gutter__hour}
-              style={{ top: `${((minutes - rangeStart) / rangeLength) * 100}%` }}
-            >
+            <span key={minutes} className={styles.gutter__hour} style={{ top: percent(minutes) }}>
               {toTime(minutes)}
+            </span>
+          ))}
+          {bands.map(band => (
+            <span
+              key={band.key}
+              className={styles.gutter__band}
+              style={{ top: percent(band.startMin), height: share(band.endMin - band.startMin) }}
+            >
+              {band.label}
             </span>
           ))}
         </div>
@@ -183,6 +220,17 @@ const TimeGrid = ({
                   : undefined
               }
             >
+              {bands.map((band, index) => (
+                <div
+                  key={band.key}
+                  className={cx(styles.band, index % 2 === 1 && styles['band--alternate'])}
+                  style={{
+                    top: percent(band.startMin),
+                    height: share(band.endMin - band.startMin),
+                  }}
+                  aria-hidden
+                />
+              ))}
               {placed[column.index].map(item => (
                 <EventBlock
                   key={item.key}
@@ -204,7 +252,7 @@ const TimeGrid = ({
                   className={styles.preview}
                   style={
                     {
-                      '--ui-calendar-top': `${((preview.target.startMin - rangeStart) / rangeLength) * 100}%`,
+                      '--ui-calendar-top': percent(preview.target.startMin),
                       '--ui-calendar-height': `${((preview.target.endMin - preview.target.startMin) / rangeLength) * 100}%`,
                     } as CSSProperties
                   }

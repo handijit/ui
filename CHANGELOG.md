@@ -8,6 +8,25 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [2.5.0] — 2026-11-13
+
+**What Teknik Servis's day plan needs from the calendar** (EKRAN_OZETI §3.7): a resource header
+that turns to the warning tone at 80% of the day's capacity, and the morning, noon and evening
+bands beside the hour blocks. Additive only; a calendar without the new props draws as in 2.4.
+
+### Added
+
+- **`CalendarResource.detail`** — a second header line under the label ("7 / 8 iş · %88").
+- **`CalendarResource.tone`** — tints the resource's column header with the event tones
+  (`warning` for a technician near capacity); `data-tone` on the header. Never alone: the reason
+  goes in `detail`.
+- **`Calendar` `renderResource(resource)`** — draws the header of a resource column instead of
+  its label and detail (an icon, a fill bar); the tone tint stays.
+- **`Calendar` `bands`** and the type **`CalendarBand`** (`{ label, start: 'HH:MM', end }`) —
+  named stretches of the day drawn as a labelled strip beside the hours (the hours column widens
+  to 4.75rem, still `--ui-calendar-gutter`) and a shaded stretch across every column, under the
+  events; clipped to the drawn hours, they catch no click or drop.
+
 ## [2.4.0] — 2026-11-13
 
 **What the pilot programs need from the component library**: number fields that hold the data

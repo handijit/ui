@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 // @ts-expect-error — eklenti düz JS; tip bildirimi yok ve gerekmiyor.
 import uiLayer from './scripts/lib/postcss-ui-layer.mjs';
 import { defineConfig } from 'vite';
+import type { PluginOption } from 'vite';
 import dts from 'vite-plugin-dts';
 
 import { clientDirectives, componentCss } from './vite.modules';
@@ -20,13 +21,18 @@ export default defineConfig({
   plugins: [
     clientDirectives(),
     componentCss({ baseEntry: BASE_ENTRY }),
+    /*
+     * Ortak çalışma alanında `vite-plugin-dts`in `vite` eşi (`*` aralığı) alanın vite'ına
+     * çözülür; eklentinin `Plugin` tipi o sürümün tipidir, kancaları aynıdır. Tip burada
+     * bu paketin vite'ına bağlanır.
+     */
     dts({
       entryRoot: 'src',
       include: ['src'],
       /* Alt girişler kendi derlemelerinde (`vite.subentry.ts`). */
       exclude: ['src/**/*.test.*', 'src/chat/**', 'src/charts/**', 'src/calendar/**'],
       tsconfigPath: resolve(__dirname, 'tsconfig.build.json'),
-    }),
+    }) as unknown as PluginOption,
   ],
   resolve: {
     alias: {

@@ -56,6 +56,7 @@ import {
   UiThemeScript,
   IconButton,
   Input,
+  MoneyInput,
   Kbd,
   Menu,
   Modal,
@@ -65,17 +66,21 @@ import {
   PanelForm,
   PanelRow,
   PasswordInput,
+  PercentInput,
   Popover,
   Price,
   Progress,
   ProgressCircle,
   PromptDialog,
+  QuantityInput,
   QuantityStepper,
   Radio,
   RadioCard,
   RangeSlider,
   Rating,
+  RateInput,
   RatingInput,
+  ScaledInput,
   ScrollArea,
   SectionHeader,
   SegmentedControl,
@@ -142,6 +147,7 @@ import {
   RadarChart,
   ScatterPlot,
 } from '../src/charts';
+import { Calendar, type CalendarDay, type CalendarEvent } from '../src/calendar';
 
 import { SOLO_ONLY } from './solo';
 
@@ -175,6 +181,13 @@ export const LABELS: UiLabels = {
     copied: value => `${value} kopyalandı`,
     announcement: 'Kopyalandı',
   },
+  calendar: {
+    instructions:
+      'Oklarla etkinlikler arasında gezinin, Enter ile açın; ⌘ ve oklarla taşıyın, ⌘ ⇧ ↑ ↓ ile kısaltıp uzatın.',
+    cancelled: 'İptal',
+    more: count => `+${count} daha`,
+    moved: (title, when) => `${title} taşındı: ${when}`,
+  },
   rating: {
     srLabel: (value, count) => `5 üzerinden ${value}${count ? ` — ${count} değerlendirme` : ''}`,
     starCount: star => `${star} yıldız`,
@@ -195,6 +208,113 @@ const COLUMNS: DataTableColumn[] = [
 ];
 
 const noop = () => {};
+
+/* Takvim: bir hafta (Pazartesi 9 Kasım 2026'dan), iki derslik ve bir ay. Günler ÇAĞIRANDAN gelir. */
+const WEEK_DAYS: CalendarDay[] = [
+  ['2026-11-09', 'Pazartesi 9 Kasım', 'Pzt 9'],
+  ['2026-11-10', 'Salı 10 Kasım', 'Sal 10'],
+  ['2026-11-11', 'Çarşamba 11 Kasım', 'Çar 11'],
+  ['2026-11-12', 'Perşembe 12 Kasım', 'Per 12'],
+  ['2026-11-13', 'Cuma 13 Kasım', 'Cum 13'],
+  ['2026-11-14', 'Cumartesi 14 Kasım', 'Cmt 14'],
+  ['2026-11-15', 'Pazar 15 Kasım', 'Paz 15'],
+].map(([date, label, shortLabel], index) => ({
+  date,
+  label,
+  shortLabel,
+  isToday: index === 4,
+  isOff: index >= 5,
+}));
+
+const LESSONS: CalendarEvent[] = [
+  {
+    id: 'l1',
+    title: 'İngilizce B1',
+    start: '2026-11-09T09:00',
+    end: '2026-11-09T10:30',
+    resourceId: 'r1',
+  },
+  {
+    id: 'l2',
+    title: 'Matematik 8',
+    start: '2026-11-09T10:00',
+    end: '2026-11-09T11:00',
+    resourceId: 'r2',
+    tone: 'success',
+  },
+  {
+    id: 'l3',
+    title: 'Almanca A2',
+    start: '2026-11-10T13:00',
+    end: '2026-11-10T14:30',
+    resourceId: 'r1',
+    tone: 'info',
+  },
+  {
+    id: 'l4',
+    title: 'Fizik 11',
+    start: '2026-11-11T09:30',
+    end: '2026-11-11T11:00',
+    resourceId: 'r2',
+    tone: 'warning',
+  },
+  {
+    id: 'l5',
+    title: 'Kimya 10',
+    start: '2026-11-11T10:00',
+    end: '2026-11-11T11:30',
+    resourceId: 'r2',
+    isCancelled: true,
+  },
+  {
+    id: 'l6',
+    title: 'Türkçe 7',
+    start: '2026-11-13T15:00',
+    end: '2026-11-13T16:00',
+    resourceId: 'r1',
+    isLocked: true,
+    tone: 'neutral',
+  },
+];
+
+const ROOMS = [
+  { id: 'r1', label: 'Derslik 1' },
+  { id: 'r2', label: 'Derslik 2' },
+];
+
+/* Kasım 2026 Pazartesi başlangıçlı altı satır: 26 Ekim – 6 Aralık. */
+const MONTH_DAYS: CalendarDay[] = [
+  ...Array.from({ length: 6 }, (_, index) => ['10', 'Ekim', 26 + index] as const),
+  ...Array.from({ length: 30 }, (_, index) => ['11', 'Kasım', 1 + index] as const),
+  ...Array.from({ length: 6 }, (_, index) => ['12', 'Aralık', 1 + index] as const),
+].map(([month, monthName, number], index) => ({
+  date: `2026-${month}-${String(number).padStart(2, '0')}`,
+  label: `${number} ${monthName}`,
+  shortLabel: String(number),
+  isOutside: month !== '11',
+  isOff: index % 7 >= 5,
+  isToday: month === '11' && number === 13,
+}));
+
+const DUES: CalendarEvent[] = [
+  { id: 'd1', title: 'Kira', start: '2026-11-05T00:00', end: '2026-11-05T00:00', tone: 'danger' },
+  {
+    id: 'd2',
+    title: 'Çek 0042',
+    start: '2026-11-12T00:00',
+    end: '2026-11-12T00:00',
+    tone: 'warning',
+  },
+  {
+    id: 'd3',
+    title: 'Tahsilat — Yıldız Ltd.',
+    start: '2026-11-12T00:00',
+    end: '2026-11-12T00:00',
+    tone: 'success',
+  },
+  { id: 'd4', title: 'Senet 12', start: '2026-11-12T00:00', end: '2026-11-12T00:00' },
+  { id: 'd5', title: 'Elektrik', start: '2026-11-12T00:00', end: '2026-11-12T00:00' },
+];
 
 const MONTHLY = [
   'Oca',
@@ -537,6 +657,65 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     disabled: <Input aria-label="Ad" defaultValue="Değiştirilemez" disabled />,
     technical: <Input aria-label="Şase" defaultValue="WVWZZZ1KZAW000001" isTechnical />,
     small: <Input aria-label="Ara" placeholder="Kod ya da ad" size="sm" />,
+  },
+  ScaledInput: {
+    price4: (
+      <ScaledInput
+        aria-label="Birim fiyat"
+        value={123_456}
+        onChange={noop}
+        scaleDigits={4}
+        minFractionDigits={2}
+        suffix="TL"
+      />
+    ),
+  },
+  MoneyInput: {
+    default: (
+      <MoneyInput
+        aria-label="Tutar"
+        value={123_450}
+        onChange={noop}
+        minorDigits={2}
+        currency="TL"
+      />
+    ),
+    empty: (
+      <MoneyInput
+        aria-label="Tutar"
+        value={null}
+        onChange={noop}
+        minorDigits={2}
+        placeholder="0,00"
+      />
+    ),
+    invalid: (
+      <MoneyInput aria-label="Tutar" value={null} onChange={noop} minorDigits={2} aria-invalid />
+    ),
+    disabled: (
+      <MoneyInput aria-label="Tutar" value={9_900} onChange={noop} minorDigits={2} disabled />
+    ),
+  },
+  QuantityInput: {
+    default: (
+      <QuantityInput aria-label="Miktar" value={25_000} onChange={noop} unitDigits={3} unit="kg" />
+    ),
+    pieces: (
+      <QuantityInput
+        aria-label="Miktar"
+        value={30_000}
+        onChange={noop}
+        unitDigits={0}
+        unit="adet"
+      />
+    ),
+  },
+  RateInput: {
+    default: <RateInput aria-label="Kur" value={34_123_456} onChange={noop} suffix="TL" />,
+  },
+  PercentInput: {
+    default: <PercentInput aria-label="KDV" value={2000} onChange={noop} />,
+    small: <PercentInput aria-label="İskonto" value={1250} onChange={noop} size="sm" />,
   },
   PasswordInput: {
     default: <PasswordInput aria-label="Şifre" placeholder="••••••••" />,
@@ -1780,6 +1959,42 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
             values: { price: 58, speed: 88, quality: 84, stock: 47, returns: 76, support: null },
           },
         ]}
+      />
+    ),
+  },
+  // --- Takvim (@handijit/ui/calendar) ---
+  Calendar: {
+    week: (
+      <Calendar
+        label="Ders planı"
+        days={WEEK_DAYS}
+        events={LESSONS.map(({ resourceId: _room, ...lesson }) => lesson)}
+        startTime="08:00"
+        endTime="18:00"
+        onEventChange={noop}
+        onEventOpen={noop}
+      />
+    ),
+    resources: (
+      <Calendar
+        label="Ders planı — derslikler"
+        days={WEEK_DAYS.slice(0, 3)}
+        resources={ROOMS}
+        events={LESSONS}
+        startTime="08:00"
+        endTime="16:00"
+        onEventChange={noop}
+      />
+    ),
+    month: (
+      <Calendar
+        label="Vade takvimi"
+        view="month"
+        days={MONTH_DAYS}
+        events={DUES}
+        weekdays={['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz']}
+        selectedDate="2026-11-12"
+        onDaySelect={noop}
       />
     ),
   },

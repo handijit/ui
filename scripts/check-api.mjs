@@ -5,6 +5,7 @@
  * - `@handijit/ui`      → `build/index.d.ts`             ↔ `scripts/api-baseline.txt`
  * - `@handijit/ui/chat` → `build/types/chat/index.d.ts`  ↔ `scripts/api-baseline.chat.txt`
  * - `@handijit/ui/charts` → `build/types/charts/index.d.ts` ↔ `scripts/api-baseline.charts.txt`
+ * - `@handijit/ui/calendar` → `build/types/calendar/index.d.ts` ↔ `scripts/api-baseline.calendar.txt`
  * - `@handijit/ui/scss`   → `build/scss/*.scss` (`$degisken`, `@mixin`) ↔ `scripts/api-baseline.scss.txt`
  *
  * ⚠ Grep deseni `export { … }` DEGIL (ana giris icin). vite-plugin-dts her bildirimi tek tek
@@ -74,6 +75,12 @@ const ENTRIES = [
     name: '@handijit/ui/charts',
     declarationFile: join(ROOT, 'build', 'types', 'charts', 'index.d.ts'),
     baselineFile: join(ROOT, 'scripts', 'api-baseline.charts.txt'),
+    read: reexportedNames,
+  },
+  {
+    name: '@handijit/ui/calendar',
+    declarationFile: join(ROOT, 'build', 'types', 'calendar', 'index.d.ts'),
+    baselineFile: join(ROOT, 'scripts', 'api-baseline.calendar.txt'),
     read: reexportedNames,
   },
   {

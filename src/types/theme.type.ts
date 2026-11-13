@@ -128,6 +128,21 @@ export type UiLabels = Partial<{
     codeCopied: string;
   }>;
 
+  /** The calendar (`@handijit/ui/calendar`, 2.4). */
+  calendar: Partial<{
+    /**
+     * How the keyboard works, read when the calendar is entered, e.g. "Oklarla etkinlikler
+     * arasında gezinin, Enter ile açın; ⌘ ve oklarla taşıyın, ⌘ ⇧ ↑ ↓ ile kısaltıp uzatın."
+     */
+    instructions: string;
+    /** Read before a cancelled event's title ("İptal"): the strike-through is not read. */
+    cancelled: string;
+    /** The rest of a month cell's events, e.g. `count => '+' + count + ' daha'`. */
+    more: Formatter<[count: number]>;
+    /** Announced when a keyboard move stands, e.g. `(title, when) => title + ' taşındı: ' + when`. */
+    moved: Formatter<[title: string, when: string]>;
+  }>;
+
   copyField: Partial<{
     /** Kopyalama düğmesinin adı. */
     copy: Formatter<[value: string]>;

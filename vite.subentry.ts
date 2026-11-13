@@ -5,7 +5,7 @@ import uiLayer from './scripts/lib/postcss-ui-layer.mjs';
 import { defineConfig, type UserConfig } from 'vite';
 
 /**
- * ALT GİRİŞ DERLEMESİ — `@handijit/ui/chat`, `@handijit/ui/charts`.
+ * ALT GİRİŞ DERLEMESİ — `@handijit/ui/chat`, `@handijit/ui/charts`, `@handijit/ui/calendar` (2.4).
  *
  * ⚠ Ana giriş (`@handijit/ui`) DIŞSAL: alt giriş onu paket adıyla alır. Paketlenseydi
  * `UiProvider`ın bağlamı (metinler, yönlendirici) ve kipsel yüzey yığını iki kopyaya bölünür,
@@ -16,7 +16,7 @@ import { defineConfig, type UserConfig } from 'vite';
  * (`build/types/<giriş>`): `vite-plugin-dts`in toplama adımı girişi `<outDir>/index.d.ts` diye
  * hesaplıyor ve ANA girişin tiplerini topluyordu.
  */
-export const defineSubEntry = (name: 'chat' | 'charts'): UserConfig =>
+export const defineSubEntry = (name: 'chat' | 'charts' | 'calendar'): UserConfig =>
   defineConfig({
     resolve: {
       alias: { '@': resolve(__dirname, 'src') },

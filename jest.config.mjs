@@ -1,4 +1,6 @@
 /** Jest yapılandırması. */
+const FULL = { lines: 100, statements: 100, functions: 100, branches: 100 };
+
 export default {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
@@ -45,5 +47,17 @@ export default {
   coverageThreshold: {
     /* ⚠ Esikler OLCULENIN ~2 puan altinda — regresyon kapisi, hedef degil. */
     global: { lines: 89, statements: 86, functions: 80, branches: 75 },
+    /*
+     * 2.4: what this release adds is held at 100% — the scaled-integer fields and the calendar
+     * entry. A new file under these paths starts at 100 or the gate fails.
+     */
+    './src/calendar/': FULL,
+    './src/helpers/scaled-number.helper.ts': FULL,
+    './src/constants/scale.constants.ts': FULL,
+    './src/components/ScaledInput/': FULL,
+    './src/components/MoneyInput/': FULL,
+    './src/components/QuantityInput/': FULL,
+    './src/components/RateInput/': FULL,
+    './src/components/PercentInput/': FULL,
   },
 };

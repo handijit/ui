@@ -95,6 +95,15 @@ export { default as TableCheckbox } from './components/TableCheckbox';
 // --- Girdi ------------------------------------------------------------
 export { default as Input } from './components/Input';
 export { default as PasswordInput } from './components/PasswordInput';
+/*
+ * Scaled-integer number fields (2.4): the value is the integer of the data contract (`Kurus`,
+ * `Qty4`, `Rate6`, `Pct2`), never a float. `ScaledInput` takes any scale (`Price4`, `Ppm`).
+ */
+export { default as ScaledInput } from './components/ScaledInput';
+export { default as MoneyInput } from './components/MoneyInput';
+export { default as QuantityInput } from './components/QuantityInput';
+export { default as RateInput } from './components/RateInput';
+export { default as PercentInput } from './components/PercentInput';
 export { default as TagInput } from './components/TagInput';
 export { default as Textarea } from './components/Textarea';
 export { default as DateField, DateRange, type DateRangeValue } from './components/DateField';

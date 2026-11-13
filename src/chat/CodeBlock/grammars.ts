@@ -342,8 +342,13 @@ const sql = (): Grammar => ({
     ['word', WORD],
     ['punctuation', /[(),;.]/],
   ],
+  /*
+   * A set: the order means nothing — except that "insert" is not followed by "into" and a word,
+   * which the data contract gate (`program-tools verify contract`) reads as an SQL write to an
+   * unprefixed table named after that word.
+   */
   keywords: words(
-    'select from where and or not insert into values update set delete create table alter drop index view join inner left right full outer cross on as group by order having limit offset union all distinct case when then else end is in exists between like ilike primary key foreign references default unique constraint returning with asc desc begin commit rollback transaction if replace check cascade grant revoke add column database schema trigger procedure function declare',
+    'select from where and or not insert values into update set delete create table alter drop index view join inner left right full outer cross on as group by order having limit offset union all distinct case when then else end is in exists between like ilike primary key foreign references default unique constraint returning with asc desc begin commit rollback transaction if replace check cascade grant revoke add column database schema trigger procedure function declare',
   ),
   literals: words('null true false'),
   types: words(

@@ -1,0 +1,362 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// The calendar (2.4). Sizes the application may override on the root or above it:
+// `--ui-calendar-hour-height` (one hour of the time grid), `--ui-calendar-column-min` (the
+// narrowest column before the grid scrolls sideways), `--ui-calendar-gutter` (the hours column).
+.calendar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  color: $text;
+  font-family: $font-body;
+}
+
+.srOnly {
+  @include visually-hidden;
+}
+
+// --- Time grid ------------------------------------------------------------
+
+// One scroll box for both axes: the headers stick to its top, the hours to its start.
+.scroller {
+  position: relative;
+  overflow: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  border: 1px solid $border;
+  border-radius: $radius-sm;
+  background-color: $bg-surface;
+
+  @include focus-ring($focus-inset, -2px);
+  @include custom-scrollbar;
+}
+
+.time {
+  --ui-calendar-track: repeat(
+    var(--ui-calendar-columns),
+    minmax(var(--ui-calendar-column-min, 7rem), 1fr)
+  );
+
+  display: grid;
+  grid-template-columns: var(--ui-calendar-gutter, 3.5rem) minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  min-width: min-content;
+}
+
+.corner {
+  position: sticky;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: 3;
+  background-color: $bg-surface;
+  border-block-end: 1px solid $border;
+  border-inline-end: 1px solid $border;
+}
+
+.headers {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: var(--ui-calendar-track);
+  background-color: $bg-surface;
+  border-block-end: 1px solid $border;
+}
+
+.header,
+.resource {
+  @include truncate;
+
+  padding: $space-2 $space-2;
+  font-size: $font-size-small;
+  font-weight: $weight-semibold;
+  text-align: center;
+  color: $text-2;
+  border-inline-start: 1px solid $border;
+}
+
+// Today is marked by weight and an underline as well as cobalt — colour is never alone.
+.header--today {
+  color: $primary-text;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.resource {
+  font-weight: $weight-regular;
+  border-block-start: 1px solid $border;
+}
+
+.gutter {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background-color: $bg-surface;
+  border-inline-end: 1px solid $border;
+
+  &__hour {
+    position: absolute;
+    inset-inline-end: $space-2;
+    translate: 0 -50%;
+    font-size: $font-size-caption;
+    font-variant-numeric: tabular-nums;
+    color: $text-3;
+
+    // The first hour sits on the top edge: drawn under it, not cut by the header.
+    &:first-child {
+      translate: 0 0;
+    }
+  }
+}
+
+.columns {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--ui-calendar-track);
+  height: calc(var(--ui-calendar-hours) * var(--ui-calendar-hour-height, 3rem));
+}
+
+// A slot line every `slotMinutes`: a gradient sized to one slot, repeated down the column.
+.column {
+  position: relative;
+  border-inline-start: 1px solid $border;
+  background-image: linear-gradient(to bottom, $border 1px, transparent 1px);
+  background-size: 100% calc(var(--ui-calendar-hour-height, 3rem) * var(--ui-calendar-slot-ratio));
+
+  &--off {
+    background-color: $bg-raised;
+  }
+}
+
+// --- Events ---------------------------------------------------------------
+
+.event {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  min-width: 0;
+  overflow: hidden;
+  padding: 2px $space-2;
+  font: inherit;
+  font-size: $font-size-small;
+  line-height: $leading-snug;
+  text-align: start;
+  border-radius: $radius-xs;
+  cursor: pointer;
+  // A drag must not select the text it passes over.
+  user-select: none;
+
+  @include tint(neutral);
+  @include focus-ring($focus, 1px);
+
+  &--primary {
+    background-color: $primary-soft;
+    border-color: $primary-line;
+    color: $primary-text;
+  }
+
+  &--neutral {
+    @include tint(neutral);
+  }
+
+  &--success {
+    @include tint(success);
+  }
+
+  &--warning {
+    @include tint(warning);
+  }
+
+  &--danger {
+    @include tint(danger);
+  }
+
+  &--info {
+    @include tint(info);
+  }
+
+  // The time grid: placed by the column percentages `EventBlock` writes; side by side in lanes.
+  &--time {
+    position: absolute;
+    inset-block-start: var(--ui-calendar-top);
+    inset-inline-start: calc(100% / var(--ui-calendar-lanes) * var(--ui-calendar-lane));
+    width: calc(100% / var(--ui-calendar-lanes) - 2px);
+    height: var(--ui-calendar-height);
+    min-height: 1.25rem;
+  }
+
+  // The month: a one-line row of the day cell.
+  &--month {
+    flex-direction: row;
+    gap: $space-1;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  &--movable {
+    cursor: grab;
+  }
+
+  // The source of a drag keeps its place, drawn with a dashed edge while the preview travels.
+  &--dragging {
+    border-style: dashed;
+    cursor: grabbing;
+  }
+
+  &--cancelled &__body {
+    text-decoration: line-through;
+  }
+
+  &--cancelled {
+    border-style: dashed;
+  }
+
+  &__time {
+    font-size: $font-size-caption;
+    font-variant-numeric: tabular-nums;
+    font-weight: $weight-semibold;
+  }
+
+  &__body {
+    @include truncate;
+
+    max-width: 100%;
+  }
+
+  // The bottom edge stretches the event; the whole width, a few pixels tall, the resize cursor.
+  &__handle {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    height: 6px;
+    cursor: ns-resize;
+  }
+}
+
+// Where a dragged event will land: a dashed cobalt outline with the new time.
+.preview {
+  position: absolute;
+  inset-block-start: var(--ui-calendar-top);
+  inset-inline: 0;
+  height: var(--ui-calendar-height);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2px $space-2;
+  overflow: hidden;
+  font-size: $font-size-caption;
+  font-variant-numeric: tabular-nums;
+  font-weight: $weight-semibold;
+  color: $primary-text;
+  background-color: $primary-soft;
+  border: 2px dashed $primary;
+  border-radius: $radius-xs;
+  pointer-events: none;
+
+  &__title {
+    @include truncate;
+
+    font-weight: $weight-regular;
+  }
+}
+
+// --- Month ----------------------------------------------------------------
+
+.month {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $border;
+  border-radius: $radius-sm;
+  background-color: $bg-surface;
+  overflow: hidden;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-block-end: 1px solid $border;
+
+  span {
+    padding: $space-2;
+    font-size: $font-size-small;
+    font-weight: $weight-semibold;
+    text-align: center;
+    color: $text-2;
+  }
+}
+
+.cells {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: repeat(var(--ui-calendar-rows), minmax(6rem, 1fr));
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: $space-1;
+  border-block-start: 1px solid $border;
+  border-inline-start: 1px solid $border;
+
+  &--off {
+    background-color: $bg-raised;
+  }
+
+  // A day of the neighbouring month: its number quieter (the text says which day it is).
+  &--outside &__day {
+    color: $text-3;
+  }
+
+  // The day a dragged event will land on.
+  &--target {
+    background-color: $primary-soft;
+    box-shadow: inset 0 0 0 2px $primary;
+  }
+
+  &__day {
+    align-self: flex-end;
+    min-width: 1.75rem;
+    padding: 2px $space-1;
+    font: inherit;
+    font-size: $font-size-small;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    color: $text-2;
+    border: 0;
+    border-radius: $radius-xs;
+
+    @include interactive-surface;
+    @include focus-ring($focus, 1px);
+
+    &[aria-pressed='true'] {
+      background-color: $primary-soft;
+      color: $primary-text;
+      font-weight: $weight-semibold;
+    }
+
+    &--today {
+      color: $primary-text;
+      font-weight: $weight-bold;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+
+  &__more {
+    align-self: flex-start;
+    padding: 0 $space-1;
+    font: inherit;
+    font-size: $font-size-caption;
+    color: $text-2;
+    border: 0;
+    border-radius: $radius-xs;
+
+    @include interactive-surface;
+    @include focus-ring($focus, 1px);
+  }
+}

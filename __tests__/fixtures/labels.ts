@@ -46,6 +46,12 @@ export const LABELS: ui.UiLabels = {
     starCount: star => `${star} yıldız`,
     scale: { 1: 'Çok kötü', 2: 'Kötü', 3: 'Orta', 4: 'İyi', 5: 'Çok iyi' },
   },
+  calendar: {
+    instructions: 'Oklarla gezinin, Enter ile açın; ⌘ ve oklarla taşıyın.',
+    cancelled: 'İptal',
+    more: count => `+${count} daha`,
+    moved: (title, when) => `${title} taşındı: ${when}`,
+  },
   chat: {
     thread: 'Sohbet',
     send: 'Gönder',

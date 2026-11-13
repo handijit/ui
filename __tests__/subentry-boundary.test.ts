@@ -25,7 +25,7 @@ const ALLOWED_RELATIVE = [
   /^\.\/[\w-]+$/,
 ];
 
-const ENTRIES = ['src/chat', 'src/charts'];
+const ENTRIES = ['src/chat', 'src/charts', 'src/calendar'];
 
 const files = (dir: string): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
@@ -64,7 +64,9 @@ describe.each(ENTRIES)('%s girişinin sınırı', entry => {
 it('ana giriş alt girişleri İÇE AKTARMAZ — yalnızca ana girişi kullanan uygulamaya sohbet ya da grafik kodu inmez', () => {
   const offenders = files('src')
     .filter(path => !ENTRIES.some(entry => path.startsWith(entry)))
-    .filter(path => imports(path).some(specifier => /(^|\/)(chat|charts)(\/|$)/.test(specifier)));
+    .filter(path =>
+      imports(path).some(specifier => /(^|\/)(chat|charts|calendar)(\/|$)/.test(specifier)),
+    );
 
   expect(offenders).toEqual([]);
 });

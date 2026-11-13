@@ -8,6 +8,49 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [2.4.0] — 2026-11-13
+
+**What the pilot programs need from the component library**: number fields that hold the data
+contract's scaled integers, and a calendar. Additive only; nothing is renamed, removed or changes
+behaviour.
+
+### Added
+
+- **`ScaledInput`, `MoneyInput`, `QuantityInput`, `RateInput`, `PercentInput`** (main entry, a
+  subpath each): number fields that take and give a **scaled integer** (`value: number | null`,
+  `onChange(value: number | null)`), never a float. `MoneyInput` takes the currency's
+  `minorDigits` (`Kurus`) and a `currency` suffix; `QuantityInput` stores `Qty4` and takes the
+  unit's `unitDigits` and a `unit` suffix; `RateInput` stores `Rate6` (at least four places at
+  rest); `PercentInput` stores `Pct2` with the `%` before the number; `ScaledInput` takes any
+  `scaleDigits` (`Price4`, `Ppm`) with `maxFractionDigits` and `minFractionDigits`. All take
+  `min` (0 by default: no minus sign) and `max`, `Field`'s contract, `ref`, `size`,
+  `prefix`/`suffix`. The text is read digit by digit with the grammar of app-kit's
+  `parseDecimal` (`helpers/scaled-number.helper.ts`, pinned by the same vectors); a keystroke the
+  field cannot hold is refused, nothing is rounded. Grouped at rest ("1.234,50"), plain and
+  selected while focused.
+- **`@handijit/ui/calendar`** — a new entry with **`Calendar`** and its types (`CalendarDay`,
+  `CalendarEvent`, `CalendarEventChange`, `CalendarEventTone`, `CalendarResource`,
+  `CalendarSlot`, `CalendarView`); styles in `@handijit/ui/calendar.css`. A time grid of days or
+  of days and resources, or a month; events moved (into another column) and stretched with the
+  pointer, snapped to `slotMinutes`, with a preview and `Escape`; the same with the keyboard
+  (roving focus, arrows between events, ⌘/Ctrl + arrows to move, ⌘/Ctrl ⇧ ↑ ↓ to stretch, the
+  move announced); a click on an empty slot (`onSlotSelect`), a drop from outside
+  (`onExternalDrop`), the day of a month cell and its "+N" (`onDaySelect`). Controlled: a change
+  stands when `events` carries it. Times are wall clock text, days come from the caller.
+- **`labels.calendar`**: `instructions`, `cancelled`, `more(count)`, `moved(title, when)`.
+- **Guards**: the new files are held at 100% coverage (`jest.config.mjs`); the calendar's budgets
+  of the pilots as a test (a week of 500 lessons under 300 ms, a day of 20 resources and 200 jobs
+  under 500 ms; measured 40–100 ms and 16–30 ms in jsdom); size budgets for the calendar entry
+  (5.92 kB), `calendar.css` (2.05 kB) and `MoneyInput` alone (2.02 kB). The main entry grows from
+  41.31 to 42.55 kB of its 44 kB.
+
+### Fixed
+
+- **The data contract gate passes on this package** (`program-tools verify contract`, 11/11): the
+  SQL keyword list of `CodeBlock`'s highlighter read `insert into values` and the gate took it for
+  a write to an unprefixed table `values`. The words are a set; `into` moved, the colouring is
+  unchanged.
+
 ## [2.3.1] — 2026-11-11
 
 Repository hygiene; the code and styles are those of 2.3.0. 2.3.0 was not published to npm, so

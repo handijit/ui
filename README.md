@@ -84,7 +84,7 @@ Every component also has a subpath (`@handijit/ui/button`, `/chip-group`,
 same file either way.
 
 The sub-entries have their own stylesheets, imported **after** `styles.css`:
-`@handijit/ui/chat.css`, `@handijit/ui/charts.css`.
+`@handijit/ui/chat.css`, `@handijit/ui/charts.css`, `@handijit/ui/calendar.css`.
 
 ---
 
@@ -286,6 +286,12 @@ either. Labels are given **once**, on the provider:
       copied: value => `${value} kopyalandı`,
       announcement: 'Panoya kopyalandı',
     },
+    calendar: {
+      instructions: 'Oklarla gezinin, Enter ile açın; ⌘ ve oklarla taşıyın, ⌘ ⇧ ↑ ↓ ile kısaltıp uzatın.',
+      cancelled: 'İptal',
+      more: count => `+${count} daha`,
+      moved: (title, when) => `${title} taşındı: ${when}`,
+    },
     rating: {
       srLabel: (value, count) => `5 üzerinden ${value}${count ? `, ${count} değerlendirme` : ''}`,
       starCount: star => `${star} yıldız`,
@@ -370,18 +376,19 @@ and changes when an announcement strip appears.
 
 ## Component catalogue
 
-| Group             | Components                                                                                                                                                                                                                                                                                                                          |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Action            | `Button` · `IconButton` · `TextLink` · `Tooltip` · `Menu` · `ContextMenu` · `Popover`                                                                                                                                                                                                                                               |
-| Choice            | `Chip` · `ChipGroup` · `SegmentedControl` · `Select` · `Combobox` · `Checkbox` · `Switch` · `Radio` · `RadioCard` · `RangeSlider` · `RatingInput` · `QuantityStepper` · `TableCheckbox`                                                                                                                                             |
-| Input             | `Input` · `PasswordInput` · `Textarea` · `TagInput` · `DateField` · `FileUpload` · `Field`                                                                                                                                                                                                                                          |
-| Surface           | `Card` (+ `CardMedia`, `CardOverlay`, `CardBody`, `CardFooter`) · `SummaryCard` · `Panel` (+ `PanelForm`, `PanelRow`) · `PageHeader` · `SectionHeader` · `Tile` · `Directory` (+ `DirectoryGroup`, `DirectoryRow`, `DirectoryJump`) · `Carousel` · `ScrollArea` · `Disclosure` · `Accordion` · `Tabs`                               |
-| Feedback          | `Alert` · `Badge` · `StatusDot` · `CodeBadge` · `Kbd` · `EmptyState` · `Skeleton` (+ `SkeletonCard`, `SkeletonRows`, `SkeletonTable`) · `Spinner` · `Progress` · `Steps` · `Divider` · `Avatar` · `Rating` · `Price` · `Stat` · `CopyField` · `Breadcrumb` · `ToastHub` (+ `ToastPortal`)                                           |
-| Modal             | `Modal` · `Drawer` · `BottomSheet` · `ConfirmDialog` · `PromptDialog` · `CommandPalette`                                                                                                                                                                                                                                            |
-| Data              | `Table` (+ `TableScroller`) · `DataTable` (+ `DataTableRow`) · `FilterBar` (+ `FilterBarField`) · `Pagination` · `Timeline`                                                                                                                                                                                                         |
-| Theme and hooks   | `UiProvider` · `UiThemeScript` · `useUi` · `useUiTheme` · `useUiTokens` · `useAnnounce` · `useStickToBottom` · `usePositioning` · `useVirtualList` · `useListboxNavigation` · `hasOpenSurface`                                                                                                                                      |
-| Chat, `/chat`     | `ChatThread` · `ChatMessage` · `PromptInput` · `PromptSuggestions` · `Prose` · `CodeBlock` · `ReasoningBlock` (+ `ReasoningText`) · `ToolCall` (+ `ToolCallSection`) · `TerminalOutput` · `SourceList` · `Citation` · `MessageActions` · `AppBar` · `ActionList` (+ `ActionListItem`) · `SegmentBar` · `Legend` · `DescriptionList` |
-| Charts, `/charts` | `LineChart` · `AreaChart` · `BarChart` · `ComposedChart` · `PieChart` · `ScatterPlot` · `Heatmap` · `BoxPlot` · `Histogram` · `RadarChart`                                                                                                                                                                                          |
+| Group                 | Components                                                                                                                                                                                                                                                                                                                          |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Action                | `Button` · `IconButton` · `TextLink` · `Tooltip` · `Menu` · `ContextMenu` · `Popover`                                                                                                                                                                                                                                               |
+| Choice                | `Chip` · `ChipGroup` · `SegmentedControl` · `Select` · `Combobox` · `Checkbox` · `Switch` · `Radio` · `RadioCard` · `RangeSlider` · `RatingInput` · `QuantityStepper` · `TableCheckbox`                                                                                                                                             |
+| Input                 | `Input` · `PasswordInput` · `Textarea` · `TagInput` · `DateField` (+ `DateRange`) · `FileUpload` · `Field` · `ScaledInput` · `MoneyInput` · `QuantityInput` · `RateInput` · `PercentInput`                                                                                                                                          |
+| Surface               | `Card` (+ `CardMedia`, `CardOverlay`, `CardBody`, `CardFooter`) · `SummaryCard` · `Panel` (+ `PanelForm`, `PanelRow`) · `PageHeader` · `SectionHeader` · `Tile` · `Directory` (+ `DirectoryGroup`, `DirectoryRow`, `DirectoryJump`) · `Carousel` · `ScrollArea` · `Disclosure` · `Accordion` · `Tabs`                               |
+| Feedback              | `Alert` · `Badge` · `StatusDot` · `CodeBadge` · `Kbd` · `EmptyState` · `Skeleton` (+ `SkeletonCard`, `SkeletonRows`, `SkeletonTable`) · `Spinner` · `Progress` · `Steps` · `Divider` · `Avatar` · `Rating` · `Price` · `Stat` · `CopyField` · `Breadcrumb` · `ToastHub` (+ `ToastPortal`)                                           |
+| Modal                 | `Modal` · `Drawer` · `BottomSheet` · `ConfirmDialog` · `PromptDialog` · `CommandPalette`                                                                                                                                                                                                                                            |
+| Data                  | `Table` (+ `TableScroller`) · `DataTable` (+ `DataTableRow`) · `FilterBar` (+ `FilterBarField`) · `Pagination` · `Timeline`                                                                                                                                                                                                         |
+| Theme and hooks       | `UiProvider` · `UiThemeScript` · `useUi` · `useUiTheme` · `useUiTokens` · `useAnnounce` · `useStickToBottom` · `usePositioning` · `useVirtualList` · `useListboxNavigation` · `hasOpenSurface`                                                                                                                                      |
+| Chat, `/chat`         | `ChatThread` · `ChatMessage` · `PromptInput` · `PromptSuggestions` · `Prose` · `CodeBlock` · `ReasoningBlock` (+ `ReasoningText`) · `ToolCall` (+ `ToolCallSection`) · `TerminalOutput` · `SourceList` · `Citation` · `MessageActions` · `AppBar` · `ActionList` (+ `ActionListItem`) · `SegmentBar` · `Legend` · `DescriptionList` |
+| Charts, `/charts`     | `LineChart` · `AreaChart` · `BarChart` · `ComposedChart` · `PieChart` · `ScatterPlot` · `Heatmap` · `BoxPlot` · `Histogram` · `RadarChart`                                                                                                                                                                                          |
+| Calendar, `/calendar` | `Calendar`                                                                                                                                                                                                                                                                                                                          |
 
 ### Variants and sizes
 
@@ -434,7 +441,9 @@ are linked for a screen reader.
 
 ```tsx
 <Field id="plan" label="Plan" hint="İstediğiniz zaman değiştirebilirsiniz" error={error}>
-  {props => <SegmentedControl {...props} label="Plan" options={PLANS} value={plan} onChange={setPlan} />}
+  {props => (
+    <SegmentedControl {...props} label="Plan" options={PLANS} value={plan} onChange={setPlan} />
+  )}
 </Field>
 ```
 
@@ -515,6 +524,53 @@ first back to the trigger; it closes in both cases.
 `Select` and `Input` are one height (40px and 32px). The placeholder of an
 `isTechnical` input is drawn in the body font: it is an instruction, not code,
 and in monospace it was cut short in a narrow scan field.
+
+### Number fields: scaled integers (2.4)
+
+`ScaledInput`, `MoneyInput`, `QuantityInput`, `RateInput` and `PercentInput`
+take and give a **scaled integer**, never a float: the integer types of the
+data contract. `123450` with two decimal places is "1.234,50".
+
+| Field           | Value                    | Scale                        | At rest             |
+| --------------- | ------------------------ | ---------------------------- | ------------------- |
+| `MoneyInput`    | `Kurus` (the minor unit) | `minorDigits` (TRY 2, JPY 0) | "1.234,50 TL"       |
+| `QuantityInput` | `Qty4`                   | 4; `unitDigits` may be typed | "2,5 kg"            |
+| `RateInput`     | `Rate6`                  | 6                            | "34,1235"           |
+| `PercentInput`  | `Pct2`                   | 2                            | "%12,5"             |
+| `ScaledInput`   | any (`Price4`, `Ppm`)    | `scaleDigits`                | `minFractionDigits` |
+
+```tsx
+<Field label="Tutar" error={errors.amount}>
+  {props => (
+    <MoneyInput {...props} value={amount} onChange={setAmount} minorDigits={2} currency="TL" />
+  )}
+</Field>
+<QuantityInput aria-label="Miktar" value={qty} onChange={setQty} unitDigits={3} unit="kg" />
+<PercentInput aria-label="KDV" value={vat} onChange={setVat} />
+```
+
+- **`onChange` on every keystroke that changes the meaning**: the integer, or
+  `null` while the field is empty or holds a number still being typed ("-",
+  "1.250.0"). Left with such a text, the field keeps it and marks itself
+  `aria-invalid`.
+- **The grammar is the one of app-kit's `parseDecimal`**: the comma is the
+  decimal point; with a comma, dots only group by three; without one, "1.250"
+  is a thousand two hundred and fifty, "0.250" and "12.5" are decimals (the dot
+  key of a number pad). Spaces and signs around the number are dropped, so a
+  pasted "1.234,56 TL" reads; a letter inside it does not.
+- **A keystroke the field cannot hold is refused**, the text stays: a letter,
+  one decimal too many (`unitDigits={0}` refuses the comma), a minus when `min`
+  is 0 or more (the default), a value past `max` or past the safe integers.
+  Nothing is rounded.
+- **At rest grouped, while focused plain and selected** ("1234,50"), so typing
+  replaces it. A value under a positive `min` is raised to it on blur or Enter.
+- `Field`'s contract (`id`, `aria-invalid`, `aria-describedby`, `required`),
+  `ref`, `size`, `prefix`/`suffix`, `disabled` and `readOnly` pass to the
+  input. Right-aligned, tabular figures.
+- The scale is never guessed: `minorDigits` comes from the currency table of
+  `@handijit/tr-codes`, `unitDigits` from the unit. Display elsewhere is
+  app-kit's formatters' (`formatMoney`, `formatQuantity` …); `Price` stays a
+  display of an already formatted text.
 
 ### TypeScript resolution
 
@@ -746,6 +802,64 @@ also reads the chart as a hidden **data table**. Width is measured from the
 container (or fixed with `width`); numbers are formatted with `labels.locale`.
 Colours come from the data series of the design (`tone`: `chart-1` … `chart-6`,
 `muted`).
+
+## Calendar: `@handijit/ui/calendar`
+
+The base of app-kit's `takvim` pattern (2.4): a **time grid** (days as
+columns, the drawn hours as rows; with `resources` a column per teacher, room
+or technician under every day) or a **month** of day cells. A separate entry,
+so the main entry's budget does not grow (5,9 kB gzip, `calendar.css` 2 kB).
+
+```tsx
+import '@handijit/ui/styles.css';
+import '@handijit/ui/calendar.css'; // AFTER styles.css
+
+import { Calendar, type CalendarEvent } from '@handijit/ui/calendar';
+
+<Calendar
+  label="Ders planı"
+  days={week} // [{ date: '2026-11-09', label: 'Pazartesi 9 Kasım', shortLabel: 'Pzt 9', isToday, isOff }]
+  resources={rooms} // optional: [{ id: 'r1', label: 'Derslik 1' }]
+  events={lessons} // [{ id, title, start: '2026-11-09T09:00', end: '2026-11-09T10:30', resourceId, tone, isCancelled, isLocked }]
+  startTime="08:00"
+  endTime="22:00"
+  slotMinutes={15}
+  onEventChange={change => (conflicts(change) ? toast(why(change)) : save(change))}
+  onEventOpen={id => openLesson(id)}
+  onSlotSelect={slot => newLesson(slot)}
+  onExternalDrop={({ data, start, resourceId }) => assign(data, start, resourceId)}
+  renderEvent={lesson => `${lesson.title} · ${fill(lesson)}`}
+/>;
+```
+
+- **Times are the data contract's wall clock** (`YYYY-MM-DDTHH:MM`, the firm's
+  time zone) and **days come from the caller**: the calendar converts no time
+  zone and does no day arithmetic (that is `@handijit/tr`'s). The month takes
+  its 35 or 42 `days` (`isOutside` for the neighbouring months), `weekdays`,
+  `maxEventsPerDay` (3; the rest behind "+N" → `onDaySelect`) and
+  `selectedDate`.
+- **Controlled.** A drop, a stretch or a keyboard move calls `onEventChange`
+  with `{ id, start, end, resourceId }`; the move stands when `events` carries
+  it. A refused move (a conflict) is simply not applied: say why in a toast.
+  Without `onEventChange` the calendar only shows and opens.
+- **Pointer.** Drag the body to move (snapped to `slotMinutes`, into another
+  column), the bottom edge to stretch; a preview shows where it lands, `Escape`
+  gives up. A multi-day or `isLocked` event is drawn but not moved.
+  `onExternalDrop` takes a drop from outside (an unassigned job), with its
+  `text/plain` drag data.
+- **Keyboard.** One event is in the tab order; ← ↑ → ↓ go to the neighbouring
+  event, Enter opens it, ⌘/Ctrl + arrows move it one slot or one column (month:
+  a day or a week), ⌘/Ctrl ⇧ ↑ ↓ shorten or lengthen it. The new place is
+  announced (`labels.calendar.moved`) and the focus follows the event.
+- **Colour is never alone**: `tone` tints an event; a cancelled one is struck
+  through _and_ read as `labels.calendar.cancelled`; today is underlined and
+  `aria-current="date"`.
+- **Budgets of the pilots**, measured in jsdom (`__tests__/calendar/performance.test.tsx`):
+  a week of 500 lessons draws in ~40–100 ms (budget 300 ms); a day of 20
+  technicians and 200 jobs in ~16–30 ms (budget 500 ms). No virtualisation:
+  the grid is bounded by its days and hours.
+- Sizes are component variables: `--ui-calendar-hour-height` (3rem),
+  `--ui-calendar-column-min` (7rem), `--ui-calendar-gutter` (3.5rem).
 
 ## SCSS API: `@handijit/ui/scss`
 

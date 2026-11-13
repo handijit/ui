@@ -118,6 +118,31 @@ export default [
     limit: '2 kB',
     gzip: true,
   },
+  /* TAKVİM GİRİŞİ (2.4) — sohbet ve grafik girişleriyle aynı kural: ayrı ölçülür, ana girişte sayılmaz. */
+  {
+    name: 'calendar girişi (tümü)',
+    path: 'build/calendar.js',
+    ignore: ['@handijit/ui'],
+    /* İlk ölçüm (2026-11-13, `Calendar` + çekirdek): 5,92 kB. */
+    limit: '7 kB',
+    gzip: true,
+  },
+  {
+    name: 'calendar.css',
+    path: 'build/calendar.css',
+    /* İlk ölçüm: 2,05 kB. */
+    limit: '2.5 kB',
+    gzip: true,
+  },
+  {
+    /* 2.4: the fixed-scale fields pull `ScaledInput` and `Input`, never the calendar. */
+    name: 'yalnızca MoneyInput (ağaç sarsma)',
+    path: 'build/index.js',
+    import: '{ MoneyInput }',
+    /* İlk ölçüm: 2,02 kB (`Input` + `ScaledInput` + okuyucu). Ana giriş 41,31 → 42,55 kB (44 kB bütçe). */
+    limit: '2.5 kB',
+    gzip: true,
+  },
   {
     name: 'yalnızca Badge (ağaç sarsma)',
     path: 'build/index.js',

@@ -2,7 +2,9 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 /* Ana giriş VE alt girişler (sohbet, grafikler): aynı sözleşme her girişte geçerli. */
-const ROOTS = ['components', 'chat', 'charts'].map(root => resolve(__dirname, '../src', root));
+const ROOTS = ['components', 'chat', 'charts', 'calendar'].map(root =>
+  resolve(__dirname, '../src', root),
+);
 
 const directoryOf = new Map<string, string>(
   ROOTS.flatMap(root =>

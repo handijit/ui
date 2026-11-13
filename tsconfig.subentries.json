@@ -11,6 +11,6 @@
     "paths": { "@/*": ["./src/*"] },
     "types": ["node"]
   },
-  "include": ["src/chat", "src/charts", "src/types/scss.d.ts"],
+  "include": ["src/chat", "src/charts", "src/calendar", "src/types/scss.d.ts"],
   "exclude": ["src/**/*.test.*"]
 }

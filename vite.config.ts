@@ -24,7 +24,7 @@ export default defineConfig({
       entryRoot: 'src',
       include: ['src'],
       /* Alt girişler kendi derlemelerinde (`vite.subentry.ts`). */
-      exclude: ['src/**/*.test.*', 'src/chat/**', 'src/charts/**'],
+      exclude: ['src/**/*.test.*', 'src/chat/**', 'src/charts/**', 'src/calendar/**'],
       tsconfigPath: resolve(__dirname, 'tsconfig.build.json'),
     }),
   ],

@@ -46,30 +46,33 @@ const {
   FileUpload,
   FilterBar,
   FilterBarField,
-  UiProvider,
-  UiThemeScript,
   IconButton,
   Input,
   Kbd,
   Menu,
   Modal,
+  MoneyInput,
   PageHeader,
   Pagination,
   Panel,
   PanelForm,
   PanelRow,
   PasswordInput,
+  PercentInput,
   Popover,
   Price,
   Progress,
   ProgressCircle,
   PromptDialog,
+  QuantityInput,
   QuantityStepper,
   Radio,
   RadioCard,
   RangeSlider,
+  RateInput,
   Rating,
   RatingInput,
+  ScaledInput,
   ScrollArea,
   SectionHeader,
   SegmentedControl,
@@ -89,13 +92,15 @@ const {
   TableScroller,
   Tabs,
   TagInput,
-  Textarea,
   TextLink,
+  Textarea,
   Tile,
   Timeline,
   ToastHub,
   ToastPortal,
   Tooltip,
+  UiProvider,
+  UiThemeScript,
 } = ui;
 
 const OPTIONS = [
@@ -215,6 +220,44 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     invalid: <Input aria-label="Ad" aria-invalid />,
     technical: <Input aria-label="Barkod" placeholder="Barkod okutun" isTechnical />,
   },
+  ScaledInput: {
+    default: (
+      <ScaledInput aria-label="Birim fiyat" value={123_456} onChange={() => {}} scaleDigits={4} />
+    ),
+  },
+  MoneyInput: {
+    default: (
+      <MoneyInput
+        aria-label="Tutar"
+        value={123_450}
+        onChange={() => {}}
+        minorDigits={2}
+        currency="TL"
+      />
+    ),
+    invalid: (
+      <MoneyInput
+        aria-label="Tutar"
+        value={null}
+        onChange={() => {}}
+        minorDigits={2}
+        aria-invalid
+      />
+    ),
+  },
+  QuantityInput: {
+    default: (
+      <QuantityInput
+        aria-label="Miktar"
+        value={25_000}
+        onChange={() => {}}
+        unitDigits={3}
+        unit="kg"
+      />
+    ),
+  },
+  RateInput: { default: <RateInput aria-label="Kur" value={34_123_456} onChange={() => {}} /> },
+  PercentInput: { default: <PercentInput aria-label="KDV" value={2000} onChange={() => {}} /> },
   PasswordInput: {
     default: <PasswordInput aria-label="Şifre" />,
     filled: <PasswordInput aria-label="Şifre" defaultValue="cok-gizli-parola" />,

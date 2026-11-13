@@ -1,0 +1,10 @@
+@use '../../styles/variables' as *;
+
+/*
+ * Numbers line up on their last digit in a column of fields (a document's lines), so they are
+ * right-aligned and drawn with tabular figures. `Input` puts `className` on its wrapper.
+ */
+.scaled input {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}

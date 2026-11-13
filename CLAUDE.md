@@ -43,6 +43,9 @@ them is in the migration table of `CHANGELOG.md`. New text is written in English
 | Öneriler seçim mi eylem mi? | `ChipGroup` / `PromptSuggestions` | Öneri bir EYLEM (`onPick`); çip ise geri alınabilir bir seçim |
 | Parçaların toplamı mı zaman çizelgesi mi? | `SegmentBar` (`value`) / `SegmentBar` (`from`/`to`) | Tek görsel (`role="img"`); tam bir eksen gerekiyorsa `/charts` |
 | Hangi grafik? | `/charts` — bkz. "`@handijit/ui/charts`" | Eğilim, karşılaştırma, parça-bütün ve dağılım ayrı grafikler; ayrımlar orada ölçülü |
+| Adet mi miktar mı? (2.4) | `QuantityStepper` / `QuantityInput` | Stepper bütün adedi iki düğmeyle sayar; miktar alanı `Qty4` tutar ve birimin hanesini (kg 3) yazdırır |
+| Tutar gösterimi mi girişi mi? (2.4) | `Price` / `MoneyInput` | `Price` biçimlenmiş bir METİN çizer; giriş ölçekli tam sayı alır ve verir. Kayan noktalı sayı ikisinde de dolaşmaz |
+| Takvim mi zaman çizelgesi mi? (2.4) | `/calendar` `Calendar` / `Timeline` | Takvim saate yerleşen ve taşınan işler içindir; olay sırası `Timeline` |
 
 ## Surfaces and elevation
 
@@ -918,6 +921,63 @@ girişi etkilenmemişti (orada `export type {` satırı yok).
 kırılma yok. Nöbetçi: `__tests__/api-consistency.test.ts` — burada kayıtlı
 olmayan bir `@deprecated` prop derlemeyi kırar.
 
+### 2.4 — the pilots' number fields and calendar (additive)
+
+Asked by the five pilot programs (catalogue K1, "arayuz genişler"): every number field holds the
+data contract's scaled integer, and the `takvim` pattern of app-kit needs a calendar to stand on.
+`CHANGELOG.md` has the list; `README.md` the API.
+
+| Need | 2.4 |
+|---|---|
+| Money, quantity, rate and percent typed as floats, rounded by every program | `ScaledInput` + `MoneyInput` (`minorDigits`), `QuantityInput` (`Qty4`, `unitDigits`), `RateInput` (`Rate6`), `PercentInput` (`Pct2`). Value in, value out: a safe integer or `null` |
+| A calendar: month / week / day, resource columns, drag to move and stretch, a keyboard way | `@handijit/ui/calendar` `Calendar`, a SEPARATE entry: the main entry was at 41.31 of 44 kB and the calendar is 5.92 kB |
+| "Sanal kaydırma" of the catalogue | No new primitive — decided while writing the calendar (below) |
+
+⚠ **`ui` cannot import `@handijit/decimal` or app-kit** (it is the platform layer under both), so
+the scales and the reading of typed text live here a second time: `constants/scale.constants.ts`
+(`QTY4_DIGITS` …) and `helpers/scaled-number.helper.ts`. The grammar is app-kit's `parseDecimal`
+(data contract §4.3) and `__tests__/helpers/scaled-number.helper.test.ts` carries app-kit's own
+vectors; a change to one copy that the table does not follow is a drift. Two deliberate
+differences, both because a field is TYPED and an import is not: a digit past the allowed decimals
+is refused instead of rounded, and a text still on its way to a number ("-", "1.250.0") is `null`
+instead of invalid.
+⚠ **Not `<input type="number">`** (the "Yerel öğe korunur" rule asks for the reason, it is in the
+JSDoc): its value is a float, Chromium refuses the Turkish comma under an English system locale,
+and the wheel changes an amount under a scrolling pointer.
+⚠ **The prop is `scaleDigits`, not `scale`**: `scale` is a forbidden alias of `size`
+(`api-consistency.test.ts`).
+⚠ **The four fixed-scale fields are server-safe modules** (`client-boundary.test.ts` lists them):
+they only fix props of `ScaledInput`, the client module.
+
+**The calendar's measured decisions.**
+- **No day arithmetic, no time zone.** Times are the data contract's wall clock text and the days
+  to draw are a prop: `@handijit/tr` owns day arithmetic (catalogue Ç23), the pattern computes the
+  week or the month with it. The calendar compares `YYYY-MM-DD` texts (they sort in time) and
+  turns `HH:MM` into minutes; nothing else.
+- **Controlled, refusal by not applying.** `onEventChange` proposes; the move stands when `events`
+  carries it. The calendar never keeps a moved copy of its own, so a conflict refused by the domain
+  (`domain-takvim`) cannot leave a ghost on screen.
+- **Roving focus.** 500 lessons are one tab stop: arrows walk the events (↑ ↓ the column, ← → the
+  nearest in time in the closest column with events), ⌘/Ctrl + arrows move (the kanban's ⌘→ of a pilot's
+  brief), ⌘/Ctrl ⇧ ↑ ↓ stretch. After a keyboard move the event's button may be a new
+  element (another column); the focus follows it and the move is announced only once `events`
+  carries it.
+- **The drag listens on `window` for one drag**, not on the event: the source stays in place
+  (dashed) while a preview is drawn in the target column, so the pressed element never unmounts
+  mid-drag. The click that ends a drag is swallowed for one task (`setTimeout 0`), so dropping does
+  not also open. `Escape` is captured on `window` with `stopPropagation`: giving up a drag inside a
+  `Drawer` must not close the drawer.
+- **Short events are smaller than 44px** — a measured exception to the tap-target rule: an
+  event's height is its duration (a 15-minute slot at 3rem an hour is 12px), and every pointer
+  action has its keyboard way. The month's day number and "+N" do not take `tap-target` either: its
+  44px `::after` would cover the first event of the cell.
+- **No virtualisation, and no new `ui` primitive for it** (the catalogue's "sanal kaydırma"). The
+  time grid is bounded by its days and hours, not by its events: 500 lessons in a week draw in
+  40–100 ms in jsdom (budget 300 ms), 20 technicians × 200 jobs in 16–30 ms (budget 500 ms) —
+  `__tests__/calendar/performance.test.tsx`. A long list already has `useVirtualList` (public since
+  5.x, `Combobox` uses it); app-kit's `VirtualTable` keeps its own row virtualisation, and a kanban
+  column of hundreds of cards can use `useVirtualList`. A second primitive would be a second owner.
+
 ### 2.3 — the first desktop program's findings (additive, three behaviours change)
 
 Found while building a desktop program (Electron, a 232px sidebar, keyboard-first); each had
@@ -1372,7 +1432,7 @@ Nöbetçi: `__tests__/components/Carousel.track.test.ts` — `fr` biriminin ya d
 otomatik denetçilerle zorlanır** — `npm run verify` zinciri (2.0): `check:contrast` →
 `typecheck` → `lint` → `test:coverage` (satır 89 ·
 ifade 86 · fonksiyon 80 · dal 75) → `build` (ana giriş + `chat` + `charts` +
-`build/scss` + `exports` denetimi) → **`check:api`** (dört giriş) → `check:animations` →
+`build/scss` + `exports` denetimi; 2.4'ten beri `calendar` da) → **`check:api`** (beş giriş) → `check:animations` →
 `size-limit`. 1.x'in `check:palette` ve `tokens` adımları üreteçle birlikte kalktı. CI ve yayın
 iş akışı ayrıca `format:check` koşar.
 
@@ -1441,7 +1501,8 @@ aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
 Ölçüm artık elle değil: `scripts/check-api.mjs` `build/index.d.ts`ten dışa
 aktarım adlarını çıkarır ve `scripts/api-baseline.txt` ile karşılaştırır
 (2.0'da **163 ad**; 5.6'da 177'ydi — tema nesneleri, `initUi` ve token tipleri kalktı, design'ın
-tema sabitleri eklendi. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22, SCSS 227). Kapı
+tema sabitleri eklendi; 2.4'te 170. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22,
+takvim 8, SCSS 227). Kapı
 `verify` içinde, `build`ten hemen sonra.
 
 ```bash

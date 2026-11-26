@@ -11,6 +11,8 @@ import motion from '@/design/tokens/motion';
 import radii from '@/design/tokens/radii';
 import scales from '@/design/tokens/scales';
 import spacing from '@/design/tokens/spacing';
+import band from '@/design/tokens/band';
+import themes from '@/design/tokens/themes';
 import typography from '@/design/tokens/typography';
 
 const ascending = (values: number[]): boolean =>
@@ -40,6 +42,44 @@ describe('scales', () => {
     expect(c).toBeLessThan(0.04);
     expect(Math.abs(h - hues.cobalt)).toBeLessThan(6);
     expect(scales.slate[0]).toBe('#ffffff');
+  });
+});
+
+// 2.0 removed turquoise: the palette is cobalt, coral, the navy band, neutrals and the status
+// and series hues. Cyan, teal and turquoise sit between these angles in OKLCH.
+const CYAN_FROM = 170;
+const CYAN_TO = 240;
+// Below this chroma a colour reads as a neutral whatever its hue angle.
+const NEUTRAL_CHROMA = 0.02;
+
+describe('palette', () => {
+  test('should carry no cyan: no hue, scale step or theme colour in the cyan range', () => {
+    const colours = [
+      ...Object.entries(scales).flatMap(([name, steps]) =>
+        Object.entries(steps).map(([step, hex]) => [`${name}-${step}`, hex] as const),
+      ),
+      ...(['light', 'dark'] as const).flatMap(theme =>
+        Object.entries(themes[theme]).map(([token, hex]) => [`${theme} ${token}`, hex] as const),
+      ),
+    ];
+    const cyan = colours
+      .filter(([, hex]) => {
+        const { c, h } = hexToOklch(hex);
+        return c > NEUTRAL_CHROMA && h > CYAN_FROM && h < CYAN_TO;
+      })
+      .map(([name]) => name);
+
+    expect(Object.values(hues).filter(hue => hue > CYAN_FROM && hue < CYAN_TO)).toEqual([]);
+    expect(cyan).toEqual([]);
+  });
+});
+
+describe('band', () => {
+  test('should hold offsets and opacities between 0 and 1, and lengths in pixels', () => {
+    for (const value of [band.gradientHold, band.glowAlpha, band.dotAlpha, band.blueprintHold])
+      expect(value > 0 && value < 1).toBe(true);
+    expect(band.dotRadius * 2).toBeLessThan(band.dotCell);
+    expect(band.accentGlow.alpha).toBeLessThan(1);
   });
 });
 

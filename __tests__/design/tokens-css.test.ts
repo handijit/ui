@@ -68,7 +68,7 @@ describe('tokens.css', () => {
     const root = declarations(find(':root').body);
 
     expect(Object.keys(root)).toEqual(STATIC_NAMES);
-    expect(STATIC_NAMES).toHaveLength(191);
+    expect(STATIC_NAMES).toHaveLength(180);
     expect(root['--hd-cobalt-600']).toBe('#2661fa');
     expect(root['--hd-slate-0']).toBe('#ffffff');
     expect(root['--hd-space-4']).toBe('1rem');
@@ -141,7 +141,7 @@ describe('tokens.css', () => {
       ([, property]) => property as string,
     );
 
-    expect(properties).toHaveLength(191 + 3 * 71 + 3);
+    expect(properties).toHaveLength(180 + 3 * 83 + 3);
     expect(properties.every(property => property.startsWith('--hd-'))).toBe(true);
   });
 

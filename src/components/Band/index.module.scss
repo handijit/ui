@@ -1,0 +1,147 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// The brand band: navy in both themes. The surface colour is `band-bg`; the gradient, the glows and
+// the dot grid are an inline SVG under the content (never a CSS gradient), so the band reads the
+// same in a browser, a screenshot and an Open Graph image.
+.band {
+  position: relative;
+  // The SVG and the artwork sit at `z-index: -1`, under the content and above the fill.
+  isolation: isolate;
+  overflow: clip;
+  display: flex;
+  flex-direction: column;
+  // The band's own colour on a light page; its hairline on the dark page, where navy is 1.24:1.
+  border: 1px solid $band-edge;
+  border-radius: var(--ui-band-radius, #{$radius-lg});
+  background-color: $band-bg;
+  color: $band-text;
+  // Every focus ring inside reads against navy: `$focus` follows this hook.
+  --ui-ring-color: #{$band-focus};
+
+  @include for-mobile {
+    border-radius: var(--ui-band-radius, #{$radius-md});
+  }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+
+    // `start` and `end` follow the writing direction.
+    @include mirror-in-rtl;
+  }
+
+  &__stop-from {
+    stop-color: $band-gradient-from;
+  }
+
+  &__stop-to {
+    stop-color: $band-gradient-to;
+  }
+
+  &__glow-centre {
+    stop-color: $band-glow;
+    stop-opacity: $band-glow-alpha;
+  }
+
+  &__glow-edge {
+    stop-color: $band-glow;
+    stop-opacity: 0;
+  }
+
+  &__dot {
+    fill: $band-dot;
+  }
+
+  // The mask reads the stops' opacity only; their colour plays no part.
+  &__mask {
+    mask-type: alpha;
+  }
+
+  &__fade-edge {
+    stop-opacity: $band-dot-alpha;
+  }
+
+  &__fade-clear {
+    stop-opacity: 0;
+  }
+
+  &__artwork {
+    position: absolute;
+    inset-inline-end: clamp(#{$space-6}, 3.5vw, #{$space-12});
+    bottom: 0;
+    z-index: -1;
+    width: var(--ui-band-artwork-width, 120px);
+    pointer-events: none;
+
+    @include for-tablet {
+      display: none;
+    }
+  }
+
+  &__body {
+    position: relative;
+    padding: var(
+      --ui-band-padding,
+      clamp(#{$space-6}, 4vw, #{$space-12}) clamp(#{$space-5}, 4vw, #{$space-12})
+    );
+  }
+
+  // Room for the artwork beside the content, where the artwork is drawn.
+  &--artwork &__body {
+    @include for-desktop-up {
+      padding-inline-end: calc(var(--ui-band-artwork-width, 120px) + #{$space-16});
+    }
+  }
+
+  &__footer {
+    position: relative;
+  }
+
+  // Forced colours keep the system's text colour on top of whatever the SVG paints: the imagery
+  // goes and the band is a framed region of the system canvas.
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+
+    &__backdrop,
+    &__artwork {
+      display: none;
+    }
+  }
+}
+
+.blueprint {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+
+  &__stop-from {
+    stop-color: $band-blueprint-from;
+  }
+
+  &__stop-to {
+    stop-color: $band-blueprint-to;
+  }
+
+  &__body {
+    stroke: $band-blueprint-stroke;
+    stroke-width: 2px;
+    stroke-linejoin: round;
+    // The outline keeps its width at any size the artwork is drawn.
+    vector-effect: non-scaling-stroke;
+  }
+
+  // The coral dot of the logo: the brand mark, never an action.
+  &__dot {
+    fill: $accent;
+  }
+
+  @media (forced-colors: active) {
+    display: none;
+  }
+}

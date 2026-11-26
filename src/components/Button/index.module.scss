@@ -137,7 +137,8 @@
     }
   }
 
-  // Coral: the conversion action (download, try, subscribe) — and nothing else in the library.
+  // Coral: the conversion action (download, try, subscribe) — and nothing else in the library. On the
+  // brand band it is the band's one action (see the glow at the end of this file).
   &--accent {
     background-color: $accent;
     border-color: $accent;
@@ -267,6 +268,13 @@
   &--outline:disabled:not(.button--on-band) {
     border-color: $border;
   }
+}
+
+// The brand band (`Band`, or any element that carries `data-ui-band`): the conversion button is the
+// band's one action, coral on navy (5.07:1 on `band-bg`, gated), and glows softly there. Everywhere
+// else every button is flat.
+:where([data-ui-band]) .button--accent:not(:disabled) {
+  box-shadow: $band-accent-glow;
 }
 
 .button__spinner {

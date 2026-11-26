@@ -9,10 +9,8 @@ export type BadgeTone =
   | 'success'
   | 'danger'
   | 'warning'
-  /** Cobalt: information, a counter, a navigation label. */
-  | 'info'
-  /** Turquoise: a highlight or a live state ("New", "Live"). */
-  | 'highlight';
+  /** Cobalt: information, a counter, a navigation label, a "New" mark. */
+  | 'info';
 
 /** `soft` is the tint, `solid` the filled pair (a counter, a discount), `outline` line and text. */
 export type BadgeVariant = 'soft' | 'solid' | 'outline';

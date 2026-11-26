@@ -60,7 +60,9 @@
 // Built-in highlighter: every token kind maps to a semantic design token, so the colours follow the
 // theme and stay inside the measured text pairs. Comments are `text-2` + italic (colour alone never
 // carries meaning), punctuation `text-2`, diff lines the status families (the `+`/`-` prefix
-// carries the meaning too).
+// carries the meaning too). Type names are the text colour at medium weight: IBM Plex Mono ships
+// 400 and 500, so 500 is a real face, not a synthesised bold, and a monospace weight keeps the
+// column width.
 .block__token--comment {
   color: $text-2;
   font-style: italic;
@@ -83,7 +85,8 @@
 }
 
 .block__token--type {
-  color: $highlight-text;
+  color: $text;
+  font-weight: $weight-medium;
 }
 
 .block__token--punctuation {

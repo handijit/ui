@@ -8,6 +8,115 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-11-27
+
+**No cyan, and the brand band is part of the system.** Turquoise leaves the palette: the brand is
+cobalt (the interface), coral (the conversion action) and the navy band, on neutrals and the
+status colours; a design test now fails on any hue between 170° and 240°. The band that every
+application drew by hand (hero, closing call, footer, share image) is a component with its own
+tokens. Nothing removed is kept as an alias. Migration below, line by line.
+
+### Breaking
+
+- **Turquoise is removed from `@handijitcom/ui/design`.** The `turquoise` hue and scale
+  (`--hd-turquoise-50` … `-950`, `hues.turquoise`, `scales.turquoise`, the `'turquoise'` member of
+  `ChromaticScaleName` / `HueName`) and the colour roles `highlight`, `on-highlight`,
+  `highlight-soft`, `highlight-text` (both themes; CSS, SCSS `$hd-*`, JSON, TypeScript
+  `ColorToken`) are gone. Static tokens 191 → 180; colours per theme 65 → 63.
+- **`chart-3` is green**, no longer turquoise: `success` 600 / 400 (`#159358` light, `#3ad184`
+  dark). Measured with `deltaE` and `contrast`: the only family of the palette at least 16 ΔE from
+  every other series in both themes (16.6 light, 20.1 dark; the gate is 10) and at least 3.63:1 on
+  the light backgrounds. Red sat 6.6–8 ΔE from coral and magenta, a second amber or violet step
+  under 12 ΔE from its own series, and a new hue would have added a scale. A chart names its series
+  in a legend, so the shared hue never says "success" alone.
+- **`Badge tone="highlight"`** is removed (`BadgeTone` loses the member).
+- **SCSS API** (`@handijitcom/ui/scss`): `$highlight`, `$on-highlight`, `$highlight-soft`,
+  `$highlight-text` and the `tint(highlight)` tone are removed (`tint()` fails the build on it).
+- **`Avatar`**: the `brand` medallion draws a white mark (`band-text`) instead of a turquoise one;
+  initials bucket 3 is `primary-text` in `bg-inset` instead of the turquoise tint. A name keeps its
+  bucket (still six).
+- **`CodeBlock`**: type names are the text colour at medium weight instead of `highlight-text`.
+- **`$focus`** (SCSS) is `var(--ui-ring-color, var(--hd-focus))`: a surface can set the ring of its
+  descendants (`Band` does). A stylesheet that declares `--ui-ring-color` for another purpose now
+  recolours rings.
+
+### Added
+
+- **Band tokens** in `@handijitcom/ui/design`, composed from existing colours, the same in both
+  themes:
+  - colours `band-focus` (`#ffffff`, the ring on the band) and `band-edge` (`band-bg` in light,
+    `band-line` in dark, where navy is 1.24:1 on the page);
+  - effects `band-gradient-from`, `band-gradient-to`, `band-gradient-hold` (55%), `band-glow`
+    (`primary`), `band-glow-alpha` (0.5), `band-dot` (`band-line-strong`), `band-dot-alpha` (0.7),
+    `band-dot-cell` (22px), `band-dot-radius` (1.6px), `band-blueprint-from` (`band-line`),
+    `band-blueprint-to` (`band-bg`), `band-blueprint-hold` (60%), `band-blueprint-stroke`
+    (`band-line-strong`), `band-accent-glow` (`0 8px 24px -10px` coral at 0.45). Effects per theme
+    6 → 20;
+  - `effectValues[theme].band` (hex and numbers, for an Open Graph image or Electron) and the
+    `band` recipe (`BandRecipe`: the geometry an SVG attribute needs); types `BandEffectValues`,
+    `BandRecipe`, `GradientStop`.
+- **Gates**: `band-focus` and `accent` on `band-bg` / `band-deep` ≥ 3:1 (15.53 / 18.33, 5.07 / 5.98),
+  `band-text` ≥ 7:1 and `band-text-2` ≥ 4.5:1 over the centre of a glow (8.95, 5.85), `band-edge`
+  on `bg-page` ≥ 1.25:1, and no hue in the cyan range. `check:contrast`: 124 pairs per theme.
+- **`Band`** (`@handijitcom/ui/band`): the navy surface with its imagery as inline SVG (gradient,
+  glows, faded dot grid; ids from `useId`, `aria-hidden`; never a CSS gradient). Props `as`
+  (`section` default · `div` · `header` · `footer` · `aside`), `glow` and `dots` (`BandSide`:
+  `start` · `end` · `both` · `none`; defaults `both` / `end`), `artwork` (decorative, bottom end,
+  from the tablet width up), `footer` (full width under the content), `aria-label`,
+  `aria-labelledby`, `id`, `className`, `testId`. Sets `band-focus` as every descendant's ring
+  (`--ui-ring-color`) and `data-ui-band` for what sits on it; a hairline edge in dark; the imagery
+  is dropped in forced colours. Hooks `--ui-band-radius`, `--ui-band-padding`,
+  `--ui-band-artwork-width`.
+- **`BandBlueprint`**: a supergraphic in the blueprint style (`shape: BandBlueprintShape` —
+  `viewBox`, `body`, optional `dot`; `logos.mark` fits): gradient fill, `band-line-strong`
+  outline, the coral dot of the logo.
+- **`Eyebrow`** (`@handijitcom/ui/eyebrow`): mono capital label framed by thin rules; `align`
+  (`EyebrowAlign`: `start` · `center`), `as` (`p` · `span` · `div`). Takes the band's colours on a
+  band. Hook `--ui-eyebrow-tracking`.
+- **`StatStrip`** (`@handijitcom/ui/stat-strip`): a list of facts (`items: StatStripItem[]`,
+  `{ value, label }`) with thin dividers; `variant` (`StatStripVariant`: `page` · `band`, the deep
+  strip at the foot of the band), `aria-label`.
+- **`Button` `ACCENT` on the band** glows softly (`band-accent-glow`); every other button, and
+  `ACCENT` anywhere else, stays flat.
+- SCSS: `$band-focus`, `$band-edge`, `$band-gradient-from`, `$band-gradient-to`, `$band-glow`,
+  `$band-glow-alpha`, `$band-dot`, `$band-dot-alpha`, `$band-blueprint-from`, `$band-blueprint-to`,
+  `$band-blueprint-stroke`, `$band-accent-glow`.
+- Guards: the band components on the colour footprint allow-list with their reasons, the turquoise
+  names barred from coming back, `Band`, `Eyebrow`, `StatStrip` and `src/design` held at 100%
+  coverage, size budgets for `Band` (1.4 kB) and its CSS (0.78 kB).
+
+### Changed
+
+- The main entry's size budget is 46 kB (was 44): measured 45.44 kB with the band. The band is not
+  a sub-entry: a sub-entry is one client bundle, while `Eyebrow` and `StatStrip` render on the
+  server; per-component modules keep the cost on the page that draws it.
+
+### Migration
+
+Work through the table; every row is old → new.
+
+| 1.x                                                                   | 2.0.0                                                                                                        |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `<Badge tone="highlight">Yeni</Badge>` (a "New" mark)                 | `<Badge tone="info">Yeni</Badge>`                                                                            |
+| `<Badge tone="highlight">Canlı</Badge>` (a "Live" state)              | `<Badge tone="success">Canlı</Badge>`, or `<StatusDot tone="success" label="Canlı" isPulsing />`             |
+| `<Badge tone="highlight" variant="solid">`                            | `tone="info" variant="solid"` (cobalt fill, white text)                                                      |
+| `--hd-highlight`, `$hd-highlight`, `$highlight` (a fill or graphic)   | `--hd-primary` / `$primary` for an interface mark; `--hd-success-solid` for a live state                     |
+| `--hd-on-highlight`, `$on-highlight`                                  | `--hd-on-primary` / `$on-primary` (or `success-on-solid` with `success-solid`)                               |
+| `--hd-highlight-soft`, `$highlight-soft`                              | `--hd-info-bg` / `$info-bg` (or `success-bg`)                                                                |
+| `--hd-highlight-text`, `$highlight-text`                              | `--hd-info-fg` / `$info-fg` (or `success-fg`)                                                                |
+| `@include tint(highlight)`                                            | `@include tint(info)` (or `tint(success)`)                                                                   |
+| `--hd-turquoise-<step>`, `scales.turquoise[step]`, `hues.turquoise`   | the token that says what it is for (above); a raw step: `cobalt-<step>` or `success-<step>`                  |
+| `themes[theme].highlight*`, `ColorToken` `'highlight'` …              | `themes[theme].info-*` / `primary` (TypeScript flags every use)                                              |
+| `--hd-chart-3` turquoise (`#158e8a` / `#3acac6`)                      | the same name, now green (`#159358` / `#3ad184`): nothing to change; recheck a legend that said "turquoise"  |
+| an application band: `background: var(--hd-band-bg)` + hand-drawn SVG | `<Band>` (+ `BandBlueprint`, `Eyebrow`, `StatStrip variant="band"`); delete the local imagery                |
+| `--hd-focus: var(--hd-band-text)` declared inside an application band | nothing: `Band` sets `--ui-ring-color` (`band-focus`); a band of your own sets `--ui-ring-color` instead     |
+| a coral CTA on the band with a hand-made glow                         | `<Button variant={UIVariant.ACCENT}>` inside `Band` (or under `[data-ui-band]`)                              |
+| an Open Graph image reading `palette['band-bg']` … for its gradient   | `effectValues.light.band` (`gradient`, `glow`, `dots`, `blueprint`, `accentGlow`) and `band` for the numbers |
+
+`check:api`: the main entry has 179 names (+9: `Band`, `BandBlueprint`, `BandBlueprintShape`,
+`BandSide`, `Eyebrow`, `EyebrowAlign`, `StatStrip`, `StatStripItem`, `StatStripVariant`); the SCSS
+API 235 (−4, +12).
+
 ## [1.1.1] - 2026-11-26
 
 ### Fixed

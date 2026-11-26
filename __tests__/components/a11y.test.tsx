@@ -12,6 +12,8 @@ const {
   Alert,
   Avatar,
   Badge,
+  Band,
+  BandBlueprint,
   BottomSheet,
   Breadcrumb,
   Button,
@@ -41,6 +43,7 @@ const {
   Disclosure,
   Divider,
   Drawer,
+  Eyebrow,
   EmptyState,
   Field,
   FileUpload,
@@ -83,6 +86,7 @@ const {
   SkeletonTable,
   Spinner,
   Stat,
+  StatStrip,
   StatusDot,
   Steps,
   SummaryCard,
@@ -101,6 +105,7 @@ const {
   Tooltip,
   UiProvider,
   UiThemeScript,
+  UIVariant,
 } = ui;
 
 const OPTIONS = [
@@ -295,6 +300,49 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     brand: <Avatar name="Asistan" icon={<HeartFill />} tone="brand" shape="rounded" />,
   },
   Badge: { default: <Badge>Yeni</Badge>, solid: <Badge variant="solid">Yeni</Badge> },
+  /* The imagery is `aria-hidden`; a section band is a landmark only with its heading as its name. */
+  Band: {
+    section: (
+      <Band
+        aria-labelledby="band-a11y"
+        artwork={<BandBlueprint shape={{ viewBox: '0 0 10 10', body: 'M0 0h10v10H0z' }} />}
+        footer={<StatStrip variant="band" items={[{ value: '4,9', label: 'puan' }]} />}
+      >
+        <Eyebrow>Teklif</Eyebrow>
+        <h2 id="band-a11y">Projenizi konuşalım</h2>
+        <Button variant={UIVariant.ACCENT}>Teklif alın</Button>
+      </Band>
+    ),
+    plain: (
+      <Band as="div" glow="none" dots="none">
+        Metin
+      </Band>
+    ),
+  },
+  BandBlueprint: {
+    default: (
+      <BandBlueprint shape={{ viewBox: '0 0 10 10', body: 'M0 0h10v10H0z', dot: 'M1 1h2v2H1z' }} />
+    ),
+  },
+  Eyebrow: {
+    start: <Eyebrow>Hizmetler</Eyebrow>,
+    center: (
+      <Eyebrow align="center" as="span">
+        Sektör · Çözüm
+      </Eyebrow>
+    ),
+  },
+  StatStrip: {
+    page: (
+      <StatStrip
+        aria-label="Rakamlarla"
+        items={[
+          { value: '4,9', label: 'ortalama puan' },
+          { value: '2 saat', label: 'yanıt süresi' },
+        ]}
+      />
+    ),
+  },
   Breadcrumb: {
     default: <Breadcrumb items={[{ label: 'Ana sayfa', href: '/' }, { label: 'Ürün' }]} />,
   },

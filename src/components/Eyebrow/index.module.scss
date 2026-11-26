@@ -1,0 +1,46 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin: 0;
+  font-family: $font-mono;
+  font-size: $font-size-caption;
+  font-weight: $weight-medium;
+  line-height: $leading-snug;
+  // Monospace capitals need air between letters to read as a label, not as code.
+  letter-spacing: var(--ui-eyebrow-tracking, 0.15em);
+  text-transform: uppercase;
+  color: $text-2;
+
+  // A border, not a fill: forced colours keep a border and drop a background.
+  &::before,
+  &::after {
+    content: '';
+    flex: none;
+    width: $space-6;
+    border-top: 1px solid $border-strong;
+  }
+
+  &--start::after {
+    display: none;
+  }
+
+  &--center {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+// On the brand band the label reads `band-text-2` (gated on `band-bg` and `band-deep`) and the rules
+// are the band's visible line.
+:where([data-ui-band]) .eyebrow {
+  color: $band-text-2;
+
+  &::before,
+  &::after {
+    border-top-color: $band-line-strong;
+  }
+}

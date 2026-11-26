@@ -5,11 +5,11 @@ const MIXINS_FILE = 'src/styles/_mixins.scss';
 
 /*
  * Mixins the library no longer calls but still publishes in `@handijitcom/ui/scss`: removing one is a
- * major (`check:api`). Each name says when its last caller left and waits for 3.0.
- * - `for-desktop-up`: the toast stack was its last caller; since 2.3 `placement` decides at every
- *   width.
+ * major (`check:api`). Each name says when its last caller left and waits for the next major.
+ * Empty since 2.0: `for-desktop-up` (kept from 2.3, when the toast stack stopped calling it) is
+ * called again by `Band`, for the room beside its artwork.
  */
-const KEPT_FOR_CONSUMERS = new Set(['for-desktop-up']);
+const KEPT_FOR_CONSUMERS = new Set<string>([]);
 
 const styleFiles = (directory: string): string[] =>
   readdirSync(directory).flatMap(entry => {

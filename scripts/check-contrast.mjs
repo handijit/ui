@@ -63,7 +63,6 @@ const buildPairs = () => {
   // --- Text on a fill: every interaction state is its own pair ---
   for (const fill of ['primary', 'primary-hover', 'primary-active']) add('on-primary', fill);
   for (const fill of ['accent', 'accent-hover', 'accent-active']) add('on-accent', fill);
-  add('on-highlight', 'highlight');
   for (const status of STATUSES) add(`${status}-on-solid`, `${status}-solid`);
 
   // --- Cobalt text: links, ghost and outline buttons, the selected option ---
@@ -78,10 +77,8 @@ const buildPairs = () => {
     add(`${status}-fg`, `${status}-bg`);
     for (const surface of SURFACES) add(`${status}-fg`, surface);
   }
-  add('highlight-text', 'highlight-soft');
-  for (const surface of SURFACES) add('highlight-text', surface);
 
-  // --- Brand band ---
+  // --- Brand band: `Band`, its `Eyebrow`, the `StatStrip` at its foot (on `band-deep`) ---
   for (const fill of ['band-bg', 'band-deep']) {
     add('band-text', fill);
     add('band-text-2', fill);
@@ -125,6 +122,14 @@ const buildPairs = () => {
   /* The ring of a button that sits on the band. */
   add('band-text', 'band-bg', 'graphic');
   add('band-line-strong', 'band-bg', 'graphic');
+  /*
+   * 2.0: inside `Band` every ring is `band-focus` (the `--ui-ring-color` hook), and the band's one
+   * coral button is a filled shape on navy: both must be seen on either band layer.
+   */
+  for (const fill of ['band-bg', 'band-deep']) {
+    add('band-focus', fill, 'graphic');
+    add('accent', fill, 'graphic');
+  }
 
   return pairs;
 };
@@ -140,8 +145,9 @@ const buildAdvisoryPairs = () => {
   add('text-3', 'bg-inset');
   add('focus', 'bg-inset');
   for (const fill of ['primary', 'danger-solid', 'info-solid']) add(fill, 'bg-overlay');
-  /* Turquoise is a tint and a text colour here, never a state on its own. */
-  add('highlight', 'bg-surface');
+  /* The band on the page: navy stands out of the light page; on the dark page `band-edge` does. */
+  add('band-bg', 'bg-page');
+  add('band-edge', 'bg-page');
   for (const surface of ['bg-page', 'bg-surface', 'bg-raised']) {
     add('border', surface);
     add('border-strong', surface);

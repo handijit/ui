@@ -64,21 +64,3 @@
     }
   }
 }
-
-// Turquoise: a highlight or a live state. The fill never carries body text; `on-highlight` does.
-.badge--highlight {
-  &.badge--soft {
-    @include tint(highlight);
-  }
-
-  &.badge--solid {
-    background-color: $highlight;
-    border-color: $highlight;
-    color: $on-highlight;
-  }
-
-  &.badge--outline {
-    border-color: color-mix(in srgb, #{$highlight} 45%, transparent);
-    color: $highlight-text;
-  }
-}

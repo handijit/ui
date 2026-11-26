@@ -1,5 +1,6 @@
 /** @jest-environment node */
 import type {
+  BandRecipe,
   BreakpointName,
   ColorToken,
   EffectValues,
@@ -14,6 +15,7 @@ import type {
 } from '@/design';
 import { expectTypeOf } from 'expect-type';
 import {
+  band,
   breakpoints,
   contrast,
   CSS_VARIABLE_PREFIX,
@@ -56,6 +58,8 @@ describe('type surface', () => {
     expectTypeOf<'border-control'>().toExtend<ColorToken>();
     expectTypeOf<'info-on-solid'>().toExtend<ColorToken>();
     expectTypeOf<'shadow-2'>().toExtend<TokenName>();
+    expectTypeOf<'band-glow-alpha'>().toExtend<TokenName>();
+    expectTypeOf<'band-focus'>().toExtend<ColorToken>();
     expectTypeOf<'type-h1-line-height'>().toExtend<TokenName>();
     expectTypeOf<'space-24'>().toExtend<TokenName>();
     expectTypeOf<'z-modal'>().toExtend<TokenName>();
@@ -64,6 +68,8 @@ describe('type surface', () => {
   test('should reject names that are not tokens', () => {
     expectTypeOf<'cobalt-25'>().not.toExtend<TokenName>();
     expectTypeOf<'chart-7'>().not.toExtend<TokenName>();
+    expectTypeOf<'highlight'>().not.toExtend<TokenName>();
+    expectTypeOf<'turquoise-500'>().not.toExtend<TokenName>();
     expectTypeOf<'space-7'>().not.toExtend<TokenName>();
     expectTypeOf<'breakpoint-md'>().not.toExtend<TokenName>();
 
@@ -86,6 +92,9 @@ describe('type surface', () => {
     expectTypeOf(effectValues.dark.scrim.color).toEqualTypeOf<string>();
     expectTypeOf(effectValues.dark.scrim.alpha).toEqualTypeOf<number>();
     expectTypeOf(effectValues.light.shadows[2]).toEqualTypeOf<readonly ShadowLayer[]>();
+
+    expectTypeOf(effectValues.light.band.dots.cell).toEqualTypeOf<number>();
+    expectTypeOf(band).toEqualTypeOf<BandRecipe>();
 
     // @ts-expect-error there are three elevation levels
     expect(effectValues.light.shadows[4]).toBe(undefined);

@@ -352,17 +352,12 @@ $header-offset: var(--ui-header-height, 0px);
     background-color: $info-bg;
     border: 1px solid $info-line;
     color: $info-fg;
-  } @else if $tone == highlight {
-    // Turquoise is a fill: the line is mixed from it, the text uses the readable `highlight-text`.
-    background-color: $highlight-soft;
-    border: 1px solid color-mix(in srgb, #{$highlight} 45%, transparent);
-    color: $highlight-text;
   } @else if $tone == neutral {
     background-color: $bg-raised;
     border: 1px solid $border;
     color: $text-2;
   } @else {
-    @error 'tint(): unknown tone `#{$tone}`. Valid: success, warning, danger, info, highlight, neutral.';
+    @error 'tint(): unknown tone `#{$tone}`. Valid: success, warning, danger, info, neutral.';
   }
 }
 

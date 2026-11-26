@@ -23,16 +23,14 @@ const SATURATION: readonly number[] = [0.8, 0.8, 0.82, 0.86, 0.9, 0.95, 0.96, 0.
 const LIGHTNESS_SHIFT: Readonly<Partial<Record<ChromaticScaleName, number>>> = {
   coral: 0.04,
   warning: 0.06,
-  turquoise: 0.03,
   success: 0.03,
 };
 
 /** How much of the family shift each step receives. */
 const SHIFT_CURVE: readonly number[] = [0, 0, 0.25, 0.6, 1, 1, 1, 1, 0.5, 0.25, 0];
 
-/** Cyan and green tints turn neon at full saturation; these families keep quieter tints. */
+/** Green tints turn neon at full saturation; this family keeps quieter tints. */
 const TINT: Readonly<Partial<Record<ChromaticScaleName, number>>> = {
-  turquoise: 0.5,
   success: 0.5,
 };
 
@@ -80,7 +78,6 @@ const slate: NeutralScale = {
 const scales: Scales = {
   cobalt: buildScale('cobalt'),
   coral: buildScale('coral'),
-  turquoise: buildScale('turquoise'),
   success: buildScale('success'),
   warning: buildScale('warning'),
   danger: buildScale('danger'),

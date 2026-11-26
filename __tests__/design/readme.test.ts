@@ -28,7 +28,7 @@ describe('README', () => {
       .map(name => name.trim())
       .filter(name => name !== '');
 
-    expect(types).toHaveLength(50);
+    expect(types).toHaveLength(53);
     expect(types.filter(name => !readme.includes(`\`${name}\``))).toEqual([]);
   });
 
@@ -40,7 +40,7 @@ describe('README', () => {
         ),
     );
 
-    expect(keysOf(api.themes.light)).toHaveLength(65);
+    expect(keysOf(api.themes.light)).toHaveLength(63);
     expect(missing).toEqual([]);
   });
 

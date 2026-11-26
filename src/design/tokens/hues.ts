@@ -4,7 +4,6 @@ import type { HueName } from '../types';
 const hues: Readonly<Record<HueName, number>> = {
   cobalt: 264,
   coral: 33,
-  turquoise: 192,
   success: 156,
   warning: 78,
   danger: 14,

@@ -41,7 +41,7 @@ describe('hexToOklch', () => {
   test('should round-trip every palette colour through oklchToHex', () => {
     const palette = Object.values(scales).flatMap(scale => Object.values(scale));
 
-    expect(palette).toHaveLength(101);
+    expect(palette).toHaveLength(90);
     for (const hex of palette) {
       expect(oklchToHex(hexToOklch(hex))).toBe(hex);
     }

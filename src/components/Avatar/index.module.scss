@@ -50,10 +50,11 @@
     }
   }
 
-  // Marka madalyonu — iki temada aynı (logo kuralı: çam zemin, mint işaret).
+  // The brand medallion: the navy band with a white mark, the same in both themes (the logo's
+  // colours).
   &--brand {
     background-color: $band-bg;
-    color: $highlight;
+    color: $band-text;
   }
 
   &--sm {
@@ -92,9 +93,10 @@
   color: $warning-fg;
 }
 
+// Cobalt text in a well: told from bucket 0 (a cobalt tint under body text) by which part is blue.
 .avatar--tone-3 {
-  background-color: $highlight-soft;
-  color: $highlight-text;
+  background-color: $bg-inset;
+  color: $primary-text;
 }
 
 .avatar--tone-4 {

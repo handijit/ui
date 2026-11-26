@@ -56,5 +56,11 @@ export default {
     './src/components/QuantityInput/': FULL,
     './src/components/RateInput/': FULL,
     './src/components/PercentInput/': FULL,
+    /* The design tokens (`@handijitcom/ui/design`), as `docs/design.md` promises. */
+    './src/design/': FULL,
+    /* 2.0: the brand band. */
+    './src/components/Band/': FULL,
+    './src/components/Eyebrow/': FULL,
+    './src/components/StatStrip/': FULL,
   },
 };

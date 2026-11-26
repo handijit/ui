@@ -51,6 +51,7 @@ const SERVER_SAFE = [
   'Chip',
   'Divider',
   'EmptyState',
+  'Eyebrow',
   'IconButton',
   'Kbd',
   /* 2.4: the four fixed-scale fields only fix props of `ScaledInput`, the client module. */
@@ -63,6 +64,7 @@ const SERVER_SAFE = [
   'RateInput',
   'SectionHeader',
   'Skeleton',
+  'StatStrip',
   'StatusDot',
   'SummaryCard',
   'TextLink',

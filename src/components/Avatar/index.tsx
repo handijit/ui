@@ -11,8 +11,9 @@ import styles from './index.module.scss';
 export type AvatarShape = 'circle' | 'rounded';
 
 /**
- * `auto`: baş harf madalyonu addan SABİT bir kovaya boyanır. `brand`: marka madalyonu — çam zemin,
- * mint işaret, iki temada aynı (logo kuralı; asistanın avatarı, boş sohbetin karosu).
+ * `auto`: the initials medallion is painted from a FIXED bucket chosen by the name. `brand`: the
+ * brand medallion — the navy band with a white mark, the same in both themes (the logo's colours;
+ * the assistant's avatar, the tile of an empty chat).
  */
 export type AvatarTone = 'auto' | 'brand';
 

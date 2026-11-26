@@ -2,6 +2,7 @@
 import { parseHex } from '@/design/helpers/srgb.helper';
 import contrast from '@/design/modules/contrast';
 import deltaE from '@/design/modules/delta-e';
+import effectValues from '@/design/tokens/effect-values';
 import effects from '@/design/tokens/effects';
 import themes from '@/design/tokens/themes';
 import type { ColorToken, StatusName, ThemeName } from '@/design/types';
@@ -26,7 +27,7 @@ const CHARTS: ColorToken[] = ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart
 
 type Pair = [foreground: ColorToken, background: ColorToken, minimum: number];
 
-/** The pairs the approved recipe gates, unchanged. */
+/** The pairs the approved recipe gates; the turquoise pairs left with the hue (2.0). */
 const recipePairs = (): Pair[] => [
   ...SURFACES.flatMap((surface): Pair[] => [
     ['text', surface, PRIMARY_TEXT],
@@ -34,7 +35,6 @@ const recipePairs = (): Pair[] => [
     ['text-3', surface, TEXT],
     ['primary-text', surface, TEXT],
     ['accent-text', surface, TEXT],
-    ['highlight-text', surface, TEXT],
     ['focus', surface, GRAPHIC],
     ['border-strong', surface, BORDER],
     ...CHARTS.map((chart): Pair => [chart, surface, GRAPHIC]),
@@ -47,7 +47,6 @@ const recipePairs = (): Pair[] => [
   ['on-primary', 'danger-solid', TEXT],
   ['primary-text', 'primary-soft', TEXT],
   ['accent-text', 'accent-soft', TEXT],
-  ['highlight-text', 'highlight-soft', TEXT],
   ['success-fg', 'success-bg', TEXT],
   ['warning-fg', 'warning-bg', TEXT],
   ['danger-fg', 'danger-bg', TEXT],
@@ -64,13 +63,17 @@ const addedPairs = (): Pair[] => [
   ['text-2', 'bg-inset', TEXT],
   ['text', 'selection-bg', PRIMARY_TEXT],
   ['on-primary', 'primary-active', TEXT],
-  ['on-highlight', 'highlight', TEXT],
   ['band-text', 'band-deep', PRIMARY_TEXT],
   ['band-text-2', 'band-deep', TEXT],
   ['band-line-strong', 'band-bg', GRAPHIC],
   ['band-line-strong', 'band-deep', GRAPHIC],
   ['focus', 'band-bg', GRAPHIC],
   ['focus', 'band-deep', GRAPHIC],
+  // The band's own ring, and the one coral button the band carries.
+  ['band-focus', 'band-bg', GRAPHIC],
+  ['band-focus', 'band-deep', GRAPHIC],
+  ['accent', 'band-bg', GRAPHIC],
+  ['accent', 'band-deep', GRAPHIC],
   ['on-accent', 'accent', TEXT],
   ...STATUSES.flatMap((status): Pair[] => [
     [`${status}-fg`, `${status}-bg`, TEXT],
@@ -100,6 +103,11 @@ const failures = (theme: ThemeName, pairs: Pair[]): string[] =>
         `${theme}: ${foreground} on ${background} is ${ratio.toFixed(2)}:1, needs ${minimum}:1`,
     );
 
+const channels = (hex: string): string => {
+  const { r, g, b } = parseHex(hex, 'channels');
+  return [r, g, b].map(channel => Math.round(channel * 255)).join(' ');
+};
+
 /** `rgb(r g b / a)` painted over an opaque hex, as an opaque hex. */
 const composite = (overlay: string, backdrop: string): string => {
   const match = /^rgb\((\d+) (\d+) (\d+) \/ ([\d.]+)\)$/.exec(overlay);
@@ -117,7 +125,7 @@ const composite = (overlay: string, backdrop: string): string => {
 
 describe.each(THEME_NAMES)('accessibility gates: %s theme', theme => {
   test('should pass every contrast pair of the approved recipe', () => {
-    expect(recipePairs()).toHaveLength(56);
+    expect(recipePairs()).toHaveLength(52);
     expect(failures(theme, recipePairs())).toEqual([]);
   });
 
@@ -162,6 +170,20 @@ describe.each(THEME_NAMES)('accessibility gates: %s theme', theme => {
   test('should keep the conversion colour apart from the destructive colour', () => {
     expect(deltaE(themes[theme].accent, themes[theme]['danger-solid'])).toBeGreaterThanOrEqual(
       DISTINCT,
+    );
+  });
+
+  test('should keep the band text readable over the centre of a glow', () => {
+    const { glow } = effectValues[theme].band;
+    const lit = composite(`rgb(${channels(glow.color)} / ${glow.alpha})`, themes[theme]['band-bg']);
+
+    expect(contrast(themes[theme]['band-text'], lit)).toBeGreaterThanOrEqual(PRIMARY_TEXT);
+    expect(contrast(themes[theme]['band-text-2'], lit)).toBeGreaterThanOrEqual(TEXT);
+  });
+
+  test('should mark where the band ends on the page', () => {
+    expect(contrast(themes[theme]['band-edge'], themes[theme]['bg-page'])).toBeGreaterThanOrEqual(
+      BORDER,
     );
   });
 

@@ -13,11 +13,14 @@ import {
   ZoomIn,
 } from 'react-bootstrap-icons';
 
+import { logos } from '../src/design';
 import {
   Accordion,
   Alert,
   Avatar,
   Badge,
+  Band,
+  BandBlueprint,
   BottomSheet,
   Breadcrumb,
   Button,
@@ -46,6 +49,7 @@ import {
   DirectoryRow,
   Disclosure,
   Divider,
+  Eyebrow,
   Drawer,
   EmptyState,
   Field,
@@ -97,6 +101,7 @@ import {
   Switch,
   Table,
   TableCheckbox,
+  StatStrip,
   TableScroller,
   Tabs,
   TagInput,
@@ -381,6 +386,14 @@ const ORDERS_BY_HOUR = WEEKDAYS.map((_, day) =>
   ),
 );
 
+/** The trust facts of the band scenarios: value first, then the label. */
+const BAND_FACTS = [
+  { value: '4,9', label: 'ortalama puan' },
+  { value: '2 saat', label: 'yanıt süresi' },
+  { value: '30 gün', label: 'koşulsuz iade' },
+  { value: '7/24', label: 'destek' },
+];
+
 /** MEDYA ÖRNEĞİ — gömülü, ağdan gelmeyen ve ÇERÇEVEDEN FARKLI oranda. */
 const MEDIA_SAMPLE = `data:image/svg+xml;utf8,${encodeURIComponent(
   '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">' +
@@ -411,10 +424,14 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     soft: <Button variant={UIVariant.SOFT}>Filtrele</Button>,
     ghost: <Button variant={UIVariant.GHOST}>Daha fazla</Button>,
     danger: <Button variant={UIVariant.DANGER}>Sil</Button>,
+    /* On the band: the one coral action (with its glow) and the band's own outline button. */
     onBand: (
-      <div style={{ padding: 16, borderRadius: 14, background: 'var(--hd-band-bg)' }}>
-        <Button variant={UIVariant.ON_BAND}>Belgeleri oku</Button>
-      </div>
+      <Band as="div" glow="none" dots="none">
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <Button variant={UIVariant.ACCENT}>Teklif alın</Button>
+          <Button variant={UIVariant.ON_BAND}>Belgeleri oku</Button>
+        </div>
+      </Band>
     ),
     accentDisabled: (
       <Button variant={UIVariant.ACCENT} disabled>
@@ -807,8 +824,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     success: <Badge tone="success">Stokta</Badge>,
     warning: <Badge tone="warning">Son 2 adet</Badge>,
     danger: <Badge tone="danger">Tükendi</Badge>,
-    info: <Badge tone="info">Bilgi</Badge>,
-    highlight: <Badge tone="highlight">Canlı</Badge>,
+    info: <Badge tone="info">Yeni</Badge>,
     solidTones: (
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <Badge tone="success" variant="solid">
@@ -823,9 +839,6 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         <Badge tone="info" variant="solid">
           3
         </Badge>
-        <Badge tone="highlight" variant="solid">
-          Yeni
-        </Badge>
       </div>
     ),
     outlineTones: (
@@ -839,10 +852,58 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         <Badge tone="info" variant="outline">
           Kategori
         </Badge>
-        <Badge tone="highlight" variant="outline">
-          Canlı
-        </Badge>
       </div>
+    ),
+  },
+  Band: {
+    /* The closing call: eyebrow, heading with the coral full stop, one coral action, the facts. */
+    closingWide: (
+      <Band
+        aria-labelledby="band-heading"
+        artwork={<BandBlueprint shape={logos.mark} />}
+        footer={<StatStrip variant="band" items={BAND_FACTS} />}
+      >
+        <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
+          <Eyebrow>Teklif</Eyebrow>
+          <h2 id="band-heading" style={{ margin: 0, fontSize: 30, lineHeight: 1.15 }}>
+            Projenizi konuşalım
+            <span style={{ color: 'var(--hd-accent)' }}>.</span>
+          </h2>
+          <p style={{ margin: 0, maxWidth: '52ch', color: 'var(--hd-band-text-2)' }}>
+            Yazılı teklif bir iş günü içinde gelir; fiyat ve takvim baştan bellidir.
+          </p>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <Button variant={UIVariant.ACCENT}>Teklif alın</Button>
+            <Button variant={UIVariant.ON_BAND}>WhatsApp</Button>
+          </div>
+        </div>
+      </Band>
+    ),
+    /* Centred, the dot grid on both sides, as in the share image. */
+    centeredWide: (
+      <Band aria-label="Tanıtım" dots="both">
+        <div style={{ display: 'grid', gap: 12, justifyItems: 'center', textAlign: 'center' }}>
+          <Eyebrow align="center">Yazılım · Kurumsal site</Eyebrow>
+          <p style={{ margin: 0, fontSize: 30, lineHeight: 1.15 }}>
+            Hızlı ve güvenilir yazılım
+            <span style={{ color: 'var(--hd-accent)' }}>.</span>
+          </p>
+        </div>
+      </Band>
+    ),
+    plain: (
+      <Band as="div" glow="none" dots="none">
+        Düz bant: yalnızca degrade.
+      </Band>
+    ),
+  },
+  BandBlueprint: {
+    default: (
+      <Band as="div" glow="none" dots="none">
+        <div style={{ width: 96 }}>
+          <BandBlueprint shape={logos.mark} />
+        </div>
+      </Band>
     ),
   },
   Breadcrumb: {
@@ -928,6 +989,15 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   },
   CopyField: { default: <CopyField value="SP-2026-000123" /> },
   Divider: { plain: <Divider />, labelled: <Divider label="veya" /> },
+  Eyebrow: {
+    start: <Eyebrow>Hizmetler</Eyebrow>,
+    center: <Eyebrow align="center">Sektör · Çözüm</Eyebrow>,
+    onBand: (
+      <Band as="div" glow="none" dots="none">
+        <Eyebrow>Teklif</Eyebrow>
+      </Band>
+    ),
+  },
   Directory: {
     default: (
       <Directory>
@@ -1361,6 +1431,19 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       <ScrollArea label="Kısa metin" maxHeight={400} hasFade>
         <p>Tek satır</p>
       </ScrollArea>
+    ),
+  },
+  StatStrip: {
+    pageWide: <StatStrip items={BAND_FACTS} aria-label="Rakamlarla" />,
+    bandWide: (
+      <Band
+        as="div"
+        glow="none"
+        dots="none"
+        footer={<StatStrip variant="band" items={BAND_FACTS} />}
+      >
+        Bandın altındaki şerit.
+      </Band>
     ),
   },
   Stat: {

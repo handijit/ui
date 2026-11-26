@@ -3,10 +3,12 @@ import { readdirSync, readFileSync } from 'node:fs';
 /*
  * COLOUR FOOTPRINT — the role rule of the theme, as a failing test.
  *
- *   cobalt (`$primary*`)      primary action, link, focus, selection — the interface colour
- *   coral (`$accent*`)        the CONVERSION button (download, try, subscribe) and nothing else
- *   turquoise (`$highlight*`) a highlight or a "live" mark, never an action
- *   band (`$band-*`)          the dark brand band and what sits on it
+ *   cobalt (`$primary*`)   primary action, link, focus, selection — the interface colour
+ *   coral (`$accent*`)     the CONVERSION button (download, try, subscribe) and nothing else
+ *   band (`$band-*`)       the navy brand band and what sits on it
+ *
+ * 2.0 removed turquoise (`$highlight*`): the palette is cobalt, coral, the band, neutrals and the
+ * status colours. The last test below keeps its names from coming back.
  *
  * ⚠ No single declaration is ever wrong on its own: a coral chip here, a coral progress bar there,
  * and coral stops meaning "this is the button that converts". This list turns that drift into a
@@ -15,7 +17,6 @@ import { readdirSync, readFileSync } from 'node:fs';
  */
 const FAMILIES = {
   accent: /\$(?:accent(?:-[a-z]+)?|on-accent)(?![\w-])/g,
-  highlight: /\$(?:highlight(?:-[a-z]+)?|on-highlight)(?![\w-])/g,
   band: /\$band-[a-z0-9-]+(?![\w-])/g,
 } as const;
 
@@ -23,17 +24,16 @@ type Family = keyof typeof FAMILIES;
 
 const ALLOWED: Record<Family, Record<string, string>> = {
   accent: {
+    Band: "`BandBlueprint`'s dot — the coral point of the brand mark, as in the logo; never clickable",
     Button: 'the ACCENT variant — the conversion button',
     IconButton: 'the `accent` variant — the same button without a text label',
   },
-  highlight: {
-    Avatar: '`tone="highlight"` — a marked account (live, featured)',
-    Badge: '`tone="highlight"` — a "live" or "new" mark',
-    CodeBlock: 'type names in syntax colouring — text, not a control',
-  },
   band: {
     Avatar: '`tone="brand"` — the brand medallion',
-    Button: 'the ON_BAND variant — a button that sits on the brand band',
+    Band: 'the band itself: its surface, imagery, edge and focus ring',
+    Button: 'the ON_BAND variant, and the glow of ACCENT on the band',
+    Eyebrow: 'its label and rules on the band',
+    StatStrip: '`variant="band"` — the deep strip at the foot of the band',
   },
 };
 
@@ -92,6 +92,21 @@ describe('colour footprint', () => {
         readdirSync(dir)
           .filter(name => name.endsWith('.scss'))
           .some(file => legacy.test(readFileSync(`${dir}/${file}`, 'utf8'))),
+      )
+      .map(([component]) => component);
+
+    expect(offenders).toEqual([]);
+  });
+
+  /* 2.0: turquoise left the palette. Its role names coming back means a copy from a 1.x consumer. */
+  it('the turquoise roles of 1.x do not come back', () => {
+    const turquoise = /\$(?:highlight|on-highlight|turquoise)(?:-[a-z0-9]+)*(?![\w-])/;
+
+    const offenders = componentDirs()
+      .filter(([, dir]) =>
+        readdirSync(dir)
+          .filter(name => name.endsWith('.scss'))
+          .some(file => turquoise.test(readFileSync(`${dir}/${file}`, 'utf8'))),
       )
       .map(([component]) => component);
 

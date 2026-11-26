@@ -4,7 +4,7 @@ import type { Theme, Themes } from '../types';
 import hues from './hues';
 import scales from './scales';
 
-const { cobalt, coral, turquoise, success, warning, danger, violet, magenta, slate } = scales;
+const { cobalt, coral, success, warning, danger, violet, magenta, slate } = scales;
 
 const WHITE = '#ffffff';
 
@@ -42,6 +42,8 @@ const band = {
   'band-line-strong': oklchToHex({ l: 0.6, c: 0.13, h: 266 }),
   'band-text': WHITE,
   'band-text-2': oklchToHex({ l: 0.86, c: 0.05, h: 262 }),
+  // The cobalt ring is 4.6:1 here but reads as part of the cobalt band; the white one cannot be missed.
+  'band-focus': WHITE,
 } as const;
 
 /** The conversion colour and its ink are identical in both themes. */
@@ -84,10 +86,6 @@ const light: Theme = {
   ...accent,
   'accent-soft': coral[50],
   'accent-text': coral[700],
-  highlight: turquoise[500],
-  'on-highlight': slate[950],
-  'highlight-soft': turquoise[50],
-  'highlight-text': turquoise[700],
   focus: cobalt[500],
   'selection-bg': cobalt[200],
   'success-bg': success[50],
@@ -112,11 +110,14 @@ const light: Theme = {
   'info-on-solid': WHITE,
   'chart-1': cobalt[600],
   'chart-2': coral[600],
-  'chart-3': turquoise[600],
+  // Green, the one family of the palette at least 16 ΔE from every other series in both themes.
+  'chart-3': success[600],
   'chart-4': warning[600],
   'chart-5': magenta[600],
   'chart-6': violet[600],
   ...band,
+  // The navy band stands out of a light page on its own (15:1); no edge.
+  'band-edge': band['band-bg'],
 };
 
 const dark: Theme = {
@@ -144,10 +145,6 @@ const dark: Theme = {
   ...accent,
   'accent-soft': oklchToHex({ l: 0.27, c: 0.06, h: hues.coral }),
   'accent-text': coral[300],
-  highlight: turquoise[400],
-  'on-highlight': slate[950],
-  'highlight-soft': oklchToHex({ l: 0.27, c: 0.045, h: hues.turquoise }),
-  'highlight-text': turquoise[300],
   focus: cobalt[400],
   'selection-bg': cobaltNight.line,
   'success-bg': oklchToHex({ l: 0.26, c: 0.05, h: hues.success }),
@@ -172,11 +169,13 @@ const dark: Theme = {
   'info-on-solid': WHITE,
   'chart-1': cobalt[400],
   'chart-2': coral[400],
-  'chart-3': turquoise[400],
+  'chart-3': success[400],
   'chart-4': warning[400],
   'chart-5': magenta[400],
   'chart-6': violet[400],
   ...band,
+  // The navy band is 1.24:1 on the dark page; its hairline (1.87:1) marks where it ends.
+  'band-edge': band['band-line'],
 };
 
 /**

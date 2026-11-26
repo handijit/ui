@@ -1,6 +1,6 @@
 {
   "name": "@handijitcom/ui",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "Accessible React component library on SCSS Modules, themed by its own design tokens (@handijitcom/ui/design): light and dark from one set of --hd-* tokens, a CSP-ready theme boot script, and Bootstrap Icons for iconography.",
   "author": "Ahmet ilhan <ahmetilhan.dev@gmail.com>",
   "license": "MIT",
@@ -64,6 +64,16 @@
       "require": {
         "types": "./build/components/Badge/index.d.cts",
         "default": "./build/components/Badge/index.cjs"
+      }
+    },
+    "./band": {
+      "import": {
+        "types": "./build/components/Band/index.d.ts",
+        "default": "./build/components/Band/index.js"
+      },
+      "require": {
+        "types": "./build/components/Band/index.d.cts",
+        "default": "./build/components/Band/index.cjs"
       }
     },
     "./bottom-sheet": {
@@ -264,6 +274,16 @@
       "require": {
         "types": "./build/components/EmptyState/index.d.cts",
         "default": "./build/components/EmptyState/index.cjs"
+      }
+    },
+    "./eyebrow": {
+      "import": {
+        "types": "./build/components/Eyebrow/index.d.ts",
+        "default": "./build/components/Eyebrow/index.js"
+      },
+      "require": {
+        "types": "./build/components/Eyebrow/index.d.cts",
+        "default": "./build/components/Eyebrow/index.cjs"
       }
     },
     "./field": {
@@ -604,6 +624,16 @@
       "require": {
         "types": "./build/components/Stat/index.d.cts",
         "default": "./build/components/Stat/index.cjs"
+      }
+    },
+    "./stat-strip": {
+      "import": {
+        "types": "./build/components/StatStrip/index.d.ts",
+        "default": "./build/components/StatStrip/index.js"
+      },
+      "require": {
+        "types": "./build/components/StatStrip/index.d.cts",
+        "default": "./build/components/StatStrip/index.cjs"
       }
     },
     "./status-dot": {

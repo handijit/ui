@@ -16,8 +16,13 @@ export default [
      * ⚠ 43 → 44 kB (2026-11-07, 6.0). Ölçüm 43,29 kB: dosya başına `'use client'` ve CSS içe aktarım
      * satırları, bağlantı düğmesinin `inert` sınıfı. Tüketici bunu indirmez (yalnızca ulaşılan
      * modüller); asıl koruma aşağıdaki tek bileşen ölçümleri — 6.0'da `Button` 5,12 → 1,33 kB.
+     * ⚠ 44 → 46 kB (2026-11-27, 2.0 of @handijitcom/ui). Measured 45.44 kB: the brand band (`Band`
+     * with `BandBlueprint` 1.3 kB, `StatStrip` 0.4 kB, `Eyebrow` 0.3 kB alone). Asked first whether
+     * they belong in a sub-entry: no. A sub-entry is ONE client bundle (`'use client'` banner),
+     * while `Eyebrow` and `StatStrip` are drawn on the server and the band is the shop window's own
+     * surface; per-component modules keep its cost to the page that draws it (measured below).
      */
-    limit: '44 kB',
+    limit: '46 kB',
     gzip: true,
   },
   {
@@ -141,6 +146,22 @@ export default [
     import: '{ MoneyInput }',
     /* İlk ölçüm: 2,02 kB (`Input` + `ScaledInput` + okuyucu). Ana giriş 41,31 → 42,55 kB (44 kB bütçe). */
     limit: '2.5 kB',
+    gzip: true,
+  },
+  {
+    /* 2.0: the band pulls only its recipe numbers from the design entry, never the palette. */
+    name: 'only Band (tree shaking)',
+    path: 'build/index.js',
+    import: '{ Band, BandBlueprint }',
+    /* First measurement (2026-11-27): 1.4 kB. */
+    limit: '1.8 kB',
+    gzip: true,
+  },
+  {
+    name: 'only Band CSS (components/Band/style.css)',
+    path: 'build/components/Band/style.css',
+    /* First measurement (2026-11-27): 0.78 kB. */
+    limit: '1 kB',
     gzip: true,
   },
   {

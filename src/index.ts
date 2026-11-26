@@ -172,6 +172,25 @@ export {
   type TimelineStatus,
 } from './components/Timeline';
 
+// --- Brand band (2.0) -------------------------------------------------
+/*
+ * The navy band of the brand and what sits on it: the surface with its SVG imagery, the eyebrow
+ * label and the strip of facts. `Eyebrow` and `StatStrip` are server-drawable; `Band` is a client
+ * module for its SVG ids (`useId`). The coral glow of `ACCENT` on the band lives in `Button`.
+ */
+export {
+  default as Band,
+  BandBlueprint,
+  type BandBlueprintShape,
+  type BandSide,
+} from './components/Band';
+export { default as Eyebrow, type EyebrowAlign } from './components/Eyebrow';
+export {
+  default as StatStrip,
+  type StatStripItem,
+  type StatStripVariant,
+} from './components/StatStrip';
+
 // --- Kipsel -----------------------------------------------------------
 export { default as BottomSheet } from './components/BottomSheet';
 export { default as Modal, type ModalTone } from './components/Modal';

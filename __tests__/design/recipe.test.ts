@@ -7,6 +7,8 @@ import approved from './fixtures/approved-recipe.json';
 
 // The fixture is the approved output of the design recipe. These tests are meant to turn
 // red when the palette changes: update the fixture only together with a design decision.
+// 2.0: turquoise left the palette (its scale and the `highlight*` roles) and `chart-3` became
+// the green of the success family (CHANGELOG 2.0.0).
 const THEME_NAMES: ThemeName[] = ['light', 'dark'];
 
 // The recipe kept the shadow tone next to the colours; the package moved it to `effects`.
@@ -23,7 +25,7 @@ describe('approved recipe', () => {
     );
     const theme: Record<string, string> = themes[name];
 
-    expect(expected).toHaveLength(49);
+    expect(expected).toHaveLength(46);
     for (const [token, hex] of expected) {
       expect(theme[token]).toBe(hex);
     }

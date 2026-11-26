@@ -16,6 +16,8 @@ const channels = (hex: string): string => {
 
 const length = (pixels: number): string => (pixels === 0 ? '0' : `${pixels}px`);
 
+const percent = (offset = 0): string => `${Math.round(offset * 100)}%`;
+
 const layerCss = (color: string, layer: ShadowLayer): string => {
   const lengths = [layer.x, layer.y, layer.blur];
   if (layer.spread !== 0) lengths.push(layer.spread);
@@ -41,6 +43,56 @@ describe.each(THEME_NAMES)('effect values: %s theme', theme => {
     expect(`rgb(${channels(values.scrim.color)} / ${values.scrim.alpha})`).toBe(
       effects[theme].scrim,
     );
+  });
+
+  test('should say the same as the CSS band imagery', () => {
+    const { band } = values;
+    const css = effects[theme];
+
+    expect(band.gradient.map(stop => stop.color)).toEqual([
+      css['band-gradient-from'],
+      css['band-gradient-from'],
+      css['band-gradient-to'],
+    ]);
+    expect(percent(band.gradient[1]?.offset)).toBe(css['band-gradient-hold']);
+    expect([band.glow.color, String(band.glow.alpha)]).toEqual([
+      css['band-glow'],
+      css['band-glow-alpha'],
+    ]);
+    expect([band.dots.color, String(band.dots.alpha)]).toEqual([
+      css['band-dot'],
+      css['band-dot-alpha'],
+    ]);
+    expect([length(band.dots.cell), length(band.dots.radius)]).toEqual([
+      css['band-dot-cell'],
+      css['band-dot-radius'],
+    ]);
+    expect(band.blueprint.fill.map(stop => stop.color)).toEqual([
+      css['band-blueprint-from'],
+      css['band-blueprint-to'],
+    ]);
+    expect(percent(band.blueprint.fill[1]?.offset)).toBe(css['band-blueprint-hold']);
+    expect(band.blueprint.stroke).toBe(css['band-blueprint-stroke']);
+    expect(layerCss(band.accentGlow.color, band.accentGlow.layer)).toBe(css['band-accent-glow']);
+  });
+
+  test('should compose the band imagery from the theme roles, no new colour', () => {
+    const colours = themes[theme];
+    const { band } = values;
+
+    expect(band.gradient.map(stop => stop.color)).toEqual([
+      colours['band-bg'],
+      colours['band-bg'],
+      colours['band-deep'],
+    ]);
+    expect(band.glow.color).toBe(colours.primary);
+    expect(band.dots.color).toBe(colours['band-line-strong']);
+    expect(band.blueprint.fill.map(stop => stop.color)).toEqual([
+      colours['band-line'],
+      colours['band-bg'],
+    ]);
+    expect(band.blueprint.stroke).toBe(colours['band-line-strong']);
+    expect(band.accentGlow.color).toBe(colours.accent);
   });
 
   test('should hold opaque six-digit hex and opacities a shadow can have', () => {
@@ -69,6 +121,10 @@ describe('effect values', () => {
   test('should take the scrim colour from the theme it dims', () => {
     expect(effectValues.light.scrim.color).toBe(themes.light.text);
     expect(effectValues.dark.scrim.color).toBe(themes.dark['bg-inset']);
+  });
+
+  test('should draw the band the same in both themes, like its colours', () => {
+    expect(effectValues.dark.band).toEqual(effectValues.light.band);
   });
 
   test('should need a denser shadow and scrim on the dark theme', () => {

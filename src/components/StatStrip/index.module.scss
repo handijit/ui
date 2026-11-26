@@ -1,0 +1,60 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.strip {
+  // The dividers are each item's start border, pulled 1px outside it; the list clips that pixel, so
+  // the first item of every row, wrapped ones included, starts without a divider. Equal columns
+  // that fill the row keep every row's first item at the list's edge, where the clip is.
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-1;
+    margin-inline-start: -1px;
+    padding: $space-1 clamp(#{$space-4}, 2.5vw, #{$space-6});
+    border-inline-start: 1px solid var(--ui-strip-line);
+    text-align: center;
+  }
+
+  &__value {
+    font-family: $font-display;
+    font-size: $font-size-h4;
+    font-weight: $weight-semibold;
+    line-height: $leading-snug;
+    letter-spacing: $tracking-snug;
+    color: var(--ui-strip-value);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__label {
+    font-family: $font-body;
+    font-size: $font-size-small;
+    font-weight: $weight-medium;
+    line-height: $leading-snug;
+    color: var(--ui-strip-label);
+  }
+
+  &--page {
+    --ui-strip-line: #{$border};
+    --ui-strip-value: #{$text};
+    --ui-strip-label: #{$text-2};
+  }
+
+  // The deep strip at the foot of the band: `band-deep` under a `band-line` hairline.
+  &--band {
+    --ui-strip-line: #{$band-line};
+    --ui-strip-value: #{$band-text};
+    --ui-strip-label: #{$band-text-2};
+
+    padding-block: $space-4;
+    border-top: 1px solid $band-line;
+    background-color: $band-deep;
+  }
+}

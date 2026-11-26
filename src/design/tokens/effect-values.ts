@@ -1,10 +1,12 @@
 import type {
+  BandEffectValues,
   EffectValues,
   ShadowLayer,
   ShadowLevel,
   ThemeEffectValues,
   ThemeName,
 } from '../types';
+import band from './band';
 import themes from './themes';
 
 type LayerRecipe = {
@@ -53,6 +55,34 @@ const layers = (theme: ThemeName, level: ShadowLevel): ShadowLayer[] =>
     alpha: alpha(SHADOW_TONE[theme].alpha * strength),
   }));
 
+/** The band's imagery: the recipe's numbers on the theme's own band, cobalt and coral roles. */
+const bandValues = (theme: ThemeName): BandEffectValues => {
+  const colours = themes[theme];
+
+  return {
+    gradient: [
+      { offset: 0, color: colours['band-bg'] },
+      { offset: band.gradientHold, color: colours['band-bg'] },
+      { offset: 1, color: colours['band-deep'] },
+    ],
+    glow: { color: colours.primary, alpha: band.glowAlpha },
+    dots: {
+      color: colours['band-line-strong'],
+      alpha: band.dotAlpha,
+      cell: band.dotCell,
+      radius: band.dotRadius,
+    },
+    blueprint: {
+      fill: [
+        { offset: 0, color: colours['band-line'] },
+        { offset: band.blueprintHold, color: colours['band-bg'] },
+      ],
+      stroke: colours['band-line-strong'],
+    },
+    accentGlow: { color: colours.accent, layer: band.accentGlow },
+  };
+};
+
 const buildValues = (theme: ThemeName, scrimBase: string): ThemeEffectValues => ({
   shadow: {
     color: SHADOW_TONE[theme].color,
@@ -64,10 +94,11 @@ const buildValues = (theme: ThemeName, scrimBase: string): ThemeEffectValues => 
     3: layers(theme, 3),
   },
   scrim: { color: scrimBase, alpha: alpha(SCRIM_ALPHA[theme]) },
+  band: bandValues(theme),
 });
 
 /**
- * The shadows and the scrim as hex and numbers, for anything that cannot read a custom
+ * The shadows, the scrim and the band's imagery as hex and numbers, for anything that cannot read a custom
  * property: an Electron main process, an Open Graph image, a PDF. This is the single source;
  * the CSS strings in `effects` are rendered from it.
  */

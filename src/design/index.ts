@@ -6,6 +6,7 @@ import deltaE from './modules/delta-e';
 import hexToOklch from './modules/hex-to-oklch';
 import maxChroma from './modules/max-chroma';
 import oklchToHex from './modules/oklch-to-hex';
+import band from './tokens/band';
 import breakpoints from './tokens/breakpoints';
 import CSS_VARIABLE_PREFIX from './tokens/css-variable-prefix';
 import effectValues from './tokens/effect-values';
@@ -26,6 +27,8 @@ import THEME_STORAGE_KEY from './tokens/theme-storage-key';
 import themes from './tokens/themes';
 import typography from './tokens/typography';
 import type {
+  BandEffectValues,
+  BandRecipe,
   BreakpointName,
   Breakpoints,
   ChartIndex,
@@ -43,6 +46,7 @@ import type {
   FontWeightName,
   FontWeights,
   Fonts,
+  GradientStop,
   HueName,
   LayerName,
   Layers,
@@ -79,6 +83,7 @@ import type {
 } from './types';
 
 export {
+  band,
   breakpoints,
   contrast,
   CSS_VARIABLE_PREFIX,
@@ -107,6 +112,8 @@ export {
   typography,
 };
 export type {
+  BandEffectValues,
+  BandRecipe,
   BreakpointName,
   Breakpoints,
   ChartIndex,
@@ -124,6 +131,7 @@ export type {
   FontWeightName,
   FontWeights,
   Fonts,
+  GradientStop,
   HueName,
   LayerName,
   Layers,

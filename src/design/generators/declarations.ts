@@ -83,11 +83,21 @@ const staticGroups = (): DeclarationGroup<StaticToken>[] => [
   },
 ];
 
-/** Tokens whose value depends on the theme: semantic colours, shadows and the scrim. */
-const themedGroups = (theme: ThemeName): DeclarationGroup<ThemedToken>[] => [
-  { title: 'Colours', declarations: entries(themes[theme]) },
-  { title: 'Elevation', declarations: entries(effects[theme]) },
-];
+const isBandEffect = ([name]: Declaration<ThemedToken>): boolean => name.startsWith('band-');
+
+/** Tokens whose value depends on the theme: semantic colours, shadows, the scrim, band imagery. */
+const themedGroups = (theme: ThemeName): DeclarationGroup<ThemedToken>[] => {
+  const effectDeclarations = entries(effects[theme]);
+
+  return [
+    { title: 'Colours', declarations: entries(themes[theme]) },
+    {
+      title: 'Elevation',
+      declarations: effectDeclarations.filter(declaration => !isBandEffect(declaration)),
+    },
+    { title: 'Brand band imagery', declarations: effectDeclarations.filter(isBandEffect) },
+  ];
+};
 
 /** Breakpoints cannot be custom properties (`var()` is invalid in a media query). */
 const breakpointEntries = (): [string, number][] => entries(breakpoints);

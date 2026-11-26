@@ -1,7 +1,7 @@
 /**
  * CONTRAST GATE — `npm run check:contrast`, part of `verify`.
  *
- * The library owns no colour: every value comes from `@handijit/design`, which gates its own
+ * The library owns no colour: every value comes from `@handijitcom/ui/design`, which gates its own
  * palette. What the design package cannot know is WHICH TOKEN THIS LIBRARY PUTS ON WHICH — a
  * caption in a well, a syntax colour on a code block, white on a hover fill. Those pairings are
  * decisions made in the component styles, and this file is the list of them, measured against the
@@ -11,7 +11,10 @@
  * A pairing a component starts to use is ADDED here; a failing pairing is fixed in the component
  * (pick another token), never by writing a one-off colour.
  */
-import { contrast, scales, themes } from '@handijit/design';
+import evaluateTypescript from './design/evaluate-typescript.mjs';
+
+// The tokens are read from source, so the gate runs before any build.
+const { contrast, scales, themes } = await evaluateTypescript('./src/design/index.ts');
 
 const THRESHOLD = { text: 4.5, graphic: 3 };
 
@@ -189,7 +192,7 @@ for (const name of ['light', 'dark']) {
 
 if (failures.length > 0) {
   console.error(
-    `\nui: ${failures.length} contrast failure(s). The colours belong to @handijit/design; fix the` +
+    `\nui: ${failures.length} contrast failure(s). The colours belong to @handijitcom/ui/design; fix the` +
       ` PAIRING in the component style (another token for the text or the surface).\n`,
   );
   process.exit(1);

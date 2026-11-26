@@ -1,7 +1,7 @@
 // `@handijitcom/ui/base.css` — box-model reset, shared `@keyframes` and helper classes.
 //
 // No design token is declared here: colours, type, spacing, radii, motion and layers are the
-// `--hd-*` custom properties of `@handijit/design/tokens.css`, which the application loads once.
+// `--hd-*` custom properties of `@handijitcom/ui/tokens.css`, which the application loads once.
 // The `--ui-anim-*` names below are animation names, not theme values.
 @use 'mixins' as *;
 

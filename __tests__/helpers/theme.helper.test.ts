@@ -1,4 +1,4 @@
-import { THEME_ATTRIBUTE, THEME_BOOT_SCRIPT, THEME_STORAGE_KEY } from '@handijit/design';
+import { THEME_ATTRIBUTE, THEME_BOOT_SCRIPT, THEME_STORAGE_KEY } from '@handijitcom/ui/design';
 
 import {
   applyThemePreference,
@@ -48,7 +48,7 @@ describe('readStoredPreference', () => {
     expect(readStoredPreference()).toBe('system');
   });
 
-  it('reads the key of @handijit/design', () => {
+  it('reads the key of @handijitcom/ui/design', () => {
     window.localStorage.setItem(THEME_STORAGE_KEY, 'dark');
 
     expect(readStoredPreference()).toBe('dark');

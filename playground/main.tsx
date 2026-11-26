@@ -1,14 +1,14 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { THEME_ATTRIBUTE } from '@handijit/design';
+import { THEME_ATTRIBUTE } from '@handijitcom/ui/design';
 
 import { UiProvider, LABELS, SCENARIOS } from './scenarios';
 import { SOLO_ONLY } from './solo';
 
 /* The design tokens and fonts first — exactly what an application does — then the library's globals. */
-import '@handijit/design/tokens.css';
-import '@handijit/design/fonts.css';
+import '@handijitcom/ui/tokens.css';
+import '@handijitcom/ui/fonts.css';
 import '../src/styles/base.scss';
 
 import './playground.css';

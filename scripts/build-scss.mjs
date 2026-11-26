@@ -4,7 +4,7 @@
  *
  * The set is CLOSED: `_index` forwards `variables` and `mixins`, and neither reaches outside the
  * set — every theme value in them is a literal `var(--hd-*)`, so the consumer's Sass never has to
- * resolve `@handijit/design`. `base.scss` (reset, `@keyframes`) stays out on purpose: the
+ * resolve `@handijitcom/ui/design`. `base.scss` (reset, `@keyframes`) stays out on purpose: the
  * consumer already gets it in `styles.css`, and compiling it again would print its rules per `@use`.
  * ⚠ A missing file or a `@use` outside the list fails the build.
  */

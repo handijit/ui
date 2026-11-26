@@ -1,6 +1,6 @@
-import { breakpoints } from '@handijit/design';
+import { breakpoints } from '@handijitcom/ui/design';
 
-/** Breakpoints — the values of `@handijit/design` (`$breakpoint-*` in `styles/_variables.scss`). */
+/** Breakpoints — the values of `@handijitcom/ui/design` (`$breakpoint-*` in `styles/_variables.scss`). */
 export const MOBILE_BREAKPOINT = breakpoints.sm;
 
 export const TABLET_PORTRAIT_BREAKPOINT = breakpoints.md;

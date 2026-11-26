@@ -21,7 +21,7 @@ type Props = {
  * Library provider: the router's link component and the interface strings.
  *
  * It renders nothing of its own and injects no style. Colours, type, spacing and motion come from
- * `@handijit/design/tokens.css`, which the application loads once; a brand override is a plain
+ * `@handijitcom/ui/tokens.css`, which the application loads once; a brand override is a plain
  * `--hd-*` declaration in the application's own stylesheet.
  * @example <UiProvider linkComponent={NextLink} labels={{ close: 'Kapat' }}><App /></UiProvider>
  */

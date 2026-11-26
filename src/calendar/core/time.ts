@@ -1,6 +1,6 @@
 /**
  * Minutes of a day and the wall-clock text around them — string work only. Day arithmetic (adding
- * a day, the weekday of a date) is NOT here: it belongs to `@handijit/tr` and the caller passes
+ * a day, the weekday of a date) is NOT here: it belongs to the caller, who passes
  * the days already computed.
  */
 

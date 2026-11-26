@@ -1,5 +1,5 @@
 /**
- * @handijitcom/ui/calendar — the calendar (2.4), the base of app-kit's `takvim` pattern. Every
+ * @handijitcom/ui/calendar — the calendar (2.4), the base of a scheduling screen. Every
  * exported name is a CONTRACT.
  *
  * ⚠ A separate entry for the main entry's size budget (`.size-limit.js`): the main entry stays

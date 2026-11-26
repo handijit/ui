@@ -1,6 +1,6 @@
 import { type FC, memo } from 'react';
 
-import { cssVar } from '@handijit/design';
+import { cssVar } from '@handijitcom/ui/design';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';

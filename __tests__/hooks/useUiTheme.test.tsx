@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 
-import { THEME_ATTRIBUTE, THEME_STORAGE_KEY } from '@handijit/design';
+import { THEME_ATTRIBUTE, THEME_STORAGE_KEY } from '@handijitcom/ui/design';
 
 import { THEME_SWITCHING_CLASS } from '@/helpers/theme.helper';
 import useUiTheme from '@/hooks/useUiTheme';

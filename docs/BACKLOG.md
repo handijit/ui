@@ -6,9 +6,9 @@ where it was found and what would close it.
 
 ## 2.4 — scaled number fields and the calendar
 
-- **The typed-number grammar lives twice.** `helpers/scaled-number.helper.ts` mirrors app-kit's
-  `parseDecimal` (data contract §4.3) because `ui` cannot import app-kit or `@handijit/decimal`.
-  Pinned by app-kit's vectors in `__tests__/helpers/scaled-number.helper.test.ts`. Closes when the
+- **The typed-number grammar lives twice.** `helpers/scaled-number.helper.ts` follows the data
+  contract's grammar (§4.3); an application that reads imported numbers keeps its own copy.
+  Pinned by the vectors in `__tests__/helpers/scaled-number.helper.test.ts`. Closes when the
   grammar moves to a package under both (for example `@handijitcom/utils`) and both call it.
 - **`ScaledInput`: the caret goes to the end** when a keystroke is refused or a pasted text is
   cleaned (the controlled value is written back). Closes with a caret restore in a layout effect.
@@ -25,7 +25,7 @@ where it was found and what would close it.
   with an all-day row on top of the time grid (events whose `start` and `end` are `T00:00` of a
   day), drawn and reached with the keyboard like the month's cells.
 - **`Calendar`: a multi-day event is drawn but never moved**, in both views (moving it needs day
-  arithmetic, which belongs to `@handijit/tr`). Closes when a pilot asks: the caller would pass the
+  arithmetic, which belongs to the caller). Closes when a pilot asks: the caller would pass the
   new end.
 - **Visual baselines.** The playground has scenarios for the six new components; the Playwright
   baselines (`npm run test:visual`, outside `verify`) are not redrawn yet.
@@ -58,5 +58,5 @@ where it was found and what would close it.
   sizes in budget (main entry; `calendar` 5.94 / 7 kB, `calendar.css` 2.07 / 2.5 kB, `MoneyInput`
   2.01 / 2.5 kB); program-tools `verify contract` 11/11 GREEN; the API surface only added to; the
   2.4.0 tarball in a scratch copy of handijit-frontend: vitest 79 files, 721/721 tests, `tsc` 0
-  errors. The typed-number grammar matches app-kit's `parseDecimal`; the one difference — an
+  errors. The typed-number grammar is the data contract's; the one difference — an
   extra decimal place typed is refused, not rounded — is documented. Tree clean at `a409561`.

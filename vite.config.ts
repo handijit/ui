@@ -30,7 +30,13 @@ export default defineConfig({
       entryRoot: 'src',
       include: ['src'],
       /* Alt girişler kendi derlemelerinde (`vite.subentry.ts`). */
-      exclude: ['src/**/*.test.*', 'src/chat/**', 'src/charts/**', 'src/calendar/**'],
+      exclude: [
+        'src/**/*.test.*',
+        'src/chat/**',
+        'src/charts/**',
+        'src/calendar/**',
+        'src/design/**',
+      ],
       tsconfigPath: resolve(__dirname, 'tsconfig.build.json'),
     }) as unknown as PluginOption,
   ],
@@ -58,7 +64,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'build',
-    emptyOutDir: true,
+    /* `npm run build` empties `build/` first and writes `build/design` before this build. */
+    emptyOutDir: false,
     sourcemap: true,
     /* CSS modül başına: her bileşenin CSS'i kendi dosyasında (`vite.modules.ts`). */
     cssCodeSplit: true,
@@ -75,7 +82,7 @@ export default defineConfig({
         'react',
         'react-dom',
         'react/jsx-runtime',
-        '@handijit/design',
+        '@handijitcom/ui/design',
         '@handijitcom/utils',
         /*
          * İkonlar da EXTERNAL: paket tüketicide zaten var (uygulamalar kendi içerik ikonlarını aynı

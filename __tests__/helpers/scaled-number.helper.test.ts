@@ -18,11 +18,10 @@ const read = (input: string, options: Partial<ScaledReadOptions> = {}) =>
   readScaledText(input, { ...QTY4, ...options });
 
 /*
- * ⚠ THE SAME VECTORS AS `@handijit/app-kit` `__tests__/shared/parse-decimal.test.ts`
- * ("parseQuantity"). The grammar has two copies (the helper's header says why); a change to one
+ * ⚠ THE REFERENCE VECTORS of the data contract's number grammar (§4.3). A change to the helper
  * that this table does not follow is a drift between what a field takes and what an import reads.
  */
-describe('readScaledText — the grammar of app-kit parseDecimal', () => {
+describe('readScaledText — the grammar of the data contract', () => {
   it("reads Turkish and programmer's decimals", () => {
     expect(read('12,5')).toBe(125_000);
     expect(read('12.5')).toBe(125_000);

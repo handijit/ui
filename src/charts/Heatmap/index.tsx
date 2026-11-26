@@ -2,7 +2,7 @@
 
 import { memo, useCallback, useId, useMemo } from 'react';
 
-import { cssVar } from '@handijit/design';
+import { cssVar } from '@handijitcom/ui/design';
 import { useUi } from '@handijitcom/ui';
 
 import { named } from '../../helpers/component.helper';

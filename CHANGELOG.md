@@ -8,6 +8,24 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-26
+
+The design tokens are now part of this package; `@handijit/design` is no longer a dependency.
+
+### Added
+
+- `@handijitcom/ui/design`: the design tokens' JavaScript API (tokens, themes, colour helpers,
+  `THEME_BOOT_SCRIPT`, `THEME_BOOT_SCRIPT_HASH`), built from `src/design`.
+- `@handijitcom/ui/tokens.css`, `fonts.css`, `tokens.scss`, `tokens.json`, `fonts/*`, `logos/*`.
+- `docs/design.md`: the token reference.
+
+### Migration
+
+- `import … from '@handijit/design'` → `import … from '@handijitcom/ui/design'`.
+- `@handijit/design/tokens.css` → `@handijitcom/ui/tokens.css` (the same for `fonts.css`,
+  `tokens.scss`, `tokens.json`, `fonts/*`, `logos/*`).
+- Remove `@handijit/design` from the application's dependencies.
+
 ## [1.0.0] - 2026-11-26
 
 First release under the `@handijitcom` npm organization. The package was previously published as `@handijit/ui` (last version 2.5.0); the API is unchanged, only the package name and the version line reset.
@@ -445,16 +463,16 @@ Without `tokens.css` every component renders without colour, radius and spacing.
 
 #### 3. Theme attribute, storage and boot script
 
-| 1.x | 2.0 |
-| --- | --- |
-| `<html data-ui-theme="dark">` | `<html data-theme="dark">` |
-| `[data-ui-theme='dark'] .x { … }` | `[data-theme='dark'] .x { … }` |
-| no attribute = follow the system | the boot script and `useUiTheme` write the resolved theme; without either, `tokens.css` still follows `prefers-color-scheme` |
-| `<UiThemeScript storageKey="theme" />` | `<UiThemeScript />` or `<UiThemeScript nonce={nonce} />`; the key is always `hd-theme` |
-| the application's own storage key | `localStorage["hd-theme"]` (`THEME_STORAGE_KEY`), values `light` / `dark`, absent = system. Copy a stored choice over once if it must survive the upgrade. |
-| `data-ui-density="compact"`, `COMPACT_DENSITY`, `DENSITY_ATTRIBUTE` | removed, no replacement |
-| `THEME_ATTRIBUTE` (`'data-ui-theme'`) | `THEME_ATTRIBUTE` (`'data-theme'`), re-exported from design |
-| `<style id="ui-theme-overrides">` | no longer rendered |
+| 1.x                                                                 | 2.0                                                                                                                                                        |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<html data-ui-theme="dark">`                                       | `<html data-theme="dark">`                                                                                                                                 |
+| `[data-ui-theme='dark'] .x { … }`                                   | `[data-theme='dark'] .x { … }`                                                                                                                             |
+| no attribute = follow the system                                    | the boot script and `useUiTheme` write the resolved theme; without either, `tokens.css` still follows `prefers-color-scheme`                               |
+| `<UiThemeScript storageKey="theme" />`                              | `<UiThemeScript />` or `<UiThemeScript nonce={nonce} />`; the key is always `hd-theme`                                                                     |
+| the application's own storage key                                   | `localStorage["hd-theme"]` (`THEME_STORAGE_KEY`), values `light` / `dark`, absent = system. Copy a stored choice over once if it must survive the upgrade. |
+| `data-ui-density="compact"`, `COMPACT_DENSITY`, `DENSITY_ATTRIBUTE` | removed, no replacement                                                                                                                                    |
+| `THEME_ATTRIBUTE` (`'data-ui-theme'`)                               | `THEME_ATTRIBUTE` (`'data-theme'`), re-exported from design                                                                                                |
+| `<style id="ui-theme-overrides">`                                   | no longer rendered                                                                                                                                         |
 
 Content-Security-Policy: pass the request nonce to `UiThemeScript`, or add
 `THEME_BOOT_SCRIPT_HASH` (`'sha256-…'`, already quoted for the header) to `script-src`. The library
@@ -462,39 +480,39 @@ injects nothing else: no `<style>` element, no other script.
 
 #### 4. Theme overrides
 
-| 1.x | 2.0 |
-| --- | --- |
-| `initUi({ theme, colorScheme, density })` | delete the call; see the rows below |
-| `<UiProvider theme={{ light: { link: '#0a58ca' } }}>` | `:root { --hd-primary-text: #0a58ca; }` in the application's stylesheet (per theme: `[data-theme='dark'] { … }`) |
-| `applyThemeConfig(config)`, `buildThemeCss(config)`, `resolveTokens(config)` | removed; write `--hd-*` declarations |
-| `LIGHT_THEME`, `DARK_THEME` | `themes.light`, `themes.dark` from `@handijit/design` |
-| `DEFAULT_FONTS`, `UiFonts` | `--hd-font-display`, `--hd-font-body`, `--hd-font-mono` |
-| `METRIC_TOKENS`, `UiMetrics`, `UiMetricToken` | `radii`, `spacing`, `typography`, `motion` from `@handijit/design` |
-| `UiToken`, `UiThemeTokens`, `UiResolvedTokens` | `TokenName` from `@handijit/design` |
-| `UiThemeConfig`, `InitUiOptions`, `UiDensity` | removed |
-| `useUi().theme` | removed; `useUi()` returns `linkComponent` and `labels` |
-| `useUiTokens(['series-1', 'border'])` | `useUiTokens(['chart-1', 'border'])`: design token names without `--hd-` |
-| `setScheme('system')` removed the attribute | removes the stored key and writes the system's theme to the attribute |
+| 1.x                                                                          | 2.0                                                                                                              |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `initUi({ theme, colorScheme, density })`                                    | delete the call; see the rows below                                                                              |
+| `<UiProvider theme={{ light: { link: '#0a58ca' } }}>`                        | `:root { --hd-primary-text: #0a58ca; }` in the application's stylesheet (per theme: `[data-theme='dark'] { … }`) |
+| `applyThemeConfig(config)`, `buildThemeCss(config)`, `resolveTokens(config)` | removed; write `--hd-*` declarations                                                                             |
+| `LIGHT_THEME`, `DARK_THEME`                                                  | `themes.light`, `themes.dark` from `@handijit/design`                                                            |
+| `DEFAULT_FONTS`, `UiFonts`                                                   | `--hd-font-display`, `--hd-font-body`, `--hd-font-mono`                                                          |
+| `METRIC_TOKENS`, `UiMetrics`, `UiMetricToken`                                | `radii`, `spacing`, `typography`, `motion` from `@handijit/design`                                               |
+| `UiToken`, `UiThemeTokens`, `UiResolvedTokens`                               | `TokenName` from `@handijit/design`                                                                              |
+| `UiThemeConfig`, `InitUiOptions`, `UiDensity`                                | removed                                                                                                          |
+| `useUi().theme`                                                              | removed; `useUi()` returns `linkComponent` and `labels`                                                          |
+| `useUiTokens(['series-1', 'border'])`                                        | `useUiTokens(['chart-1', 'border'])`: design token names without `--hd-`                                         |
+| `setScheme('system')` removed the attribute                                  | removes the stored key and writes the system's theme to the attribute                                            |
 
 #### 5. Variants, tones and props
 
-| Component | 1.x | 2.0 |
-| --- | --- | --- |
-| `Button` | `UIVariant.CART` | `UIVariant.ACCENT` |
-| `Button` | `UIVariant.LIGHT` | `UIVariant.SOFT` |
-| `Button` | `UIVariant.DARK` | `UIVariant.ON_BAND` |
-| `Button` | `PRIMARY`, `SECONDARY`, `OUTLINE`, `GHOST`, `DANGER` | unchanged names; `PRIMARY` is cobalt, `OUTLINE` a cobalt frame, `GHOST` link-coloured text |
-| `IconButton` | `variant="cart"` | `variant="accent"` |
-| `Badge` | `tone="oem"` | `tone="info"` |
-| `Badge` | `tone="alt"` | `tone="highlight"` |
-| `Badge` | `tone="sale"` | `tone="danger" variant="solid"` (a discount) or `tone="success"` (a positive change) |
-| `Badge` | `tone="action"` | `tone="info" variant="solid"` |
-| `Badge` | `tone="link"` | `tone="info"` |
-| charts, `Legend`, `SegmentBar` | `tone="cat-1"` … `"cat-5"` | `"chart-1"` … `"chart-5"` |
-| charts, `Legend`, `SegmentBar` | `tone="series-1"` | `"chart-1"` |
-| charts, `Legend`, `SegmentBar` | `tone="series-2"` | `"chart-6"` |
-| `UiThemeScript` | `storageKey` (required) | removed; `nonce` (optional) added |
-| `UiProvider` | `theme` | removed |
+| Component                      | 1.x                                                  | 2.0                                                                                        |
+| ------------------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `Button`                       | `UIVariant.CART`                                     | `UIVariant.ACCENT`                                                                         |
+| `Button`                       | `UIVariant.LIGHT`                                    | `UIVariant.SOFT`                                                                           |
+| `Button`                       | `UIVariant.DARK`                                     | `UIVariant.ON_BAND`                                                                        |
+| `Button`                       | `PRIMARY`, `SECONDARY`, `OUTLINE`, `GHOST`, `DANGER` | unchanged names; `PRIMARY` is cobalt, `OUTLINE` a cobalt frame, `GHOST` link-coloured text |
+| `IconButton`                   | `variant="cart"`                                     | `variant="accent"`                                                                         |
+| `Badge`                        | `tone="oem"`                                         | `tone="info"`                                                                              |
+| `Badge`                        | `tone="alt"`                                         | `tone="highlight"`                                                                         |
+| `Badge`                        | `tone="sale"`                                        | `tone="danger" variant="solid"` (a discount) or `tone="success"` (a positive change)       |
+| `Badge`                        | `tone="action"`                                      | `tone="info" variant="solid"`                                                              |
+| `Badge`                        | `tone="link"`                                        | `tone="info"`                                                                              |
+| charts, `Legend`, `SegmentBar` | `tone="cat-1"` … `"cat-5"`                           | `"chart-1"` … `"chart-5"`                                                                  |
+| charts, `Legend`, `SegmentBar` | `tone="series-1"`                                    | `"chart-1"`                                                                                |
+| charts, `Legend`, `SegmentBar` | `tone="series-2"`                                    | `"chart-6"`                                                                                |
+| `UiThemeScript`                | `storageKey` (required)                              | removed; `nonce` (optional) added                                                          |
+| `UiProvider`                   | `theme`                                              | removed                                                                                    |
 
 `UISize` kept its four members; the heights changed (see Breaking).
 
@@ -520,186 +538,186 @@ column.
 (`$radius-sm`, `$radius-md`, `$radius-lg`, `$space-8`, `$font-size-body`, `$z-base`, `$z-raised`);
 applying the rows one after another would rename a value twice.
 
-| 1.x (`$name` and `--ui-name`) | 2.0 SCSS variable | 2.0 custom property | Note |
-| --- | --- | --- | --- |
-| `$action` | `$primary` | `--hd-primary` |  |
-| `$action-active` | `$primary-active` | `--hd-primary-active` |  |
-| `$action-hover` | `$primary-hover` | `--hd-primary-hover` |  |
-| `$action-line` | `$primary` | `--hd-primary` | the primary fill has no separate line |
-| `$action-soft` | `$bg-disabled` | `--hd-bg-disabled` | the disabled fill |
-| `$alt-bg` | `$highlight-soft` | `--hd-highlight-soft` |  |
-| `$alt-fg` | `$highlight-text` | `--hd-highlight-text` |  |
-| `$alt-line` | `$highlight` | `--hd-highlight` |  |
-| `$bad-bg` | `$danger-bg` | `--hd-danger-bg` |  |
-| `$bad-fg` | `$danger-fg` | `--hd-danger-fg` |  |
-| `$bad-line` | `$danger-line` | `--hd-danger-line` |  |
-| `$band-accent` | `$highlight` | `--hd-highlight` |  |
-| `$band-fg` | `$band-text` | `--hd-band-text` |  |
-| `$band-fg-2` | `$band-text-2` | `--hd-band-text-2` |  |
-| `$band-fg-3` | `$band-text-2` | `--hd-band-text-2` |  |
-| `$band-hover` | `$band-line` | `--hd-band-line` |  |
-| `$breakpoint-desktop` | `$breakpoint-xl` | — (SCSS only) |  |
-| `$breakpoint-mobile` | `$breakpoint-sm` | — (SCSS only) |  |
-| `$breakpoint-tablet` | `$breakpoint-lg` | — (SCSS only) |  |
-| `$breakpoint-tablet-portrait` | `$breakpoint-md` | — (SCSS only) |  |
-| `$cart` | `$accent` | `--hd-accent` |  |
-| `$cart-active` | `$accent-active` | `--hd-accent-active` |  |
-| `$cart-hover` | `$accent-hover` | `--hd-accent-hover` |  |
-| `$cart-soft` | `$bg-disabled` | `--hd-bg-disabled` | the disabled fill |
-| `$cat-1` | `$chart-1` | `--hd-chart-1` |  |
-| `$cat-2` | `$chart-2` | `--hd-chart-2` |  |
-| `$cat-3` | `$chart-3` | `--hd-chart-3` |  |
-| `$cat-4` | `$chart-4` | `--hd-chart-4` |  |
-| `$cat-5` | `$chart-5` | `--hd-chart-5` |  |
-| `$danger-solid-hover` | — | — | no token; `color-mix(in oklab, #{ui.$danger-solid} 88%, black)` is what `Button` uses |
-| `$duration-instant` | `$duration-fast` | `--hd-duration-fast` |  |
-| `$duration-normal` | `$duration-base` | `--hd-duration-base` |  |
-| `$ease-in-out` | `$ease-standard` | `--hd-ease-standard` |  |
-| `$ease-out` | `$ease-standard` | `--hd-ease-standard` | or `$ease-enter` for something that appears |
-| `$ease-spring` | `$ease-standard` | `--hd-ease-standard` | no overshoot curve in the design |
-| `$font-heading` | `$font-display` | `--hd-font-display` |  |
-| `$font-size-2xl` | `$font-size-h2` | `--hd-type-h2-size` |  |
-| `$font-size-2xs` | `$font-size-caption` | `--hd-type-caption-size` | 12px; the design has nothing smaller |
-| `$font-size-3xl` | `$font-size-h2` | `--hd-type-h2-size` | or `$font-size-h1` |
-| `$font-size-4xl` | `$font-size-h1` | `--hd-type-h1-size` |  |
-| `$font-size-base` | `$font-size-body` | `--hd-type-body-size` |  |
-| `$font-size-body` | `$font-size-lead` | `--hd-type-lead-size` | 17px; `$font-size-body` is now 15px |
-| `$font-size-lg` | `$font-size-h4` | `--hd-type-h4-size` |  |
-| `$font-size-sm` | `$font-size-small` | `--hd-type-small-size` |  |
-| `$font-size-xl` | `$font-size-h3` | `--hd-type-h3-size` |  |
-| `$font-size-xs` | `$font-size-caption` | `--hd-type-caption-size` |  |
-| `$font-steps` | `$type-roles` | — (SCSS only) | the list of type roles |
-| `$font-ui` | `$font-body` | `--hd-font-body` |  |
-| `$footer-bg` | `$bg-raised` | `--hd-bg-raised` |  |
-| `$glass` | `$bg-overlay` | `--hd-bg-overlay` | opaque; the design has no translucent surface |
-| `$glass-solid` | `$bg-overlay` | `--hd-bg-overlay` |  |
-| `$glow-1` | — | — | removed, no replacement: decorative glows are gone |
-| `$glow-2` | — | — | removed, no replacement |
-| `$glow-cart` | — | — | removed, no replacement |
-| `$green-accent` | `$success-solid` | `--hd-success-solid` |  |
-| `$green-accent-hover` | `$success-solid` | `--hd-success-solid` | one success fill |
-| `$leading-relaxed` | `$leading-normal` | `--hd-type-body-line-height` |  |
-| `$link` | `$primary-text` | `--hd-primary-text` |  |
-| `$link-hover` | `$primary-text` | `--hd-primary-text` | the hover is an underline, not a second colour |
-| `$media-bg` | `$bg-inset` | `--hd-bg-inset` |  |
-| `$nav-bg` | `$bg-surface` | `--hd-bg-surface` | a plain surface; `$band-*` is the cobalt brand band |
-| `$nav-bg-2` | `$bg-raised` | `--hd-bg-raised` |  |
-| `$nav-fg` | `$text` | `--hd-text` |  |
-| `$nav-fg-2` | `$text-2` | `--hd-text-2` |  |
-| `$nav-fg-3` | `$text-3` | `--hd-text-3` |  |
-| `$nav-hover` | `$state-hover` | — (SCSS only) |  |
-| `$nav-line` | `$border` | `--hd-border` |  |
-| `$nav-line-strong` | `$border-strong` | `--hd-border-strong` |  |
-| `$oem-bg` | `$info-bg` | `--hd-info-bg` |  |
-| `$oem-fg` | `$info-fg` | `--hd-info-fg` |  |
-| `$oem-line` | `$info-line` | `--hd-info-line` |  |
-| `$off-bg` | `$bg-raised` | `--hd-bg-raised` | the "off" role is the neutral tone |
-| `$off-fg` | `$text-2` | `--hd-text-2` |  |
-| `$off-line` | `$border` | `--hd-border` |  |
-| `$ok-bg` | `$success-bg` | `--hd-success-bg` |  |
-| `$ok-fg` | `$success-fg` | `--hd-success-fg` |  |
-| `$ok-line` | `$success-line` | `--hd-success-line` |  |
-| `$on-action` | `$on-primary` | `--hd-on-primary` |  |
-| `$on-action-soft` | `$text-disabled` | `--hd-text-disabled` | text on the disabled fill |
-| `$on-cart` | `$on-accent` | `--hd-on-accent` |  |
-| `$on-danger` | `$danger-on-solid` | `--hd-danger-on-solid` |  |
-| `$on-green` | `$success-on-solid` | `--hd-success-on-solid` |  |
-| `$on-scrim` | `$inverse-text` | `--hd-slate-50` | light text on a dark, theme-independent backdrop |
-| `$on-selected` | `$on-primary` | `--hd-on-primary` |  |
-| `$on-shell` | `$inverse-text` | `--hd-slate-50` |  |
-| `$on-shell-2` | `$inverse-text-2` | `--hd-slate-300` |  |
-| `$on-shell-danger` | `$inverse-danger` | `--hd-danger-300` |  |
-| `$page` | `$bg-page` | `--hd-bg-page` |  |
-| `$radius-lg` | `$radius-md` | `--hd-radius-md` | 12px → 14px |
-| `$radius-md` | `$radius-sm` | `--hd-radius-sm` | 8px → 10px |
-| `$radius-sm` | `$radius-xs` | `--hd-radius-xs` | 6px stays 6px |
-| `$radius-xl` | `$radius-lg` | `--hd-radius-lg` |  |
-| `$red-accent` | `$danger-solid` | `--hd-danger-solid` |  |
-| `$ring` | `$focus-halo` | — (SCSS only) | the 3px focus halo of fields |
-| `$ring-color` | `$focus` | `--hd-focus` | the 2px focus outline |
-| `$ring-danger` | `$danger-halo` | — (SCSS only) |  |
-| `$ring-ok` | — | — | removed, no replacement: a valid field has no halo |
-| `$sale-bg` | `$danger-solid` | `--hd-danger-solid` | the "sale" role is `Badge tone="danger" variant="solid"` |
-| `$sale-fg` | `$danger-on-solid` | `--hd-danger-on-solid` |  |
-| `$scrim-soft` | `$scrim` | `--hd-scrim` |  |
-| `$selected` | `$primary` | `--hd-primary` |  |
-| `$selected-active` | `$primary-active` | `--hd-primary-active` |  |
-| `$selected-hover` | `$primary-hover` | `--hd-primary-hover` |  |
-| `$selected-line` | `$primary-line` | `--hd-primary-line` |  |
-| `$selected-tint` | `$primary-soft` | `--hd-primary-soft` |  |
-| `$series-1` | `$chart-1` | `--hd-chart-1` |  |
-| `$series-2` | `$chart-6` | `--hd-chart-6` |  |
-| `$shadow-lg` | `$shadow-2` | `--hd-shadow-2` |  |
-| `$shadow-md` | `$shadow-2` | `--hd-shadow-2` |  |
-| `$shadow-sm` | `$shadow-1` | `--hd-shadow-1` |  |
-| `$shadow-xl` | `$shadow-3` | `--hd-shadow-3` |  |
-| `$shadow-xs` | `$shadow-1` | `--hd-shadow-1` |  |
-| `$shell` | `$inverse-bg` | `--hd-slate-900` |  |
-| `$shell-2` | `$inverse-bg-2` | `--hd-slate-800` |  |
-| `$shell-3` | `$inverse-bg-2` | `--hd-slate-800` |  |
-| `$shell-line` | `$inverse-line` | `--hd-slate-700` |  |
-| `$skeleton-a` | `$bg-disabled` | `--hd-bg-disabled` | use `@include ui.skeleton` |
-| `$skeleton-b` | `$border` | `--hd-border` | use `@include ui.skeleton` |
-| `$space-7` | `$space-10` | `--hd-space-10` |  |
-| `$space-8` | `$space-12` | `--hd-space-12` | up to 64px → 48px |
-| `$space-9` | `$space-16` | `--hd-space-16` |  |
-| `$space-scale` | — | — | removed with the density setting |
-| `$star` | `$warning-solid` | `--hd-warning-solid` |  |
-| `$surface` | `$bg-surface` | `--hd-bg-surface` |  |
-| `$surface-2` | `$bg-raised` | `--hd-bg-raised` |  |
-| `$surface-3` | `$bg-inset` | `--hd-bg-inset` |  |
-| `$surface-inset` | `$bg-inset` | `--hd-bg-inset` |  |
-| `$track` | `$bg-inset` | `--hd-bg-inset` |  |
-| `$tracking-logo` | — | — | removed, no replacement: the logo is an asset of `@handijit/design` |
-| `$type-scale` | — | — | removed with the density setting |
-| `$warn-bg` | `$warning-bg` | `--hd-warning-bg` |  |
-| `$warn-fg` | `$warning-fg` | `--hd-warning-fg` |  |
-| `$warn-line` | `$warning-line` | `--hd-warning-line` |  |
-| `$z-base` | `$z-raised` | `--hd-z-raised` | 1; `$z-base` is now 0 |
-| `$z-raised` | `$z-sticky` | `--hd-z-sticky` | a sticky layer; `$z-raised` is now 1 |
+| 1.x (`$name` and `--ui-name`) | 2.0 SCSS variable    | 2.0 custom property          | Note                                                                                  |
+| ----------------------------- | -------------------- | ---------------------------- | ------------------------------------------------------------------------------------- |
+| `$action`                     | `$primary`           | `--hd-primary`               |                                                                                       |
+| `$action-active`              | `$primary-active`    | `--hd-primary-active`        |                                                                                       |
+| `$action-hover`               | `$primary-hover`     | `--hd-primary-hover`         |                                                                                       |
+| `$action-line`                | `$primary`           | `--hd-primary`               | the primary fill has no separate line                                                 |
+| `$action-soft`                | `$bg-disabled`       | `--hd-bg-disabled`           | the disabled fill                                                                     |
+| `$alt-bg`                     | `$highlight-soft`    | `--hd-highlight-soft`        |                                                                                       |
+| `$alt-fg`                     | `$highlight-text`    | `--hd-highlight-text`        |                                                                                       |
+| `$alt-line`                   | `$highlight`         | `--hd-highlight`             |                                                                                       |
+| `$bad-bg`                     | `$danger-bg`         | `--hd-danger-bg`             |                                                                                       |
+| `$bad-fg`                     | `$danger-fg`         | `--hd-danger-fg`             |                                                                                       |
+| `$bad-line`                   | `$danger-line`       | `--hd-danger-line`           |                                                                                       |
+| `$band-accent`                | `$highlight`         | `--hd-highlight`             |                                                                                       |
+| `$band-fg`                    | `$band-text`         | `--hd-band-text`             |                                                                                       |
+| `$band-fg-2`                  | `$band-text-2`       | `--hd-band-text-2`           |                                                                                       |
+| `$band-fg-3`                  | `$band-text-2`       | `--hd-band-text-2`           |                                                                                       |
+| `$band-hover`                 | `$band-line`         | `--hd-band-line`             |                                                                                       |
+| `$breakpoint-desktop`         | `$breakpoint-xl`     | — (SCSS only)                |                                                                                       |
+| `$breakpoint-mobile`          | `$breakpoint-sm`     | — (SCSS only)                |                                                                                       |
+| `$breakpoint-tablet`          | `$breakpoint-lg`     | — (SCSS only)                |                                                                                       |
+| `$breakpoint-tablet-portrait` | `$breakpoint-md`     | — (SCSS only)                |                                                                                       |
+| `$cart`                       | `$accent`            | `--hd-accent`                |                                                                                       |
+| `$cart-active`                | `$accent-active`     | `--hd-accent-active`         |                                                                                       |
+| `$cart-hover`                 | `$accent-hover`      | `--hd-accent-hover`          |                                                                                       |
+| `$cart-soft`                  | `$bg-disabled`       | `--hd-bg-disabled`           | the disabled fill                                                                     |
+| `$cat-1`                      | `$chart-1`           | `--hd-chart-1`               |                                                                                       |
+| `$cat-2`                      | `$chart-2`           | `--hd-chart-2`               |                                                                                       |
+| `$cat-3`                      | `$chart-3`           | `--hd-chart-3`               |                                                                                       |
+| `$cat-4`                      | `$chart-4`           | `--hd-chart-4`               |                                                                                       |
+| `$cat-5`                      | `$chart-5`           | `--hd-chart-5`               |                                                                                       |
+| `$danger-solid-hover`         | —                    | —                            | no token; `color-mix(in oklab, #{ui.$danger-solid} 88%, black)` is what `Button` uses |
+| `$duration-instant`           | `$duration-fast`     | `--hd-duration-fast`         |                                                                                       |
+| `$duration-normal`            | `$duration-base`     | `--hd-duration-base`         |                                                                                       |
+| `$ease-in-out`                | `$ease-standard`     | `--hd-ease-standard`         |                                                                                       |
+| `$ease-out`                   | `$ease-standard`     | `--hd-ease-standard`         | or `$ease-enter` for something that appears                                           |
+| `$ease-spring`                | `$ease-standard`     | `--hd-ease-standard`         | no overshoot curve in the design                                                      |
+| `$font-heading`               | `$font-display`      | `--hd-font-display`          |                                                                                       |
+| `$font-size-2xl`              | `$font-size-h2`      | `--hd-type-h2-size`          |                                                                                       |
+| `$font-size-2xs`              | `$font-size-caption` | `--hd-type-caption-size`     | 12px; the design has nothing smaller                                                  |
+| `$font-size-3xl`              | `$font-size-h2`      | `--hd-type-h2-size`          | or `$font-size-h1`                                                                    |
+| `$font-size-4xl`              | `$font-size-h1`      | `--hd-type-h1-size`          |                                                                                       |
+| `$font-size-base`             | `$font-size-body`    | `--hd-type-body-size`        |                                                                                       |
+| `$font-size-body`             | `$font-size-lead`    | `--hd-type-lead-size`        | 17px; `$font-size-body` is now 15px                                                   |
+| `$font-size-lg`               | `$font-size-h4`      | `--hd-type-h4-size`          |                                                                                       |
+| `$font-size-sm`               | `$font-size-small`   | `--hd-type-small-size`       |                                                                                       |
+| `$font-size-xl`               | `$font-size-h3`      | `--hd-type-h3-size`          |                                                                                       |
+| `$font-size-xs`               | `$font-size-caption` | `--hd-type-caption-size`     |                                                                                       |
+| `$font-steps`                 | `$type-roles`        | — (SCSS only)                | the list of type roles                                                                |
+| `$font-ui`                    | `$font-body`         | `--hd-font-body`             |                                                                                       |
+| `$footer-bg`                  | `$bg-raised`         | `--hd-bg-raised`             |                                                                                       |
+| `$glass`                      | `$bg-overlay`        | `--hd-bg-overlay`            | opaque; the design has no translucent surface                                         |
+| `$glass-solid`                | `$bg-overlay`        | `--hd-bg-overlay`            |                                                                                       |
+| `$glow-1`                     | —                    | —                            | removed, no replacement: decorative glows are gone                                    |
+| `$glow-2`                     | —                    | —                            | removed, no replacement                                                               |
+| `$glow-cart`                  | —                    | —                            | removed, no replacement                                                               |
+| `$green-accent`               | `$success-solid`     | `--hd-success-solid`         |                                                                                       |
+| `$green-accent-hover`         | `$success-solid`     | `--hd-success-solid`         | one success fill                                                                      |
+| `$leading-relaxed`            | `$leading-normal`    | `--hd-type-body-line-height` |                                                                                       |
+| `$link`                       | `$primary-text`      | `--hd-primary-text`          |                                                                                       |
+| `$link-hover`                 | `$primary-text`      | `--hd-primary-text`          | the hover is an underline, not a second colour                                        |
+| `$media-bg`                   | `$bg-inset`          | `--hd-bg-inset`              |                                                                                       |
+| `$nav-bg`                     | `$bg-surface`        | `--hd-bg-surface`            | a plain surface; `$band-*` is the cobalt brand band                                   |
+| `$nav-bg-2`                   | `$bg-raised`         | `--hd-bg-raised`             |                                                                                       |
+| `$nav-fg`                     | `$text`              | `--hd-text`                  |                                                                                       |
+| `$nav-fg-2`                   | `$text-2`            | `--hd-text-2`                |                                                                                       |
+| `$nav-fg-3`                   | `$text-3`            | `--hd-text-3`                |                                                                                       |
+| `$nav-hover`                  | `$state-hover`       | — (SCSS only)                |                                                                                       |
+| `$nav-line`                   | `$border`            | `--hd-border`                |                                                                                       |
+| `$nav-line-strong`            | `$border-strong`     | `--hd-border-strong`         |                                                                                       |
+| `$oem-bg`                     | `$info-bg`           | `--hd-info-bg`               |                                                                                       |
+| `$oem-fg`                     | `$info-fg`           | `--hd-info-fg`               |                                                                                       |
+| `$oem-line`                   | `$info-line`         | `--hd-info-line`             |                                                                                       |
+| `$off-bg`                     | `$bg-raised`         | `--hd-bg-raised`             | the "off" role is the neutral tone                                                    |
+| `$off-fg`                     | `$text-2`            | `--hd-text-2`                |                                                                                       |
+| `$off-line`                   | `$border`            | `--hd-border`                |                                                                                       |
+| `$ok-bg`                      | `$success-bg`        | `--hd-success-bg`            |                                                                                       |
+| `$ok-fg`                      | `$success-fg`        | `--hd-success-fg`            |                                                                                       |
+| `$ok-line`                    | `$success-line`      | `--hd-success-line`          |                                                                                       |
+| `$on-action`                  | `$on-primary`        | `--hd-on-primary`            |                                                                                       |
+| `$on-action-soft`             | `$text-disabled`     | `--hd-text-disabled`         | text on the disabled fill                                                             |
+| `$on-cart`                    | `$on-accent`         | `--hd-on-accent`             |                                                                                       |
+| `$on-danger`                  | `$danger-on-solid`   | `--hd-danger-on-solid`       |                                                                                       |
+| `$on-green`                   | `$success-on-solid`  | `--hd-success-on-solid`      |                                                                                       |
+| `$on-scrim`                   | `$inverse-text`      | `--hd-slate-50`              | light text on a dark, theme-independent backdrop                                      |
+| `$on-selected`                | `$on-primary`        | `--hd-on-primary`            |                                                                                       |
+| `$on-shell`                   | `$inverse-text`      | `--hd-slate-50`              |                                                                                       |
+| `$on-shell-2`                 | `$inverse-text-2`    | `--hd-slate-300`             |                                                                                       |
+| `$on-shell-danger`            | `$inverse-danger`    | `--hd-danger-300`            |                                                                                       |
+| `$page`                       | `$bg-page`           | `--hd-bg-page`               |                                                                                       |
+| `$radius-lg`                  | `$radius-md`         | `--hd-radius-md`             | 12px → 14px                                                                           |
+| `$radius-md`                  | `$radius-sm`         | `--hd-radius-sm`             | 8px → 10px                                                                            |
+| `$radius-sm`                  | `$radius-xs`         | `--hd-radius-xs`             | 6px stays 6px                                                                         |
+| `$radius-xl`                  | `$radius-lg`         | `--hd-radius-lg`             |                                                                                       |
+| `$red-accent`                 | `$danger-solid`      | `--hd-danger-solid`          |                                                                                       |
+| `$ring`                       | `$focus-halo`        | — (SCSS only)                | the 3px focus halo of fields                                                          |
+| `$ring-color`                 | `$focus`             | `--hd-focus`                 | the 2px focus outline                                                                 |
+| `$ring-danger`                | `$danger-halo`       | — (SCSS only)                |                                                                                       |
+| `$ring-ok`                    | —                    | —                            | removed, no replacement: a valid field has no halo                                    |
+| `$sale-bg`                    | `$danger-solid`      | `--hd-danger-solid`          | the "sale" role is `Badge tone="danger" variant="solid"`                              |
+| `$sale-fg`                    | `$danger-on-solid`   | `--hd-danger-on-solid`       |                                                                                       |
+| `$scrim-soft`                 | `$scrim`             | `--hd-scrim`                 |                                                                                       |
+| `$selected`                   | `$primary`           | `--hd-primary`               |                                                                                       |
+| `$selected-active`            | `$primary-active`    | `--hd-primary-active`        |                                                                                       |
+| `$selected-hover`             | `$primary-hover`     | `--hd-primary-hover`         |                                                                                       |
+| `$selected-line`              | `$primary-line`      | `--hd-primary-line`          |                                                                                       |
+| `$selected-tint`              | `$primary-soft`      | `--hd-primary-soft`          |                                                                                       |
+| `$series-1`                   | `$chart-1`           | `--hd-chart-1`               |                                                                                       |
+| `$series-2`                   | `$chart-6`           | `--hd-chart-6`               |                                                                                       |
+| `$shadow-lg`                  | `$shadow-2`          | `--hd-shadow-2`              |                                                                                       |
+| `$shadow-md`                  | `$shadow-2`          | `--hd-shadow-2`              |                                                                                       |
+| `$shadow-sm`                  | `$shadow-1`          | `--hd-shadow-1`              |                                                                                       |
+| `$shadow-xl`                  | `$shadow-3`          | `--hd-shadow-3`              |                                                                                       |
+| `$shadow-xs`                  | `$shadow-1`          | `--hd-shadow-1`              |                                                                                       |
+| `$shell`                      | `$inverse-bg`        | `--hd-slate-900`             |                                                                                       |
+| `$shell-2`                    | `$inverse-bg-2`      | `--hd-slate-800`             |                                                                                       |
+| `$shell-3`                    | `$inverse-bg-2`      | `--hd-slate-800`             |                                                                                       |
+| `$shell-line`                 | `$inverse-line`      | `--hd-slate-700`             |                                                                                       |
+| `$skeleton-a`                 | `$bg-disabled`       | `--hd-bg-disabled`           | use `@include ui.skeleton`                                                            |
+| `$skeleton-b`                 | `$border`            | `--hd-border`                | use `@include ui.skeleton`                                                            |
+| `$space-7`                    | `$space-10`          | `--hd-space-10`              |                                                                                       |
+| `$space-8`                    | `$space-12`          | `--hd-space-12`              | up to 64px → 48px                                                                     |
+| `$space-9`                    | `$space-16`          | `--hd-space-16`              |                                                                                       |
+| `$space-scale`                | —                    | —                            | removed with the density setting                                                      |
+| `$star`                       | `$warning-solid`     | `--hd-warning-solid`         |                                                                                       |
+| `$surface`                    | `$bg-surface`        | `--hd-bg-surface`            |                                                                                       |
+| `$surface-2`                  | `$bg-raised`         | `--hd-bg-raised`             |                                                                                       |
+| `$surface-3`                  | `$bg-inset`          | `--hd-bg-inset`              |                                                                                       |
+| `$surface-inset`              | `$bg-inset`          | `--hd-bg-inset`              |                                                                                       |
+| `$track`                      | `$bg-inset`          | `--hd-bg-inset`              |                                                                                       |
+| `$tracking-logo`              | —                    | —                            | removed, no replacement: the logo is an asset of `@handijit/design`                   |
+| `$type-scale`                 | —                    | —                            | removed with the density setting                                                      |
+| `$warn-bg`                    | `$warning-bg`        | `--hd-warning-bg`            |                                                                                       |
+| `$warn-fg`                    | `$warning-fg`        | `--hd-warning-fg`            |                                                                                       |
+| `$warn-line`                  | `$warning-line`      | `--hd-warning-line`          |                                                                                       |
+| `$z-base`                     | `$z-raised`          | `--hd-z-raised`              | 1; `$z-base` is now 0                                                                 |
+| `$z-raised`                   | `$z-sticky`          | `--hd-z-sticky`              | a sticky layer; `$z-raised` is now 1                                                  |
 
 Names that stayed and now carry the design value (no edit needed, but the pixels moved):
 
-| Variable | 1.x | 2.0 |
-| --- | --- | --- |
-| `$space-1` … `$space-6` | 4, 8, then fluid up to 12 / 16 / 24 / 32px | 4, 8, 12, 16, 20, 24px (`$space-8` is 32px) |
-| `$radius-xs` | 4px | 6px |
-| `$radius-pill` | 999px | 999px |
-| `$container-max-width` | 1360px | 1280px (`$breakpoint-xl`) |
-| `$duration-fast` / `$duration-slow` | 140ms / 320ms | 120ms / 320ms |
-| `$z-dropdown` / `$z-toast` / `$z-tooltip` | 200 / 500 / 450 | 1000 / 1400 / 1500 |
-| `$font-size-control` | at least 16px | at least 16px (unchanged rule, design body size) |
-| `$weight-*`, `$leading-*`, `$tracking-tight`, `$tracking-snug` | constants | the design type tokens |
-| `$text`, `$text-2`, `$text-3`, `$border`, `$border-strong`, `$scrim`, `$band-bg`, `$band-line`, `$danger-solid`, `$font-body`, `$font-mono` | `var(--ui-…)` | `var(--hd-…)` of the same name |
+| Variable                                                                                                                                    | 1.x                                        | 2.0                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------ |
+| `$space-1` … `$space-6`                                                                                                                     | 4, 8, then fluid up to 12 / 16 / 24 / 32px | 4, 8, 12, 16, 20, 24px (`$space-8` is 32px)      |
+| `$radius-xs`                                                                                                                                | 4px                                        | 6px                                              |
+| `$radius-pill`                                                                                                                              | 999px                                      | 999px                                            |
+| `$container-max-width`                                                                                                                      | 1360px                                     | 1280px (`$breakpoint-xl`)                        |
+| `$duration-fast` / `$duration-slow`                                                                                                         | 140ms / 320ms                              | 120ms / 320ms                                    |
+| `$z-dropdown` / `$z-toast` / `$z-tooltip`                                                                                                   | 200 / 500 / 450                            | 1000 / 1400 / 1500                               |
+| `$font-size-control`                                                                                                                        | at least 16px                              | at least 16px (unchanged rule, design body size) |
+| `$weight-*`, `$leading-*`, `$tracking-tight`, `$tracking-snug`                                                                              | constants                                  | the design type tokens                           |
+| `$text`, `$text-2`, `$text-3`, `$border`, `$border-strong`, `$scrim`, `$band-bg`, `$band-line`, `$danger-solid`, `$font-body`, `$font-mono` | `var(--ui-…)`                              | `var(--hd-…)` of the same name                   |
 
 Custom properties without an SCSS twin:
 
-| 1.x | 2.0 |
-| --- | --- |
-| `--ui-font-size-<step>` | `--hd-type-<role>-size` (roles in the table above) |
+| 1.x                                                           | 2.0                                                             |
+| ------------------------------------------------------------- | --------------------------------------------------------------- |
+| `--ui-font-size-<step>`                                       | `--hd-type-<role>-size` (roles in the table above)              |
 | `--ui-syntax-keyword`, `-name`, `-number`, `-string`, `-type` | removed; `CodeBlock` colours its tokens from the design palette |
-| `--ui-anim-*` | unchanged (`$anim-*`) |
+| `--ui-anim-*`                                                 | unchanged (`$anim-*`)                                           |
 
 #### 8. Mixins
 
-| 1.x | 2.0 |
-| --- | --- |
-| `@include ui.for-dark { … }` | removed. Tokens change with the theme; for a rule that really differs, `[data-theme='dark'] & { … }` |
-| `@include ui.heading(4xl)` | `@include ui.heading(h1)` |
-| `@include ui.heading(3xl)`, `heading(2xl)` | `@include ui.heading(h2)` |
-| `@include ui.heading(xl)` (the default) | `@include ui.heading(h3)` (the default) |
-| `@include ui.heading(lg)` | `@include ui.heading(h4)` |
-| `@include ui.heading(base)`, `(sm)`, `(xs)`, `(2xs)`, `(body)` | `@include ui.block-title`, or `@include ui.type(body)` / `type(small)` / `type(caption)` / `type(lead)` plus a weight |
-| `heading($step, $weight)` | the second argument is gone: the role carries its weight |
-| `@include ui.tint(oem)` | `@include ui.tint(info)` |
-| `@include ui.tint(alt)` | `@include ui.tint(highlight)` |
-| `@include ui.tint(info)` (neutral in 1.x) | `tint(info)` is cobalt now; for the old look use `tint(neutral)` |
-| `tint(<unknown>)` fell back to neutral | a compile error |
-| `interactive-surface($hover: $surface-2, $pressed: $surface-3)` | the defaults are `$state-hover` / `$state-pressed` |
-| `card($radius: $radius-lg)`, `panel($radius: $radius-lg)` | default `$radius-md` (14px) |
-| `muted($size: $font-size-sm)`, `technical-text(…)`, `money($size: $font-size-lg)` | defaults `$font-size-small`, `$font-size-small`, `$font-size-h4` |
-| `focus-ring($color: $ring-color)` | default `$focus` |
-| `bottom-sheet($duration: $duration-normal)` | default `$duration-base` |
+| 1.x                                                                               | 2.0                                                                                                                   |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `@include ui.for-dark { … }`                                                      | removed. Tokens change with the theme; for a rule that really differs, `[data-theme='dark'] & { … }`                  |
+| `@include ui.heading(4xl)`                                                        | `@include ui.heading(h1)`                                                                                             |
+| `@include ui.heading(3xl)`, `heading(2xl)`                                        | `@include ui.heading(h2)`                                                                                             |
+| `@include ui.heading(xl)` (the default)                                           | `@include ui.heading(h3)` (the default)                                                                               |
+| `@include ui.heading(lg)`                                                         | `@include ui.heading(h4)`                                                                                             |
+| `@include ui.heading(base)`, `(sm)`, `(xs)`, `(2xs)`, `(body)`                    | `@include ui.block-title`, or `@include ui.type(body)` / `type(small)` / `type(caption)` / `type(lead)` plus a weight |
+| `heading($step, $weight)`                                                         | the second argument is gone: the role carries its weight                                                              |
+| `@include ui.tint(oem)`                                                           | `@include ui.tint(info)`                                                                                              |
+| `@include ui.tint(alt)`                                                           | `@include ui.tint(highlight)`                                                                                         |
+| `@include ui.tint(info)` (neutral in 1.x)                                         | `tint(info)` is cobalt now; for the old look use `tint(neutral)`                                                      |
+| `tint(<unknown>)` fell back to neutral                                            | a compile error                                                                                                       |
+| `interactive-surface($hover: $surface-2, $pressed: $surface-3)`                   | the defaults are `$state-hover` / `$state-pressed`                                                                    |
+| `card($radius: $radius-lg)`, `panel($radius: $radius-lg)`                         | default `$radius-md` (14px)                                                                                           |
+| `muted($size: $font-size-sm)`, `technical-text(…)`, `money($size: $font-size-lg)` | defaults `$font-size-small`, `$font-size-small`, `$font-size-h4`                                                      |
+| `focus-ring($color: $ring-color)`                                                 | default `$focus`                                                                                                      |
+| `bottom-sheet($duration: $duration-normal)`                                       | default `$duration-base`                                                                                              |
 
 New: `type($role)`, `block-title`, `choice-control($shape)`.
 
@@ -805,24 +823,24 @@ bir değerlendirme zincirine bölüp tarayıcı yığınını taşırıyordu (ha
 
 ### Ölçüm — tüketicide (handijit.com, Next 16.4.5 / Turbopack, `SITE_ENV=production`, gz)
 
-| Hizmet sayfası | hanui 5.6.3 | ui 1.0.0 |
-|---|---|---|
-| Toplam JS (check-bundle) | 191,8 kB | **162,1 kB** |
-| @handijit/ui içeren istemci parçaları | 39,7 kB | 27,8 kB (Combobox, Modal, Drawer, Toast, palet… istemci bileşenlerinin kullandıkları) |
-| Render-blocking CSS (`styles.css` tek dosya) | 6 dosya, 46,7 kB (hanui 22,6) | 6 dosya (ui 24,0) |
+| Hizmet sayfası                               | hanui 5.6.3                   | ui 1.0.0                                                                              |
+| -------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------- |
+| Toplam JS (check-bundle)                     | 191,8 kB                      | **162,1 kB**                                                                          |
+| @handijit/ui içeren istemci parçaları        | 39,7 kB                       | 27,8 kB (Combobox, Modal, Drawer, Toast, palet… istemci bileşenlerinin kullandıkları) |
+| Render-blocking CSS (`styles.css` tek dosya) | 6 dosya, 46,7 kB (hanui 22,6) | 6 dosya (ui 24,0)                                                                     |
 
 Denenen ve geri alınan: modüllerin CSS'i kendilerinin getirmesi → 12 dosya, 33,3 kB, LCP (yavaş 4G,
 Lighthouse medyan) 1,9 s → 2,5 s. Tek dosya ile LCP ölçümü tüketici raporunda.
 
 ### Ölçüm (`size-limit`, gz)
 
-| | hanui 5.6.3 | ui 1.0.0 |
-|---|---|---|
-| yalnızca `Button` (JS) | 5,12 kB | **1,33 kB** |
-| yalnızca `Badge` (JS) | 4,33 kB | **0,45 kB** |
-| tüm paket (cephe) | 42,05 kB | 43,29 kB |
-| `styles.css` (tam) | 23,07 kB | 24,22 kB |
-| `base.css` + `Button/style.css` | — | 3,41 + 1,30 kB |
+|                                 | hanui 5.6.3 | ui 1.0.0       |
+| ------------------------------- | ----------- | -------------- |
+| yalnızca `Button` (JS)          | 5,12 kB     | **1,33 kB**    |
+| yalnızca `Badge` (JS)           | 4,33 kB     | **0,45 kB**    |
+| tüm paket (cephe)               | 42,05 kB    | 43,29 kB       |
+| `styles.css` (tam)              | 23,07 kB    | 24,22 kB       |
+| `base.css` + `Button/style.css` | —           | 3,41 + 1,30 kB |
 
 ### `@ahmetilhn/hanui` 5.x'ten geçiş
 

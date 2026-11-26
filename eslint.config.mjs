@@ -73,6 +73,8 @@ export default [
        */
       ...jestPlugin.configs['flat/recommended'].rules,
       'jest/valid-expect': 'error',
+      /* `expectTypeOf` (expect-type) is a compile-time assertion: a test made of it asserts. */
+      'jest/expect-expect': ['warn', { assertFunctionNames: ['expect', 'expectTypeOf'] }],
       'jest/no-focused-tests': 'error',
       'jest/no-identical-title': 'error',
       'jest/no-conditional-expect': 'error',

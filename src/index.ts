@@ -8,7 +8,7 @@ export { default as UiProvider } from './theme/UiProvider';
 export { default as UiThemeScript } from './theme/UiThemeScript';
 export { useUi } from './theme/context';
 /*
- * The theme contract belongs to `@handijit/design`; these four are re-exported unchanged so an
+ * The theme contract belongs to `@handijitcom/ui/design`; these four are re-exported unchanged so an
  * application that only talks to the component library does not need a second import line, and so
  * the boot script and its CSP hash can never drift from the design package's copy.
  */
@@ -17,7 +17,7 @@ export {
   THEME_BOOT_SCRIPT,
   THEME_BOOT_SCRIPT_HASH,
   THEME_STORAGE_KEY,
-} from '@handijit/design';
+} from '@handijitcom/ui/design';
 /*
  * Sayfa düzeyinde `Escape` dinleyen kod (sohbetin "akışı durdur" kısayolu)
  * `event.defaultPrevented || hasOpenSurface()` sorar; yığının kendisi (`pushModal` / `isTopModal`)

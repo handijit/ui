@@ -4,7 +4,13 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "declaration": true,
-    "rootDir": "src"
+    "rootDir": "src",
+    /* `@handijitcom/ui/design` is not mapped: it resolves through the package exports to
+       `build/design`, so the declarations keep importing it by name. */
+    "paths": {
+      "@handijitcom/ui": ["./src/index.ts"],
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"],
   "exclude": [
@@ -12,6 +18,7 @@
     "build",
     "src/**/__tests__/**",
     "src/**/*.test.ts",
-    "src/**/*.test.tsx"
+    "src/**/*.test.tsx",
+    "src/design"
   ]
 }

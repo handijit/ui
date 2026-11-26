@@ -54,7 +54,7 @@ import TimeGrid from './TimeGrid';
 type Props = {
   /** The calendar's accessible name ("Ders planı"). */
   label: string;
-  /** The days to draw, in order — computed by the caller (`@handijit/tr` owns day arithmetic). */
+  /** The days to draw, in order — computed by the caller (the caller owns day arithmetic). */
   days: readonly CalendarDay[];
   events: readonly CalendarEvent[];
   /** `time` (default): days as columns, hours as rows — day and week. `month`: day cells. */
@@ -111,7 +111,7 @@ const DEFAULT_MAX_PER_DAY = 3;
 type Pending = { key: string; before: CalendarEvent };
 
 /**
- * Calendar (2.4) — the base of app-kit's `takvim` pattern: a time grid of days or of days and
+ * Calendar (2.4) — the base of a scheduling screen: a time grid of days or of days and
  * resources, or a month; events moved and stretched with the pointer and with the keyboard.
  *
  * Keyboard: Tab reaches ONE event (roving `tabindex`; 500 lessons are not 500 tab stops);

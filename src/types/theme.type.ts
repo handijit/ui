@@ -1,4 +1,4 @@
-import type { ThemeName, ThemePreference } from '@handijit/design';
+import type { ThemeName, ThemePreference } from '@handijitcom/ui/design';
 
 import type { UiLinkComponent } from '@/types/link.type';
 
@@ -10,7 +10,7 @@ export type Formatter<TArgs extends unknown[]> = (...args: TArgs) => string;
 
 /**
  * The user's CHOICE. `system` = no explicit choice, the operating system's setting is followed.
- * The same union as `ThemePreference` of `@handijit/design`.
+ * The same union as `ThemePreference` of `@handijitcom/ui/design`.
  */
 export type UiColorPreference = ThemePreference;
 

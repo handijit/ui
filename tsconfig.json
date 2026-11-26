@@ -28,10 +28,22 @@
     "paths": {
       /* `chat` girişi ana girişi PAKET ADIYLA alır (derlemede dışsal kalır); depo içinde kaynağa eşlenir. */
       "@handijitcom/ui": ["./src/index.ts"],
+      "@handijitcom/ui/design": ["./src/design/index.ts"],
       "@/*": ["./src/*"],
       "@tests/*": ["./__tests__/*"]
     }
   },
-  "include": ["src", "scripts", "playground", "__tests__", "vite.config.ts", "vite.subentry.ts", "vite.chat.config.ts", "vite.charts.config.ts", "vite.calendar.config.ts", "playwright.config.ts"],
+  "include": [
+    "src",
+    "scripts",
+    "playground",
+    "__tests__",
+    "vite.config.ts",
+    "vite.subentry.ts",
+    "vite.chat.config.ts",
+    "vite.charts.config.ts",
+    "vite.calendar.config.ts",
+    "playwright.config.ts"
+  ],
   "exclude": ["node_modules", "build", "scripts/node-consumer"]
 }

@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
 
 import { renderToString } from 'react-dom/server';
 
-import { THEME_BOOT_SCRIPT, THEME_BOOT_SCRIPT_HASH } from '@handijit/design';
+import { THEME_BOOT_SCRIPT, THEME_BOOT_SCRIPT_HASH } from '@handijitcom/ui/design';
 
 import UiThemeScript from '@/theme/UiThemeScript';
 

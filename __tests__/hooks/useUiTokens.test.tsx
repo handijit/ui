@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { THEME_ATTRIBUTE } from '@handijit/design';
+import { THEME_ATTRIBUTE } from '@handijitcom/ui/design';
 
 import useUiTokens from '@/hooks/useUiTokens';
 

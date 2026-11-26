@@ -1,11 +1,19 @@
 import '@testing-library/jest-dom';
 import { toHaveNoViolations } from 'jest-axe';
+import { TextEncoder } from 'node:util';
 
 /*
  * Eksen eslesticisi GLOBAL kaydedilir: `axe` ile taramak isteyen her test dosyasi ayrica
  * `expect.extend` yazmak zorunda kalmasin.
  */
 expect.extend(toHaveNoViolations);
+
+/*
+ * jsdom has no `TextEncoder`. The design tokens are loaded from source in the tests
+ * (`@handijitcom/ui/design` → `src/design`), where the CSP hash of the theme boot script is
+ * computed at import time; the published build carries it as a literal.
+ */
+if (typeof globalThis.TextEncoder === 'undefined') globalThis.TextEncoder = TextEncoder;
 
 /* jsdom `<dialog>`i uygulamıyor: `showModal()` ve `close()` tanımsız. */
 if (typeof HTMLDialogElement !== 'undefined') {

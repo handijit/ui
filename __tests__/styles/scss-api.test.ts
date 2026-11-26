@@ -9,7 +9,7 @@ import { compileString } from 'sass';
 /*
  * SCSS API — `@use '@handijitcom/ui/scss' as ui;` tüketicide derlenir ve HİÇBİR KURAL basmaz.
  *
- * ⚠ Modül değişken ve mixin taşır, CSS değil: token kuralları `@handijit/design/tokens.css`te. Bir
+ * ⚠ Modül değişken ve mixin taşır, CSS değil: token kuralları `@handijitcom/ui/tokens.css`te. Bir
  * `@use` kural bassaydı her tüketici dosyası onları yeniden üretirdi.
  * Ad kümesinin sözleşmesi `scripts/api-baseline.scss.txt`te (`check:api`).
  */

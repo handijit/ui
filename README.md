@@ -2,12 +2,12 @@
 
 Accessible React components for Han Dijit applications: the site, the staff
 panel and the desktop programs. Built on SCSS Modules and drawn with the tokens
-of [`@handijit/design`](https://www.npmjs.com/package/@handijit/design).
+of [`@handijitcom/ui/design`](https://www.npmjs.com/package/@handijitcom/ui/design).
 
 - **One design source.** Colours, type, radii, spacing, motion and layers come
-  from `@handijit/design` (`--hd-*`). This package holds no palette of its own.
+  from `@handijitcom/ui/design` (`--hd-*`). This package holds no palette of its own.
 - **Light and dark.** Both themes ship; the choice rides on `data-theme`, the
-  contract `@handijit/design` defines.
+  contract `@handijitcom/ui/design` defines.
 - **The router is injected.** `next/link`, `react-router`, a plain `<a>`: the
   application decides.
 - **Text comes from outside, once.** The library invents no string in any
@@ -15,21 +15,22 @@ of [`@handijit/design`](https://www.npmjs.com/package/@handijit/design).
 - **Native elements are kept.** `<dialog>`, `<input type="range">`,
   `<input type="radio">`: focus trapping, keyboard handling and screen reader
   announcements come from the browser.
-- **Three sub-entries, zero bytes in the main bundle.** `@handijitcom/ui/chat`
+- **Sub-entries, zero bytes in the main bundle.** `@handijitcom/ui/chat`
   (chat and tool interfaces), `@handijitcom/ui/charts` (dependency-free SVG
-  charts), `@handijitcom/ui/scss` (token variables and mixins).
+  charts), `@handijitcom/ui/calendar`, `@handijitcom/ui/scss` (token variables
+  and mixins) and `@handijitcom/ui/design` (the design tokens: JavaScript API,
+  `tokens.css`, `fonts.css`, `tokens.scss`, `tokens.json`, fonts and logos).
 
 ```bash
-npm install @handijitcom/ui @handijit/design @handijitcom/utils react-bootstrap-icons
+npm install @handijitcom/ui @handijitcom/utils react-bootstrap-icons
 ```
 
-`react`, `react-dom`, `@handijit/design` (`^1.1.0`), `@handijitcom/utils`
-(`^2.0.0`) and `react-bootstrap-icons` are **peer** dependencies. The design
-package is a peer on purpose: an application has exactly one copy of the tokens,
-and the site, the panel and the components all read the same custom properties.
-
-Coming from 1.x? The migration is in [`CHANGELOG.md`](./CHANGELOG.md) under
-2.0.0, old name → new name for every token, variable, prop, variant and export.
+`react`, `react-dom`, `@handijitcom/utils` (`^1.0.0`) and `react-bootstrap-icons`
+are **peer** dependencies. The design tokens ship inside the package
+(`@handijitcom/ui/design`, `@handijitcom/ui/tokens.css`, see
+[`docs/design.md`](./docs/design.md)): an application has exactly one copy of the
+tokens, and the site, the panel and the components all read the same custom
+properties.
 
 ---
 
@@ -37,8 +38,8 @@ Coming from 1.x? The migration is in [`CHANGELOG.md`](./CHANGELOG.md) under
 
 ```tsx
 // Once, at the root of the application. The order matters.
-import '@handijit/design/tokens.css'; // the --hd-* custom properties, both themes
-import '@handijit/design/fonts.css'; // optional: Archivo, Inter, IBM Plex Mono
+import '@handijitcom/ui/tokens.css'; // the --hd-* custom properties, both themes
+import '@handijitcom/ui/fonts.css'; // optional: Archivo, Inter, IBM Plex Mono
 import '@handijitcom/ui/styles.css';
 ```
 
@@ -58,7 +59,7 @@ The provider is **optional**: the package works with no configuration. Links
 are plain `<a>` elements and labels are whatever each call passes.
 
 `@handijitcom/ui/styles.css` carries **no tokens**. Without
-`@handijit/design/tokens.css` every colour resolves to nothing. `fonts.css` is
+`@handijitcom/ui/tokens.css` every colour resolves to nothing. `fonts.css` is
 optional: load the three families your own way (`next/font`, self-hosted
 `@font-face`) if you prefer, the tokens only name them.
 
@@ -96,7 +97,7 @@ The sub-entries have their own stylesheets, imported **after** `styles.css`:
 <html data-theme="dark"></html>
 ```
 
-This is the contract of `@handijit/design`, not a setting of this package:
+This is the contract of `@handijitcom/ui/design`, not a setting of this package:
 `data-theme="light"` or `"dark"` on the root element picks the theme, and
 without the attribute `prefers-color-scheme` decides. An explicit choice is
 never overridden by the system setting. The attribute also works on any
@@ -113,7 +114,7 @@ import { UiThemeScript } from '@handijitcom/ui';
 </head>;
 ```
 
-It renders the boot script of `@handijit/design` (`THEME_BOOT_SCRIPT`) as an
+It renders the boot script of `@handijitcom/ui/design` (`THEME_BOOT_SCRIPT`) as an
 inline `<script>`. The script reads `localStorage["hd-theme"]` (`light` or
 `dark`; anything else means "follow the system"), writes `data-theme` while the
 HTML is still being parsed, and follows the system setting when it changes.
@@ -133,7 +134,7 @@ The boot script is the **only** element this library injects. It injects no
 | Static hash       | add `'${THEME_BOOT_SCRIPT_HASH}'` to `script-src`; the page stays cacheable |
 
 ```ts
-import { THEME_BOOT_SCRIPT_HASH } from '@handijitcom/ui'; // re-exported from @handijit/design
+import { THEME_BOOT_SCRIPT_HASH } from '@handijitcom/ui'; // re-exported from @handijitcom/ui/design
 
 const policy = `script-src 'self' '${THEME_BOOT_SCRIPT_HASH}'`;
 ```
@@ -187,7 +188,7 @@ property, in the application's own stylesheet:
 }
 ```
 
-Change the tokens of `@handijit/design` sparingly: the contrast of every text
+Change the tokens of `@handijitcom/ui/design` sparingly: the contrast of every text
 and focus pair is measured against the published values.
 
 ### Overriding our CSS: `@layer ui`
@@ -247,7 +248,7 @@ const colors = useUiTokens(['border', 'chart-1']); // { border: '#…', 'chart-1
 `useUiTokens` returns the resolved values of design tokens and follows theme
 changes; it is for canvas and third-party charts that cannot read `var()`. On
 the server and the first frame it returns `currentColor`. The names are
-`TokenName` of `@handijit/design`.
+`TokenName` of `@handijitcom/ui/design`.
 
 ---
 
@@ -553,7 +554,7 @@ data contract. `123450` with two decimal places is "1.234,50".
   `null` while the field is empty or holds a number still being typed ("-",
   "1.250.0"). Left with such a text, the field keeps it and marks itself
   `aria-invalid`.
-- **The grammar is the one of app-kit's `parseDecimal`**: the comma is the
+- **The grammar is the data contract's (§4.3)**: the comma is the
   decimal point; with a comma, dots only group by three; without one, "1.250"
   is a thousand two hundred and fifty, "0.250" and "12.5" are decimals (the dot
   key of a number pad). Spaces and signs around the number are dropped, so a
@@ -567,9 +568,9 @@ data contract. `123450` with two decimal places is "1.234,50".
 - `Field`'s contract (`id`, `aria-invalid`, `aria-describedby`, `required`),
   `ref`, `size`, `prefix`/`suffix`, `disabled` and `readOnly` pass to the
   input. Right-aligned, tabular figures.
-- The scale is never guessed: `minorDigits` comes from the currency table of
-  `@handijit/tr-codes`, `unitDigits` from the unit. Display elsewhere is
-  app-kit's formatters' (`formatMoney`, `formatQuantity` …); `Price` stays a
+- The scale is never guessed: `minorDigits` comes from the caller's currency table,
+  `unitDigits` from the unit. Display elsewhere is the application's
+  formatters' (`formatMoney`, `formatQuantity` …); `Price` stays a
   display of an already formatted text.
 
 ### TypeScript resolution
@@ -650,8 +651,8 @@ const nextConfig = {
 
 ```tsx
 // app/layout.tsx, a server component
-import '@handijit/design/tokens.css';
-import '@handijit/design/fonts.css';
+import '@handijitcom/ui/tokens.css';
+import '@handijitcom/ui/fonts.css';
 import '@handijitcom/ui/styles.css';
 import '@handijitcom/ui/chat.css'; // only if /chat is used
 import '@handijitcom/ui/charts.css'; // only if /charts is used
@@ -805,7 +806,7 @@ Colours come from the data series of the design (`tone`: `chart-1` … `chart-6`
 
 ## Calendar: `@handijitcom/ui/calendar`
 
-The base of app-kit's `takvim` pattern (2.4): a **time grid** (days as
+The base of a scheduling screen (2.4): a **time grid** (days as
 columns, the drawn hours as rows; with `resources` a column per teacher, room
 or technician under every day) or a **month** of day cells. A separate entry,
 so the main entry's budget does not grow (5,9 kB gzip, `calendar.css` 2 kB).
@@ -835,7 +836,7 @@ import { Calendar, type CalendarEvent } from '@handijitcom/ui/calendar';
 
 - **Times are the data contract's wall clock** (`YYYY-MM-DDTHH:MM`, the firm's
   time zone) and **days come from the caller**: the calendar converts no time
-  zone and does no day arithmetic (that is `@handijit/tr`'s). The month takes
+  zone and does no day arithmetic (that is the caller's). The month takes
   its 35 or 42 `days` (`isOutside` for the neighbouring months), `weekdays`,
   `maxEventsPerDay` (3; the rest behind "+N" → `onDaySelect`) and
   `selectedDate`.
@@ -910,7 +911,7 @@ Sass colour functions do not work either; mix in CSS:
 Next.js (Turbopack and webpack) resolves the package `exports`. For a compiler
 that cannot, add `node_modules/@handijitcom/ui/build/scss` to `loadPaths` and
 write `@use 'index' as ui`. An application that needs only the tokens can use
-`@handijit/design/tokens.scss` directly.
+`@handijitcom/ui/tokens.scss` directly.
 
 ---
 
@@ -943,7 +944,7 @@ npm run playground # component gallery → http://localhost:5273
 
 - **Design contract** (`__tests__/styles/design-contract.test.ts`): every
   `--hd-*` name in the compiled stylesheets, the SCSS aliases and the
-  TypeScript sources exists in the installed `@handijit/design`; breakpoints
+  TypeScript sources exists in the tokens of `src/design`; breakpoints
   and layers match it; no stylesheet declares an `--hd-*` property or carries
   a literal colour.
 - **Colour footprint** (`colour-footprint.test.ts`): coral and turquoise tokens
@@ -1009,9 +1010,10 @@ section must exist before the push.
 Which element to use when, the surface ladder, colour roles, typography roles,
 accessibility thresholds and the motion scale are in **`CLAUDE.md`**. That file
 is normative for applications that use the library too. The visual language
-itself (palette, type, logo) belongs to `@handijit/design`.
+itself (palette, type, logo) belongs to `@handijitcom/ui/design`.
 
 <!-- handijit:about:start -->
+
 ## About Han Dijit
 
 `@handijitcom/ui` is built and maintained by **[Han Dijit](https://www.handijit.com)**, a software company serving businesses across Türkiye: web, e-commerce, mobile, artificial intelligence, cyber security and enterprise software projects.

@@ -6,13 +6,12 @@
  * Nothing here goes through a float: the digits are read as text and put together with `BigInt`,
  * so "0,1" at 2 is exactly `10`, never `10.000000000000002`.
  *
- * ⚠ The GRAMMAR is the one of `@handijit/app-kit` `parseDecimal` (data contract §4.3), on
- * purpose and pinned by the same vectors in `__tests__/helpers/scaled-number.helper.test.ts`:
+ * ⚠ The GRAMMAR is the data contract's (§4.3), pinned by the vectors in `__tests__/helpers/scaled-number.helper.test.ts`:
  * the comma is the decimal point; with a comma, dots may only group the whole part by three;
  * without one, a dot followed by groups of three groups thousands ("1.250" is 1250) unless the
  * first group starts with zero ("0.250" is 0,25), and any other single dot is the point ("12.5"
- * is 12,5 — the dot key of a number pad). `ui` is a platform package and cannot import app-kit or
- * `@handijit/decimal`; the two copies must say the same thing, and the test is where they meet.
+ * is 12,5 — the dot key of a number pad). `ui` depends on no decimal library; the test table is the
+ * reference for the grammar.
  */
 
 /** Text the field cannot hold: the keystroke that produced it is refused. */

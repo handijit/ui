@@ -3,7 +3,7 @@
  */
 import { readFileSync } from 'node:fs';
 
-import { themes } from '@handijit/design';
+import { themes } from '@handijitcom/ui/design';
 
 const source = readFileSync('src/components/SegmentedControl/index.module.scss', 'utf8');
 

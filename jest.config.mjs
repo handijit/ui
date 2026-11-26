@@ -8,6 +8,7 @@ export default {
   moduleNameMapper: {
     '\\.(scss|css)$': '<rootDir>/__tests__/support/style-stub.js',
     '^@handijitcom/ui$': '<rootDir>/src/index.ts',
+    '^@handijitcom/ui/design$': '<rootDir>/src/design/index.ts',
     '^@tests/(.*)$': '<rootDir>/__tests__/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
@@ -33,11 +34,7 @@ export default {
    * satiri yok ve paydada durmasi orani mekanik olarak sisirir.
    * ⚠ Payda bir donem yalniz `helpers`+`hooks`+`theme` idi — 17 dosya, 469 satir.
    */
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/index.ts',
-    '!src/**/*.d.ts',
-  ],
+  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/index.ts', '!src/**/*.d.ts'],
 
   /*
    * Esikler OLCULEN degerin ~2-3 puan altina kuruldu (2026-08-15 olcumu: satir 87,51 · ifade 84,57

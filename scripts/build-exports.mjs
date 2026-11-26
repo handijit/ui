@@ -7,7 +7,7 @@
  * adının kebab hâlidir (`ChipGroup` → `chip-group`). Her koşul kendi tipini taşır (2.2): `import` →
  * `.d.ts`, `require` → `.d.cts` (`scripts/build-declarations.mjs`); tek bir üst düzey `types`
  * CommonJS tüketicisine ES modülü bildiriyordu. Sabit girişler (`.`, `./base.css`, `./styles.css`,
- * `./chat`, `./charts`, `./calendar`, `./scss`) burada tanımlıdır; harita ELLE DÜZENLENMEZ.
+ * `./chat`, `./charts`, `./calendar`, `./design` and its assets, `./scss`) burada tanımlıdır; harita ELLE DÜZENLENMEZ.
  *
  *   node scripts/build-exports.mjs          → package.json'u yazar
  *   node scripts/build-exports.mjs --check  → harita güncel mi, hedef dosyalar `build/`de var mı
@@ -54,6 +54,17 @@ const exportsMap = {
   './charts.css': './build/charts.css',
   './calendar': conditions('types/calendar/index', 'calendar'),
   './calendar.css': './build/calendar.css',
+  /* Design tokens (`src/design`, built by `scripts/design`): JavaScript API and generated assets. */
+  './design': {
+    import: { types: './build/design/index.d.mts', default: './build/design/index.mjs' },
+    require: { types: './build/design/index.d.cts', default: './build/design/index.cjs' },
+  },
+  './tokens.css': './build/design/tokens.css',
+  './fonts.css': './build/design/fonts.css',
+  './tokens.scss': './build/design/tokens.scss',
+  './tokens.json': './build/design/tokens.json',
+  './fonts/*': './build/design/fonts/*',
+  './logos/*': './build/design/logos/*',
   './scss': {
     sass: './build/scss/_index.scss',
     style: './build/scss/_index.scss',

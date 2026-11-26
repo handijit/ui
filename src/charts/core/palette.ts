@@ -1,7 +1,7 @@
-import { cssVar } from '@handijit/design';
+import { cssVar } from '@handijitcom/ui/design';
 
 /**
- * SERIES COLOURS — the six data series tokens of `@handijit/design` (`chart-1…6`), which the design
+ * SERIES COLOURS — the six data series tokens of `@handijitcom/ui/design` (`chart-1…6`), which the design
  * package gates for contrast against the theme surfaces and for distance from each other.
  * `muted` is for a waiting or empty part.
  */

@@ -1,13 +1,13 @@
 import { type FC, memo } from 'react';
 
-import { cssVar } from '@handijit/design';
+import { cssVar } from '@handijitcom/ui/design';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';
 
 import styles from './index.module.scss';
 
-/** The data series tokens of `@handijit/design` (`chart-1…6`) + `muted` for a waiting or empty part. */
+/** The data series tokens of `@handijitcom/ui/design` (`chart-1…6`) + `muted` for a waiting or empty part. */
 export type LegendTone =
   'chart-1' | 'chart-2' | 'chart-3' | 'chart-4' | 'chart-5' | 'chart-6' | 'muted';
 

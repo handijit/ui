@@ -2,7 +2,7 @@
 
 import { type FC } from 'react';
 
-import { THEME_BOOT_SCRIPT } from '@handijit/design';
+import { THEME_BOOT_SCRIPT } from '@handijitcom/ui/design';
 
 type Props = {
   /**
@@ -15,7 +15,7 @@ type Props = {
 /**
  * The theme before the first paint — rendered in `<head>`, in the server output.
  *
- * It inlines the boot script of `@handijit/design` unchanged, so its text matches
+ * It inlines the boot script of `@handijitcom/ui/design` unchanged, so its text matches
  * `THEME_BOOT_SCRIPT_HASH`: the stored choice (`localStorage["hd-theme"]`) or the system setting is
  * written to `<html data-theme>` while the HTML is parsed. Put `suppressHydrationWarning` on
  * `<html>`: the attribute is set before React hydrates.

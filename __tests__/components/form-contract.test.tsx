@@ -1,6 +1,6 @@
 /**
  * 2.2 — what a form library needs from the field components, one block per gap found while
- * building `@handijit/forms` 1.0 and the desktop template: errors on the choice controls, the
+ * binding the field components to a form library: errors on the choice controls, the
  * accessibility links of the composites, `Field`'s `id`, `Select` / `Combobox` as form fields,
  * read-only and group-wide disabled states, `TagInput`'s `value`, `Button`'s busy state and the
  * name of `Progress`.
@@ -75,7 +75,7 @@ describe.each([
     );
   });
 
-  /* `@handijit/forms` 1.0 passed the hint id itself, next to `Field`'s error id. */
+  /* A form library may pass the hint id itself, next to `Field`'s error id. */
   it('names an id once when the passed aria-describedby already holds the hint', () => {
     render(
       <Control id="terms" label="Kabul" hint="Sözleşme" aria-describedby="f-error terms-hint" />,

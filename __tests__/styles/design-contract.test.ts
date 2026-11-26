@@ -3,40 +3,27 @@
  */
 /* dart2js Sass fails under jsdom; compiling needs no DOM. */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { createRequire } from 'node:module';
-import { dirname, join, resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 
 import { compile, compileString } from 'sass';
 
-import { breakpoints, layers } from '@handijit/design';
+import { breakpoints, layers } from '@handijitcom/ui/design';
+import renderTokensCss from '@/design/generators/tokens-css';
 
 /*
- * THE DESIGN CONTRACT — the library draws with the tokens of `@handijit/design` and owns none.
+ * THE DESIGN CONTRACT — the library draws with the tokens of `@handijitcom/ui/design` and owns none.
  *
  * `styles/_variables.scss` is a hand-written alias layer: `$text: var(--hd-text)`. Nothing checks a
  * hand-written name against the package that defines it, and a misspelt custom property is not an
  * error anywhere — the declaration is simply dropped by the browser and the component loses a
  * colour in one theme. This test compiles every stylesheet and looks each name up in the tokens
- * file the installed design package ships.
+ * file the design generator renders.
  */
 const ROOT = resolve(__dirname, '../..');
 const STYLES = join(ROOT, 'src/styles');
 
-/*
- * The path comes from the package's own exports map. Resolving `@handijit/design/tokens.css`
- * directly would hand back the style stub: Jest maps every `.css` request to it.
- */
-const nodeRequire = createRequire(join(ROOT, 'package.json'));
-const DESIGN_PACKAGE = nodeRequire.resolve('@handijit/design/package.json');
-const DESIGN_EXPORTS = (
-  JSON.parse(readFileSync(DESIGN_PACKAGE, 'utf8')) as {
-    exports: Record<string, { default: string }>;
-  }
-).exports;
-const DESIGN_TOKENS = readFileSync(
-  resolve(dirname(DESIGN_PACKAGE), DESIGN_EXPORTS['./tokens.css'].default),
-  'utf8',
-);
+/* The tokens file is rendered from the design source, the same generator the build uses. */
+const DESIGN_TOKENS = renderTokensCss();
 
 const declaredTokens = new Set(DESIGN_TOKENS.match(/--hd-[a-z0-9-]+(?=\s*:)/g));
 
@@ -77,22 +64,7 @@ describe('design contract', () => {
     expect(declaredTokens).toContain('--hd-primary');
   });
 
-  /*
-   * The range is written twice in `package.json`: the peer range is what an application is held
-   * to, the dev range is what this suite runs against. `npm install --save-dev @handijit/design@^x`
-   * moves only the second, and the library would then ship styles that need tokens its peer range
-   * does not ask for. Both move together: `npm pkg set` on the two keys, then `npm install`.
-   */
-  it('the peer range of the design package is the range the suite runs against', () => {
-    const { peerDependencies, devDependencies } = JSON.parse(
-      readFileSync(join(ROOT, 'package.json'), 'utf8'),
-    ) as Record<'peerDependencies' | 'devDependencies', Record<string, string>>;
-
-    expect(peerDependencies['@handijit/design']).toBeDefined();
-    expect(peerDependencies['@handijit/design']).toBe(devDependencies['@handijit/design']);
-  });
-
-  it('every --hd-* name in a compiled stylesheet exists in @handijit/design', () => {
+  it('every --hd-* name in a compiled stylesheet exists in @handijitcom/ui/design', () => {
     const unknown = compiled.flatMap(({ path, css }) =>
       [...new Set(referenced(css))]
         .filter(name => !declaredTokens.has(name))
@@ -110,7 +82,11 @@ describe('design contract', () => {
 
   /* `cssVar()` is typed, a template string is not: `var(--hd-…)` written by hand in a component. */
   it('every --hd-* name written in TypeScript exists too', () => {
-    const unknown = SOURCES.filter(path => /\.tsx?$/.test(path)).flatMap(path =>
+    /* `src/design` is where the tokens are defined (the logo's own `--hd-logo-dot` among them). */
+    const consumers = SOURCES.filter(
+      path => /\.tsx?$/.test(path) && !path.startsWith(join(ROOT, 'src/design')),
+    );
+    const unknown = consumers.flatMap(path =>
       [...new Set(referenced(readFileSync(path, 'utf8')))]
         .filter(name => !declaredTokens.has(name))
         .map(name => `${path.slice(ROOT.length + 1)}: ${name}`),

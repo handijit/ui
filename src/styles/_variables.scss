@@ -1,8 +1,8 @@
-// SCSS names for the tokens of `@handijit/design`.
+// SCSS names for the tokens of `@handijitcom/ui/design`.
 //
 // Nothing in this file holds a colour, a size or a duration of its own: every theme-aware value is a
 // `var(--hd-*)` reference, so the consuming application decides the values by loading
-// `@handijit/design/tokens.css` once. `__tests__/styles/design-contract.test.ts` fails when a name
+// `@handijitcom/ui/tokens.css` once. `__tests__/styles/design-contract.test.ts` fails when a name
 // below points at a custom property the installed design package does not define.
 //
 // ⚠ The values are `var()` references: they cannot go through Sass colour functions (`darken`,
@@ -205,7 +205,7 @@ $z-tooltip: var(--hd-z-tooltip);
 
 // --- Breakpoints ---
 // Media queries cannot read custom properties, so these are the design values as numbers; the
-// contract test compares them with `breakpoints` from `@handijit/design`.
+// contract test compares them with `breakpoints` from `@handijitcom/ui/design`.
 $breakpoint-sm: 640px;
 $breakpoint-md: 768px;
 $breakpoint-lg: 1024px;

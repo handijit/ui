@@ -2,7 +2,7 @@
  * The data the calendar draws (2.4). Every time is the data contract's (§5.1) local wall clock,
  * `YYYY-MM-DDTHH:MM` in the firm's time zone, and every day a calendar day `YYYY-MM-DD`: the
  * calendar never converts a time zone and never does day arithmetic — the days to draw come from
- * the caller, who has `@handijit/tr` for that.
+ * the caller.
  */
 
 /** The tone of an event — a tint of the design's status colours. Never the only signal. */

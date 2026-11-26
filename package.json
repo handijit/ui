@@ -1,7 +1,7 @@
 {
   "name": "@handijitcom/ui",
-  "version": "1.0.0",
-  "description": "Accessible React component library on SCSS Modules, themed by @handijit/design: light and dark from one set of --hd-* tokens, a CSP-ready theme boot script, and Bootstrap Icons for iconography.",
+  "version": "1.1.0",
+  "description": "Accessible React component library on SCSS Modules, themed by its own design tokens (@handijitcom/ui/design): light and dark from one set of --hd-* tokens, a CSP-ready theme boot script, and Bootstrap Icons for iconography.",
   "author": "Ahmet ilhan <ahmetilhan.dev@gmail.com>",
   "license": "MIT",
   "private": false,
@@ -789,6 +789,22 @@
       }
     },
     "./calendar.css": "./build/calendar.css",
+    "./design": {
+      "import": {
+        "types": "./build/design/index.d.mts",
+        "default": "./build/design/index.mjs"
+      },
+      "require": {
+        "types": "./build/design/index.d.cts",
+        "default": "./build/design/index.cjs"
+      }
+    },
+    "./tokens.css": "./build/design/tokens.css",
+    "./fonts.css": "./build/design/fonts.css",
+    "./tokens.scss": "./build/design/tokens.scss",
+    "./tokens.json": "./build/design/tokens.json",
+    "./fonts/*": "./build/design/fonts/*",
+    "./logos/*": "./build/design/logos/*",
     "./scss": {
       "sass": "./build/scss/_index.scss",
       "style": "./build/scss/_index.scss",
@@ -833,7 +849,7 @@
   ],
   "scripts": {
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true",
-    "build": "vite build && vite build --config vite.chat.config.ts && vite build --config vite.charts.config.ts && vite build --config vite.calendar.config.ts && tsc -p tsconfig.subentries.json && node scripts/build-declarations.mjs && node scripts/build-scss.mjs && node scripts/build-exports.mjs --check",
+    "build": "node -e \"require('node:fs').rmSync('build',{recursive:true,force:true})\" && npm run build:design && vite build && vite build --config vite.chat.config.ts && vite build --config vite.charts.config.ts && vite build --config vite.calendar.config.ts && tsc -p tsconfig.subentries.json && node scripts/build-declarations.mjs && node scripts/build-scss.mjs && node scripts/build-exports.mjs --check",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src __tests__ scripts --max-warnings 0 && stylelint \"src/**/*.scss\"",
@@ -854,10 +870,10 @@
     "size": "npm run build && size-limit",
     "verify": "npm run check:contrast && npm run typecheck && npm run lint && npm run test:coverage && npm run build && npm run check:types && npm run check:api && npm run check:animations && size-limit",
     "check:exports": "node scripts/build-exports.mjs --check",
-    "exports": "node scripts/build-exports.mjs"
+    "exports": "node scripts/build-exports.mjs",
+    "build:design": "rollup -c scripts/design/rollup.config.mjs && node scripts/design/verify-build.mjs"
   },
   "peerDependencies": {
-    "@handijit/design": "^1.1.0",
     "@handijitcom/utils": "^1.0.0",
     "react": ">=18",
     "react-bootstrap-icons": ">=1.11.0",
@@ -865,9 +881,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
-    "@handijit/design": "^1.1.0",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@handijitcom/utils": "^1.0.0",
     "@playwright/test": "^1.62.1",
+    "@rollup/plugin-terser": "^1.0.2",
+    "@rollup/plugin-typescript": "^12.3.1",
     "@size-limit/preset-small-lib": "^13.0.3",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -884,6 +904,7 @@
     "eslint-plugin-jest": "^29.16.1",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
+    "expect-type": "^1.4.0",
     "jest": "^29.7.0",
     "jest-axe": "^11.0.0",
     "jest-environment-jsdom": "^29.7.0",
@@ -892,11 +913,14 @@
     "react": "^19.0.0",
     "react-bootstrap-icons": "^1.11.6",
     "react-dom": "^19.0.0",
+    "rollup": "^4.68.2",
+    "rollup-plugin-dts": "^6.5.1",
     "sass": "^1.83.4",
     "size-limit": "^13.0.3",
     "stylelint": "^17.14.1",
     "stylelint-config-standard-scss": "^17.0.0",
     "ts-jest": "^29.2.5",
+    "tslib": "^2.9.1",
     "typescript": "^5.7.3",
     "vite": "^5.4.11",
     "vite-plugin-dts": "^4.5.0"

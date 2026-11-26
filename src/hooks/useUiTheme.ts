@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import { THEME_ATTRIBUTE } from '@handijit/design';
+import { THEME_ATTRIBUTE } from '@handijitcom/ui/design';
 import { isClient } from '@handijitcom/utils';
 
 import {
@@ -14,7 +14,7 @@ import {
 import type { UiColorPreference, UiColorScheme, UiThemeState } from '@/types/theme.type';
 
 /**
- * Reads and changes the light/dark choice, on the `data-theme` contract of `@handijit/design`.
+ * Reads and changes the light/dark choice, on the `data-theme` contract of `@handijitcom/ui/design`.
  *
  * The choice lives where the design boot script reads it (`localStorage["hd-theme"]`), so a choice
  * made here survives a reload without a flash when `UiThemeScript` is in `<head>`.

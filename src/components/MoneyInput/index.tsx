@@ -9,7 +9,7 @@ type Props = Omit<
 > & {
   /**
    * The minor-unit digits of the currency — the scale of the amount (TRY, USD, EUR 2; JPY 0;
-   * `HAS-G` 3). The currency table belongs to `@handijit/tr-codes`; the caller reads it there.
+   * `HAS-G` 3). The currency table belongs to the caller.
    */
   minorDigits: number;
   /** The currency code or sign after the amount ("TL", "USD"). */

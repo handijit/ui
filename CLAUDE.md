@@ -1,6 +1,6 @@
 # @handijitcom/ui
 
-Accessible React components of Han Dijit, drawn with the tokens of `@handijit/design`.
+Accessible React components of Han Dijit, drawn with the tokens of `@handijitcom/ui/design`.
 React 19 · TypeScript strict · SCSS Modules · Vite.
 
 This file keeps the **design contract and the measured decisions**. Installation, usage, the theme
@@ -11,7 +11,7 @@ migration from 1.x is in `CHANGELOG.md`.
 only record what deviates.
 
 ⚠ **This file describes 2.x.** The visual language (palette, type, radii, spacing, motion, layers,
-shadows) belongs to `@handijit/design`. This library declares no colour and decides no value; what
+shadows) belongs to `@handijitcom/ui/design`. This library declares no colour and decides no value; what
 it decides is WHICH token a component draws with, and that is what the sections below record.
 
 ⚠ **Two languages, on purpose.** Everything written for 2.0 is in English. The measured history of
@@ -22,40 +22,40 @@ them is in the migration table of `CHANGELOG.md`. New text is written in English
 
 ## Öğe seçimi — hangisi, ne zaman
 
-| Soru | Cevap | Ayrımın nedeni |
-|---|---|---|
-| Seçim mi eylem mi? | `Select` / `Menu` | `listbox` "2 seçenekten biri seçili" der, `menu` "menü, 3 öğe". Eylemi listbox sunmak kalıcı bir seçim vaat ediyordu |
-| Düğmeden mi sağ tıktan mı? | `Menu` / `ContextMenu` | Aynı yüzey (klavye, odak, dışarı tıklama tek yerde); `ContextMenu` tetikleyicisiz, imleç noktasında açılır ve eylemlerin üstüne `role="menu"` DIŞINDA bir başlık alır |
-| Kaç seçenek? | ≤7 `ChipGroup` · 5-20 `Select` · 20+ `Combobox` | Aramasız liste 20 satırdan sonra taranamıyor |
-| Filtre mi görünüm mü? | `ChipGroup` / `SegmentedControl` | Çipe ikinci kez basmak seçimi KALDIRIR; bölmeli denetimde "hiçbiri" yok |
-| Panel mi sekme mi? | `Tabs` / `SegmentedControl` | `Tabs` `aria-controls` ile bir panele bağlanır; yoksa var olmayan panel vaat ediliyor |
-| Form seçimi mi ayar mı? | `Checkbox` / `Switch` | Checkbox GÖNDERİLİR, switch ANINDA uygulanır — ekran okuyucuda duyuluyor |
-| Bilinen liste mi serbest değer mi? | `Combobox` / `TagInput` | |
-| Açıklama mı eylem mi? | `Tooltip` / `Popover` | Tooltip `pointer-events: none` — içine konan bağlantıya ulaşılamaz |
-| Dar ekran mı geniş mi? | `BottomSheet` / `Drawer` | Tercih değil EKRAN kararı |
-| Karar bekliyor mu? | `Modal` / `Popover` | Popover kipsel değil; kullanıcıyı hapsetmez |
-| İleri mi geri mi bakıyor? | `Steps` / `Timeline` | Bir ADIM "başarısız" olamaz, bir OLAY olabilir |
-| Sonu biliniyor mu? | `Progress` / `Spinner` | |
-| Tek bölüm mü bölümler listesi mi? | `Disclosure` / `Accordion` | `Accordion` her bölümünü bir `Disclosure` olarak çizer; `<details>` mantığı tek yerde |
-| Durum noktası mı rozet mi? | `StatusDot` / `Badge` | Nokta süren bir durumu (bağlı, çalışıyor) ADIYLA taşır — `label` zorunlu, görsel olarak gizli. Rozet okunan bir etikettir |
-| Boş mu yüklenemedi mi? | `EmptyState` · `tone="error"` | Ağ hatasını "kayıt kalmamış" diye okuyan kullanıcı yanlış karar veriyor |
-| Satır listesi seçim mi eylem mi? | `ActionListItem isSelected` / `ActionListItem` | `isSelected` verilince satır `aria-pressed` taşır ve kalıcı bir durum vaat eder; eylemi seçim gibi sunmak yanlış söz |
-| Öneriler seçim mi eylem mi? | `ChipGroup` / `PromptSuggestions` | Öneri bir EYLEM (`onPick`); çip ise geri alınabilir bir seçim |
-| Parçaların toplamı mı zaman çizelgesi mi? | `SegmentBar` (`value`) / `SegmentBar` (`from`/`to`) | Tek görsel (`role="img"`); tam bir eksen gerekiyorsa `/charts` |
-| Hangi grafik? | `/charts` — bkz. "`@handijitcom/ui/charts`" | Eğilim, karşılaştırma, parça-bütün ve dağılım ayrı grafikler; ayrımlar orada ölçülü |
-| Adet mi miktar mı? (2.4) | `QuantityStepper` / `QuantityInput` | Stepper bütün adedi iki düğmeyle sayar; miktar alanı `Qty4` tutar ve birimin hanesini (kg 3) yazdırır |
-| Tutar gösterimi mi girişi mi? (2.4) | `Price` / `MoneyInput` | `Price` biçimlenmiş bir METİN çizer; giriş ölçekli tam sayı alır ve verir. Kayan noktalı sayı ikisinde de dolaşmaz |
-| Takvim mi zaman çizelgesi mi? (2.4) | `/calendar` `Calendar` / `Timeline` | Takvim saate yerleşen ve taşınan işler içindir; olay sırası `Timeline` |
+| Soru                                      | Cevap                                               | Ayrımın nedeni                                                                                                                                                        |
+| ----------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Seçim mi eylem mi?                        | `Select` / `Menu`                                   | `listbox` "2 seçenekten biri seçili" der, `menu` "menü, 3 öğe". Eylemi listbox sunmak kalıcı bir seçim vaat ediyordu                                                  |
+| Düğmeden mi sağ tıktan mı?                | `Menu` / `ContextMenu`                              | Aynı yüzey (klavye, odak, dışarı tıklama tek yerde); `ContextMenu` tetikleyicisiz, imleç noktasında açılır ve eylemlerin üstüne `role="menu"` DIŞINDA bir başlık alır |
+| Kaç seçenek?                              | ≤7 `ChipGroup` · 5-20 `Select` · 20+ `Combobox`     | Aramasız liste 20 satırdan sonra taranamıyor                                                                                                                          |
+| Filtre mi görünüm mü?                     | `ChipGroup` / `SegmentedControl`                    | Çipe ikinci kez basmak seçimi KALDIRIR; bölmeli denetimde "hiçbiri" yok                                                                                               |
+| Panel mi sekme mi?                        | `Tabs` / `SegmentedControl`                         | `Tabs` `aria-controls` ile bir panele bağlanır; yoksa var olmayan panel vaat ediliyor                                                                                 |
+| Form seçimi mi ayar mı?                   | `Checkbox` / `Switch`                               | Checkbox GÖNDERİLİR, switch ANINDA uygulanır — ekran okuyucuda duyuluyor                                                                                              |
+| Bilinen liste mi serbest değer mi?        | `Combobox` / `TagInput`                             |                                                                                                                                                                       |
+| Açıklama mı eylem mi?                     | `Tooltip` / `Popover`                               | Tooltip `pointer-events: none` — içine konan bağlantıya ulaşılamaz                                                                                                    |
+| Dar ekran mı geniş mi?                    | `BottomSheet` / `Drawer`                            | Tercih değil EKRAN kararı                                                                                                                                             |
+| Karar bekliyor mu?                        | `Modal` / `Popover`                                 | Popover kipsel değil; kullanıcıyı hapsetmez                                                                                                                           |
+| İleri mi geri mi bakıyor?                 | `Steps` / `Timeline`                                | Bir ADIM "başarısız" olamaz, bir OLAY olabilir                                                                                                                        |
+| Sonu biliniyor mu?                        | `Progress` / `Spinner`                              |                                                                                                                                                                       |
+| Tek bölüm mü bölümler listesi mi?         | `Disclosure` / `Accordion`                          | `Accordion` her bölümünü bir `Disclosure` olarak çizer; `<details>` mantığı tek yerde                                                                                 |
+| Durum noktası mı rozet mi?                | `StatusDot` / `Badge`                               | Nokta süren bir durumu (bağlı, çalışıyor) ADIYLA taşır — `label` zorunlu, görsel olarak gizli. Rozet okunan bir etikettir                                             |
+| Boş mu yüklenemedi mi?                    | `EmptyState` · `tone="error"`                       | Ağ hatasını "kayıt kalmamış" diye okuyan kullanıcı yanlış karar veriyor                                                                                               |
+| Satır listesi seçim mi eylem mi?          | `ActionListItem isSelected` / `ActionListItem`      | `isSelected` verilince satır `aria-pressed` taşır ve kalıcı bir durum vaat eder; eylemi seçim gibi sunmak yanlış söz                                                  |
+| Öneriler seçim mi eylem mi?               | `ChipGroup` / `PromptSuggestions`                   | Öneri bir EYLEM (`onPick`); çip ise geri alınabilir bir seçim                                                                                                         |
+| Parçaların toplamı mı zaman çizelgesi mi? | `SegmentBar` (`value`) / `SegmentBar` (`from`/`to`) | Tek görsel (`role="img"`); tam bir eksen gerekiyorsa `/charts`                                                                                                        |
+| Hangi grafik?                             | `/charts` — bkz. "`@handijitcom/ui/charts`"         | Eğilim, karşılaştırma, parça-bütün ve dağılım ayrı grafikler; ayrımlar orada ölçülü                                                                                   |
+| Adet mi miktar mı? (2.4)                  | `QuantityStepper` / `QuantityInput`                 | Stepper bütün adedi iki düğmeyle sayar; miktar alanı `Qty4` tutar ve birimin hanesini (kg 3) yazdırır                                                                 |
+| Tutar gösterimi mi girişi mi? (2.4)       | `Price` / `MoneyInput`                              | `Price` biçimlenmiş bir METİN çizer; giriş ölçekli tam sayı alır ve verir. Kayan noktalı sayı ikisinde de dolaşmaz                                                    |
+| Takvim mi zaman çizelgesi mi? (2.4)       | `/calendar` `Calendar` / `Timeline`                 | Takvim saate yerleşen ve taşınan işler içindir; olay sırası `Timeline`                                                                                                |
 
 ## Surfaces and elevation
 
-| Component | Context | Surface | Elevation |
-|---|---|---|---|
-| `Tile` · `SummaryCard` · interactive `Card` | Navigation | `bg-surface` + `border` | a border at rest; hover lifts 2px with `shadow-2` and `border-strong`, pressed falls back to `shadow-1` |
-| `Card` | Content | `bg-surface` + `border` | NO shadow |
-| `Panel` | Form / data | `bg-surface` + `border` | NO shadow |
-| `Popover` · `Menu` · `Tooltip` · `Select`/`Combobox` list · `Toast` | Transient layer | `bg-overlay` | `shadow-2` |
-| `Modal` · `Drawer` · `BottomSheet` · `CommandPalette` | Modal | `bg-overlay` | `shadow-3` |
+| Component                                                           | Context         | Surface                 | Elevation                                                                                               |
+| ------------------------------------------------------------------- | --------------- | ----------------------- | ------------------------------------------------------------------------------------------------------- |
+| `Tile` · `SummaryCard` · interactive `Card`                         | Navigation      | `bg-surface` + `border` | a border at rest; hover lifts 2px with `shadow-2` and `border-strong`, pressed falls back to `shadow-1` |
+| `Card`                                                              | Content         | `bg-surface` + `border` | NO shadow                                                                                               |
+| `Panel`                                                             | Form / data     | `bg-surface` + `border` | NO shadow                                                                                               |
+| `Popover` · `Menu` · `Tooltip` · `Select`/`Combobox` list · `Toast` | Transient layer | `bg-overlay`            | `shadow-2`                                                                                              |
+| `Modal` · `Drawer` · `BottomSheet` · `CommandPalette`               | Modal           | `bg-overlay`            | `shadow-3`                                                                                              |
 
 **Colour block first, shadow rarely.** A card and a panel carry no shadow at rest; depth is the
 difference between the page and the surface, plus the border (`card` / `panel` mixins). When every
@@ -77,13 +77,13 @@ toast 1400 · tooltip 1500. A component never writes a number.
 The scale is design's: `radius-xs` 6 · `radius-sm` 10 · `radius-md` 14 · `radius-lg` 20 ·
 `radius-pill`.
 
-| Radius | Who |
-|---|---|
-| `radius-xs` | small marks and rows inside a surface (a menu item, the box of a checkbox) |
-| `radius-sm` | controls: `Button` (`--ui-button-radius`), fields (`input-base`), `Menu`; `Card` and `Panel` on a narrow screen |
-| `radius-md` | `Card`, `Panel`, `Popover` |
-| `radius-lg` | `Modal`; the top corners of a bottom sheet |
-| `radius-pill` | `Button shape="pill"`, the `Switch` track, `Badge` (`--ui-badge-radius`), a radio |
+| Radius        | Who                                                                                                             |
+| ------------- | --------------------------------------------------------------------------------------------------------------- |
+| `radius-xs`   | small marks and rows inside a surface (a menu item, the box of a checkbox)                                      |
+| `radius-sm`   | controls: `Button` (`--ui-button-radius`), fields (`input-base`), `Menu`; `Card` and `Panel` on a narrow screen |
+| `radius-md`   | `Card`, `Panel`, `Popover`                                                                                      |
+| `radius-lg`   | `Modal`; the top corners of a bottom sheet                                                                      |
+| `radius-pill` | `Button shape="pill"`, the `Switch` track, `Badge` (`--ui-badge-radius`), a radio                               |
 
 **Inner radius = outer radius − padding.** Two nested surfaces never share a radius: a field with
 the radius of the panel around it is not concentric and looks off. The rule is applied by hand;
@@ -140,15 +140,15 @@ Native `:disabled` elements are covered by `base.scss`.
 `border-control` is design 1.1's role for exactly this: 3.08 – 3.52:1 in light, 3.10 – 4.32:1 in
 dark on every surface and on `bg-disabled`.
 
-| Control | Drawn with `border-control` | Hover | Disabled |
-|---|---|---|---|
-| `Input` · `PasswordInput` · `Textarea` · `Select` · `Combobox` · `DateField` · `TagInput` (`input-base`) | the 1px edge | the edge mixed 40% towards `text` (`color-mix`, follows the theme) | `passive-surface()` |
-| `Checkbox` · `Radio` · `TableCheckbox` (`choice-control`) | the 1.5px edge | `text-2` | `bg-disabled` + `border-strong` |
-| `Switch` | the OFF track (the thumb is `bg-surface`: same ratio on the track) | the row veil | `bg-disabled` + a `border-strong` line |
-| `QuantityStepper` · `SegmentedControl` | the outer frame (inner separators stay `border`) | the button / segment | per button / segment |
-| `FileUpload` | the dashed edge of the drop zone | `primary` | `passive-surface()` |
-| `RadioCard` | the indicator circle (the card outline stays `border`, it is a card) | card `border-strong` | `border` |
-| `PromptInput` | the box | — (focus-within) | `passive-surface()` |
+| Control                                                                                                  | Drawn with `border-control`                                          | Hover                                                              | Disabled                               |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------- |
+| `Input` · `PasswordInput` · `Textarea` · `Select` · `Combobox` · `DateField` · `TagInput` (`input-base`) | the 1px edge                                                         | the edge mixed 40% towards `text` (`color-mix`, follows the theme) | `passive-surface()`                    |
+| `Checkbox` · `Radio` · `TableCheckbox` (`choice-control`)                                                | the 1.5px edge                                                       | `text-2`                                                           | `bg-disabled` + `border-strong`        |
+| `Switch`                                                                                                 | the OFF track (the thumb is `bg-surface`: same ratio on the track)   | the row veil                                                       | `bg-disabled` + a `border-strong` line |
+| `QuantityStepper` · `SegmentedControl`                                                                   | the outer frame (inner separators stay `border`)                     | the button / segment                                               | per button / segment                   |
+| `FileUpload`                                                                                             | the dashed edge of the drop zone                                     | `primary`                                                          | `passive-surface()`                    |
+| `RadioCard`                                                                                              | the indicator circle (the card outline stays `border`, it is a card) | card `border-strong`                                               | `border`                               |
+| `PromptInput`                                                                                            | the box                                                              | — (focus-within)                                                   | `passive-surface()`                    |
 
 Focus (`focus` + halo) and invalid (`danger-solid`) are unchanged and still read against the
 resting edge. Separators, cards, table rules, popups and the BUTTON family (`Button` SECONDARY,
@@ -168,9 +168,9 @@ not change its fill. Not valid for a row, a menu item or a button.
 ## Colour roles (2.0)
 
 **One sentence: cobalt is the interface, coral is the button that converts, turquoise is a
-highlight.** The palette, both themes and every value live in `@handijit/design`; this library
+highlight.** The palette, both themes and every value live in `@handijitcom/ui/design`; this library
 loads none of it (`styles.css` and `base.css` declare no token) and the application imports
-`@handijit/design/tokens.css` once.
+`@handijitcom/ui/tokens.css` once.
 
 - There is **no palette, no recipe and no token build step** in this repository. `palette.ts`,
   `scripts/lib/palette-recipe.mjs`, `build-palette.mjs`, `npm run tokens`, `check:palette`, the
@@ -185,16 +185,16 @@ loads none of it (`styles.css` and `base.css` declare no token) and the applicat
 
 ### Who draws with what
 
-| Family | Role | Where it lives |
-|---|---|---|
-| Cobalt — `primary`, `primary-hover/-active`, `on-primary`, `primary-soft`, `primary-line`, `primary-text`, `focus` | primary action, link, selection, focus | everywhere it is the interface colour: `Button` PRIMARY / OUTLINE / GHOST, links, selected states, progress, the focus ring |
-| Coral — `accent*`, `on-accent` | the CONVERSION action: download, try, subscribe | `Button` `UIVariant.ACCENT`, `IconButton variant="accent"` — **and nowhere else** |
-| Turquoise — `highlight*`, `on-highlight` | a highlight or a "live" / "new" mark, never an action | `Badge tone="highlight"`, `Avatar tone="highlight"`, type names in `CodeBlock` |
-| Brand band — `band-*` | the deep cobalt band of the brand, the SAME in both themes | `Button` `UIVariant.ON_BAND`, `Avatar tone="brand"`; the band itself is the application's |
-| Inverse — `inverse-*` | a dark technical surface, the SAME in both themes | `TerminalOutput`, `CodeBadge` |
-| Status — `success` / `warning` / `danger` / `info` × `-bg` `-fg` `-line` `-solid` `-on-solid` | a state, not an action | `Alert`, `Badge`, `Toast`, `StatusDot`, field errors; `danger-solid` is also the fill of a destructive BUTTON |
-| Series — `chart-1…6` | chart series, legend squares, category dots | `/charts`, `Legend`, `SegmentBar`; `muted` is the neutral tone |
-| Neutrals — `bg-page/-surface/-raised/-inset/-overlay/-disabled`, `border`, `border-strong`, `border-control`, `text`, `text-2`, `text-3`, `text-disabled` | everything else | `border-control` is the resting edge of a form control and nothing else (see "State layers") |
+| Family                                                                                                                                                    | Role                                                       | Where it lives                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Cobalt — `primary`, `primary-hover/-active`, `on-primary`, `primary-soft`, `primary-line`, `primary-text`, `focus`                                        | primary action, link, selection, focus                     | everywhere it is the interface colour: `Button` PRIMARY / OUTLINE / GHOST, links, selected states, progress, the focus ring |
+| Coral — `accent*`, `on-accent`                                                                                                                            | the CONVERSION action: download, try, subscribe            | `Button` `UIVariant.ACCENT`, `IconButton variant="accent"` — **and nowhere else**                                           |
+| Turquoise — `highlight*`, `on-highlight`                                                                                                                  | a highlight or a "live" / "new" mark, never an action      | `Badge tone="highlight"`, `Avatar tone="highlight"`, type names in `CodeBlock`                                              |
+| Brand band — `band-*`                                                                                                                                     | the deep cobalt band of the brand, the SAME in both themes | `Button` `UIVariant.ON_BAND`, `Avatar tone="brand"`; the band itself is the application's                                   |
+| Inverse — `inverse-*`                                                                                                                                     | a dark technical surface, the SAME in both themes          | `TerminalOutput`, `CodeBadge`                                                                                               |
+| Status — `success` / `warning` / `danger` / `info` × `-bg` `-fg` `-line` `-solid` `-on-solid`                                                             | a state, not an action                                     | `Alert`, `Badge`, `Toast`, `StatusDot`, field errors; `danger-solid` is also the fill of a destructive BUTTON               |
+| Series — `chart-1…6`                                                                                                                                      | chart series, legend squares, category dots                | `/charts`, `Legend`, `SegmentBar`; `muted` is the neutral tone                                                              |
+| Neutrals — `bg-page/-surface/-raised/-inset/-overlay/-disabled`, `border`, `border-strong`, `border-control`, `text`, `text-2`, `text-3`, `text-disabled` | everything else                                            | `border-control` is the resting edge of a form control and nothing else (see "State layers")                                |
 
 ⚠ **Guard `__tests__/styles/colour-footprint.test.ts`.** Coral, turquoise and the band are tied to
 an allow-list of components, each with its reason. A component outside the list that reaches for
@@ -226,16 +226,16 @@ in a consumer.
 
 ### Buttons
 
-| `UIVariant` | Drawn with | For |
-|---|---|---|
-| `PRIMARY` | `primary` fill, `on-primary` label | the primary action of the screen |
-| `ACCENT` | `accent` fill, `on-accent` label | the conversion action (download, try, subscribe) |
-| `SECONDARY` | `bg-surface` + `border-strong`, body text | the neutral second action ("Cancel") |
-| `OUTLINE` | cobalt frame | an encouraged navigation that is not the primary action ("See all") |
-| `SOFT` | neutral fill | a secondary action inside a card |
-| `GHOST` | no surface, link colour | toolbar and inline secondary actions |
-| `DANGER` | `danger-solid` fill | a destructive action: a delete confirmation |
-| `ON_BAND` | `band-*` | an action on the brand band |
+| `UIVariant` | Drawn with                                | For                                                                 |
+| ----------- | ----------------------------------------- | ------------------------------------------------------------------- |
+| `PRIMARY`   | `primary` fill, `on-primary` label        | the primary action of the screen                                    |
+| `ACCENT`    | `accent` fill, `on-accent` label          | the conversion action (download, try, subscribe)                    |
+| `SECONDARY` | `bg-surface` + `border-strong`, body text | the neutral second action ("Cancel")                                |
+| `OUTLINE`   | cobalt frame                              | an encouraged navigation that is not the primary action ("See all") |
+| `SOFT`      | neutral fill                              | a secondary action inside a card                                    |
+| `GHOST`     | no surface, link colour                   | toolbar and inline secondary actions                                |
+| `DANGER`    | `danger-solid` fill                       | a destructive action: a delete confirmation                         |
+| `ON_BAND`   | `band-*`                                  | an action on the brand band                                         |
 
 `IconButton variant`: `ghost` (default) · `secondary` · `outline` · `solid` · `accent` · `danger`.
 `secondary` and `outline` are `SECONDARY` and `OUTLINE` of the table above, value for value in
@@ -301,31 +301,31 @@ value is design's.
 
 Advisory pairs (measured and printed, never failing) and what they mean:
 
-| Pair | Light | Dark | Decision |
-|---|---|---|---|
-| `text-disabled` on `bg-disabled` | 2.06 | 2.28 | The label of a disabled `Button` / `IconButton`. WCAG 1.4.3 exempts disabled controls and the pair is design's. ⚠ This REPLACES the 1.x rule "the disabled label is gated at 4.5:1": with design's tokens the nearest passing label is `text-2` (5.98:1), which no longer looks disabled; `text-3` is 4.35:1 |
-| `focus` on `bg-inset` | 2.95 | 8.48 | hence `$focus-inset` |
-| `text-3` on `bg-inset` | 4.35 | 6.97 | tertiary text is not written in a well; `CodeBlock` comments use `text-2` |
+| Pair                                                      | Light       | Dark            | Decision                                                                                                                                                                                                                                                                                                                                  |
+| --------------------------------------------------------- | ----------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `text-disabled` on `bg-disabled`                          | 2.06        | 2.28            | The label of a disabled `Button` / `IconButton`. WCAG 1.4.3 exempts disabled controls and the pair is design's. ⚠ This REPLACES the 1.x rule "the disabled label is gated at 4.5:1": with design's tokens the nearest passing label is `text-2` (5.98:1), which no longer looks disabled; `text-3` is 4.35:1                              |
+| `focus` on `bg-inset`                                     | 2.95        | 8.48            | hence `$focus-inset`                                                                                                                                                                                                                                                                                                                      |
+| `text-3` on `bg-inset`                                    | 4.35        | 6.97            | tertiary text is not written in a well; `CodeBlock` comments use `text-2`                                                                                                                                                                                                                                                                 |
 | `primary` / `danger-solid` / `info-solid` on `bg-overlay` | 5.03 – 5.31 | **2.70 – 2.85** | Design gates these fills on page, surface and raised only. On a dark menu or dialog a filled control is never the only carrier (its glyph is measured as text on a fill), but a bare status ICON in that colour, e.g. in a dark toast, is under 3:1. Known limit; the fix belongs to design (an overlay-safe fill), not to a local colour |
-| `border` / `border-strong` on surfaces | 1.19 – 1.53 | 1.25 – 2.27 | hairlines; a card is separated from the page by the border AND the fill. A form control is NOT drawn with them: its edge is `border-control`, gated at 3:1 |
-| `highlight` on `bg-surface` | 2.79 | 8.91 | turquoise is a tint and a text colour here, never a state on its own |
+| `border` / `border-strong` on surfaces                    | 1.19 – 1.53 | 1.25 – 2.27     | hairlines; a card is separated from the page by the border AND the fill. A form control is NOT drawn with them: its edge is `border-control`, gated at 3:1                                                                                                                                                                                |
+| `highlight` on `bg-surface`                               | 2.79        | 8.91            | turquoise is a tint and a text colour here, never a state on its own                                                                                                                                                                                                                                                                      |
 
 ## Typography roles
 
 The roles are design's; a component takes a whole role, never a size.
 
-| Role | Size | Used for |
-|---|---:|---|
-| `display` | 56px | marketing hero — not used by a component |
-| `h1` | 40px | |
-| `h2` | 30px | page title (`page-title`, balanced wrapping) |
-| `h3` | 22px | section heading (`heading()` default) |
-| `h4` | 18px | |
-| `lead` | 17px | intro paragraph |
-| `body` | 15px | body, field text on a desktop pointer |
-| `small` | 13px | interface text: labels, table, dense controls |
+| Role      | Size | Used for                                        |
+| --------- | ---: | ----------------------------------------------- |
+| `display` | 56px | marketing hero — not used by a component        |
+| `h1`      | 40px |                                                 |
+| `h2`      | 30px | page title (`page-title`, balanced wrapping)    |
+| `h3`      | 22px | section heading (`heading()` default)           |
+| `h4`      | 18px |                                                 |
+| `lead`    | 17px | intro paragraph                                 |
+| `body`    | 15px | body, field text on a desktop pointer           |
+| `small`   | 13px | interface text: labels, table, dense controls   |
 | `caption` | 12px | help text, overline; the smallest size there is |
-| `code` | 13px | IBM Plex Mono |
+| `code`    | 13px | IBM Plex Mono                                   |
 
 - `@include type($role)` writes family, size, weight, stretch, line height and letter spacing of a
   role; `@include heading($role)` is a heading role in the text colour. An unknown role is a
@@ -343,11 +343,11 @@ The roles are design's; a component takes a whole role, never a size.
 
 ### Kontrast eşikleri
 
-| Tür | Eşik |
-|---|---|
-| Gövde metni | 4,5:1 (WCAG 1.4.3) |
-| ≥19 px ya da ≥16 px kalın | 3:1 |
-| İkon, odak halkası, denetim sınırı | 3:1 (WCAG 1.4.11) |
+| Tür                                | Eşik               |
+| ---------------------------------- | ------------------ |
+| Gövde metni                        | 4,5:1 (WCAG 1.4.3) |
+| ≥19 px ya da ≥16 px kalın          | 3:1                |
+| İkon, odak halkası, denetim sınırı | 3:1 (WCAG 1.4.11)  |
 
 **Advisory** (ölçülür, kırmaz): hairline'lar ve pasif dolgular. 1.4.11 "bilgiyi
 ayırt etmek için GEREKLİ" görsel bilgiyi kapsar; rozetin kenarlığı anlamın tek
@@ -420,11 +420,11 @@ Nöbetçi `stylelint.config.mjs` — bileşen SCSS'inde ham `ms`/`s` yasak.
 2.0: the scale is design's (three steps; the 1.x `duration-instant` 80 ms and `duration-normal`
 are gone, `duration-fast` moved from 140 to 120 ms).
 
-| Token | Süre | Ne için |
-|---|---:|---|
-| `duration-fast` | 120 ms | Hover, odak, renk, kenarlık, basma |
+| Token           |   Süre | Ne için                                                                      |
+| --------------- | -----: | ---------------------------------------------------------------------------- |
+| `duration-fast` | 120 ms | Hover, odak, renk, kenarlık, basma                                           |
 | `duration-base` | 200 ms | Kip pencere, çekmece, dipten açılan panel, `Disclosure`, `Progress`, `Toast` |
-| `duration-slow` | 320 ms | Uzun kayma (`Card` görselinin büyümesi) |
+| `duration-slow` | 320 ms | Uzun kayma (`Card` görselinin büyümesi)                                      |
 
 ⚠ **200 ms üzerindeki geçişler** tıklama ile sonuç arasında görünür gecikme
 yaratır ve arayüz yavaş hissedilir.
@@ -432,7 +432,7 @@ yaratır ve arayüz yavaş hissedilir.
 **Döngü süreleri ölçekten AYRI** ve kütüphanenin kendi sabitleri (design'da karşılığı yok):
 `duration-spin` 700 ms, `duration-shimmer`
 1400 ms, `duration-pulse` 1600 ms (`StatusDot` nabzı — 700 ms telaş, 2 sn ölü gibi
-okunuyordu; nabız noktayı soluklaştırmaz, etrafında sönen bir HALE çizer). Sürekli dönen bir gösterge bir *geçiş* değil — 320 ms'lik dönüş baş
+okunuyordu; nabız noktayı soluklaştırmaz, etrafında sönen bir HALE çizer). Sürekli dönen bir gösterge bir _geçiş_ değil — 320 ms'lik dönüş baş
 döndürücü, 120 ms'lik parıltı titreşim gibi okunuyor. Ayrı isim vermenin sebebi
 ölçekten kaçmak değil **ölçeği korumak**.
 
@@ -505,11 +505,11 @@ kararı `helpers/portal.helper.ts`te.
 içinde çiziyordu. Ölçüldü (2026-08-19, chromium 1280×900, `.gallery__stage`
 üzerinde `transform: translateZ(0)`):
 
-| yüzey | panelin tetikleyiciden yatay kayması |
-|---|---|
-| `Menu` / `Popover` / `Tooltip` | 0px (portallanmış) |
-| `Combobox` | **46px** |
-| `Select` | **46px** |
+| yüzey                          | panelin tetikleyiciden yatay kayması |
+| ------------------------------ | ------------------------------------ |
+| `Menu` / `Popover` / `Tooltip` | 0px (portallanmış)                   |
+| `Combobox`                     | **46px**                             |
+| `Select`                       | **46px**                             |
 
 Kırpan bir ata eklendiğinde (`overflow: hidden`) panel isabet testini de
 kaybediyordu — yani görünür sayılıyor ama tıklanamıyordu.
@@ -536,12 +536,12 @@ sanıyor — bildirim orada duruyor.
 
 Ölçüldü (2026-08-19, `?solo=Combobox`, `isClearable` + seçili değer):
 
-| ne | beklenen | ölçülen |
-|---|---|---|
-| `✕` `position` | `absolute` | **`relative`** |
-| `.combobox` kök yüksekliği | 48px (tetikleyici) | **73px** |
-| `✕` yatay konumu | tetikleyicinin içinde | kökün **36px SOLUNDA** |
-| caret dikey kayması | 0px | **12px** |
+| ne                         | beklenen              | ölçülen                |
+| -------------------------- | --------------------- | ---------------------- |
+| `✕` `position`             | `absolute`            | **`relative`**         |
+| `.combobox` kök yüksekliği | 48px (tetikleyici)    | **73px**               |
+| `✕` yatay konumu           | tetikleyicinin içinde | kökün **36px SOLUNDA** |
+| caret dikey kayması        | 0px                   | **12px**               |
 
 Zincir tek yönlü ve üç arıza **tek** hatadan doğuyor: düğme akışta kaldı →
 tetikleyicinin altına blok olarak dizildi → kök 48'den 73px'e şişti →
@@ -551,9 +551,9 @@ göstermiyor.
 
 **İki düzeltme, iki ayrı gerekçe:**
 
-| ne | nasıl |
-|---|---|
-| `✕` | `position` artık `@include tap-target`TAN SONRA yazılır. `absolute` de konumlu kutu kurar, `::after` çapası korunur |
+| ne    | nasıl                                                                                                                                                                                          |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `✕`   | `position` artık `@include tap-target`TAN SONRA yazılır. `absolute` de konumlu kutu kurar, `::after` çapası korunur                                                                            |
 | caret | mutlak konum bırakıldı, **düz esnek çocuk** oldu — hizalamayı tetikleyicinin `align-items: center`ı yapar, kapsayıcı bloktan bağımsız. Kardeş `Select` baştan böyleydi ve arızayı hiç taşımadı |
 
 ⚠ **Caret esnek akışa girince `--clearable` DOLGUSU DÜŞTÜ.** Eski dolgu
@@ -568,10 +568,10 @@ yalnızca burada vardı.
 
 ### Nöbetçiler ve ölçülemeyen boşluk
 
-| nöbetçi | ne tutuyor |
-|---|---|
-| `__tests__/e2e/anchored-panel.spec.ts` (7) | panelin dönüştürülmüş/kırpan atada kaymaması, caret ve `✕`in tetikleyici içinde kalması, kök yüksekliği == tetikleyici yüksekliği |
-| `__tests__/components/Combobox.portal.test.tsx` (7) | panelin kökün DIŞINA çizilmesi; portallanan panelde seçim ve arama kutusunun paneli kapatmaması |
+| nöbetçi                                             | ne tutuyor                                                                                                                        |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `__tests__/e2e/anchored-panel.spec.ts` (7)          | panelin dönüştürülmüş/kırpan atada kaymaması, caret ve `✕`in tetikleyici içinde kalması, kök yüksekliği == tetikleyici yüksekliği |
+| `__tests__/components/Combobox.portal.test.tsx` (7) | panelin kökün DIŞINA çizilmesi; portallanan panelde seçim ve arama kutusunun paneli kapatmaması                                   |
 
 ⚠ **`desktop-behavior` PLAYWRIGHT PROJESİ BU TUR AÇILDI ve boşluk yapısaldı.**
 Öncesinde davranış ölçen her spec yalnızca `ios` + `android` projelerinde
@@ -617,12 +617,12 @@ Taramada **18 kaydırma kabından 16'sı konumsuzdu** — yalnızca `DataTable` 
 içi `position: fixed`) konumluydu. Galeride ölçülen sızıntı (gizli etiket kabın 1200 px dibinde,
 chromium 1280×900; Pixel 7'de aynı mertebe):
 
-| kab | büyüyen | ne kadar |
-|---|---|---|
-| `ChatThread` | kök ve tüm atalar | +1024 px |
-| `TerminalOutput` | sayfa | +514 px — kendi stderr öneki de sızıyordu |
-| `ScrollArea` | sayfa | +626 px |
-| `ActionList` (sanal) | sayfa | +2171 px |
+| kab                  | büyüyen           | ne kadar                                  |
+| -------------------- | ----------------- | ----------------------------------------- |
+| `ChatThread`         | kök ve tüm atalar | +1024 px                                  |
+| `TerminalOutput`     | sayfa             | +514 px — kendi stderr öneki de sızıyordu |
+| `ScrollArea`         | sayfa             | +626 px                                   |
+| `ActionList` (sanal) | sayfa             | +2171 px                                  |
 
 Düzeltmeden sonra dördü de 0 ve görsel süitte tek piksel değişmedi (40/40; değişen tek taban
 `ActionList`in yeni `virtual` durumu).
@@ -641,10 +641,10 @@ göre), `Tabs` çizgisi sekmenin kendisine göre.
 kutuyu aşmadıkça gizli etiketin statik yeri kutunun içinde kalıyor. Nöbetçi yalnızca `auto|scroll`
 okur.
 
-| nöbetçi | ne tutuyor |
-|---|---|
-| `__tests__/styles/scroll-containment.test.ts` | SCSS'te `overflow: auto\|scroll` yazan her kural konumlu; BEM değiştiricisi (`&--x`) ebeveyninden, `position` yazan mixin'in include'u (`tap-target`, `sticky-below-header`) sayılır. Tek istisna `Menu` — gerekçesiyle ve bayatlık denetimiyle |
-| `__tests__/e2e/scroll-containment.spec.ts` (4 × 3 proje) | gerçek yerleşim: kabın dibine konan gizli etiket hiçbir atanın `scrollHeight`ini büyütmez, `scrollIntoView` yalnızca kabı kaydırır. `desktop-behavior` + `ios` + `android` (`ANY_VIEWPORT_SPEC`) |
+| nöbetçi                                                  | ne tutuyor                                                                                                                                                                                                                                      |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `__tests__/styles/scroll-containment.test.ts`            | SCSS'te `overflow: auto\|scroll` yazan her kural konumlu; BEM değiştiricisi (`&--x`) ebeveyninden, `position` yazan mixin'in include'u (`tap-target`, `sticky-below-header`) sayılır. Tek istisna `Menu` — gerekçesiyle ve bayatlık denetimiyle |
+| `__tests__/e2e/scroll-containment.spec.ts` (4 × 3 proje) | gerçek yerleşim: kabın dibine konan gizli etiket hiçbir atanın `scrollHeight`ini büyütmez, `scrollIntoView` yalnızca kabı kaydırır. `desktop-behavior` + `ios` + `android` (`ANY_VIEWPORT_SPEC`)                                                |
 
 ## `@handijitcom/ui/chat` — sohbet bileşenlerinin AYRI girişi (5.2)
 
@@ -653,19 +653,20 @@ sohbet bileşenlerinin e-ticaret vitrininde çağıranı yok. Ana girişe girsel
 indirdiği paket ve `styles.css` büyürdü. Ayrı girişte ana pakete **sıfır bayt**
 eklendi (ölçüldü: ana giriş 42 000 bayt, önce ve sonra).
 
-| Ne | Nerede |
-|---|---|
-| Kaynak | `src/chat/<Bileşen>/` · cephe `src/chat/index.ts` |
-| Derleme | `vite.chat.config.ts` (`vite.subentry.ts`) → `build/chat.js`, `chat.cjs`, `chat.css` |
-| Tipler | `tsconfig.subentries.json` → `build/types/chat/` (dosya başına) |
-| Dışa aktarım | `exports["./chat"]`, `exports["./chat.css"]` |
-| Bütçe | `chat.js` 13 kB (2.0'da ölçülen 11,76; vurgulayıcıdan önce 6,29) · yalnızca `CodeBlock` 7 kB (6,25) · yalnızca `ChatThread` 1,3 kB (1,04) · `chat.css` 5 kB (4,06) |
-| API taban çizgisi | `scripts/api-baseline.chat.txt` (30 ad) |
+| Ne                | Nerede                                                                                                                                                             |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Kaynak            | `src/chat/<Bileşen>/` · cephe `src/chat/index.ts`                                                                                                                  |
+| Derleme           | `vite.chat.config.ts` (`vite.subentry.ts`) → `build/chat.js`, `chat.cjs`, `chat.css`                                                                               |
+| Tipler            | `tsconfig.subentries.json` → `build/types/chat/` (dosya başına)                                                                                                    |
+| Dışa aktarım      | `exports["./chat"]`, `exports["./chat.css"]`                                                                                                                       |
+| Bütçe             | `chat.js` 13 kB (2.0'da ölçülen 11,76; vurgulayıcıdan önce 6,29) · yalnızca `CodeBlock` 7 kB (6,25) · yalnızca `ChatThread` 1,3 kB (1,04) · `chat.css` 5 kB (4,06) |
+| API taban çizgisi | `scripts/api-baseline.chat.txt` (30 ad)                                                                                                                            |
 
 ⚠ **ANA GİRİŞ DIŞSAL — sohbet kodu onu PAKET ADIYLA alır.** Bir sohbet
 dosyası `../../components/…` ya da `../../theme/context` gibi göreli bir yolla
 ana girişe uzanırsa o modülün İKİNCİ BİR KOPYASI `chat.js`e paketlenir ve
 derleme yine de yeşil biter:
+
 - `theme/context` kopyası → sohbet bileşenleri `UiProvider`ın metinlerini
   ve yönlendiricisini GÖRMEZ
 - `helpers/focus.helper` kopyası → kipsel yüzey yığını ikiye bölünür, `Escape`
@@ -690,23 +691,23 @@ girişinin cephe dosyasındaki `export { … } from` satırlarını okur.
 
 **Bileşenler** (20; hepsi eksen taramasında, davranışları `__tests__/chat/`):
 
-| Grup | Bileşen | Not |
-|---|---|---|
-| İskelet | `ChatThread` | Sona yapışık kaydırma, "en yeniye in", alt dok. ⚠ Akan belirteçler OKUNMAZ (`aria-live` yok, `role="log"` değil); yanıt bitince TEK cümle duyurulur (`labels.chat.replyReady`) |
-| | `ChatMessage` (`author`) | Kullanıcı balonu `bg-raised`; eylemler hover'da VE `:focus-within`de belirginleşir (renkle, `opacity` değil) |
-| | `PromptInput` | `Enter` gönderir, `Shift+Enter` satır, IME yazımında `Enter` GÖNDERMEZ; `Escape` akışı durdurur ama açık bir yüzey varken DOKUNMAZ (`hasOpenSurface`). Gönder = kobalt dolgu (`IconButton variant="solid"`, ekranın tek birincil eylemi) |
-| | `PromptSuggestions` | EYLEM ızgarası, seçim değil (`ChipGroup` değil) |
-| Yanıt | `Prose` | Tipografi kabı; ayrıştırıcı İÇERMEZ (markdown/KaTeX tüketicide) |
-| | `CodeBlock` | Yerleşik vurgulayıcı + biçimlendirici, bağımlılıksız (aşağıda); `html` (Shiki) verilirse onun yerine geçer — güvenliği ÇAĞIRANIN |
-| | `ReasoningBlock` + `ReasoningText` | Tur sürerken açık, bitince kapanır — kullanıcı dokunduysa tercihine DOKUNULMAZ |
-| | `ToolCall` + `ToolCallSection` | Durum nokta + OKUNAN metin (`labels.chat.toolStatus`); çalışan nokta NÖTR nabız |
-| | `TerminalOutput` | Temadan bağımsız koyu yüzey (`inverse-*`), sona yapışık; stderr gizli önek taşır (renk tek başına anlam taşımaz) |
-| | `SourceList` + `Citation` | Atıfın okunan adı `labels.chat.citation(n)` |
-| | `MessageActions` | `role="toolbar"`, ok/`Home`/`End` |
-| Uygulama | `AppBar` | Kendi yüksekliğini `--ui-header-height`e yazar |
-| | `ActionList` + `ActionListItem` | `isSelected` verilirse SEÇİM (`aria-pressed`), verilmezse EYLEM; `rowHeight` ile sanal (`aria-posinset`/`aria-setsize`) |
-| Veri | `SegmentBar` | Yığılmış (`value`) ya da zaman çizelgesi (`from`/`to`); TEK görsel (`role="img"`), adı tüm parçaları okur |
-| | `Legend` · `DescriptionList` | Kategorik palet; `tone` (`color` değil — tek ad kuralı) |
+| Grup     | Bileşen                            | Not                                                                                                                                                                                                                                      |
+| -------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| İskelet  | `ChatThread`                       | Sona yapışık kaydırma, "en yeniye in", alt dok. ⚠ Akan belirteçler OKUNMAZ (`aria-live` yok, `role="log"` değil); yanıt bitince TEK cümle duyurulur (`labels.chat.replyReady`)                                                           |
+|          | `ChatMessage` (`author`)           | Kullanıcı balonu `bg-raised`; eylemler hover'da VE `:focus-within`de belirginleşir (renkle, `opacity` değil)                                                                                                                             |
+|          | `PromptInput`                      | `Enter` gönderir, `Shift+Enter` satır, IME yazımında `Enter` GÖNDERMEZ; `Escape` akışı durdurur ama açık bir yüzey varken DOKUNMAZ (`hasOpenSurface`). Gönder = kobalt dolgu (`IconButton variant="solid"`, ekranın tek birincil eylemi) |
+|          | `PromptSuggestions`                | EYLEM ızgarası, seçim değil (`ChipGroup` değil)                                                                                                                                                                                          |
+| Yanıt    | `Prose`                            | Tipografi kabı; ayrıştırıcı İÇERMEZ (markdown/KaTeX tüketicide)                                                                                                                                                                          |
+|          | `CodeBlock`                        | Yerleşik vurgulayıcı + biçimlendirici, bağımlılıksız (aşağıda); `html` (Shiki) verilirse onun yerine geçer — güvenliği ÇAĞIRANIN                                                                                                         |
+|          | `ReasoningBlock` + `ReasoningText` | Tur sürerken açık, bitince kapanır — kullanıcı dokunduysa tercihine DOKUNULMAZ                                                                                                                                                           |
+|          | `ToolCall` + `ToolCallSection`     | Durum nokta + OKUNAN metin (`labels.chat.toolStatus`); çalışan nokta NÖTR nabız                                                                                                                                                          |
+|          | `TerminalOutput`                   | Temadan bağımsız koyu yüzey (`inverse-*`), sona yapışık; stderr gizli önek taşır (renk tek başına anlam taşımaz)                                                                                                                         |
+|          | `SourceList` + `Citation`          | Atıfın okunan adı `labels.chat.citation(n)`                                                                                                                                                                                              |
+|          | `MessageActions`                   | `role="toolbar"`, ok/`Home`/`End`                                                                                                                                                                                                        |
+| Uygulama | `AppBar`                           | Kendi yüksekliğini `--ui-header-height`e yazar                                                                                                                                                                                           |
+|          | `ActionList` + `ActionListItem`    | `isSelected` verilirse SEÇİM (`aria-pressed`), verilmezse EYLEM; `rowHeight` ile sanal (`aria-posinset`/`aria-setsize`)                                                                                                                  |
+| Veri     | `SegmentBar`                       | Yığılmış (`value`) ya da zaman çizelgesi (`from`/`to`); TEK görsel (`role="img"`), adı tüm parçaları okur                                                                                                                                |
+|          | `Legend` · `DescriptionList`       | Kategorik palet; `tone` (`color` değil — tek ad kuralı)                                                                                                                                                                                  |
 
 **Plandan sapmalar:** `ChatMessage.role` → `author` (`role` HTML özniteliğiyle
 çakışıyordu); `StatusDot`ta `brand` tonu yok (tonlar: `neutral`, `success`, `warning`,
@@ -722,26 +723,26 @@ Shiki bağlamayan her tüketicide (galeri dahil) kod **renksiz** çiziliyordu; b
 da renkler Shiki'nin `github-*` temasından geliyordu — kontrastı ölçülmüyor, @handijitcom/ui
 paletiyle hiçbir bağı yok.
 
-| Karar | Gerekçe |
-|---|---|
-| Bağımlılıksız sözcük çözümleyici: dilin kuralları TEK birleşik düzenli ifadede, tek geçiş | Shiki bunun onlarca katı ve eşzamansız (ilk boyama renksiz, sunucu çiziminde renk yok). Grafikler de sıfır bağımlılıkla kuruldu |
-| Dilbilgisi çözümleyicisi DEĞİL — bilinen yaklaşıklıklar | JSX metnindeki büyük harfli kelime tip boyanır; kesme işaretli JSX metni (`Don't`) satırın kalanını dize sayar; YAML düz değerleri boyanmaz. Shiki doğruluğu gerekiyorsa `html` |
-| Diller: ts/tsx/js/jsx, json, bash/sh/zsh, python, ruby, yaml, toml, css/scss/less, html/xml/svg, markdown, sql, diff, graphql, dockerfile, c/c++/c#, java, kotlin, swift, go, rust, php (takma adlarla 56 ad) | bir tüketicinin Shiki'ye verdiği listenin tamamı. Tanınmayan dil düz |
-| Geriye bakış (`(?<=…)`) YOK | Safari 16.4 öncesinde ifade kurulurken `SyntaxError` — kod bloğu hiç çizilmezdi. Önceki karaktere bağlı kurallar `reject` ile (`a#b` yorum değil, `useState<string>` etiket değil) |
-| `/` bağlama göre düzenli ifade ya da bölme | Bağlamsız kural `a / b / c`yi düzenli ifade boyuyordu. Karakter sınıfının kapanışı tam kuralda zorunlu: isteğe bağlı `]` birkaç bin `[`de üstel geri dönüş yapıp sayfayı kilitliyordu |
-| Özellik erişimi anahtar kelime değil (`map.get`, `obj.type`) | Bağlamsal anahtar kelimeler (`get`, `type`, `of`) en sık özellik adı |
-| Rust yaşam süresi (`'a`) dize açmaz | Tek tırnağı dize sayan kural satırın kalanını boyuyordu |
-| Kapanmamış yorum ve dize METNİN SONUNA kadar | Akan yanıtta blok bitmeden renk doğru tarafta kalır |
-| `<span>` + sınıf; `dangerouslySetInnerHTML` YOK | Yerleşik yol XSS yüzeyi açmaz (`html` yolunun güvenliği yine çağıranın) |
+| Karar                                                                                                                                                                                                         | Gerekçe                                                                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bağımlılıksız sözcük çözümleyici: dilin kuralları TEK birleşik düzenli ifadede, tek geçiş                                                                                                                     | Shiki bunun onlarca katı ve eşzamansız (ilk boyama renksiz, sunucu çiziminde renk yok). Grafikler de sıfır bağımlılıkla kuruldu                                                       |
+| Dilbilgisi çözümleyicisi DEĞİL — bilinen yaklaşıklıklar                                                                                                                                                       | JSX metnindeki büyük harfli kelime tip boyanır; kesme işaretli JSX metni (`Don't`) satırın kalanını dize sayar; YAML düz değerleri boyanmaz. Shiki doğruluğu gerekiyorsa `html`       |
+| Diller: ts/tsx/js/jsx, json, bash/sh/zsh, python, ruby, yaml, toml, css/scss/less, html/xml/svg, markdown, sql, diff, graphql, dockerfile, c/c++/c#, java, kotlin, swift, go, rust, php (takma adlarla 56 ad) | bir tüketicinin Shiki'ye verdiği listenin tamamı. Tanınmayan dil düz                                                                                                                  |
+| Geriye bakış (`(?<=…)`) YOK                                                                                                                                                                                   | Safari 16.4 öncesinde ifade kurulurken `SyntaxError` — kod bloğu hiç çizilmezdi. Önceki karaktere bağlı kurallar `reject` ile (`a#b` yorum değil, `useState<string>` etiket değil)    |
+| `/` bağlama göre düzenli ifade ya da bölme                                                                                                                                                                    | Bağlamsız kural `a / b / c`yi düzenli ifade boyuyordu. Karakter sınıfının kapanışı tam kuralda zorunlu: isteğe bağlı `]` birkaç bin `[`de üstel geri dönüş yapıp sayfayı kilitliyordu |
+| Özellik erişimi anahtar kelime değil (`map.get`, `obj.type`)                                                                                                                                                  | Bağlamsal anahtar kelimeler (`get`, `type`, `of`) en sık özellik adı                                                                                                                  |
+| Rust yaşam süresi (`'a`) dize açmaz                                                                                                                                                                           | Tek tırnağı dize sayan kural satırın kalanını boyuyordu                                                                                                                               |
+| Kapanmamış yorum ve dize METNİN SONUNA kadar                                                                                                                                                                  | Akan yanıtta blok bitmeden renk doğru tarafta kalır                                                                                                                                   |
+| `<span>` + sınıf; `dangerouslySetInnerHTML` YOK                                                                                                                                                               | Yerleşik yol XSS yüzeyi açmaz (`html` yolunun güvenliği yine çağıranın)                                                                                                               |
 
 ⚠ **20 000 karakterin üstü düz çizilir** (`HIGHLIGHT_LIMIT`). Maliyet çözümlemede
 değil `<span>` sayısında. Ölçüldü (chromium, galeri sunucusu, React geliştirme
 kipi):
 
-| kod | çözümleme | parça | DOM + yerleşim | React ilk çizim | akışta güncelleme |
-|---|---:|---:|---:|---:|---:|
-| 20 000 karakter | 3,8 ms | 1 555 | 17 ms | 139 ms | 78 ms |
-| 50 000 karakter | 8,5 ms | 4 333 | 66 ms | 590 ms | 173 ms |
+| kod             | çözümleme | parça | DOM + yerleşim | React ilk çizim | akışta güncelleme |
+| --------------- | --------: | ----: | -------------: | --------------: | ----------------: |
+| 20 000 karakter |    3,8 ms | 1 555 |          17 ms |          139 ms |             78 ms |
+| 50 000 karakter |    8,5 ms | 4 333 |          66 ms |          590 ms |            173 ms |
 
 **Biçimlendirici** (`format.ts`):
 
@@ -761,15 +762,15 @@ kipi):
 
 **Syntax colours (2.0) — semantic design tokens, no `syntax-*` family:**
 
-| Kind | Token | On the code well (`bg-inset`), light / dark |
-|---|---|---|
-| keyword, HTML tag, diff header | `primary-text` | 6.42 / 11.62:1 |
-| string, regular expression | `success-fg` | 4.88 / 13.00:1 |
-| number, literal (`true`, `null`), CONSTANT | `warning-fg` | 4.61 / 13.03:1 |
-| function call, property / key, attribute, variable | `text` | 16.47 / 18.04:1 |
-| type, class, JSX component | `highlight-text` | 4.93 / 12.82:1 |
-| comment (italic), punctuation | `text-2` | 5.98 / 11.08:1 |
-| diff `+` / `-` line | `success-fg` / `danger-fg` | 4.88 / 13.00 · 6.44 / 11.24:1 |
+| Kind                                               | Token                      | On the code well (`bg-inset`), light / dark |
+| -------------------------------------------------- | -------------------------- | ------------------------------------------- |
+| keyword, HTML tag, diff header                     | `primary-text`             | 6.42 / 11.62:1                              |
+| string, regular expression                         | `success-fg`               | 4.88 / 13.00:1                              |
+| number, literal (`true`, `null`), CONSTANT         | `warning-fg`               | 4.61 / 13.03:1                              |
+| function call, property / key, attribute, variable | `text`                     | 16.47 / 18.04:1                             |
+| type, class, JSX component                         | `highlight-text`           | 4.93 / 12.82:1                              |
+| comment (italic), punctuation                      | `text-2`                   | 5.98 / 11.08:1                              |
+| diff `+` / `-` line                                | `success-fg` / `danger-fg` | 4.88 / 13.00 · 6.44 / 11.24:1               |
 
 - The five `syntax-*` tokens of 1.x (plum, clay, violet, blue, ochre; generated into
   `_syntax.generated.scss`, overridden through `--ui-syntax-*`) are gone with the palette recipe.
@@ -791,12 +792,12 @@ kipi):
 bütçe 8 → 13 kB. Bedeli yalnızca `CodeBlock` alan öder — diller ve kelime kümeleri
 ilk kullanımda kurulur (fabrika), modül düzeyinde açıklamasız çağrı yok.
 
-| nöbetçi | ne tutuyor |
-|---|---|
-| `__tests__/chat/code-block.test.tsx` | parçalar birleşince kodun KENDİSİ; hiçbir kural bayrak, yakalayan grup ya da boş eşleşme taşımaz; dil başına ölçülmüş kararlar; biçimlendiricinin `JSON.stringify` eşdeğerliği ve metni koruması; kopyalanan metin |
-| `__tests__/styles/design-contract.test.ts` · `scripts/check-contrast.mjs` | sözdizimi renkleri design'da VAR OLAN token'lar ve kod kuyusundaki (`bg-inset`) çiftleri ölçülüyor (2.0; 1.x'in `tokens.contract.test.ts` nöbetçisi üreteçle birlikte kalktı) |
-| `.size-limit.js` "yalnızca ChatThread" (1,3 kB) | vurgulayıcı başka bir sohbet bileşenine sızarsa |
-| `.size-limit.js` "yalnızca CodeBlock" (7 kB) | yeni bir dil buradan geçer |
+| nöbetçi                                                                   | ne tutuyor                                                                                                                                                                                                         |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `__tests__/chat/code-block.test.tsx`                                      | parçalar birleşince kodun KENDİSİ; hiçbir kural bayrak, yakalayan grup ya da boş eşleşme taşımaz; dil başına ölçülmüş kararlar; biçimlendiricinin `JSON.stringify` eşdeğerliği ve metni koruması; kopyalanan metin |
+| `__tests__/styles/design-contract.test.ts` · `scripts/check-contrast.mjs` | sözdizimi renkleri design'da VAR OLAN token'lar ve kod kuyusundaki (`bg-inset`) çiftleri ölçülüyor (2.0; 1.x'in `tokens.contract.test.ts` nöbetçisi üreteçle birlikte kalktı)                                      |
+| `.size-limit.js` "yalnızca ChatThread" (1,3 kB)                           | vurgulayıcı başka bir sohbet bileşenine sızarsa                                                                                                                                                                    |
+| `.size-limit.js` "yalnızca CodeBlock" (7 kB)                              | yeni bir dil buradan geçer                                                                                                                                                                                         |
 
 ## `@handijitcom/ui/charts` — SVG grafikleri (5.3)
 
@@ -805,23 +806,23 @@ On grafik, **sıfır bağımlılık**: ölçek, istatistik ve yol üretimi
 (`vite.subentry.ts`, `tsconfig.subentries.json`, `subentry-boundary` nöbetçisi)
 — ana pakete **sıfır bayt**.
 
-| Ne | Nerede |
-|---|---|
-| Kaynak | `src/charts/<Grafik>/` · ortak çekirdek `src/charts/core/` · cephe `src/charts/index.ts` |
-| Derleme | `vite.charts.config.ts` → `build/charts.js`, `charts.cjs`, `charts.css` |
-| Bütçe | tümü 16 kB (2.0'da ölçülen 14,17) · yalnızca `LineChart` 8,5 kB (7,36) · `charts.css` 2 kB (1,6) |
-| API taban çizgisi | `scripts/api-baseline.charts.txt` (22 ad) |
-| Testler | `__tests__/charts/` — çekirdek (37), davranış (22), eksen taraması (her senaryo × {kapalı, ipucu açık}) |
+| Ne                | Nerede                                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------------------------- |
+| Kaynak            | `src/charts/<Grafik>/` · ortak çekirdek `src/charts/core/` · cephe `src/charts/index.ts`                |
+| Derleme           | `vite.charts.config.ts` → `build/charts.js`, `charts.cjs`, `charts.css`                                 |
+| Bütçe             | tümü 16 kB (2.0'da ölçülen 14,17) · yalnızca `LineChart` 8,5 kB (7,36) · `charts.css` 2 kB (1,6)        |
+| API taban çizgisi | `scripts/api-baseline.charts.txt` (22 ad)                                                               |
+| Testler           | `__tests__/charts/` — çekirdek (37), davranış (22), eksen taraması (her senaryo × {kapalı, ipucu açık}) |
 
-| Grafik | Hangisi, ne zaman | Ayrımın nedeni |
-|---|---|---|
-| `LineChart` / `AreaChart` | Eğilim / toplamın parçaları | Alan dolgusu bir HACİM vaat eder; yığılmamış alanlar birbirini örter |
-| `BarChart` / `Histogram` | Ayrık kategori / sürekli değişkenin bölmeleri | Histogramın x'i SÜREKLİ ve sütunlar bitişik — kategori çubuğu gibi aralıklı çizmek dağılımı parçalıyordu |
-| `ComposedChart` | Farklı birimde iki ölçü | Sağ eksen yalnızca bir seri ona bağlıysa çizilir |
-| `PieChart` / `BarChart` | ≤6 parça / daha çok | Kategorik palet altı tonda döner; yedinci dilim birinciyle aynı renk |
-| `BoxPlot` / `Histogram` | Grupları karşılaştırma / tek grubun şekli | |
-| `Heatmap` / `ScatterPlot` | İki KATEGORİK eksen / iki SAYISAL eksen | |
-| `RadarChart` | Aynı ölçekte 3+ eksen | Birimleri farklı eksenler önce 0-100'e normalleştirilir — ortak ölçek yoksa alan bir şey söylemez |
+| Grafik                    | Hangisi, ne zaman                             | Ayrımın nedeni                                                                                           |
+| ------------------------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `LineChart` / `AreaChart` | Eğilim / toplamın parçaları                   | Alan dolgusu bir HACİM vaat eder; yığılmamış alanlar birbirini örter                                     |
+| `BarChart` / `Histogram`  | Ayrık kategori / sürekli değişkenin bölmeleri | Histogramın x'i SÜREKLİ ve sütunlar bitişik — kategori çubuğu gibi aralıklı çizmek dağılımı parçalıyordu |
+| `ComposedChart`           | Farklı birimde iki ölçü                       | Sağ eksen yalnızca bir seri ona bağlıysa çizilir                                                         |
+| `PieChart` / `BarChart`   | ≤6 parça / daha çok                           | Kategorik palet altı tonda döner; yedinci dilim birinciyle aynı renk                                     |
+| `BoxPlot` / `Histogram`   | Grupları karşılaştırma / tek grubun şekli     |                                                                                                          |
+| `Heatmap` / `ScatterPlot` | İki KATEGORİK eksen / iki SAYISAL eksen       |                                                                                                          |
+| `RadarChart`              | Aynı ölçekte 3+ eksen                         | Birimleri farklı eksenler önce 0-100'e normalleştirilir — ortak ölçek yoksa alan bir şey söylemez        |
 
 ⚠ **Ana giriş bütçesi 42 → 43 kB (5.3'te; bugün 44 kB, 2.0'da ölçülen 39,47).** Aşım grafiklerden DEĞİL:
 `UiThemeScript` (5.2) 42 000 baytlık girişi 42 050'ye taşıdı ve önceki dalda
@@ -872,22 +873,22 @@ Fiziksel `left`: SVG koordinatları RTL'de aynalanmaz.
 
 ### Ölçülmüş veri kararları
 
-| Karar | Gerekçe |
-|---|---|
-| `null` çizgiyi KESER, sıfıra indirmez | Eksik veri ≠ sıfır; sıfıra inen çizgi olmamış bir düşüş çiziyordu |
-| İki boşluk arasındaki TEK değer işaretle çizilir | Tek noktalı yol görünmez — veri vardı ama grafikte yoktu |
-| Çubuk/alan varken sıfır tanım aralığında | Sıfırdan başlamayan çubuğun boyu oranı yalan söyler |
-| Yığında artı ve eksi AYRI birikir | Eksi çubuk artı yığının ortasından başlıyordu |
-| Yatay yön yalnızca tümü çubuksa | Yatay çizgi grafiği zamanı dikey eksene koyar |
-| Monoton kübik eğri (Fritsch–Carlson) | Catmull-Rom veri noktaları arasında AŞIYOR — olmayan bir tepe çiziyordu |
-| Bıyık ucu bir GÖZLEM (Tukey, 1,5 × IQR) | Q3 + 1,5 × IQR'ye kadar çizmek verinin hiç ulaşmadığı bir değeri gösterirdi |
-| Histogramın son bölmesi en büyük değeri İÇERİR | `[alt, üst)` kuralı en büyük gözlemi dışarıda bırakıyordu |
-| Pasta: sıfır ve eksi değer dilim açmaz, tabloda görünür | Bütünün parçası olamaz; gizlemek veriyi yok saymak olurdu |
-| Isı haritasında `NaN`/`null` BOŞ hücre (kesik kenarlık) | Sıfır rengiyle boyamak "değer sıfır" demekti |
-| Bant ölçekleri DİZİNLE anahtarlanır | Aynı adlı iki satır ("Pzt", "Pzt") tek banda çöküyordu |
-| Bir sayfada iki ısı haritası farklı `linearGradient` kimliği (`useId`) | Aynı kimlik ikinci haritanın ölçeğini ilkinin rengiyle boyar |
-| Radar ölçek sayıları halkalar sıkışınca seyrelir (en dıştaki kalır) | 300 px'te halka aralığı 14 px, yazı 11 px — beş sayı üst üste biniyordu |
-| Eksen bölmesinin basamağı bölme LİSTESİNDEN (`tickLabels`) | Sabit "en çok bir ondalık" 0,1'in altındaki her adımı sıfıra çökertiyordu: 0,001-0,014 USD'lik maliyet ekseni "0 · 0 · 0" (ölçüldü: bir tüketicide, 5.3.2'de düzeldi); kısa gösterimde 12 050 ile 12 100 ikisi de "12,1 B" |
+| Karar                                                                  | Gerekçe                                                                                                                                                                                                                    |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `null` çizgiyi KESER, sıfıra indirmez                                  | Eksik veri ≠ sıfır; sıfıra inen çizgi olmamış bir düşüş çiziyordu                                                                                                                                                          |
+| İki boşluk arasındaki TEK değer işaretle çizilir                       | Tek noktalı yol görünmez — veri vardı ama grafikte yoktu                                                                                                                                                                   |
+| Çubuk/alan varken sıfır tanım aralığında                               | Sıfırdan başlamayan çubuğun boyu oranı yalan söyler                                                                                                                                                                        |
+| Yığında artı ve eksi AYRI birikir                                      | Eksi çubuk artı yığının ortasından başlıyordu                                                                                                                                                                              |
+| Yatay yön yalnızca tümü çubuksa                                        | Yatay çizgi grafiği zamanı dikey eksene koyar                                                                                                                                                                              |
+| Monoton kübik eğri (Fritsch–Carlson)                                   | Catmull-Rom veri noktaları arasında AŞIYOR — olmayan bir tepe çiziyordu                                                                                                                                                    |
+| Bıyık ucu bir GÖZLEM (Tukey, 1,5 × IQR)                                | Q3 + 1,5 × IQR'ye kadar çizmek verinin hiç ulaşmadığı bir değeri gösterirdi                                                                                                                                                |
+| Histogramın son bölmesi en büyük değeri İÇERİR                         | `[alt, üst)` kuralı en büyük gözlemi dışarıda bırakıyordu                                                                                                                                                                  |
+| Pasta: sıfır ve eksi değer dilim açmaz, tabloda görünür                | Bütünün parçası olamaz; gizlemek veriyi yok saymak olurdu                                                                                                                                                                  |
+| Isı haritasında `NaN`/`null` BOŞ hücre (kesik kenarlık)                | Sıfır rengiyle boyamak "değer sıfır" demekti                                                                                                                                                                               |
+| Bant ölçekleri DİZİNLE anahtarlanır                                    | Aynı adlı iki satır ("Pzt", "Pzt") tek banda çöküyordu                                                                                                                                                                     |
+| Bir sayfada iki ısı haritası farklı `linearGradient` kimliği (`useId`) | Aynı kimlik ikinci haritanın ölçeğini ilkinin rengiyle boyar                                                                                                                                                               |
+| Radar ölçek sayıları halkalar sıkışınca seyrelir (en dıştaki kalır)    | 300 px'te halka aralığı 14 px, yazı 11 px — beş sayı üst üste biniyordu                                                                                                                                                    |
+| Eksen bölmesinin basamağı bölme LİSTESİNDEN (`tickLabels`)             | Sabit "en çok bir ondalık" 0,1'in altındaki her adımı sıfıra çökertiyordu: 0,001-0,014 USD'lik maliyet ekseni "0 · 0 · 0" (ölçüldü: bir tüketicide, 5.3.2'de düzeldi); kısa gösterimde 12 050 ile 12 100 ikisi de "12,1 B" |
 
 ⚠ **Kayan nokta payı iki yerde ölçüldü ve ikisi de SESSİZDİ:**
 `ticks(0.1, 0.3)` → `0.3 / 0.1 = 2.9999999999999996` → uçtaki bölme
@@ -924,20 +925,19 @@ olmayan bir `@deprecated` prop derlemeyi kırar.
 ### 2.4 — the pilots' number fields and calendar (additive)
 
 Asked by the five pilot programs (catalogue K1, "arayuz genişler"): every number field holds the
-data contract's scaled integer, and the `takvim` pattern of app-kit needs a calendar to stand on.
+data contract's scaled integer, and an application's scheduling screen needs a calendar to stand on.
 `CHANGELOG.md` has the list; `README.md` the API.
 
-| Need | 2.4 |
-|---|---|
-| Money, quantity, rate and percent typed as floats, rounded by every program | `ScaledInput` + `MoneyInput` (`minorDigits`), `QuantityInput` (`Qty4`, `unitDigits`), `RateInput` (`Rate6`), `PercentInput` (`Pct2`). Value in, value out: a safe integer or `null` |
-| A calendar: month / week / day, resource columns, drag to move and stretch, a keyboard way | `@handijitcom/ui/calendar` `Calendar`, a SEPARATE entry: the main entry was at 41.31 of 44 kB and the calendar is 5.92 kB |
-| "Sanal kaydırma" of the catalogue | No new primitive — decided while writing the calendar (below) |
+| Need                                                                                       | 2.4                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Money, quantity, rate and percent typed as floats, rounded by every program                | `ScaledInput` + `MoneyInput` (`minorDigits`), `QuantityInput` (`Qty4`, `unitDigits`), `RateInput` (`Rate6`), `PercentInput` (`Pct2`). Value in, value out: a safe integer or `null` |
+| A calendar: month / week / day, resource columns, drag to move and stretch, a keyboard way | `@handijitcom/ui/calendar` `Calendar`, a SEPARATE entry: the main entry was at 41.31 of 44 kB and the calendar is 5.92 kB                                                           |
+| "Sanal kaydırma" of the catalogue                                                          | No new primitive — decided while writing the calendar (below)                                                                                                                       |
 
-⚠ **`ui` cannot import `@handijit/decimal` or app-kit** (it is the platform layer under both), so
-the scales and the reading of typed text live here a second time: `constants/scale.constants.ts`
-(`QTY4_DIGITS` …) and `helpers/scaled-number.helper.ts`. The grammar is app-kit's `parseDecimal`
-(data contract §4.3) and `__tests__/helpers/scaled-number.helper.test.ts` carries app-kit's own
-vectors; a change to one copy that the table does not follow is a drift. Two deliberate
+⚠ **`ui` owns the scales and the reading of typed text itself** (it depends on no decimal
+library): `constants/scale.constants.ts` (`QTY4_DIGITS` …) and `helpers/scaled-number.helper.ts`.
+The grammar is the data contract's (§4.3) and `__tests__/helpers/scaled-number.helper.test.ts`
+pins it with a vector table; a change to the helper that the table does not follow is a drift. Two deliberate
 differences, both because a field is TYPED and an import is not: a digit past the allowed decimals
 is refused instead of rounded, and a text still on its way to a number ("-", "1.250.0") is `null`
 instead of invalid.
@@ -950,9 +950,9 @@ and the wheel changes an amount under a scrolling pointer.
 they only fix props of `ScaledInput`, the client module.
 
 **The calendar's measured decisions.**
+
 - **No day arithmetic, no time zone.** Times are the data contract's wall clock text and the days
-  to draw are a prop: `@handijit/tr` owns day arithmetic (catalogue Ç23), the pattern computes the
-  week or the month with it. The calendar compares `YYYY-MM-DD` texts (they sort in time) and
+  to draw are a prop: the application owns day arithmetic and computes the week or the month. The calendar compares `YYYY-MM-DD` texts (they sort in time) and
   turns `HH:MM` into minutes; nothing else.
 - **Controlled, refusal by not applying.** `onEventChange` proposes; the move stands when `events`
   carries it. The calendar never keeps a moved copy of its own, so a conflict refused by the domain
@@ -975,41 +975,41 @@ they only fix props of `ScaledInput`, the client module.
   time grid is bounded by its days and hours, not by its events: 500 lessons in a week draw in
   40–100 ms in jsdom (budget 300 ms), 20 technicians × 200 jobs in 16–30 ms (budget 500 ms) —
   `__tests__/calendar/performance.test.tsx`. A long list already has `useVirtualList` (public since
-  5.x, `Combobox` uses it); app-kit's `VirtualTable` keeps its own row virtualisation, and a kanban
+  5.x, `Combobox` uses it); a virtualised table keeps its own row virtualisation, and a kanban
   column of hundreds of cards can use `useVirtualList`. A second primitive would be a second owner.
-
 
 ### 2.5 — Teknik Servis's day plan (additive)
 
 Asked by Teknik Servis's EKRAN_OZETI §3.7: the column header of a technician turns to the warning
 tone at 80% of the day's capacity, and the morning, noon and evening bands show beside the hour
-blocks. Both live inside the calendar's own sticky grid, so app-kit's `takvim` cannot add them
+blocks. Both live inside the calendar's own sticky grid, so an application cannot add them
 from outside.
 
-| Need | 2.5 |
-|---|---|
-| A resource header that says "nearly full" | `CalendarResource.detail` (second line) + `.tone` (the event tones; `data-tone`), or `renderResource` |
+| Need                                      | 2.5                                                                                                                                                                                                 |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A resource header that says "nearly full" | `CalendarResource.detail` (second line) + `.tone` (the event tones; `data-tone`), or `renderResource`                                                                                               |
 | Morning / noon / evening beside the hours | `Calendar` `bands` (`CalendarBand { label, start, end }`) — a strip in the hours column, a shaded stretch across the columns; `pointer-events: none`, so slots under it still take clicks and drops |
 
 ⚠ **The tone is never alone**: the percentage is in `detail` (or in `renderResource`).
 ⚠ **With no `detail` and no `renderResource` the header is the bare label text**, as in 2.4 — a
 test or a style that reads `.resource`'s text keeps working.
+
 ### 2.3 — the first desktop program's findings (additive, three behaviours change)
 
 Found while building a desktop program (Electron, a 232px sidebar, keyboard-first); each had
 a workaround in the program. `CHANGELOG.md` has the migration.
 
-| Gap | 2.3 |
-|---|---|
-| Toasts centred below 1025px and covered the sidebar's last buttons | `ToastHub`/`ToastPortal` `placement` (six, default `bottom-end` at EVERY width) + `inset` (CSS lengths → `--ui-toast-inset-*` on the stack box). The `for-desktop-up` rule of `.hub` is gone |
-| `hasOpenSurface()` counted a visible toast and an open tooltip: ⌘K and app shortcuts were dead for 4–8 s after every notice | The stack keeps ONE `Escape` order but entries carry `isTransient` (`pushModal({ isTransient })`, `useDismissOnEscape(…, { isTransient })`). `hasOpenSurface()` counts only keyboard owners; `hasOpenSurface({ includeTransient: true })` is the 2.2 answer, for page-level `Escape` listeners (`PromptInput` uses it) |
-| `Popover` focused while `visibility: hidden` (before `usePositioning` measured): the browser ignored it | first focus in an effect gated on `isPositioned`, once per opening (`hasFocusedRef`: a later re-placement does not steal it back) |
-| Tab off the portalled `Popover` fell out of the page | `onKeyDown` at the edges: last → `nextFocusableAfter(trigger)` (else the trigger), first → the trigger; closes, notifies once (`isLeavingRef` silences the following `blur`) |
-| `Popover` pulled the focus back to the trigger on any close | restores only when the focus fell to `<body>` with the surface or is still inside |
-| `Modal`/`Drawer`: `preventAutoKeyboard` ran on EVERY device, so a first text field never kept the focus on a desktop; React `autoFocus` cannot work (it runs before `showModal()`) | `focusDialogContent`: `initialFocus` ref → `data-ui-autofocus` → first meaningful; the keyboard guard only under `TOUCH_MEDIA_QUERY`, never after an explicit `initialFocus`. `BottomSheet` keeps the guard always |
-| `Modal`/`Drawer` restored focus while the dialog was still modal (worked only through the browser's own dialog focus restore) | cleanup closes the dialog first, then restores (the `CommandPalette` order) |
-| `Combobox` had no small size; its clear button was 22px (axe `target-size`) | `size="sm"` from `input-sm` (32px, as `Select`/`Input`); `$clear-size: 24px` |
-| `isTechnical` placeholder in monospace + 0.06em was cut in a 320px scan field | `::placeholder` in `$font-body`, `letter-spacing: normal` |
+| Gap                                                                                                                                                                                | 2.3                                                                                                                                                                                                                                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Toasts centred below 1025px and covered the sidebar's last buttons                                                                                                                 | `ToastHub`/`ToastPortal` `placement` (six, default `bottom-end` at EVERY width) + `inset` (CSS lengths → `--ui-toast-inset-*` on the stack box). The `for-desktop-up` rule of `.hub` is gone                                                                                                                           |
+| `hasOpenSurface()` counted a visible toast and an open tooltip: ⌘K and app shortcuts were dead for 4–8 s after every notice                                                        | The stack keeps ONE `Escape` order but entries carry `isTransient` (`pushModal({ isTransient })`, `useDismissOnEscape(…, { isTransient })`). `hasOpenSurface()` counts only keyboard owners; `hasOpenSurface({ includeTransient: true })` is the 2.2 answer, for page-level `Escape` listeners (`PromptInput` uses it) |
+| `Popover` focused while `visibility: hidden` (before `usePositioning` measured): the browser ignored it                                                                            | first focus in an effect gated on `isPositioned`, once per opening (`hasFocusedRef`: a later re-placement does not steal it back)                                                                                                                                                                                      |
+| Tab off the portalled `Popover` fell out of the page                                                                                                                               | `onKeyDown` at the edges: last → `nextFocusableAfter(trigger)` (else the trigger), first → the trigger; closes, notifies once (`isLeavingRef` silences the following `blur`)                                                                                                                                           |
+| `Popover` pulled the focus back to the trigger on any close                                                                                                                        | restores only when the focus fell to `<body>` with the surface or is still inside                                                                                                                                                                                                                                      |
+| `Modal`/`Drawer`: `preventAutoKeyboard` ran on EVERY device, so a first text field never kept the focus on a desktop; React `autoFocus` cannot work (it runs before `showModal()`) | `focusDialogContent`: `initialFocus` ref → `data-ui-autofocus` → first meaningful; the keyboard guard only under `TOUCH_MEDIA_QUERY`, never after an explicit `initialFocus`. `BottomSheet` keeps the guard always                                                                                                     |
+| `Modal`/`Drawer` restored focus while the dialog was still modal (worked only through the browser's own dialog focus restore)                                                      | cleanup closes the dialog first, then restores (the `CommandPalette` order)                                                                                                                                                                                                                                            |
+| `Combobox` had no small size; its clear button was 22px (axe `target-size`)                                                                                                        | `size="sm"` from `input-sm` (32px, as `Select`/`Input`); `$clear-size: 24px`                                                                                                                                                                                                                                           |
+| `isTechnical` placeholder in monospace + 0.06em was cut in a 320px scan field                                                                                                      | `::placeholder` in `$font-body`, `letter-spacing: normal`                                                                                                                                                                                                                                                              |
 
 ⚠ **Semver.** "Toasts and tooltips no longer count" and "bottom-end below 1025px" are observable
 changes; they ship in a minor because the 2.2 behaviour was the defect every consumer worked
@@ -1023,21 +1023,21 @@ dead-mixin test lists it in `KEPT_FOR_CONSUMERS` until 3.0.
 
 ### 2.2 — form fields speak `Field`'s contract (additive)
 
-Found while building `@handijit/forms` 1.0 and the desktop template, where every gap below had a
+Found while binding the field components to a form library, where every gap below had a
 workaround in the binder. Nothing is renamed or removed; `CHANGELOG.md` has the full list.
 
-| Gap | 2.2 |
-|---|---|
+| Gap                                                                                         | 2.2                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `Checkbox` / `Switch` / `Radio` had no error; a passed `aria-describedby` REPLACED the hint | `error` (message under the label, `aria-invalid`, the link); the description is `error · hint · passed`, each id once, merged by `helpers/aria.helper.ts` `idList` (forms 1.0 passed the hint id itself: without the de-duplication the hint was read twice) |
-| `Field` had no `id`, its label was a string | `id` (messages `<id>-error`, `<id>-hint`), `label: ReactNode` |
-| Composites took none of `FieldChildProps` | `id`, `aria-invalid`, `aria-describedby`, `required` on `QuantityStepper`, `SegmentedControl`, `ChipGroup`, `RangeSlider`, `RatingInput`, `DateRange`; where each lands is a table in `README.md` ("Form fields") |
-| `Select` / `Combobox`: no `onBlur`, no `ref`; `Select` could not hold `null` | `onBlur` (React's focus events bubble through the portal: the root hears the trigger AND the panel; focus moving between them, or into the open sheet, is not a blur), `ref` → trigger, `Select value: T \| null` |
-| No read-only composite; no group-wide disabled | `isReadOnly` on nine controls (`aria-readonly` where the role has it); `isDisabled` on `SegmentedControl`, `ChipGroup` |
-| `TagInput.values`, a hard-coded Turkish announcement | `value`; `duplicateLabel` → `labels.tagInput.duplicate` → the 2.0 text (see below) |
-| `Button isLoading` drew a `role="status"` with an empty name | `Spinner label=""` is DECORATIVE (`aria-hidden`, no role); the button keeps `aria-busy` |
-| `Progress` demanded `label` | `label` OR `aria-labelledby` (a union: one of the two) |
-| `Alert action` squeezed the text in a narrow box | the action moved INTO the body, a wrapping row: the text keeps `$alert-text-min` (16rem) beside it, below that the action goes under the text |
-| Declarations broke under `nodenext` | `scripts/build-declarations.mjs`: Node-resolvable specifiers (the `@/` alias of the sub-entries too) and `.d.cts` twins for `require`; `check:types` compiles a `nodenext` consumer with `skipLibCheck` off |
+| `Field` had no `id`, its label was a string                                                 | `id` (messages `<id>-error`, `<id>-hint`), `label: ReactNode`                                                                                                                                                                                                |
+| Composites took none of `FieldChildProps`                                                   | `id`, `aria-invalid`, `aria-describedby`, `required` on `QuantityStepper`, `SegmentedControl`, `ChipGroup`, `RangeSlider`, `RatingInput`, `DateRange`; where each lands is a table in `README.md` ("Form fields")                                            |
+| `Select` / `Combobox`: no `onBlur`, no `ref`; `Select` could not hold `null`                | `onBlur` (React's focus events bubble through the portal: the root hears the trigger AND the panel; focus moving between them, or into the open sheet, is not a blur), `ref` → trigger, `Select value: T \| null`                                            |
+| No read-only composite; no group-wide disabled                                              | `isReadOnly` on nine controls (`aria-readonly` where the role has it); `isDisabled` on `SegmentedControl`, `ChipGroup`                                                                                                                                       |
+| `TagInput.values`, a hard-coded Turkish announcement                                        | `value`; `duplicateLabel` → `labels.tagInput.duplicate` → the 2.0 text (see below)                                                                                                                                                                           |
+| `Button isLoading` drew a `role="status"` with an empty name                                | `Spinner label=""` is DECORATIVE (`aria-hidden`, no role); the button keeps `aria-busy`                                                                                                                                                                      |
+| `Progress` demanded `label`                                                                 | `label` OR `aria-labelledby` (a union: one of the two)                                                                                                                                                                                                       |
+| `Alert action` squeezed the text in a narrow box                                            | the action moved INTO the body, a wrapping row: the text keeps `$alert-text-min` (16rem) beside it, below that the action goes under the text                                                                                                                |
+| Declarations broke under `nodenext`                                                         | `scripts/build-declarations.mjs`: Node-resolvable specifiers (the `@/` alias of the sub-entries too) and `.d.cts` twins for `require`; `check:types` compiles a `nodenext` consumer with `skipLibCheck` off                                                  |
 
 **`@deprecated` in 2.2:** `TagInput.values` → `value`. Both work until 3.0; giving `value` wins.
 
@@ -1056,23 +1056,23 @@ type error — a silent break, so not in a minor.
 spinner. An empty `role="status"` never announced anything, so no reader loses a message; a test
 that queried `getByRole('status')` for it does.
 
-### 2.0 (`@handijitcom/ui`) — the tokens of `@handijit/design`; BREAKING, no alias
+### 2.0 (`@handijitcom/ui`) — the tokens of `@handijitcom/ui/design`; BREAKING, no alias
 
 The whole migration, old → new for every token, CSS variable, SCSS name, prop, variant, export and
 stylesheet path, is in `CHANGELOG.md` ("Migration from 1.x", nine steps and one table). Kept here:
 what changed in the contract, so that the older entries below are read correctly.
 
-| What | 1.x | 2.0 |
-|---|---|---|
-| Tokens | the library's own recipe and `--ui-*` palette, shipped in `base.css` / `styles.css` | `@handijit/design` (peer `^1.0.0`), `--hd-*`, loaded once by the application; the library ships none |
-| Theme attribute | `data-ui-theme`, absent when following the system | design's `data-theme`, always the resolved theme; stored choice in `localStorage["hd-theme"]` |
-| Boot script | written here | `THEME_BOOT_SCRIPT` and `THEME_BOOT_SCRIPT_HASH` of design, re-exported; `UiThemeScript` takes a `nonce` |
-| Theme API | `UiProvider theme`, `initUi`, `applyThemeConfig`, `buildThemeCss`, `resolveTokens`, an injected `<style>` | removed; an override is a `--hd-*` declaration in the application's stylesheet. The library injects no `<style>` |
-| Density | `data-ui-density`, `UiDensity` | removed |
-| Variants | `UIVariant.CART` / `LIGHT` / `DARK`, `IconButton` `cart`, `Badge` tones `oem` `alt` `sale` `action` `link` | `ACCENT` / `SOFT` / `ON_BAND`, `accent`; the shop tones are removed |
-| Control height | 30 / 36 / 44 / 52, fields always 44px / 16px | 28 / 32 / 40 / 48; fields 40px / 15px on a desktop pointer, 44px / 16px on a narrow or touch screen |
-| `Select` / `Combobox` | a bottom sheet under 640px, by width alone | a bottom sheet only when narrow AND touch (`SHEET_MEDIA_QUERY`); a dropdown everywhere else |
-| Layers | 200 – 500 | design's: 1000 – 1500 |
+| What                  | 1.x                                                                                                        | 2.0                                                                                                              |
+| --------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Tokens                | the library's own recipe and `--ui-*` palette, shipped in `base.css` / `styles.css`                        | `@handijitcom/ui/design` (`src/design`), `--hd-*`, loaded once by the application; the library ships none        |
+| Theme attribute       | `data-ui-theme`, absent when following the system                                                          | design's `data-theme`, always the resolved theme; stored choice in `localStorage["hd-theme"]`                    |
+| Boot script           | written here                                                                                               | `THEME_BOOT_SCRIPT` and `THEME_BOOT_SCRIPT_HASH` of design, re-exported; `UiThemeScript` takes a `nonce`         |
+| Theme API             | `UiProvider theme`, `initUi`, `applyThemeConfig`, `buildThemeCss`, `resolveTokens`, an injected `<style>`  | removed; an override is a `--hd-*` declaration in the application's stylesheet. The library injects no `<style>` |
+| Density               | `data-ui-density`, `UiDensity`                                                                             | removed                                                                                                          |
+| Variants              | `UIVariant.CART` / `LIGHT` / `DARK`, `IconButton` `cart`, `Badge` tones `oem` `alt` `sale` `action` `link` | `ACCENT` / `SOFT` / `ON_BAND`, `accent`; the shop tones are removed                                              |
+| Control height        | 30 / 36 / 44 / 52, fields always 44px / 16px                                                               | 28 / 32 / 40 / 48; fields 40px / 15px on a desktop pointer, 44px / 16px on a narrow or touch screen              |
+| `Select` / `Combobox` | a bottom sheet under 640px, by width alone                                                                 | a bottom sheet only when narrow AND touch (`SHEET_MEDIA_QUERY`); a dropdown everywhere else                      |
+| Layers                | 200 – 500                                                                                                  | design's: 1000 – 1500                                                                                            |
 
 ⚠ **Superseded by 2.0, kept as history:** "5.0 token sözleşmesi" (every name in its table is
 gone), "5.6.3 — Tema ezmesi" (`UiProvider theme`, `initUi` and `<style id="ui-theme-overrides">`
@@ -1091,16 +1091,16 @@ büyük sürüm olduğu için eski adlar **bırakılmadı**: `role*` iki farklı
 taşıyacaktı ve 4.0.0'da `blue*`/`amber*` adlarının yanlış rengi anlatması tam
 olarak bu hataydı.
 
-| 4.x | 5.0 | Not |
-|---|---|---|
-| `role`, `role-hover`, `role-active` | `selected`, `selected-hover`, `selected-active` | mürekkep — yeşil DEĞİL |
-| `on-role` | `on-selected` | koyu temada siyah |
-| `role-tint` | `selected-tint` | |
-| `role-line` | `selected-line` | |
-| `role-text` | `link` (+ yeni `link-hover`) | yeşil kalır |
-| `ring`, `ring-color` | aynı ad | değer bağlantı ailesinden |
-| `shell*` | aynı ad | **değer çamdan mürekkebe** ve temaya göre dönmüyor; yeni `on-shell`, `on-shell-2`, `on-shell-danger`, `shell-line` |
-| — | `cat-1…5`, `series-1/2` | yeni |
+| 4.x                                 | 5.0                                             | Not                                                                                                                |
+| ----------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `role`, `role-hover`, `role-active` | `selected`, `selected-hover`, `selected-active` | mürekkep — yeşil DEĞİL                                                                                             |
+| `on-role`                           | `on-selected`                                   | koyu temada siyah                                                                                                  |
+| `role-tint`                         | `selected-tint`                                 |                                                                                                                    |
+| `role-line`                         | `selected-line`                                 |                                                                                                                    |
+| `role-text`                         | `link` (+ yeni `link-hover`)                    | yeşil kalır                                                                                                        |
+| `ring`, `ring-color`                | aynı ad                                         | değer bağlantı ailesinden                                                                                          |
+| `shell*`                            | aynı ad                                         | **değer çamdan mürekkebe** ve temaya göre dönmüyor; yeni `on-shell`, `on-shell-2`, `on-shell-danger`, `shell-line` |
+| —                                   | `cat-1…5`, `series-1/2`                         | yeni                                                                                                               |
 
 Tüketicide değer ezmesi yazan yerler (`--ui-page: #ffffff` gibi) ayrıca
 gözden geçirilir: 5.0'da açık sayfa krem.
@@ -1118,14 +1118,15 @@ istemci referansı (her `Button` bir hidrasyon sınırı), `turbopackModuleFragm
 ~2.000 halkalık değerlendirme zincirine bölüp tarayıcı yığınını taşırıyordu ("Maximum call stack
 size exceeded"; tüketici ayarı kapatmak zorunda kaldı).
 
-| Ne | 5.x | 6.0 |
-|---|---|---|
-| Çıktı | tek `index.js` + `styles.css` | Rollup `preserveModules`: `build/components/<Ad>/index.js` + `style.css`; cephe saf yeniden dışa aktarım; `exports` 68 alt yol (`scripts/build-exports.mjs`) |
-| `'use client'` | kaynaktan sökülüp paketin başına tek satır | kaynakta dosya başına; `vite.modules.ts` aynı modülün çıktısına geri yazar. 18 bileşen yönergesiz (`__tests__/client-boundary.test.ts`) |
-| CSS | tüketici `styles.css`i içe aktarır | aynı; ek olarak `base.css` + `components/<Ad>/style.css` dosyaları (tüketici kendi derlemesinde TEK dosyaya birleştirir). JS CSS içe aktarmaz — aşağıda |
-| Tipler | `rollupTypes` tek dosya | dosya başına; `check-api` cepheyi `export { … } from` satırlarından okur |
+| Ne             | 5.x                                        | 6.0                                                                                                                                                          |
+| -------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Çıktı          | tek `index.js` + `styles.css`              | Rollup `preserveModules`: `build/components/<Ad>/index.js` + `style.css`; cephe saf yeniden dışa aktarım; `exports` 68 alt yol (`scripts/build-exports.mjs`) |
+| `'use client'` | kaynaktan sökülüp paketin başına tek satır | kaynakta dosya başına; `vite.modules.ts` aynı modülün çıktısına geri yazar. 18 bileşen yönergesiz (`__tests__/client-boundary.test.ts`)                      |
+| CSS            | tüketici `styles.css`i içe aktarır         | aynı; ek olarak `base.css` + `components/<Ad>/style.css` dosyaları (tüketici kendi derlemesinde TEK dosyaya birleştirir). JS CSS içe aktarmaz — aşağıda      |
+| Tipler         | `rollupTypes` tek dosya                    | dosya başına; `check-api` cepheyi `export { … } from` satırlarından okur                                                                                     |
 
 Kararlar ve neden öyle:
+
 - **Sınıf haritası gömülür.** `preserveModules` her `index.module.scss`i ayrı bir JS parçası yapar
   (`index.module.scss.js`). Parça çalıştırılarak okunur (biçimi kestirmek yerine) ve ithalatçısına
   tek satırlık nesne olarak gömülür; ESM'de `import x from`, CJS'de sıkıştırılmış
@@ -1140,7 +1141,7 @@ Kararlar ve neden öyle:
   girişi vermek için var.
 - **Bağlantı `Button`/`IconButton` işlev prop'u üretmez.** Sunucu bileşeni, istemci bileşenine
   (`UiLink`) işlev geçiremez. Pasif bağlantı: `aria-disabled` + `tabIndex=-1` + `pointer-events:
-  none`. `UiLink` istemci kalır (`useUi` ile yönlendirici okur) — sunucuda çizilen `Button`un
+none`. `UiLink` istemci kalır (`useUi` ile yönlendirici okur) — sunucuda çizilen `Button`un
   içinde istemci yaprak olarak durur; `children` serileştirilebilir.
 - **`Breadcrumb`/`Stat`/`Steps`/`Spinner`/`Field` istemci kaldı.** Sağlayıcı metinlerini `useUi` ile
   okuyorlar; sunucuya almak metinleri zorunlu prop yapmayı gerektirirdi — sağlayıcıya güvenen tüketicide
@@ -1169,13 +1170,13 @@ düğmesi kırmızı, hidrasyondan sonra `#ededed` (sitenin teması); alanların
 `:root:not([data-ui-theme])` seçicisi (0,2,0) tüketicinin ezmesini yeniyordu. "Kütüphane CSS'inin
 tamamı `@layer ui` içinde" sözleşmesini bozan tek kural buydu.
 
-| Ne | Eskiden | Şimdi |
-|---|---|---|
-| Ezmenin katmanı | katmansız: tüketicinin katmansız kuralıyla özgüllük ve sıra yarışı | `@layer ui` içinde: tüketicinin katmansız kuralı her zaman kazanır |
-| Seçici | varsayılanla aynı (`:root`, `:root:not([…])`…) | `html:root…` — karşılığından bir öğe özgül: katman içinde varsayılanı **sıradan bağımsız** yener |
-| Açık ezme koyu temada | katmansız `:root` koyu varsayılanı da yeniyordu: `light`a yazılan `ring-color` koyu temaya sızıyordu | `html:root` (0,1,1) koyu varsayılana (0,2,0) yenilir; `resolveTokens`in "açık koyuya sızmaz" sözleşmesiyle aynı |
-| Ne zaman | `useEffect`: sunucu çıktısında yok; ilk kare varsayılan palet, bir kare sonra tema (tüketici bu yüzden temanın statik kopyasını üretiyordu) | sağlayıcı ezmeyi çocuklarından önce `<style id="ui-theme-overrides">` olarak **çizer**; sunucu çıktısında var, hidrasyonda aynı düğüm kullanılır |
-| `useUiTokens` | `<head>`e eklenen etiketi gözlüyordu | sağlayıcının teması değişince (bağlamdaki tema nesnesi) yeniden okur |
+| Ne                    | Eskiden                                                                                                                                     | Şimdi                                                                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Ezmenin katmanı       | katmansız: tüketicinin katmansız kuralıyla özgüllük ve sıra yarışı                                                                          | `@layer ui` içinde: tüketicinin katmansız kuralı her zaman kazanır                                                                               |
+| Seçici                | varsayılanla aynı (`:root`, `:root:not([…])`…)                                                                                              | `html:root…` — karşılığından bir öğe özgül: katman içinde varsayılanı **sıradan bağımsız** yener                                                 |
+| Açık ezme koyu temada | katmansız `:root` koyu varsayılanı da yeniyordu: `light`a yazılan `ring-color` koyu temaya sızıyordu                                        | `html:root` (0,1,1) koyu varsayılana (0,2,0) yenilir; `resolveTokens`in "açık koyuya sızmaz" sözleşmesiyle aynı                                  |
+| Ne zaman              | `useEffect`: sunucu çıktısında yok; ilk kare varsayılan palet, bir kare sonra tema (tüketici bu yüzden temanın statik kopyasını üretiyordu) | sağlayıcı ezmeyi çocuklarından önce `<style id="ui-theme-overrides">` olarak **çizer**; sunucu çıktısında var, hidrasyonda aynı düğüm kullanılır |
+| `useUiTokens`         | `<head>`e eklenen etiketi gözlüyordu                                                                                                        | sağlayıcının teması değişince (bağlamdaki tema nesnesi) yeniden okur                                                                             |
 
 - ⚠ Sağlayıcı `<body>` içinde olmalı: `<html>`i sararsa `<style>` belgenin köküne düşer. Ağaçta
   çizilmesinin ikinci nedeni katman sırası: `<body>`deki etiket `<head>`deki stil sayfalarından ve
@@ -1200,12 +1201,12 @@ Dört bulgu tüketicide ölçüldü (2026-11-01, bir kurumsal site ve yönetim p
 gelip basarak stil farkını ölçen betikle): üçü "Durum katmanları" ve "Yarıçap ritmi" kurallarını
 çiğniyordu, biri akışkan bölüm aralığını bileşen içinde kullanıyordu.
 
-| Ne | Eskiden | Şimdi |
-|---|---|---|
-| `DirectoryRow` hover | zemin `surface` + kenarlık `border` + ad `link`: satır kutusunda bir çerçeve belirip kayboluyordu | `interactive-surface`: yalnız zemin bir kademe (`surface-2`), basılınca 1 px. Saydam 1 px kenarlığın yeri dolguya katıldı, satır ölçüsü aynı |
-| `Disclosure` başlığı hover | kare `surface-2` zemin kenardan kenara; `Accordion`un ortadaki bölümlerinde yuvarlak çerçevenin içinde köşesiz bir bant | Zemin `space-1` içeride (saydam kenarlık + `background-clip: padding-box`), yarıçap `radius-lg − 1px` (çerçevenin iç eğrisiyle eş merkezli). Dolgu kenarlık kadar azaldı; başlık ve içerik hizası aynı |
-| Önek/sonek payı (`Input`) | `space-8 − space-2`: akışkan bölüm aralığı; 18 px ikonla metin arası dar ekranda 2 px, geniş ekranda 26 px; tek karakterli para simgesinde tutar simgeden kopuk | `space-3` + ölçülen genişlik + `space-2`. `Input` önek/soneki `ResizeObserver` ile ölçüp `--ui-input-prefix-width` / `--ui-input-suffix-width` yazar; ölçüm yokken (sunucu, jsdom) `icon-md` varsayılır |
-| Alan hover çizgisi (`input-base`) | `text-3`e atlıyordu: ince çizgili temalarda hover'da kalın çerçeve | `color-mix(in oklab, border-control, text 40%)` (2.1; 2.0'da `border-strong`, %30) — bir ton koyu; token tanımlamaz, temayı izler. `Input`, `Textarea`, `Select`, `Combobox`, `DateField`, `TagInput` aynı mixin'den |
+| Ne                                | Eskiden                                                                                                                                                         | Şimdi                                                                                                                                                                                                                |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DirectoryRow` hover              | zemin `surface` + kenarlık `border` + ad `link`: satır kutusunda bir çerçeve belirip kayboluyordu                                                               | `interactive-surface`: yalnız zemin bir kademe (`surface-2`), basılınca 1 px. Saydam 1 px kenarlığın yeri dolguya katıldı, satır ölçüsü aynı                                                                         |
+| `Disclosure` başlığı hover        | kare `surface-2` zemin kenardan kenara; `Accordion`un ortadaki bölümlerinde yuvarlak çerçevenin içinde köşesiz bir bant                                         | Zemin `space-1` içeride (saydam kenarlık + `background-clip: padding-box`), yarıçap `radius-lg − 1px` (çerçevenin iç eğrisiyle eş merkezli). Dolgu kenarlık kadar azaldı; başlık ve içerik hizası aynı               |
+| Önek/sonek payı (`Input`)         | `space-8 − space-2`: akışkan bölüm aralığı; 18 px ikonla metin arası dar ekranda 2 px, geniş ekranda 26 px; tek karakterli para simgesinde tutar simgeden kopuk | `space-3` + ölçülen genişlik + `space-2`. `Input` önek/soneki `ResizeObserver` ile ölçüp `--ui-input-prefix-width` / `--ui-input-suffix-width` yazar; ölçüm yokken (sunucu, jsdom) `icon-md` varsayılır              |
+| Alan hover çizgisi (`input-base`) | `text-3`e atlıyordu: ince çizgili temalarda hover'da kalın çerçeve                                                                                              | `color-mix(in oklab, border-control, text 40%)` (2.1; 2.0'da `border-strong`, %30) — bir ton koyu; token tanımlamaz, temayı izler. `Input`, `Textarea`, `Select`, `Combobox`, `DateField`, `TagInput` aynı mixin'den |
 
 ⚠ `prefix={0}` artık hiçbir şey basmaz; eskiden `prefix && …` girdinin yanına başıboş bir "0" metni
 yazıyordu.
@@ -1224,12 +1225,12 @@ görüyor. Ölçüldü (2026-10-27, backtest paneli): grafiğin yardım `Popover
 grafik seçimini de siliyordu. jsdom testleri bunu göremiyordu — `fireEvent` betikten gönderiliyor ve
 dinleyiciler arasında mikro görev boşaltılmıyor.
 
-| Ne | Nasıl |
-|---|---|
-| Kanca | En üstteki yüzey tuşu tüketince `event.preventDefault()`; üç yüzey tek yerden |
-| Sayfa dinleyicisi | `event.defaultPrevented \|\| hasOpenSurface()`: yüzeyden ÖNCE koşan dinleyici yığını, SONRA koşan işareti görür. `PromptInput` ikisini zaten soruyordu, şimdi doğru cevap alıyor. (2.3: `Escape` dinleyicisi `hasOpenSurface({ includeTransient: true })` sorar; bildirim ve ipucu artık varsayılan cevapta yok) |
-| `<dialog>` yüzeyleri | `Modal`, `Drawer`, `BottomSheet`, `CommandPalette` tuş olayı bittikten sonra `cancel` ile kapanır; tuş boyunca yığında. Değişmedi |
-| Nöbetçi | `anchored-panel.spec.ts` → "Escape — sayfa düzeyindeki dinleyici" (`desktop-behavior`): düzeltmeden önce `Popover` ve `Tooltip` kırmızıydı. Kanca: `__tests__/hooks/useDismissOnEscape.test.tsx` |
+| Ne                   | Nasıl                                                                                                                                                                                                                                                                                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kanca                | En üstteki yüzey tuşu tüketince `event.preventDefault()`; üç yüzey tek yerden                                                                                                                                                                                                                                    |
+| Sayfa dinleyicisi    | `event.defaultPrevented \|\| hasOpenSurface()`: yüzeyden ÖNCE koşan dinleyici yığını, SONRA koşan işareti görür. `PromptInput` ikisini zaten soruyordu, şimdi doğru cevap alıyor. (2.3: `Escape` dinleyicisi `hasOpenSurface({ includeTransient: true })` sorar; bildirim ve ipucu artık varsayılan cevapta yok) |
+| `<dialog>` yüzeyleri | `Modal`, `Drawer`, `BottomSheet`, `CommandPalette` tuş olayı bittikten sonra `cancel` ile kapanır; tuş boyunca yığında. Değişmedi                                                                                                                                                                                |
+| Nöbetçi              | `anchored-panel.spec.ts` → "Escape — sayfa düzeyindeki dinleyici" (`desktop-behavior`): düzeltmeden önce `Popover` ve `Tooltip` kırmızıydı. Kanca: `__tests__/hooks/useDismissOnEscape.test.tsx`                                                                                                                 |
 
 ### 5.6 — `ContextMenu`: imleç noktasında açılan menü (yalnızca ekleme)
 
@@ -1239,16 +1240,16 @@ bir `<dl>` duruyordu (menü yalnız `menuitem` taşır) ve konum çağıranda sa
 genişlik/yükseklik tahminiyle kırpılıyordu. `Menu` yalnız bir tetikleyiciye
 bağlanabildiği için kütüphane bunu karşılamıyordu.
 
-| Ne | Nasıl |
-|---|---|
-| Ortak gövde | `Menu` içindeki iç `MenuSurface`: konum, portal, odak, klavye, dışarı tıklama TEK yerde; `Menu` ve `ContextMenu` yalnız açılışı yönetir. `Menu`nün DOM'u ve davranışı DEĞİŞMEDİ (testleri dokunulmadan geçiyor) |
+| Ne           | Nasıl                                                                                                                                                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ortak gövde  | `Menu` içindeki iç `MenuSurface`: konum, portal, odak, klavye, dışarı tıklama TEK yerde; `Menu` ve `ContextMenu` yalnız açılışı yönetir. `Menu`nün DOM'u ve davranışı DEĞİŞMEDİ (testleri dokunulmadan geçiyor)           |
 | Nokta çapası | `usePositioning` artık `{ getBoundingClientRect }` taşıyan her çapayı ölçer; nokta 0×0 dikdörtgen. `ResizeObserver` yalnız gerçek `Element` gözler (nokta `TypeError` fırlatırdı). Tipi genişledi, mevcut çağıranlar aynı |
-| Konum | Noktanın sağ altı (2px boşluk), sığmazsa üste döner, görünüm alanına kırpılır — çağıran kırpmaz |
-| Portal | Noktanın DOM öğesi yok; ağaçtaki gizli bir `<span hidden>` sahibi en yakın açık `<dialog>`u bulur (modalın içindeki menü üst katmanın ALTINDA kalmasın) |
-| Başlık | `header` `role="menu"`nün DIŞINDA, menüye `aria-describedby` ile bağlı — ok tuşları öğelerde gezerken bağlam okunur |
-| Odak | Açılışta ilk etkin öğe; kapanışta (Escape, Tab, dışarı tıklama, seçim, sökülme) açılıştan önceki öğe. Yakalama `useLayoutEffect`te: yüzeyin "ilk öğeye odak" etkisinden ÖNCE koşmalı |
-| Escape | `preventDefault` — sayfa düzeyinde Escape dinleyen kod `event.defaultPrevented` ile menüyü kapatan tuşu kendi eylemine saymaz (`hasOpenSurface` yalnız kipsel yığını bilir) |
-| Yeni nokta | Yüzey noktayla anahtarlı: yeniden ölçülür, odak ilk öğeye döner |
+| Konum        | Noktanın sağ altı (2px boşluk), sığmazsa üste döner, görünüm alanına kırpılır — çağıran kırpmaz                                                                                                                           |
+| Portal       | Noktanın DOM öğesi yok; ağaçtaki gizli bir `<span hidden>` sahibi en yakın açık `<dialog>`u bulur (modalın içindeki menü üst katmanın ALTINDA kalmasın)                                                                   |
+| Başlık       | `header` `role="menu"`nün DIŞINDA, menüye `aria-describedby` ile bağlı — ok tuşları öğelerde gezerken bağlam okunur                                                                                                       |
+| Odak         | Açılışta ilk etkin öğe; kapanışta (Escape, Tab, dışarı tıklama, seçim, sökülme) açılıştan önceki öğe. Yakalama `useLayoutEffect`te: yüzeyin "ilk öğeye odak" etkisinden ÖNCE koşmalı                                      |
+| Escape       | `preventDefault` — sayfa düzeyinde Escape dinleyen kod `event.defaultPrevented` ile menüyü kapatan tuşu kendi eylemine saymaz (`hasOpenSurface` yalnız kipsel yığını bilir)                                               |
+| Yeni nokta   | Yüzey noktayla anahtarlı: yeniden ölçülür, odak ilk öğeye döner                                                                                                                                                           |
 
 ⚠ **5.5'e kadarki `Menu` açılışta odağı HİÇ taşımıyordu (gerçek tarayıcıda).**
 Yüzey konumu ölçülene kadar `visibility: hidden` taşır; ölçüm `useLayoutEffect`te
@@ -1278,11 +1279,11 @@ yanındaki `DateField` **45,7px** çiziliyordu (ölçüldü: bir backtest paneli
 `Select`, `Input` ve `DateField` onu kullanır, `DateRange` iki alana geçirir.
 `Button` SMALL da 36px — şeritte düğme, seçim ve girdi tek hizada.
 
-| | `md` (varsayılan) | `sm` |
-|---|---|---|
-| Yükseklik | 44px | 36px |
-| Dolgu | `space-3` / `space-4` | dikey 0 / yatay `space-3` |
-| Yazı | `font-size-control` | `font-size-sm`; metin girdisi dar ekranda (≤640px) ve dokunmatikte `font-size-control` (≥16px) |
+|           | `md` (varsayılan)     | `sm`                                                                                           |
+| --------- | --------------------- | ---------------------------------------------------------------------------------------------- |
+| Yükseklik | 44px                  | 36px                                                                                           |
+| Dolgu     | `space-3` / `space-4` | dikey 0 / yatay `space-3`                                                                      |
+| Yazı      | `font-size-control`   | `font-size-sm`; metin girdisi dar ekranda (≤640px) ve dokunmatikte `font-size-control` (≥16px) |
 
 ⚠ **Yerel `size` niteliği `Input`, `DateField` ve `PasswordInput` tiplerinden
 ÇIKTI.** Yerelde karakter genişliği (`number`), burada ölçü adı — `Select.size`
@@ -1349,13 +1350,13 @@ breakpoints are `$breakpoint-sm` / `-md` / `-lg` / `-xl`, and the module is thre
 **Neden:** bir tüketici değişkenleri kopyalamıştı ve değerler kaymıştı
 (`$tablet-breakpoint: 760px`; @handijitcom/ui'de 768 / 1024).
 
-| Ne | Nerede |
-|---|---|
-| Kaynak | `src/styles/_index.scss` → `variables` + `mixins` iletir |
-| Derleme | `scripts/build-scss.mjs` → `build/scss/` (2.0: 3 dosya, KAPALI liste) |
-| Dışa aktarım | `exports["./scss"]` — `sass` / `style` / `default` koşulları |
+| Ne               | Nerede                                                                                                                           |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Kaynak           | `src/styles/_index.scss` → `variables` + `mixins` iletir                                                                         |
+| Derleme          | `scripts/build-scss.mjs` → `build/scss/` (2.0: 3 dosya, KAPALI liste)                                                            |
+| Dışa aktarım     | `exports["./scss"]` — `sass` / `style` / `default` koşulları                                                                     |
 | Ad taban çizgisi | `scripts/api-baseline.scss.txt` (`$değişken` + `@mixin`; 2.2'de 227 ad — `field-error` —, 2.1'de 226, 2.0'da 225, 5.5'te 253'tü) |
-| Nöbetçi | `__tests__/styles/scss-api.test.ts` |
+| Nöbetçi          | `__tests__/styles/scss-api.test.ts`                                                                                              |
 
 ⚠ **Modül KURAL BASMAZ.** `base.scss` (ve 1.x'te `_tokens.generated.scss`, `:root`
 kuralları) bilerek dışarıda: tüketiciye `styles.css` zaten iniyor, modüle
@@ -1378,18 +1379,18 @@ ortamında `Null check operator used on a null value` ile düşüyor.
 
 ### 5.1 — Faz 1 eklemeleri (yalnızca ekleme, kırıcı değil)
 
-| Bileşen | Ekleme |
-|---|---|
-| `Modal` | `size="xl"` (≈1040 px) |
-| `Button` | `size={UISize.XSMALL}` (görsel 30 px; `tap-target` 44 px kalır) + `shape="pill"` |
-| `IconButton` | `shape="round"` |
-| `Textarea` | `variant="bare"` — çerçeve ve odak göstergesi KAPSAYICININ (`:focus-within`) |
-| `Progress` | `size="xs"` (2 px) |
-| `CodeBadge` | `onClick` / `href` ile etkileşimli kod (+ `label`), `size="xs"` |
-| `Avatar` | `icon` yuvası, `shape="rounded"`, `tone="brand"` (marka madalyonu — yeşil ayak izi listesinde) |
-| `Stat` | `variant="inline"` — etiket ve değer tek satır, değer teknik fontta |
-| `ScrollArea` | `isFollowingEnd` |
-| `Accordion` | iç yapı `Disclosure`; API aynı |
+| Bileşen      | Ekleme                                                                                         |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| `Modal`      | `size="xl"` (≈1040 px)                                                                         |
+| `Button`     | `size={UISize.XSMALL}` (görsel 30 px; `tap-target` 44 px kalır) + `shape="pill"`               |
+| `IconButton` | `shape="round"`                                                                                |
+| `Textarea`   | `variant="bare"` — çerçeve ve odak göstergesi KAPSAYICININ (`:focus-within`)                   |
+| `Progress`   | `size="xs"` (2 px)                                                                             |
+| `CodeBadge`  | `onClick` / `href` ile etkileşimli kod (+ `label`), `size="xs"`                                |
+| `Avatar`     | `icon` yuvası, `shape="rounded"`, `tone="brand"` (marka madalyonu — yeşil ayak izi listesinde) |
+| `Stat`       | `variant="inline"` — etiket ve değer tek satır, değer teknik fontta                            |
+| `ScrollArea` | `isFollowingEnd`                                                                               |
+| `Accordion`  | iç yapı `Disclosure`; API aynı                                                                 |
 
 ### `Card.isContained` → `fit`
 
@@ -1459,24 +1460,24 @@ iş akışı ayrıca `format:check` koşar.
 (`NODE_AUTH_TOKEN` = the repository secret `NPM_ACCESS_TOKEN`; no trusted publishing), then tags
 and creates the GitHub Release. A version that is already on npm is skipped, not failed.
 
-| Prensip | Ne demek |
-|---|---|
-| **KISS** | Uzun ve dolambaçlı yerine sade ve okunur. |
-| **DRY** | Aynı kural iki yerde yaşamaz. |
-| **SRP** | Bir dosya tek sebeple değişir. |
-| **SoC** | Konumlandırma/erişilebilirlik mantığı `hooks/`ta, çizim bileşende, renk ve her ölçek `@handijit/design`da (2.0; bileşen yalnızca hangi token'la çizeceğini seçer). |
-| **OCP** | Yeni görünüm yeni varyant token'ıdır; bileşen gövdesine `if` eklemek değil. |
-| **YAGNI** | Çağıranı olmayan prop eklenmez — her prop bir API taahhüdüdür. |
-| **Immutability** | Prop'lar ve token nesneleri yerinde değiştirilmez. |
+| Prensip          | Ne demek                                                                                                                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **KISS**         | Uzun ve dolambaçlı yerine sade ve okunur.                                                                                                                                |
+| **DRY**          | Aynı kural iki yerde yaşamaz.                                                                                                                                            |
+| **SRP**          | Bir dosya tek sebeple değişir.                                                                                                                                           |
+| **SoC**          | Konumlandırma/erişilebilirlik mantığı `hooks/`ta, çizim bileşende, renk ve her ölçek `@handijitcom/ui/design`da (2.0; bileşen yalnızca hangi token'la çizeceğini seçer). |
+| **OCP**          | Yeni görünüm yeni varyant token'ıdır; bileşen gövdesine `if` eklemek değil.                                                                                              |
+| **YAGNI**        | Çağıranı olmayan prop eklenmez — her prop bir API taahhüdüdür.                                                                                                           |
+| **Immutability** | Prop'lar ve token nesneleri yerinde değiştirilmez.                                                                                                                       |
 
 ### Klasör sözleşmesi
 
-| Ne | Nerede |
-|---|---|
-| Paylaşılan / alanı anlatan `type` | `src/types/*.type.ts` |
-| `enum` | `src/enums/*.enum.ts` |
-| Sabit değerler | `src/constants/*.constants.ts` |
-| Birden fazla yerde kullanılan fonksiyon | `src/helpers/*.helper.ts` |
+| Ne                                      | Nerede                         |
+| --------------------------------------- | ------------------------------ |
+| Paylaşılan / alanı anlatan `type`       | `src/types/*.type.ts`          |
+| `enum`                                  | `src/enums/*.enum.ts`          |
+| Sabit değerler                          | `src/constants/*.constants.ts` |
+| Birden fazla yerde kullanılan fonksiyon | `src/helpers/*.helper.ts`      |
 
 ⚠ **Bileşenin KENDİ genel API tipi bileşenin yanında kalır** (`BadgeTone`
 `Badge`de, `TabItem` `Tabs`ta, `UploadFile` `FileUpload`ta). Bunlar "o an
@@ -1505,7 +1506,7 @@ alıyordu ve yalnızca dosya yeri değişti diye bir sürüm kırılması olmama
 
 ⚠ **Dosya boyu bir kapı değil sinyaldir.** 1.x'te `theme/tokens.ts` (422 satır) bölünmedi: bir
 **veri tablosuydu** ve iki dosyaya ayırmak "hangi token nerede" sorusunu üretirdi. Dosya 2.0'da
-yok (tablo `@handijit/design`da); ilke duruyor.
+yok (tablo `@handijitcom/ui/design`da); ilke duruyor.
 
 ⚠ **Public API DEĞİŞMEDİ, ölçüldü.** `build/index.d.ts` içindeki dışa
 aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
@@ -1542,22 +1543,22 @@ Taban çizgisi bu yüzden repoda duruyor. (Bu satır bir dönem "iki tüketici d
 
 **Bu turda taşınan iki tip** ve neden kırıcı olmadıkları:
 
-| Tip | Önce | Sonra | Neden güvenli |
-|---|---|---|---|
-| `Formatter<TArgs>` | `helpers/label.helper.ts` **ve** `types/theme.type.ts` — birebir aynı imza, iki bildirim | tek bildirim `types/theme.type.ts`te | `index.ts`ten **dışa verilmiyor**; `.d.ts`te zaten tek `declare type` olarak görünüyordu |
-| `ListboxNavigation` | `hooks/useListboxNavigation.ts` (kardeşleri `types/hook.type.ts`te) | gövde `types/hook.type.ts`te, **hook yeniden ihraç ediyor** | `Combobox` deseninin aynısı: `src/index.ts` **değişmedi**, ad aynı yoldan geliyor |
+| Tip                 | Önce                                                                                     | Sonra                                                       | Neden güvenli                                                                            |
+| ------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `Formatter<TArgs>`  | `helpers/label.helper.ts` **ve** `types/theme.type.ts` — birebir aynı imza, iki bildirim | tek bildirim `types/theme.type.ts`te                        | `index.ts`ten **dışa verilmiyor**; `.d.ts`te zaten tek `declare type` olarak görünüyordu |
+| `ListboxNavigation` | `hooks/useListboxNavigation.ts` (kardeşleri `types/hook.type.ts`te)                      | gövde `types/hook.type.ts`te, **hook yeniden ihraç ediyor** | `Combobox` deseninin aynısı: `src/index.ts` **değişmedi**, ad aynı yoldan geliyor        |
 
 **5.1'de açılan adlar — her birinin kütüphane dışında çağıranı var:**
 
-| Ad | Neden dışa açık | Çağıran |
-|---|---|---|
-| `useUiTokens` | Çizim kütüphaneleri (recharts) `stroke`/`fill` için `var(--…)` okuyamıyor; çözülmüş değer gerekiyor ve tema değişince yenilenmeli | sohbet uygulaması `MetricsPanel` (kendi `useCssVars` kopyasıyla yapıyordu) |
-| `UiThemeScript` | Tema ilk boyamadan ÖNCE yazılmalı; iki tüketici aynı betiği elle yazıyordu. ⚠ BİLEŞEN, fonksiyon değil: paket `'use client'` taşıdığı için dışa verilen düz bir fonksiyon Next'in sunucu bileşeninde çağrılamıyor (ölçüldü: `next build` "Attempted to call themeBootScript() from the server" ile kırıldı). Bileşen sunucuda da çizilir | sohbet uygulaması `layout.tsx` (`THEME_BOOT_SCRIPT`) |
-| `hasOpenSurface` | Sayfa düzeyinde `Escape` dinleyen kod `event.defaultPrevented \|\| hasOpenSurface()` sormalı; sormayan, yüzeyi kapatan tuşla arkadaki akışı da durduruyordu. Tek başına yetmez — bkz. 5.6.1 | sohbet uygulaması `Composer` |
-| `Disclosure` (+ `DisclosureVariant`) | Tek başına açılır bölüm; aynı kalıp bir tüketicide üç kez elle yazılmıştı | sohbet uygulaması `Disclosure`, `ProcessBlock`, `ToolCallCard` |
-| `StatusDot` (+ `StatusDotTone`) | Adı olan durum noktası; dört yerde elle çiziliyordu ve hiçbiri durumu okutmuyordu | sohbet uygulaması `Header`, `LiveStatusBar`, `ToolCallCard`, `EventsPanel` |
-| `Kbd` | Klavye kısayolu; `CommandPalette`in kısayolu da artık bunu kullanıyor | sohbet uygulaması `Composer` ipucu satırı |
-| `useStickToBottom` | Kaydırma kutusunu sona yapışık tutar, kullanıcı yukarı kaydırınca bırakır; `ScrollArea isFollowingEnd` de bunu kullanır | sohbet uygulaması `ChatView` (kendi kopyası vardı) |
+| Ad                                   | Neden dışa açık                                                                                                                                                                                                                                                                                                                          | Çağıran                                                                    |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `useUiTokens`                        | Çizim kütüphaneleri (recharts) `stroke`/`fill` için `var(--…)` okuyamıyor; çözülmüş değer gerekiyor ve tema değişince yenilenmeli                                                                                                                                                                                                        | sohbet uygulaması `MetricsPanel` (kendi `useCssVars` kopyasıyla yapıyordu) |
+| `UiThemeScript`                      | Tema ilk boyamadan ÖNCE yazılmalı; iki tüketici aynı betiği elle yazıyordu. ⚠ BİLEŞEN, fonksiyon değil: paket `'use client'` taşıdığı için dışa verilen düz bir fonksiyon Next'in sunucu bileşeninde çağrılamıyor (ölçüldü: `next build` "Attempted to call themeBootScript() from the server" ile kırıldı). Bileşen sunucuda da çizilir | sohbet uygulaması `layout.tsx` (`THEME_BOOT_SCRIPT`)                       |
+| `hasOpenSurface`                     | Sayfa düzeyinde `Escape` dinleyen kod `event.defaultPrevented \|\| hasOpenSurface()` sormalı; sormayan, yüzeyi kapatan tuşla arkadaki akışı da durduruyordu. Tek başına yetmez — bkz. 5.6.1                                                                                                                                              | sohbet uygulaması `Composer`                                               |
+| `Disclosure` (+ `DisclosureVariant`) | Tek başına açılır bölüm; aynı kalıp bir tüketicide üç kez elle yazılmıştı                                                                                                                                                                                                                                                                | sohbet uygulaması `Disclosure`, `ProcessBlock`, `ToolCallCard`             |
+| `StatusDot` (+ `StatusDotTone`)      | Adı olan durum noktası; dört yerde elle çiziliyordu ve hiçbiri durumu okutmuyordu                                                                                                                                                                                                                                                        | sohbet uygulaması `Header`, `LiveStatusBar`, `ToolCallCard`, `EventsPanel` |
+| `Kbd`                                | Klavye kısayolu; `CommandPalette`in kısayolu da artık bunu kullanıyor                                                                                                                                                                                                                                                                    | sohbet uygulaması `Composer` ipucu satırı                                  |
+| `useStickToBottom`                   | Kaydırma kutusunu sona yapışık tutar, kullanıcı yukarı kaydırınca bırakır; `ScrollArea isFollowingEnd` de bunu kullanır                                                                                                                                                                                                                  | sohbet uygulaması `ChatView` (kendi kopyası vardı)                         |
 
 ⚠ **Paket bütçesi SINIRDA (2026-10-10):** 5.1'in eklemeleri tüm girişi 40,17 →
 **42,00 kB** taşıdı (bütçe 42 kB) ve `styles.css`i 23,07 / 24 kB'a. Sohbet
@@ -1596,13 +1597,13 @@ depolar `ES2024` yazıyor; @handijitcom/ui'de o değer her derlemede **89 uyarı
 ▲ [WARNING] Unrecognized target environment "es2024" [tsconfig.json]
 ```
 
-Vite 5.4'ün getirdiği esbuild **0.21.5** ve o sürümün *tsconfig* ayrıştırıcısı
+Vite 5.4'ün getirdiği esbuild **0.21.5** ve o sürümün _tsconfig_ ayrıştırıcısı
 `es2024`ü tanımıyor (`--target=es2024` bayrağı ayrı bir yol ve kabul ediyor —
 bu yüzden ilk bakışta çelişkili görünüyor). Tanımadığı değeri **sessizce yok
 sayıp** kendi varsayılanına düşüyordu, yani yapılandırma çalışmıyor ama
 başarısız da olmuyordu.
 
-**Kaybedilen bir şey yok:** `target` yalnızca *downlevel* üretimini belirler,
+**Kaybedilen bir şey yok:** `target` yalnızca _downlevel_ üretimini belirler,
 ES2025 API'lerini veren şey `lib: ESNext`. Yayınlanan bir kütüphane için
 `ES2023` çıktısı zaten daha güvenli. Vite/esbuild yükseltildiğinde `ES2024`
 yazılabilir; ölçüm `npm run build 2>&1 | grep -c "Unrecognized target"` → `0`.
@@ -1610,11 +1611,11 @@ yazılabilir; ölçüm `npm run build 2>&1 | grep -c "Unrecognized target"` → 
 **Bu turda uygulanan modern dizi yolları** — kütüphane daha önce hiçbirini
 kullanmıyordu:
 
-| Yer | Ne | Neden |
-|---|---|---|
-| `helpers/focus.helper.ts` `isTopModal` | `.at(-1)` | Yığının tepesi; karşılaştırma, dar tip gerekmiyor |
-| `TagInput` Backspace dalı | `.at(-1)` | `values.length > 0` guard'ı doğal olarak `!== undefined`a dönüştü |
-| `Toast` Escape dalı | `.at(-1)` | Kanca çıkarımı zaten `useCallback` istiyordu |
+| Yer                                    | Ne        | Neden                                                             |
+| -------------------------------------- | --------- | ----------------------------------------------------------------- |
+| `helpers/focus.helper.ts` `isTopModal` | `.at(-1)` | Yığının tepesi; karşılaştırma, dar tip gerekmiyor                 |
+| `TagInput` Backspace dalı              | `.at(-1)` | `values.length > 0` guard'ı doğal olarak `!== undefined`a dönüştü |
+| `Toast` Escape dalı                    | `.at(-1)` | Kanca çıkarımı zaten `useCallback` istiyordu                      |
 
 ⚠ **`.at(-1)` HER YERE uygulanmadı ve sebebi tsconfig'de.**
 `noUncheckedIndexedAccess: false` olduğu için `dizi[dizi.length - 1]` **dar**
@@ -1637,7 +1638,9 @@ indiriyordu (`Badge` 3,31 → 5,19). İki bileşen de anlaşılabilir biçimde
 hedefin **tüm bağımlılık zincirini** ayakta tutuyor. Doğru biçim istisnasız:
 
 ```ts
-export default /*#__PURE__*/ memo(/*#__PURE__*/ named(PasswordInput, 'PasswordInput')) as typeof PasswordInput;
+export default /*#__PURE__*/ memo(
+  /*#__PURE__*/ named(PasswordInput, 'PasswordInput'),
+) as typeof PasswordInput;
 ```
 
 Düzeltmeden sonra ölçüm tabana **birebir** döndü (3,93 / 3,31). Bu kural
@@ -1658,10 +1661,10 @@ Her ikisi de iki tüketici uygulamada (yönetim paneli ve vitrin) **birebir ayn�
 olarak duruyordu ve ikisi de zaten bu kütüphanenin bileşenlerini sarmalıyordu
 (`Input`+`IconButton`, `ToastHub`) — yani en baştan buraya aitlerdi.
 
-| Bileşen | Neden burada |
-|---|---|
-| `PasswordInput` | `Input` + `IconButton` sarmalayıcısı. Etiketler `labels.passwordShow` / `labels.passwordHide` üzerinden; sabit Türkçe metin gömülü DEĞİL. |
-| `ToastPortal` | `ToastHub` portal kullanıyor ve `document` olmadan çalışamıyor; sunucuda çizilen ağaçta hidrasyon uyuşmazlığı üretir. Montaj bekleyen sarmalayıcı uygulamanın değil bileşenin sorunu. |
+| Bileşen         | Neden burada                                                                                                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PasswordInput` | `Input` + `IconButton` sarmalayıcısı. Etiketler `labels.passwordShow` / `labels.passwordHide` üzerinden; sabit Türkçe metin gömülü DEĞİL.                                             |
+| `ToastPortal`   | `ToastHub` portal kullanıyor ve `document` olmadan çalışamıyor; sunucuda çizilen ağaçta hidrasyon uyuşmazlığı üretir. Montaj bekleyen sarmalayıcı uygulamanın değil bileşenin sorunu. |
 
 ⚠ **Uygulamalar HENÜZ GEÇMEDİ.** Yönetim paneli ve vitrin
 @handijitcom/ui'yi npm'den alıyor (`2.1.1`) ve bu bileşenler `2.1.0`da. Geçiş için
@@ -1681,7 +1684,7 @@ renkleri eski görünür. Doğru sıra: `npm publish` → iki uygulamada dep bum
 ### `ThemeToggle` ve `Logo` neden BURAYA TAŞINMADI
 
 ⚠ 2.0: the `nav-*` tokens named below no longer exist in any package, and the brand assets now
-ship with the design package (`@handijit/design/logos/*`). The note is history; the two components
+ship with the design package (`@handijitcom/ui/logos/*`). The note is history; the two components
 are still the applications'.
 
 - **`ThemeToggle`** `nav-fg`, `nav-bg`, `nav-hover`, `nav-line` token'larını

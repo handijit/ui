@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { cssVarName, THEME_ATTRIBUTE, type TokenName } from '@handijit/design';
+import { cssVarName, THEME_ATTRIBUTE, type TokenName } from '@handijitcom/ui/design';
 import { isClient } from '@handijitcom/utils';
 
 /** Returned on the server and in the first frame: drawing libraries paint an empty string black. */
@@ -25,7 +25,7 @@ const isSame = (first: Record<string, string>, second: Record<string, string>): 
 /**
  * The RESOLVED values of design tokens — for drawing libraries that cannot read a CSS variable
  * (a canvas, an SVG attribute that rejects `var(--…)`).
- * Names are the token names of `@handijit/design` without the `--hd-` prefix. The values follow the
+ * Names are the token names of `@handijitcom/ui/design` without the `--hd-` prefix. The values follow the
  * root theme (`data-theme`, the system setting, an inline override on `<html>`).
  * ⚠ Every value is `currentColor` in the server output and in the first frame before hydration.
  * @example const colors = useUiTokens(['chart-1', 'chart-2', 'border']);

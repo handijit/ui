@@ -3,7 +3,7 @@ import {
   THEME_STORAGE_KEY,
   type ThemeName,
   type ThemePreference,
-} from '@handijit/design';
+} from '@handijitcom/ui/design';
 import { isClient } from '@handijitcom/utils';
 
 /** Turns transitions off for one frame while the theme flips (see `base.scss`). */
@@ -41,7 +41,7 @@ export const readActiveTheme = (): ThemeName => {
 };
 
 /**
- * Stores the choice and applies it to the root element, the way `@handijit/design` documents it:
+ * Stores the choice and applies it to the root element, the way `@handijitcom/ui/design` documents it:
  * only `light` / `dark` are stored, "system" removes the key, and the attribute always carries the
  * resolved theme so the boot script and this function agree.
  */

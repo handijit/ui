@@ -1,6 +1,6 @@
 // SCSS API — `@use '@handijitcom/ui/scss' as ui;`
 // The one door through which a consumer takes the variables and mixins without copying them. The
-// variables are `var(--hd-…)` strings pointing at the tokens of `@handijit/design`: the theme is
+// variables are `var(--hd-…)` strings pointing at the tokens of `@handijitcom/ui/design`: the theme is
 // resolved at run time, nothing is fixed at compile time.
 // ⚠ Every name that enters here is a VERSION COMMITMENT (see CLAUDE.md, "SCSS API").
 @forward 'variables';

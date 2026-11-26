@@ -30,7 +30,7 @@ const renderTheme = (theme: ThemeName, indent: string): string =>
  */
 const renderTokensCss = (): string =>
   [
-    '/* @handijit/design — generated from the TypeScript tokens. Do not edit. */',
+    '/* @handijitcom/ui/design — generated from the TypeScript tokens. Do not edit. */',
     `:root {\n${renderGroups(staticGroups(), '  ')}\n}`,
     `:root,\n${themeSelector('light')} {\n${renderTheme('light', '  ')}\n}`,
     '/* System mode: no explicit choice on the root element. */',

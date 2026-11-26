@@ -41,7 +41,7 @@ const renderFontsCss = (unicodeRanges: UnicodeRanges): string => {
   );
 
   return `${[
-    '/* @handijit/design — generated. Fonts are licensed under the SIL Open Font License 1.1; see fonts/LICENSE-*.txt. */',
+    '/* @handijitcom/ui/design — generated. Fonts are licensed under the SIL Open Font License 1.1; see fonts/LICENSE-*.txt. */',
     ...faces,
   ].join('\n\n')}\n`;
 };

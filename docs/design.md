@@ -155,7 +155,7 @@ place where a colour, a font size or a breakpoint is decided.
   Electron window background, an e-mail template, a contrast check in a test.
 
 It is not a component library and ships no component CSS, no reset and no
-utility classes; `@handijit/ui` builds those on top of it. It is not a general
+utility classes; `@handijitcom/ui` builds those on top of it. It is not a general
 theming toolkit either: the palette is Han Dijit's, and the package does not
 generate a palette from your brand colour.
 

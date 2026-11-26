@@ -87,7 +87,7 @@ const renderTokensScss = (): string => {
   );
 
   return [
-    '// @handijit/design — generated from the TypeScript tokens. Do not edit.',
+    '// @handijitcom/ui/design — generated from the TypeScript tokens. Do not edit.',
     '@use "sass:map";',
     names.map(name => `$${PREFIX}-${name}: ${cssVar(name)};`).join('\n'),
     map(

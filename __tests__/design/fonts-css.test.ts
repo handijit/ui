@@ -106,7 +106,7 @@ describe('fonts.css', () => {
 
   test('should name the licence of the fonts', () => {
     expect(css.split('\n')[0]).toBe(
-      '/* @handijit/design — generated. Fonts are licensed under the SIL Open Font License 1.1; see fonts/LICENSE-*.txt. */',
+      '/* @handijitcom/ui/design — generated. Fonts are licensed under the SIL Open Font License 1.1; see fonts/LICENSE-*.txt. */',
     );
   });
 

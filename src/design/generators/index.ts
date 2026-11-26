@@ -15,7 +15,7 @@ type FontFileCopy = {
   readonly file: string;
 };
 
-// TypeScript resolves `import "@handijit/design/tokens.css"` to this declaration.
+// TypeScript resolves `import "@handijitcom/ui/tokens.css"` to this declaration.
 const STYLE_DECLARATION = 'export {};\n';
 
 /** Every generated text file of the package, keyed by its path inside `build/`. */

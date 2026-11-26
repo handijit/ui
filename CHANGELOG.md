@@ -8,6 +8,13 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-26
+
+### Fixed
+
+- The headers of the generated `tokens.css`, `fonts.css` and `tokens.scss` name `@handijitcom/ui/design`
+  instead of the retired `@handijit/design`.
+
 ## [1.1.0] - 2026-11-26
 
 The design tokens are now part of this package; `@handijit/design` is no longer a dependency.

@@ -1,7 +1,8 @@
+# Han Dijit standard CI (identical in every @handijitcom package).
 name: CI
 
-# Pull requests only. A push to master is gated by `publish.yml`, which runs the same two commands
-# (`format:check`, `verify`) before anything reaches the registry.
+# Pull requests only. A push to master is gated by `publish.yml`, which runs the same commands
+# before anything reaches the registry.
 on:
   pull_request:
   workflow_dispatch:
@@ -9,7 +10,6 @@ on:
 permissions:
   contents: read
 
-# A newer push to the same pull request makes the older run worthless.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -24,7 +24,6 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          # package.json `engines` asks for >= 24.
           node-version: "24"
           cache: npm
 
@@ -32,16 +31,9 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
-      # Formatting is deliberately not part of `verify`: it is diff noise, not a quality gate, and
-      # a local `verify` should not fail on it halfway through a change.
       - name: Format
-        run: npm run format:check
+        run: npm run format:check --if-present
 
-      # The one gate: contrast -> typecheck -> lint -> tests with coverage -> build (with the
-      # exports check) -> public API -> animations -> size budget.
+      # The one gate each package defines: typecheck, lint, tests, build, size...
       - name: Verify
         run: npm run verify
-
-      # Visual regression does not run here: the reference screenshots under
-      # `__tests__/e2e/__screenshots__/darwin/` are macOS renders and would not match a Linux runner.
-      # Run `npm run test:visual` locally before a release.

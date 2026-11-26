@@ -1,6 +1,6 @@
 import { type ButtonHTMLAttributes, forwardRef, memo, type ReactNode } from 'react';
 
-import { isDefined } from '@handijit/utils';
+import { isDefined } from '@handijitcom/utils';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';

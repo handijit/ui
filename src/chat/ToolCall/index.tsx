@@ -2,7 +2,7 @@
 
 import { type FC, memo, type ReactNode } from 'react';
 
-import { Disclosure, StatusDot, useUi } from '@handijit/ui';
+import { Disclosure, StatusDot, useUi } from '@handijitcom/ui';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';

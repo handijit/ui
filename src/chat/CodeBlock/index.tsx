@@ -4,7 +4,7 @@ import { type FC, Fragment, memo, useEffect, useMemo, useRef, useState } from 'r
 
 import { CheckLg, ClipboardFill } from 'react-bootstrap-icons';
 
-import { IconButton, useAnnounce, useUi } from '@handijit/ui';
+import { IconButton, useAnnounce, useUi } from '@handijitcom/ui';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';

@@ -2,7 +2,7 @@
 
 import { memo, useCallback, useMemo, useState } from 'react';
 
-import { useUi } from '@handijit/ui';
+import { useUi } from '@handijitcom/ui';
 
 import { CategoryAxis, ValueAxis } from './axes';
 import { type CartesianSeries, cartesianGeometry, type Orientation, toNumber } from './cartesian';

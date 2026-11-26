@@ -4,7 +4,7 @@ import { type FC, memo, type ReactNode, useEffect, useRef } from 'react';
 
 import { ArrowDown } from 'react-bootstrap-icons';
 
-import { IconButton, useAnnounce, useUi, useStickToBottom } from '@handijit/ui';
+import { IconButton, useAnnounce, useUi, useStickToBottom } from '@handijitcom/ui';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';

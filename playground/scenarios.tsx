@@ -1741,7 +1741,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       </FilterBar>
     ),
   },
-  // --- Grafikler (@handijit/ui/charts) ---
+  // --- Grafikler (@handijitcom/ui/charts) ---
   LineChart: {
     twoSeries: (
       <LineChart
@@ -1962,7 +1962,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       />
     ),
   },
-  // --- Takvim (@handijit/ui/calendar) ---
+  // --- Takvim (@handijitcom/ui/calendar) ---
   Calendar: {
     week: (
       <Calendar
@@ -2017,7 +2017,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       />
     ),
   },
-  // --- Sohbet (@handijit/ui/chat) ---
+  // --- Sohbet (@handijitcom/ui/chat) ---
   AppBar: {
     default: (
       <AppBar

@@ -103,7 +103,7 @@ export const componentCss = ({ baseEntry }: { baseEntry: string }): Plugin => ({
         (item): item is Chunk => isChunk(item) && item.imports.includes(chunk.fileName),
       );
       if (importers.length === 0)
-        throw new Error(`[@handijit/ui] ${chunk.fileName}: sınıf haritasının ithalatçısı yok.`);
+        throw new Error(`[@handijitcom/ui] ${chunk.fileName}: sınıf haritasının ithalatçısı yok.`);
 
       for (const importer of importers) {
         inlineClassMap(importer, chunk.fileName, map, isEsm);
@@ -163,7 +163,7 @@ export const componentCss = ({ baseEntry }: { baseEntry: string }): Plugin => ({
  */
 const readClassMap = async (chunk: Chunk, isEsm: boolean): Promise<string> => {
   if (chunk.imports.length > 0)
-    throw new Error(`[@handijit/ui] ${chunk.fileName}: sınıf haritası başka modül içe aktarıyor.`);
+    throw new Error(`[@handijitcom/ui] ${chunk.fileName}: sınıf haritası başka modül içe aktarıyor.`);
 
   let map: unknown;
   if (isEsm) {
@@ -176,7 +176,7 @@ const readClassMap = async (chunk: Chunk, isEsm: boolean): Promise<string> => {
   }
 
   if (typeof map !== 'object' || map === null)
-    throw new Error(`[@handijit/ui] ${chunk.fileName}: sınıf haritası bir nesne değil.`);
+    throw new Error(`[@handijitcom/ui] ${chunk.fileName}: sınıf haritası bir nesne değil.`);
 
   /* Tek satır: ithalatçının satır haritası kaymasın. */
   return JSON.stringify(map);
@@ -196,7 +196,7 @@ const inlineClassMap = (importer: Chunk, target: string, map: string, isEsm: boo
   const matches = [...importer.code.matchAll(pattern)];
   if (matches.length !== 1)
     throw new Error(
-      `[@handijit/ui] ${importer.fileName}: '${specifier}' içe aktarımı ${matches.length} kez bulundu (1 beklenir).`,
+      `[@handijitcom/ui] ${importer.fileName}: '${specifier}' içe aktarımı ${matches.length} kez bulundu (1 beklenir).`,
     );
 
   const [match] = matches;
@@ -221,7 +221,7 @@ const findBaseCss = (bundle: Bundle, baseEntry: string): string => {
   const [css] = chunk?.viteMetadata?.importedCss ?? [];
   if (!css)
     throw new Error(
-      `[@handijit/ui] base.css üretilmedi (${chunk ? `${chunk.fileName}: ${chunk.imports.join(', ')}` : 'giriş yok'}).`,
+      `[@handijitcom/ui] base.css üretilmedi (${chunk ? `${chunk.fileName}: ${chunk.imports.join(', ')}` : 'giriş yok'}).`,
     );
 
   return css;
@@ -229,7 +229,7 @@ const findBaseCss = (bundle: Bundle, baseEntry: string): string => {
 
 const readAsset = (bundle: Bundle, fileName: string): string => {
   const asset = bundle[fileName];
-  if (!asset || asset.type !== 'asset') throw new Error(`[@handijit/ui] ${fileName} çıktıda yok.`);
+  if (!asset || asset.type !== 'asset') throw new Error(`[@handijitcom/ui] ${fileName} çıktıda yok.`);
 
   return typeof asset.source === 'string' ? asset.source : Buffer.from(asset.source).toString();
 };

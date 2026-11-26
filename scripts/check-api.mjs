@@ -2,11 +2,11 @@
 /**
  * GENEL API NOBETCISI — her girisin disa aktarim kumesini kendi taban cizgisiyle karsilastirir.
  *
- * - `@handijit/ui`      → `build/index.d.ts`             ↔ `scripts/api-baseline.txt`
- * - `@handijit/ui/chat` → `build/types/chat/index.d.ts`  ↔ `scripts/api-baseline.chat.txt`
- * - `@handijit/ui/charts` → `build/types/charts/index.d.ts` ↔ `scripts/api-baseline.charts.txt`
- * - `@handijit/ui/calendar` → `build/types/calendar/index.d.ts` ↔ `scripts/api-baseline.calendar.txt`
- * - `@handijit/ui/scss`   → `build/scss/*.scss` (`$degisken`, `@mixin`) ↔ `scripts/api-baseline.scss.txt`
+ * - `@handijitcom/ui`      → `build/index.d.ts`             ↔ `scripts/api-baseline.txt`
+ * - `@handijitcom/ui/chat` → `build/types/chat/index.d.ts`  ↔ `scripts/api-baseline.chat.txt`
+ * - `@handijitcom/ui/charts` → `build/types/charts/index.d.ts` ↔ `scripts/api-baseline.charts.txt`
+ * - `@handijitcom/ui/calendar` → `build/types/calendar/index.d.ts` ↔ `scripts/api-baseline.calendar.txt`
+ * - `@handijitcom/ui/scss`   → `build/scss/*.scss` (`$degisken`, `@mixin`) ↔ `scripts/api-baseline.scss.txt`
  *
  * ⚠ Grep deseni `export { … }` DEGIL (ana giris icin). vite-plugin-dts her bildirimi tek tek
  * `export declare …` olarak yaziyor ve dosyanin sonunda yalnizca BOS bir `export { }` birakiyor.
@@ -53,7 +53,7 @@ const scssNames = (_source, file) =>
 
 const ENTRIES = [
   {
-    name: '@handijit/ui',
+    name: '@handijitcom/ui',
     declarationFile: join(ROOT, 'build', 'index.d.ts'),
     baselineFile: join(ROOT, 'scripts', 'api-baseline.txt'),
     /*
@@ -66,25 +66,25 @@ const ENTRIES = [
     ],
   },
   {
-    name: '@handijit/ui/chat',
+    name: '@handijitcom/ui/chat',
     declarationFile: join(ROOT, 'build', 'types', 'chat', 'index.d.ts'),
     baselineFile: join(ROOT, 'scripts', 'api-baseline.chat.txt'),
     read: reexportedNames,
   },
   {
-    name: '@handijit/ui/charts',
+    name: '@handijitcom/ui/charts',
     declarationFile: join(ROOT, 'build', 'types', 'charts', 'index.d.ts'),
     baselineFile: join(ROOT, 'scripts', 'api-baseline.charts.txt'),
     read: reexportedNames,
   },
   {
-    name: '@handijit/ui/calendar',
+    name: '@handijitcom/ui/calendar',
     declarationFile: join(ROOT, 'build', 'types', 'calendar', 'index.d.ts'),
     baselineFile: join(ROOT, 'scripts', 'api-baseline.calendar.txt'),
     read: reexportedNames,
   },
   {
-    name: '@handijit/ui/scss',
+    name: '@handijitcom/ui/scss',
     declarationFile: join(ROOT, 'build', 'scss', '_index.scss'),
     baselineFile: join(ROOT, 'scripts', 'api-baseline.scss.txt'),
     read: scssNames,

@@ -2,7 +2,7 @@
 
 import { memo, useCallback, useMemo, useState } from 'react';
 
-import { useUi } from '@handijit/ui';
+import { useUi } from '@handijitcom/ui';
 
 import { named } from '../../helpers/component.helper';
 import ChartFrame from '../core/ChartFrame';

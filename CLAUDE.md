@@ -1,4 +1,4 @@
-# @handijit/ui
+# @handijitcom/ui
 
 Accessible React components of Han Dijit, drawn with the tokens of `@handijit/design`.
 React 19 · TypeScript strict · SCSS Modules · Vite.
@@ -15,7 +15,7 @@ shadows) belongs to `@handijit/design`. This library declares no colour and deci
 it decides is WHICH token a component draws with, and that is what the sections below record.
 
 ⚠ **Two languages, on purpose.** Everything written for 2.0 is in English. The measured history of
-earlier majors (5.x of `@ahmetilhn/hanui`, 1.0 of `@handijit/ui`) stays in Turkish as it was
+earlier majors (5.x of `@ahmetilhn/hanui`, 1.0 of `@handijitcom/ui`) stays in Turkish as it was
 recorded: the measurements still explain the rules, but a token name inside such a note is the
 name of its time (`surface-2`, `action`, `shell`, `ring-color` …). The 2.0 name of every one of
 them is in the migration table of `CHANGELOG.md`. New text is written in English.
@@ -42,7 +42,7 @@ them is in the migration table of `CHANGELOG.md`. New text is written in English
 | Satır listesi seçim mi eylem mi? | `ActionListItem isSelected` / `ActionListItem` | `isSelected` verilince satır `aria-pressed` taşır ve kalıcı bir durum vaat eder; eylemi seçim gibi sunmak yanlış söz |
 | Öneriler seçim mi eylem mi? | `ChipGroup` / `PromptSuggestions` | Öneri bir EYLEM (`onPick`); çip ise geri alınabilir bir seçim |
 | Parçaların toplamı mı zaman çizelgesi mi? | `SegmentBar` (`value`) / `SegmentBar` (`from`/`to`) | Tek görsel (`role="img"`); tam bir eksen gerekiyorsa `/charts` |
-| Hangi grafik? | `/charts` — bkz. "`@handijit/ui/charts`" | Eğilim, karşılaştırma, parça-bütün ve dağılım ayrı grafikler; ayrımlar orada ölçülü |
+| Hangi grafik? | `/charts` — bkz. "`@handijitcom/ui/charts`" | Eğilim, karşılaştırma, parça-bütün ve dağılım ayrı grafikler; ayrımlar orada ölçülü |
 | Adet mi miktar mı? (2.4) | `QuantityStepper` / `QuantityInput` | Stepper bütün adedi iki düğmeyle sayar; miktar alanı `Qty4` tutar ve birimin hanesini (kg 3) yazdırır |
 | Tutar gösterimi mi girişi mi? (2.4) | `Price` / `MoneyInput` | `Price` biçimlenmiş bir METİN çizer; giriş ölçekli tam sayı alır ve verir. Kayan noktalı sayı ikisinde de dolaşmaz |
 | Takvim mi zaman çizelgesi mi? (2.4) | `/calendar` `Calendar` / `Timeline` | Takvim saate yerleşen ve taşınan işler içindir; olay sırası `Timeline` |
@@ -373,7 +373,7 @@ A disabled FIELD (`passive-surface()`, `text-3` on `bg-raised`) stays readable.
   ELLE bakılan bir liste ve ikisi listede değildi — yani kural yazılıydı,
   kısmen zorlanıyordu ve aradan geçen iki bileşen sessizce kaldı. İkisi de
   TÜKETİCİDE ölçüldü (e-ticaret vitrini, 390px ve 320px gerçek tarayıcı),
-  @handijit/ui'nin kendi ızgarasında değil.
+  @handijitcom/ui'nin kendi ızgarasında değil.
   ⚠ Türetilmiş bir kural denendi ve **elendi**: "44px altında sabit yükseklik
   yazan her dosya `tap-target` içermeli" 32 satır işaretliyor ve ezici
   çoğunluğu süs (`Progress` 4px çubuk, `Spinner`, `Steps` 1px bağlayıcı çizgi).
@@ -646,7 +646,7 @@ okur.
 | `__tests__/styles/scroll-containment.test.ts` | SCSS'te `overflow: auto\|scroll` yazan her kural konumlu; BEM değiştiricisi (`&--x`) ebeveyninden, `position` yazan mixin'in include'u (`tap-target`, `sticky-below-header`) sayılır. Tek istisna `Menu` — gerekçesiyle ve bayatlık denetimiyle |
 | `__tests__/e2e/scroll-containment.spec.ts` (4 × 3 proje) | gerçek yerleşim: kabın dibine konan gizli etiket hiçbir atanın `scrollHeight`ini büyütmez, `scrollIntoView` yalnızca kabı kaydırır. `desktop-behavior` + `ios` + `android` (`ANY_VIEWPORT_SPEC`) |
 
-## `@handijit/ui/chat` — sohbet bileşenlerinin AYRI girişi (5.2)
+## `@handijitcom/ui/chat` — sohbet bileşenlerinin AYRI girişi (5.2)
 
 **Neden ayrı:** 5.1 tüm girişi bütçenin sınırına taşıdı (42,00 / 42 kB) ve
 sohbet bileşenlerinin e-ticaret vitrininde çağıranı yok. Ana girişe girselerdi vitrinin
@@ -719,7 +719,7 @@ token'ları eklenmedi (2.0 adlarıyla `bg-inset` ve `inverse-*` karşılıyor).
 
 5.2'de `CodeBlock` "vurgulayıcı İÇERMEZ" diye kuruldu, Shiki tüketicideydi. Sonuç:
 Shiki bağlamayan her tüketicide (galeri dahil) kod **renksiz** çiziliyordu; bağlayanda
-da renkler Shiki'nin `github-*` temasından geliyordu — kontrastı ölçülmüyor, @handijit/ui
+da renkler Shiki'nin `github-*` temasından geliyordu — kontrastı ölçülmüyor, @handijitcom/ui
 paletiyle hiçbir bağı yok.
 
 | Karar | Gerekçe |
@@ -798,7 +798,7 @@ ilk kullanımda kurulur (fabrika), modül düzeyinde açıklamasız çağrı yok
 | `.size-limit.js` "yalnızca ChatThread" (1,3 kB) | vurgulayıcı başka bir sohbet bileşenine sızarsa |
 | `.size-limit.js` "yalnızca CodeBlock" (7 kB) | yeni bir dil buradan geçer |
 
-## `@handijit/ui/charts` — SVG grafikleri (5.3)
+## `@handijitcom/ui/charts` — SVG grafikleri (5.3)
 
 On grafik, **sıfır bağımlılık**: ölçek, istatistik ve yol üretimi
 `src/charts/core/`ta saf fonksiyon. Sohbet girişiyle aynı kurgu
@@ -930,7 +930,7 @@ data contract's scaled integer, and the `takvim` pattern of app-kit needs a cale
 | Need | 2.4 |
 |---|---|
 | Money, quantity, rate and percent typed as floats, rounded by every program | `ScaledInput` + `MoneyInput` (`minorDigits`), `QuantityInput` (`Qty4`, `unitDigits`), `RateInput` (`Rate6`), `PercentInput` (`Pct2`). Value in, value out: a safe integer or `null` |
-| A calendar: month / week / day, resource columns, drag to move and stretch, a keyboard way | `@handijit/ui/calendar` `Calendar`, a SEPARATE entry: the main entry was at 41.31 of 44 kB and the calendar is 5.92 kB |
+| A calendar: month / week / day, resource columns, drag to move and stretch, a keyboard way | `@handijitcom/ui/calendar` `Calendar`, a SEPARATE entry: the main entry was at 41.31 of 44 kB and the calendar is 5.92 kB |
 | "Sanal kaydırma" of the catalogue | No new primitive — decided while writing the calendar (below) |
 
 ⚠ **`ui` cannot import `@handijit/decimal` or app-kit** (it is the platform layer under both), so
@@ -1056,7 +1056,7 @@ type error — a silent break, so not in a minor.
 spinner. An empty `role="status"` never announced anything, so no reader loses a message; a test
 that queried `getByRole('status')` for it does.
 
-### 2.0 (`@handijit/ui`) — the tokens of `@handijit/design`; BREAKING, no alias
+### 2.0 (`@handijitcom/ui`) — the tokens of `@handijit/design`; BREAKING, no alias
 
 The whole migration, old → new for every token, CSS variable, SCSS name, prop, variant, export and
 stylesheet path, is in `CHANGELOG.md` ("Migration from 1.x", nine steps and one table). Kept here:
@@ -1105,14 +1105,14 @@ olarak bu hataydı.
 Tüketicide değer ezmesi yazan yerler (`--ui-page: #ffffff` gibi) ayrıca
 gözden geçirilir: 5.0'da açık sayfa krem.
 
-### 1.0 (`@handijit/ui`) — yeni ad; bileşen başına modül, dosya başına `'use client'`, CSS bileşen başına dosyada
+### 1.0 (`@handijitcom/ui`) — yeni ad; bileşen başına modül, dosya başına `'use client'`, CSS bileşen başına dosyada
 
-Paket `@ahmetilhn/hanui` 5.6.3'ten `@handijit/ui` 1.0.0'a taşındı (handijit organizasyonu). İç adlar da
+Paket `@ahmetilhn/hanui` 5.6.3'ten `@handijitcom/ui` 1.0.0'a taşındı (handijit organizasyonu). İç adlar da
 değişti: `hanui-` → `ui-`, `--hanui-*` → `--ui-*`, `@layer ui`, `data-ui-*`, `Hanui*` → `Ui*`. Aşağıdaki
 teknik değişiklikler 6.0 olarak hazırlandı ve 1.0.0 adıyla yayımlandı.
 
 Tüketicide ölçüldü (handijit.com, Next 16 / Turbopack, 6–7 Kasım 2026): 5.x paketi tek 203 KB'lık
-modül ve ilk satırı `'use client'`; her sayfaya 40 KB gz @handijit/ui JS iniyor, `styles.css` (173 KB ham,
+modül ve ilk satırı `'use client'`; her sayfaya 40 KB gz @handijitcom/ui JS iniyor, `styles.css` (173 KB ham,
 23 KB gz) tamamen yükleniyor ve ~%90'ı kullanılmıyor, ana sayfada 37 düğme + 121 çip = 420–548
 istemci referansı (her `Button` bir hidrasyon sınırı), `turbopackModuleFragments` tek dosyayı
 ~2.000 halkalık değerlendirme zincirine bölüp tarayıcı yığınını taşırıyordu ("Maximum call stack
@@ -1179,8 +1179,8 @@ tamamı `@layer ui` içinde" sözleşmesini bozan tek kural buydu.
 
 - ⚠ Sağlayıcı `<body>` içinde olmalı: `<html>`i sararsa `<style>` belgenin köküne düşer. Ağaçta
   çizilmesinin ikinci nedeni katman sırası: `<body>`deki etiket `<head>`deki stil sayfalarından ve
-  tüketicinin `@layer reset, @handijit/ui;` bildiriminden HER ZAMAN sonra gelir. React 19'un
-  `<style precedence>` taşıması `<head>`te nereye koyacağını garanti etmiyor; önce gelirse `@handijit/ui`
+  tüketicinin `@layer reset, @handijitcom/ui;` bildiriminden HER ZAMAN sonra gelir. React 19'un
+  `<style precedence>` taşıması `<head>`te nereye koyacağını garanti etmiyor; önce gelirse `@handijitcom/ui`
   katmanı ilk orada görülür ve tüketicinin `reset` katmanı kütüphanenin üstüne çıkar.
 - ⚠ `dangerouslySetInnerHTML` zorunlu: React 18 `<style>` çocuğunu HTML olarak kaçışlıyor,
   seçicideki `'` `&#x27;` oluyordu. Değer veritabanından gelebileceği için `</style` dizisi
@@ -1311,7 +1311,7 @@ metin kenarları). Temiz `master`da aynı koşu 40/40 geçiyordu.
 API değişmedi (yeni prop yok), çizim değişti: `html` verilmeyen blok artık renkli,
 JSON yeniden girintili, kenar boş satırları atılmış ve **kopyalanan metin ekranda
 görünen** metin. `html` veren tüketicide (sohbet uygulamasının Shiki sarmalayıcısı) Shiki
-yanıtı gelene kadar @handijit/ui renkleri görünür, sonra Shiki'ninkiler — iki palet arasında
+yanıtı gelene kadar @handijitcom/ui renkleri görünür, sonra Shiki'ninkiler — iki palet arasında
 bir renk sıçraması. Sarmalayıcıyı kaldırıp `language` + `code` geçmek bu sıçramayı ve
 Shiki'nin tembel yüklemesini birlikte kaldırır; Shiki doğruluğu gerekiyorsa kalır.
 
@@ -1328,12 +1328,12 @@ sonra komut çalışır. Nöbetçi `__tests__/components/CommandPalette.test.tsx
 Yeni `hotkey` (`'mod+k'`) + `onOpen`: kısayol kapalıyken açar, açıkken kapatır,
 başka bir kipsel yüzey açıkken dokunmaz (`hasOpenSurface`).
 
-### 5.3 — SCSS API (`@handijit/ui/scss`)
+### 5.3 — SCSS API (`@handijitcom/ui/scss`)
 
 Tüketici token değişkenlerini ve mixin'leri KOPYALAMADAN alır:
 
 ```scss
-@use '@handijit/ui/scss' as ui;
+@use '@handijitcom/ui/scss' as ui;
 
 .panel {
   padding: ui.$space-4;
@@ -1347,7 +1347,7 @@ breakpoints are `$breakpoint-sm` / `-md` / `-lg` / `-xl`, and the module is thre
 `_variables`, `_mixins`). Renamed and removed names: `CHANGELOG.md`.
 
 **Neden:** bir tüketici değişkenleri kopyalamıştı ve değerler kaymıştı
-(`$tablet-breakpoint: 760px`; @handijit/ui'de 768 / 1024).
+(`$tablet-breakpoint: 760px`; @handijitcom/ui'de 768 / 1024).
 
 | Ne | Nerede |
 |---|---|
@@ -1534,7 +1534,7 @@ node scripts/check-api.mjs --update   # taban çizgisini BİLİNÇLİ tazele
 Betiğin deseni `export declare (const|type|function|class|interface|enum) Ad`
 ve **sıfır eşleşmede açıkça düşer** — ölçemediği şeyi yeşil geçmez.
 
-**Tip taşımalarında diff ZORUNLU.** Tüketiciler @handijit/ui'yi **caret** ile alıyor
+**Tip taşımalarında diff ZORUNLU.** Tüketiciler @handijitcom/ui'yi **caret** ile alıyor
 (`^4.1.0`, `^5.3.0`), yani küçük sürümde düşen bir ad
 bir sonraki `npm install`da, sebebi çoktan unutulmuşken derleme hatası üretir.
 Taban çizgisi bu yüzden repoda duruyor. (Bu satır bir dönem "iki tüketici de
@@ -1564,7 +1564,7 @@ Taban çizgisi bu yüzden repoda duruyor. (Bu satır bir dönem "iki tüketici d
 bileşenleri bu yüzden ana girişe GİRMEZ, ayrı `chat` girişine gider — plan bunu
 "vitrinin bütçesi büyümesin" diye öneriyordu, ölçüm artık zorunlu kılıyor.
 5.2'nin `UiThemeScript`i girişi 42,05 kB'a taşıdı ve bütçe 43 kB'a çekildi
-(gerekçe `.size-limit.js` ve "`@handijit/ui/charts`" bölümünde).
+(gerekçe `.size-limit.js` ve "`@handijitcom/ui/charts`" bölümünde).
 
 ⚠ Sohbet planı `hasOpenSurface` yerine bir **kanca** (`useIsModalOpen`) öneriyordu.
 Çağıranın ihtiyacı reaktif bir durum değil, tuşa basıldığı ANDAKİ tek bir soru;
@@ -1590,7 +1590,7 @@ telde karşılığı yok, CSS sınıf adı sonekleri.
 `tsconfig.json` → `target: ES2023`, `lib: ["DOM", "DOM.Iterable", "ESNext"]`.
 
 ⚠ **`target` burada ES2024 DEĞİL ve bunun ölçülmüş bir sebebi var.** Diğer
-depolar `ES2024` yazıyor; @handijit/ui'de o değer her derlemede **89 uyarı** basıyordu:
+depolar `ES2024` yazıyor; @handijitcom/ui'de o değer her derlemede **89 uyarı** basıyordu:
 
 ```
 ▲ [WARNING] Unrecognized target environment "es2024" [tsconfig.json]
@@ -1664,15 +1664,15 @@ olarak duruyordu ve ikisi de zaten bu kütüphanenin bileşenlerini sarmalıyord
 | `ToastPortal` | `ToastHub` portal kullanıyor ve `document` olmadan çalışamıyor; sunucuda çizilen ağaçta hidrasyon uyuşmazlığı üretir. Montaj bekleyen sarmalayıcı uygulamanın değil bileşenin sorunu. |
 
 ⚠ **Uygulamalar HENÜZ GEÇMEDİ.** Yönetim paneli ve vitrin
-@handijit/ui'yi npm'den alıyor (`2.1.1`) ve bu bileşenler `2.1.0`da. Geçiş için
+@handijitcom/ui'yi npm'den alıyor (`2.1.1`) ve bu bileşenler `2.1.0`da. Geçiş için
 sırasıyla: `npm publish` → iki uygulamada bağımlılığı yükselt → yerel
 `components/PasswordInput` ve `components/ToastPortal` klasörlerini sil →
-`import { PasswordInput, ToastPortal } from '@handijit/ui'`. Yayın
+`import { PasswordInput, ToastPortal } from '@handijitcom/ui'`. Yayın
 yapılmadan yerel kopyaları silmek her iki uygulamayı da kırar.
 
 ⚠ **`2.2.0` (kurumsal palet) de aynı kapıda bekliyor.** Bağımlılık tam sürüme
 sabit (`"2.1.1"`, aralık değil), yani yeni palet **yayınlanana ve iki
-uygulamada `@handijit/ui@2.2.0`'a yükseltilene kadar** vitrine/panele
+uygulamada `@handijitcom/ui@2.2.0`'a yükseltilene kadar** vitrine/panele
 inmez. Uygulamaların kendi dosyalarında duran marka yüzeyleri (logo varlıkları,
 panel rayı, `og.png`, `themeColor`, manifest, mail token'ları) bundan bağımsız
 ve **zaten güncel** — yani geçiş penceresinde kurumsal logo yeni, gövde
@@ -1685,7 +1685,7 @@ ship with the design package (`@handijit/design/logos/*`). The note is history; 
 are still the applications'.
 
 - **`ThemeToggle`** `nav-fg`, `nav-bg`, `nav-hover`, `nav-line` token'larını
-  okuyor; bunlar uygulamanın üst bandına ait ve @handijit/ui'nin token
+  okuyor; bunlar uygulamanın üst bandına ait ve @handijitcom/ui'nin token
   sözleşmesinde **yok**. Buraya taşımak ya o token'ları kütüphaneye sokmayı
   (bir uygulamanın kroması genel bir tasarım sistemine girer) ya da bileşeni
   yeniden tasarlamayı gerektirir (zemin rengi tüketiciden gelen CSS özel
@@ -1693,7 +1693,7 @@ are still the applications'.
 - **`Logo`** marka varlığı taşıyor (`/brand/*.svg`, uygulamanın markası). MIT
   lisanslı, genel amaçlı bir tasarım sistemine tek bir şirketin markasını
   koymak yanlış olur. Doğru ayrıştırma: mekanizma (temaya göre kaynak
-  değiştirme, orana göre boyutlandırma) @handijit/ui'ye, varlıklar uygulamada.
+  değiştirme, orana göre boyutlandırma) @handijitcom/ui'ye, varlıklar uygulamada.
 
 ⚠ İkisi de bugün **iki depoda kopya** ve ikisi de **ayrışmış** (`ThemeToggle`
 101 vs 96 satır — admin'de `Tooltip`, vitrinde `IconButton`; `Logo` 117 vs

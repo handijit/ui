@@ -11,7 +11,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 
-import { isClient } from '@handijit/utils';
+import { isClient } from '@handijitcom/utils';
 
 import { ABOVE_MOBILE_MEDIA_QUERY } from '../../constants/breakpoint.constants';
 import { XLg } from 'react-bootstrap-icons';

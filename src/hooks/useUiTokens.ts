@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { cssVarName, THEME_ATTRIBUTE, type TokenName } from '@handijit/design';
-import { isClient } from '@handijit/utils';
+import { isClient } from '@handijitcom/utils';
 
 /** Returned on the server and in the first frame: drawing libraries paint an empty string black. */
 const FALLBACK = 'currentColor';

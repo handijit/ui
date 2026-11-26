@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 import { compileString } from 'sass';
 
 /*
- * SCSS API — `@use '@handijit/ui/scss' as ui;` tüketicide derlenir ve HİÇBİR KURAL basmaz.
+ * SCSS API — `@use '@handijitcom/ui/scss' as ui;` tüketicide derlenir ve HİÇBİR KURAL basmaz.
  *
  * ⚠ Modül değişken ve mixin taşır, CSS değil: token kuralları `@handijit/design/tokens.css`te. Bir
  * `@use` kural bassaydı her tüketici dosyası onları yeniden üretirdi.

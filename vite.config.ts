@@ -15,7 +15,7 @@ const BASE_ENTRY = resolve(__dirname, 'src/styles/base.ts');
  *
  * `preserveModules`: `src/` ağacı `build/` altına birebir iner (`build/components/Button/index.js`,
  * `build/index.js` cephe). `package.json` `exports` haritası her bileşene bir alt yol verir
- * (`@handijit/ui/button`); cephe `.` yalnızca yeniden dışa aktarım taşır.
+ * (`@handijitcom/ui/button`); cephe `.` yalnızca yeniden dışa aktarım taşır.
  */
 export default defineConfig({
   plugins: [
@@ -76,7 +76,7 @@ export default defineConfig({
         'react-dom',
         'react/jsx-runtime',
         '@handijit/design',
-        '@handijit/utils',
+        '@handijitcom/utils',
         /*
          * İkonlar da EXTERNAL: paket tüketicide zaten var (uygulamalar kendi içerik ikonlarını aynı
          * setten alıyor).

@@ -3,7 +3,7 @@
  * `package.json` `exports` HARİTASI — bileşen başına alt yol (6.0).
  *
  * `src/index.ts`in `./components/<Ad>` dizinlerinden yeniden dışa aktardığı her bileşen bir alt yol
- * alır: `@handijit/ui/button` → `build/components/Button/index.{js,cjs,d.ts}`. Alt yol adı dizin
+ * alır: `@handijitcom/ui/button` → `build/components/Button/index.{js,cjs,d.ts}`. Alt yol adı dizin
  * adının kebab hâlidir (`ChipGroup` → `chip-group`). Her koşul kendi tipini taşır (2.2): `import` →
  * `.d.ts`, `require` → `.d.cts` (`scripts/build-declarations.mjs`); tek bir üst düzey `types`
  * CommonJS tüketicisine ES modülü bildiriyordu. Sabit girişler (`.`, `./base.css`, `./styles.css`,

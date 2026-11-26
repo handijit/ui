@@ -3,7 +3,7 @@
 import { memo, useCallback, useId, useMemo } from 'react';
 
 import { cssVar } from '@handijit/design';
-import { useUi } from '@handijit/ui';
+import { useUi } from '@handijitcom/ui';
 
 import { named } from '../../helpers/component.helper';
 import { fitLabel, labelWidth, thinTicks } from '../core/axes';

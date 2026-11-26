@@ -1,5 +1,5 @@
 /**
- * @handijit/ui — açık genel API. Dışa verilen her ad bir SÖZLEŞMEDİR: bir sonraki büyük sürüme
+ * @handijitcom/ui — açık genel API. Dışa verilen her ad bir SÖZLEŞMEDİR: bir sonraki büyük sürüme
  * kadar kaldırılmaz ve davranışı sessizce değişmez.
  */
 

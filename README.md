@@ -1,4 +1,4 @@
-# @handijit/ui
+# @handijitcom/ui
 
 Accessible React components for Han Dijit applications: the site, the staff
 panel and the desktop programs. Built on SCSS Modules and drawn with the tokens
@@ -15,15 +15,15 @@ of [`@handijit/design`](https://www.npmjs.com/package/@handijit/design).
 - **Native elements are kept.** `<dialog>`, `<input type="range">`,
   `<input type="radio">`: focus trapping, keyboard handling and screen reader
   announcements come from the browser.
-- **Three sub-entries, zero bytes in the main bundle.** `@handijit/ui/chat`
-  (chat and tool interfaces), `@handijit/ui/charts` (dependency-free SVG
-  charts), `@handijit/ui/scss` (token variables and mixins).
+- **Three sub-entries, zero bytes in the main bundle.** `@handijitcom/ui/chat`
+  (chat and tool interfaces), `@handijitcom/ui/charts` (dependency-free SVG
+  charts), `@handijitcom/ui/scss` (token variables and mixins).
 
 ```bash
-npm install @handijit/ui @handijit/design @handijit/utils react-bootstrap-icons
+npm install @handijitcom/ui @handijit/design @handijitcom/utils react-bootstrap-icons
 ```
 
-`react`, `react-dom`, `@handijit/design` (`^1.1.0`), `@handijit/utils`
+`react`, `react-dom`, `@handijit/design` (`^1.1.0`), `@handijitcom/utils`
 (`^2.0.0`) and `react-bootstrap-icons` are **peer** dependencies. The design
 package is a peer on purpose: an application has exactly one copy of the tokens,
 and the site, the panel and the components all read the same custom properties.
@@ -39,11 +39,11 @@ Coming from 1.x? The migration is in [`CHANGELOG.md`](./CHANGELOG.md) under
 // Once, at the root of the application. The order matters.
 import '@handijit/design/tokens.css'; // the --hd-* custom properties, both themes
 import '@handijit/design/fonts.css'; // optional: Archivo, Inter, IBM Plex Mono
-import '@handijit/ui/styles.css';
+import '@handijitcom/ui/styles.css';
 ```
 
 ```tsx
-import { Button, Field, Input, UIVariant } from '@handijit/ui';
+import { Button, Field, Input, UIVariant } from '@handijitcom/ui';
 
 <Field label="E-posta" isRequired error={error}>
   {props => <Input {...props} type="email" value={email} onChange={onChange} />}
@@ -57,7 +57,7 @@ import { Button, Field, Input, UIVariant } from '@handijit/ui';
 The provider is **optional**: the package works with no configuration. Links
 are plain `<a>` elements and labels are whatever each call passes.
 
-`@handijit/ui/styles.css` carries **no tokens**. Without
+`@handijitcom/ui/styles.css` carries **no tokens**. Without
 `@handijit/design/tokens.css` every colour resolves to nothing. `fonts.css` is
 optional: load the three families your own way (`next/font`, self-hosted
 `@font-face`) if you prefer, the tokens only name them.
@@ -70,21 +70,21 @@ and lets its own build join them:
 
 ```scss
 // styles/ui.scss: Sass inlines plain CSS files.
-@use '@handijit/ui/base.css';
-@use '@handijit/ui/components/Button/style.css';
-@use '@handijit/ui/components/Chip/style.css';
+@use '@handijitcom/ui/base.css';
+@use '@handijitcom/ui/components/Button/style.css';
+@use '@handijitcom/ui/components/Chip/style.css';
 ```
 
 The JavaScript modules do not import CSS. That is deliberate: under Turbopack
 every client boundary's CSS landed in its own file, and the number of
 render-blocking files hurt LCP more than the bytes did.
 
-Every component also has a subpath (`@handijit/ui/button`, `/chip-group`,
+Every component also has a subpath (`@handijitcom/ui/button`, `/chip-group`,
 `/combobox`, …). The main entry is a pure re-export, so a bundler reaches the
 same file either way.
 
 The sub-entries have their own stylesheets, imported **after** `styles.css`:
-`@handijit/ui/chat.css`, `@handijit/ui/charts.css`, `@handijit/ui/calendar.css`.
+`@handijitcom/ui/chat.css`, `@handijitcom/ui/charts.css`, `@handijitcom/ui/calendar.css`.
 
 ---
 
@@ -106,7 +106,7 @@ element, to draw one region in the other theme.
 
 ```tsx
 // app/layout.tsx, a server layout, inside <head>.
-import { UiThemeScript } from '@handijit/ui';
+import { UiThemeScript } from '@handijitcom/ui';
 
 <head>
   <UiThemeScript nonce={nonce} />
@@ -133,7 +133,7 @@ The boot script is the **only** element this library injects. It injects no
 | Static hash       | add `'${THEME_BOOT_SCRIPT_HASH}'` to `script-src`; the page stays cacheable |
 
 ```ts
-import { THEME_BOOT_SCRIPT_HASH } from '@handijit/ui'; // re-exported from @handijit/design
+import { THEME_BOOT_SCRIPT_HASH } from '@handijitcom/ui'; // re-exported from @handijit/design
 
 const policy = `script-src 'self' '${THEME_BOOT_SCRIPT_HASH}'`;
 ```
@@ -316,7 +316,7 @@ optional. With neither a prop nor a provider value the element stays unnamed
 and, in development, the console says so once per key:
 
 ```
-[@handijit/ui] Eksik metin: Modal.closeLabel. Prop olarak geçin ya da
+[@handijitcom/ui] Eksik metin: Modal.closeLabel. Prop olarak geçin ya da
 <UiProvider labels={…}> içinde bir kez tanımlayın.
 ```
 
@@ -644,7 +644,7 @@ needed, and `UIVariant` / `UISize` can be imported on the server.
 ```ts
 // next.config.ts: the main entry is pure, so imports short-circuit to the component file.
 const nextConfig = {
-  experimental: { optimizePackageImports: ['@handijit/ui'] },
+  experimental: { optimizePackageImports: ['@handijitcom/ui'] },
 };
 ```
 
@@ -652,10 +652,10 @@ const nextConfig = {
 // app/layout.tsx, a server component
 import '@handijit/design/tokens.css';
 import '@handijit/design/fonts.css';
-import '@handijit/ui/styles.css';
-import '@handijit/ui/chat.css'; // only if /chat is used
-import '@handijit/ui/charts.css'; // only if /charts is used
-import { UiProvider, UiThemeScript } from '@handijit/ui';
+import '@handijitcom/ui/styles.css';
+import '@handijitcom/ui/chat.css'; // only if /chat is used
+import '@handijitcom/ui/charts.css'; // only if /charts is used
+import { UiProvider, UiThemeScript } from '@handijitcom/ui';
 import NextLink from 'next/link';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -687,16 +687,16 @@ whatever the window width. A window with a sidebar gives `ToastPortal` an
 
 ---
 
-## Chat components: `@handijit/ui/chat`
+## Chat components: `@handijitcom/ui/chat`
 
 A separate entry for chat and tool interfaces; it adds nothing to the main
 bundle or to `styles.css`.
 
 ```tsx
-import '@handijit/ui/styles.css';
-import '@handijit/ui/chat.css'; // AFTER styles.css
+import '@handijitcom/ui/styles.css';
+import '@handijitcom/ui/chat.css'; // AFTER styles.css
 
-import { ChatMessage, ChatThread, PromptInput } from '@handijit/ui/chat';
+import { ChatMessage, ChatThread, PromptInput } from '@handijitcom/ui/chat';
 
 <ChatThread
   isStreaming={isStreaming}
@@ -759,16 +759,16 @@ accuracy pass pre-highlighted HTML as `html` (its safety is yours).
 Markdown parsing stays in the application: `Prose` is a typography container
 only.
 
-## Charts: `@handijit/ui/charts`
+## Charts: `@handijitcom/ui/charts`
 
 Ten SVG charts with no dependency (drawing, scales and statistics live in the
 library).
 
 ```tsx
-import '@handijit/ui/styles.css';
-import '@handijit/ui/charts.css'; // AFTER styles.css
+import '@handijitcom/ui/styles.css';
+import '@handijitcom/ui/charts.css'; // AFTER styles.css
 
-import { BarChart, LineChart, PieChart } from '@handijit/ui/charts';
+import { BarChart, LineChart, PieChart } from '@handijitcom/ui/charts';
 
 <LineChart
   label="Aylık gelir ve gider"
@@ -803,7 +803,7 @@ container (or fixed with `width`); numbers are formatted with `labels.locale`.
 Colours come from the data series of the design (`tone`: `chart-1` … `chart-6`,
 `muted`).
 
-## Calendar: `@handijit/ui/calendar`
+## Calendar: `@handijitcom/ui/calendar`
 
 The base of app-kit's `takvim` pattern (2.4): a **time grid** (days as
 columns, the drawn hours as rows; with `resources` a column per teacher, room
@@ -811,10 +811,10 @@ or technician under every day) or a **month** of day cells. A separate entry,
 so the main entry's budget does not grow (5,9 kB gzip, `calendar.css` 2 kB).
 
 ```tsx
-import '@handijit/ui/styles.css';
-import '@handijit/ui/calendar.css'; // AFTER styles.css
+import '@handijitcom/ui/styles.css';
+import '@handijitcom/ui/calendar.css'; // AFTER styles.css
 
-import { Calendar, type CalendarEvent } from '@handijit/ui/calendar';
+import { Calendar, type CalendarEvent } from '@handijitcom/ui/calendar';
 
 <Calendar
   label="Ders planı"
@@ -872,14 +872,14 @@ import { Calendar, type CalendarEvent } from '@handijit/ui/calendar';
   `--ui-calendar-column-min` (7rem), `--ui-calendar-gutter` (3.5rem; 4.75rem
   with `bands`).
 
-## SCSS API: `@handijit/ui/scss`
+## SCSS API: `@handijitcom/ui/scss`
 
 Variables and mixins for the application's own stylesheets. The variables are
 `var(--hd-…)` references, so the theme turns at run time; the module emits no
 rules.
 
 ```scss
-@use '@handijit/ui/scss' as ui;
+@use '@handijitcom/ui/scss' as ui;
 
 .panel {
   padding: ui.$space-4;
@@ -908,7 +908,7 @@ Sass colour functions do not work either; mix in CSS:
 `color-mix(in srgb, #{ui.$primary} 20%, transparent)`.
 
 Next.js (Turbopack and webpack) resolves the package `exports`. For a compiler
-that cannot, add `node_modules/@handijit/ui/build/scss` to `loadPaths` and
+that cannot, add `node_modules/@handijitcom/ui/build/scss` to `loadPaths` and
 write `@use 'index' as ui`. An application that needs only the tokens can use
 `@handijit/design/tokens.scss` directly.
 
@@ -1010,6 +1010,14 @@ Which element to use when, the surface ladder, colour roles, typography roles,
 accessibility thresholds and the motion scale are in **`CLAUDE.md`**. That file
 is normative for applications that use the library too. The visual language
 itself (palette, type, logo) belongs to `@handijit/design`.
+
+<!-- handijit:about:start -->
+## About Han Dijit
+
+`@handijitcom/ui` is built and maintained by **[Han Dijit](https://www.handijit.com)**, a software company serving businesses across Türkiye: web, e-commerce, mobile, artificial intelligence, cyber security and enterprise software projects.
+
+[www.handijit.com](https://www.handijit.com) · [All Han Dijit packages on npm](https://www.npmjs.com/org/handijitcom)
+<!-- handijit:about:end -->
 
 ## License
 

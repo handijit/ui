@@ -4,7 +4,7 @@ import {
   type ThemeName,
   type ThemePreference,
 } from '@handijit/design';
-import { isClient } from '@handijit/utils';
+import { isClient } from '@handijitcom/utils';
 
 /** Turns transitions off for one frame while the theme flips (see `base.scss`). */
 export const THEME_SWITCHING_CLASS = 'ui-theme-switching';

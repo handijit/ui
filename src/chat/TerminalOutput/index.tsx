@@ -2,7 +2,7 @@
 
 import { type FC, memo, useRef } from 'react';
 
-import { useUi, useStickToBottom } from '@handijit/ui';
+import { useUi, useStickToBottom } from '@handijitcom/ui';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';

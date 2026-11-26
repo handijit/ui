@@ -7,7 +7,7 @@ export default {
   roots: ['<rootDir>/src', '<rootDir>/__tests__'],
   moduleNameMapper: {
     '\\.(scss|css)$': '<rootDir>/__tests__/support/style-stub.js',
-    '^@handijit/ui$': '<rootDir>/src/index.ts',
+    '^@handijitcom/ui$': '<rootDir>/src/index.ts',
     '^@tests/(.*)$': '<rootDir>/__tests__/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
   },

@@ -4,7 +4,7 @@ import { forwardRef, type InputHTMLAttributes, memo, type ReactNode, useId } fro
 
 import { ExclamationCircleFill } from 'react-bootstrap-icons';
 
-import { isDefined } from '@handijit/utils';
+import { isDefined } from '@handijitcom/utils';
 
 import { idList } from '../../helpers/aria.helper';
 import { cx } from '../../helpers/class-name.helper';

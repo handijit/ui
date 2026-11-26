@@ -14,7 +14,7 @@ import {
   useState,
 } from 'react';
 
-import { useAnnounce, useUi } from '@handijit/ui';
+import { useAnnounce, useUi } from '@handijitcom/ui';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { THEME_ATTRIBUTE } from '@handijit/design';
-import { isClient } from '@handijit/utils';
+import { isClient } from '@handijitcom/utils';
 
 import {
   applyThemePreference,

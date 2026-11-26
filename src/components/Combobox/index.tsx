@@ -45,7 +45,7 @@ import styles from './index.module.scss';
 
 /*
  * Tipler `types/`e tasindi ama BURADAN da disa aciliyor: cagiranlar (uygulamalar ve testler)
- * `@handijit/ui/components/Combobox` yolundan aliyordu…
+ * `@handijitcom/ui/components/Combobox` yolundan aliyordu…
  */
 export type { ComboboxLabels, ComboboxOption, ComboboxProps } from '../../types/combobox.type';
 

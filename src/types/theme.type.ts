@@ -98,7 +98,7 @@ export type UiLabels = Partial<{
   }>;
 
   /**
-   * Sohbet bileşenleri (`@handijit/ui/chat`). Çağrı yerine ÖZGÜ metinler buraya girmez:
+   * Sohbet bileşenleri (`@handijitcom/ui/chat`). Çağrı yerine ÖZGÜ metinler buraya girmez:
    * `PromptInput.placeholder`, `ReasoningBlock.summary`, `ToolCall.name`.
    */
   chat: Partial<{
@@ -128,7 +128,7 @@ export type UiLabels = Partial<{
     codeCopied: string;
   }>;
 
-  /** The calendar (`@handijit/ui/calendar`, 2.4). */
+  /** The calendar (`@handijitcom/ui/calendar`, 2.4). */
   calendar: Partial<{
     /**
      * How the keyboard works, read when the calendar is entered, e.g. "Oklarla etkinlikler

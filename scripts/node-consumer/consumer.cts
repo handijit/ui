@@ -1,7 +1,7 @@
 // The CommonJS side: `require` → `.d.cts`. See `tsconfig.json`.
-import Button = require('@handijit/ui/button');
-import ui = require('@handijit/ui');
-import chat = require('@handijit/ui/chat');
+import Button = require('@handijitcom/ui/button');
+import ui = require('@handijitcom/ui');
+import chat = require('@handijitcom/ui/chat');
 
 export const used = [Button, ui.Field, chat.ChatThread];
 

@@ -9,7 +9,7 @@ where it was found and what would close it.
 - **The typed-number grammar lives twice.** `helpers/scaled-number.helper.ts` mirrors app-kit's
   `parseDecimal` (data contract §4.3) because `ui` cannot import app-kit or `@handijit/decimal`.
   Pinned by app-kit's vectors in `__tests__/helpers/scaled-number.helper.test.ts`. Closes when the
-  grammar moves to a package under both (for example `@handijit/utils`) and both call it.
+  grammar moves to a package under both (for example `@handijitcom/utils`) and both call it.
 - **`ScaledInput`: the caret goes to the end** when a keystroke is refused or a pasted text is
   cleaned (the controlled value is written back). Closes with a caret restore in a layout effect.
 - **`Calendar`: no edge auto-scroll while dragging.** An event dragged towards the bottom of a

@@ -4,7 +4,7 @@ import { join } from 'node:path';
 const MIXINS_FILE = 'src/styles/_mixins.scss';
 
 /*
- * Mixins the library no longer calls but still publishes in `@handijit/ui/scss`: removing one is a
+ * Mixins the library no longer calls but still publishes in `@handijitcom/ui/scss`: removing one is a
  * major (`check:api`). Each name says when its last caller left and waits for 3.0.
  * - `for-desktop-up`: the toast stack was its last caller; since 2.3 `placement` decides at every
  *   width.

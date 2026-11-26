@@ -1,12 +1,12 @@
 // The ES module side: `import` → `.d.ts`. See `tsconfig.json`.
-import { Button as RootButton, Field, UiProvider } from '@handijit/ui';
-import Button from '@handijit/ui/button';
-import Checkbox from '@handijit/ui/checkbox';
-import { Calendar } from '@handijit/ui/calendar';
-import { BarChart } from '@handijit/ui/charts';
-import { ChatThread } from '@handijit/ui/chat';
-import MoneyInput from '@handijit/ui/money-input';
-import Select from '@handijit/ui/select';
+import { Button as RootButton, Field, UiProvider } from '@handijitcom/ui';
+import Button from '@handijitcom/ui/button';
+import Checkbox from '@handijitcom/ui/checkbox';
+import { Calendar } from '@handijitcom/ui/calendar';
+import { BarChart } from '@handijitcom/ui/charts';
+import { ChatThread } from '@handijitcom/ui/chat';
+import MoneyInput from '@handijitcom/ui/money-input';
+import Select from '@handijitcom/ui/select';
 
 export const used = [
   RootButton,

@@ -52,13 +52,13 @@ export default [
     gzip: true,
   },
   /*
-   * SOHBET GİRİŞİ — ana girişten AYRI ölçülür ve ana giriş içinde SAYILMAZ (`@handijit/ui`
+   * SOHBET GİRİŞİ — ana girişten AYRI ölçülür ve ana giriş içinde SAYILMAZ (`@handijitcom/ui`
    * dışsal: tüketici onu zaten indiriyor). Bütçe ilk ölçümden konur, yeşile boyamak için büyümez.
    */
   {
     name: 'chat girişi (tümü)',
     path: 'build/chat.js',
-    ignore: ['@handijit/ui'],
+    ignore: ['@handijitcom/ui'],
     /*
      * İlk ölçüm (2026-10-10, 20 bileşen): 6,29 kB. ⚠ 8 → 13 kB (2026-10-10): `CodeBlock`ın
      * yerleşik vurgulayıcısı (30+ dil, 4,93 kB) ve biçimlendiricisi (0,43 kB) girişi 11,74 kB'a
@@ -72,7 +72,7 @@ export default [
     name: 'yalnızca ChatThread (ağaç sarsma — vurgulayıcı SIZMAZ)',
     path: 'build/chat.js',
     import: '{ ChatThread }',
-    ignore: ['@handijit/ui'],
+    ignore: ['@handijitcom/ui'],
     /* İlk ölçüm: 1,03 kB. Vurgulayıcı modül düzeyinde bir çağrıyla ayakta kalırsa buraya biner. */
     limit: '1.3 kB',
     gzip: true,
@@ -81,7 +81,7 @@ export default [
     name: 'yalnızca CodeBlock (vurgulayıcı + biçimlendirici)',
     path: 'build/chat.js',
     import: '{ CodeBlock }',
-    ignore: ['@handijit/ui'],
+    ignore: ['@handijitcom/ui'],
     /* İlk ölçüm: 6,22 kB. Yeni bir dil buradan geçer. */
     limit: '7 kB',
     gzip: true,
@@ -97,7 +97,7 @@ export default [
   {
     name: 'charts girişi (tümü)',
     path: 'build/charts.js',
-    ignore: ['@handijit/ui'],
+    ignore: ['@handijitcom/ui'],
     /* İlk ölçüm (2026-10-10, 10 grafik): 14,02 kB. */
     limit: '16 kB',
     gzip: true,
@@ -106,7 +106,7 @@ export default [
     name: 'yalnızca LineChart (ağaç sarsma)',
     path: 'build/charts.js',
     import: '{ LineChart }',
-    ignore: ['@handijit/ui'],
+    ignore: ['@handijitcom/ui'],
     /* İlk ölçüm: 7,19 kB — ortak çekirdek (çerçeve, kartezyen geometri, eksenler) dahil. */
     limit: '8.5 kB',
     gzip: true,
@@ -122,7 +122,7 @@ export default [
   {
     name: 'calendar girişi (tümü)',
     path: 'build/calendar.js',
-    ignore: ['@handijit/ui'],
+    ignore: ['@handijitcom/ui'],
     /* İlk ölçüm (2026-11-13, `Calendar` + çekirdek): 5,92 kB. */
     limit: '7 kB',
     gzip: true,

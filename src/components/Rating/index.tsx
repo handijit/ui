@@ -2,7 +2,7 @@
 
 import { type FC, memo } from 'react';
 
-import { isDefined } from '@handijit/utils';
+import { isDefined } from '@handijitcom/utils';
 
 import { StarFill, StarHalf } from 'react-bootstrap-icons';
 

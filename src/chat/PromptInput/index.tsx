@@ -4,7 +4,7 @@ import { forwardRef, type KeyboardEvent, memo, type ReactNode, useEffect } from 
 
 import { ArrowUp, StopFill } from 'react-bootstrap-icons';
 
-import { hasOpenSurface, IconButton, Textarea, useUi } from '@handijit/ui';
+import { hasOpenSurface, IconButton, Textarea, useUi } from '@handijitcom/ui';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';

@@ -1,9 +1,9 @@
 /**
- * @handijit/ui/charts — SVG grafikleri, sıfır bağımlılık. Dışa verilen her ad bir SÖZLEŞMEDİR.
+ * @handijitcom/ui/charts — SVG grafikleri, sıfır bağımlılık. Dışa verilen her ad bir SÖZLEŞMEDİR.
  *
- * ⚠ Ana girişe ait her şey paket adıyla alınır (`@handijit/ui`); göreli yol yalnızca durumsuz
+ * ⚠ Ana girişe ait her şey paket adıyla alınır (`@handijitcom/ui`); göreli yol yalnızca durumsuz
  * yardımcılar ve SCSS içindir. Nöbetçi `__tests__/subentry-boundary.test.ts`.
- * Stiller `@handijit/ui/charts.css` — `styles.css`ten SONRA içe aktarılır.
+ * Stiller `@handijitcom/ui/charts.css` — `styles.css`ten SONRA içe aktarılır.
  */
 
 export { default as LineChart } from './LineChart';

@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react';
 
-import { isClient } from '@handijit/utils';
+import { isClient } from '@handijitcom/utils';
 import { AnnouncePoliteness } from '@/types/hook.type';
 
 /**

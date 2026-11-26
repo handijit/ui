@@ -8,6 +8,15 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-26
+
+First release under the `@handijitcom` npm organization. The package was previously published as `@handijit/ui` (last version 2.5.0); the API is unchanged, only the package name and the version line reset.
+
+### Changed
+
+- Package name: `@handijit/ui` → `@handijitcom/ui`.
+- CI/CD follows the Han Dijit standard (`ci.yml`, `publish.yml`).
+
 ## [2.5.0] — 2026-11-13
 
 **What Teknik Servis's day plan needs from the calendar** (EKRAN_OZETI §3.7): a resource header

@@ -2,7 +2,7 @@
 
 import { memo, useCallback } from 'react';
 
-import { normalize } from '@handijit/utils';
+import { normalize } from '@handijitcom/utils';
 
 import { cx } from '../../helpers/class-name.helper';
 import { resolveLabel } from '../../helpers/label.helper';

@@ -1,6 +1,6 @@
 /** Kaydırma yardımcıları. */
 
-import { isClient } from '@handijit/utils';
+import { isClient } from '@handijitcom/utils';
 
 /**
  * Pencereyi en üste alır; ortam desteklemiyorsa sessizce geçer.

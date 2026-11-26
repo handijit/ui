@@ -5,9 +5,9 @@ import uiLayer from './scripts/lib/postcss-ui-layer.mjs';
 import { defineConfig, type UserConfig } from 'vite';
 
 /**
- * ALT GİRİŞ DERLEMESİ — `@handijit/ui/chat`, `@handijit/ui/charts`, `@handijit/ui/calendar` (2.4).
+ * ALT GİRİŞ DERLEMESİ — `@handijitcom/ui/chat`, `@handijitcom/ui/charts`, `@handijitcom/ui/calendar` (2.4).
  *
- * ⚠ Ana giriş (`@handijit/ui`) DIŞSAL: alt giriş onu paket adıyla alır. Paketlenseydi
+ * ⚠ Ana giriş (`@handijitcom/ui`) DIŞSAL: alt giriş onu paket adıyla alır. Paketlenseydi
  * `UiProvider`ın bağlamı (metinler, yönlendirici) ve kipsel yüzey yığını iki kopyaya bölünür,
  * alt girişin bileşenleri sağlayıcının metinlerini göremez ve ana bileşenlerin CSS'i alt girişin
  * CSS'ine de girerdi. Alt girişin kodu ve CSS'i ana pakete hiç girmez; ana girişi kullanan uygulamanın bütçesi değişmez.
@@ -39,12 +39,12 @@ export const defineSubEntry = (name: 'chat' | 'charts' | 'calendar'): UserConfig
       },
       rollupOptions: {
         external: [
-          '@handijit/ui',
+          '@handijitcom/ui',
           'react',
           'react-dom',
           'react/jsx-runtime',
           '@handijit/design',
-          '@handijit/utils',
+          '@handijitcom/utils',
           'react-bootstrap-icons',
         ],
         output: {

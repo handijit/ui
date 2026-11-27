@@ -8,6 +8,40 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [3.2.0] - 2026-11-28
+
+**The application shell.** Every signed-in panel and desktop program was writing its own sidebar
+frame; `AppShell` is that frame, on its own subpath. Additive: nothing changes for a 3.1 caller.
+
+### Added
+
+- **`AppShell`** (`@handijitcom/ui/app-shell`): `brand`, `navigation`, `sidebarFooter` (sidebar);
+  `title`, `search`, `actions` (sticky top bar); the content in `<main>`. The sidebar (232px)
+  collapses to a 56px icon rail: `isCollapsed` / `onCollapsedChange`, uncontrolled with
+  `isDefaultCollapsed`; the consumer persists it. Below the tablet width it is a `Drawer` opened by
+  a menu button, closed by a followed link or when the window grows. Skip link to `<main>` (no
+  hash change), `header` / `nav` / `main` landmarks. Publishes `--app-sidebar-width` on `<html>`
+  in CSS (for `ToastPortal`'s `inset`) and `--ui-header-height` (the top bar's measured height,
+  read by the sticky components). Light and dark from the tokens; compact metrics.
+- **`AppShellNav`**, **`AppShellNavItem`**, **`AppShellNavGroup`**: sections of links with icon,
+  label and count (`badge`, "99+" above 99, read through `labels.appShell.badge`), the current
+  page as `aria-current="page"` from `currentPath` (the longest matching `href`) or `isActive`,
+  passive rows, nested groups that open and close (open while they hold the current page). Links
+  render through `UiProvider`'s `linkComponent`; `linkProps` pass router props on. Types
+  `AppShellNavLink`, `AppShellNavSection`, `AppShellNavProps`, `AppShellNavItemProps`,
+  `AppShellNavGroupProps`, `AppShellLabels`.
+- **`UserMenu`** (`@handijitcom/ui/user-menu`): avatar, name and `meta` opening a `Menu` of
+  `MenuItem`s; only the avatar below the mobile width (the name is still read).
+- **Labels** (`UiLabels.appShell`): `skipToContent`, `navigation`, `openNavigation`, `collapse`,
+  `expand`, `badge`, `userMenu`.
+
+### Size
+
+- Whole facade 52.97 → 55.54 kB (budget 53.5 → 56 kB); `styles.css` 25.59 → 27.18 kB (26 → 27.5
+  kB). What a page pays: `AppShell` + `AppShellNav` 5.43 kB, `UserMenu` 3.9 kB, the shell's
+  stylesheet 2.05 kB.
+- Public API 203 → 214 names (`scripts/api-baseline.txt`).
+
 ## [3.1.0] - 2026-11-27
 
 **Dense data and ordering for a parts portal.** `DataTable` gains a data mode with column state, a

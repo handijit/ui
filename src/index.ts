@@ -244,6 +244,20 @@ export {
   type BulkPasteRow,
   parseBulkPaste,
 } from './helpers/bulk-paste.helper';
+/* 3.2: the panel frame, `@handijitcom/ui/app-shell`; the account menu on its own subpath. */
+export {
+  default as AppShell,
+  AppShellNav,
+  AppShellNavGroup,
+  AppShellNavItem,
+  type AppShellLabels,
+  type AppShellNavGroupProps,
+  type AppShellNavItemProps,
+  type AppShellNavLink,
+  type AppShellNavProps,
+  type AppShellNavSection,
+} from './components/AppShell';
+export { default as UserMenu } from './components/UserMenu';
 export { default as FilterBar, FilterBarField } from './components/FilterBar';
 export { default as Pagination } from './components/Pagination';
 

@@ -308,6 +308,15 @@ either. Labels are given **once**, on the provider:
       today: 'Bugün',
       yesterday: 'Dün',
     },
+    appShell: {
+      skipToContent: 'İçeriğe atla',
+      navigation: 'Ana menü',
+      openNavigation: 'Menüyü aç',
+      collapse: 'Kenar çubuğunu daralt',
+      expand: 'Kenar çubuğunu genişlet',
+      badge: count => `${count} yeni`,
+      userMenu: 'Hesap',
+    },
     bulkPaste: {
       summary: count => `${count} satır okundu`,
       invalidSummary: count => `${count} satır okunamadı`,
@@ -418,6 +427,7 @@ and changes when an announcement strip appears.
 | Surface               | `Card` (+ `CardMedia`, `CardOverlay`, `CardBody`, `CardFooter`) · `SummaryCard` · `Panel` (+ `PanelForm`, `PanelRow`) · `PageHeader` · `SectionHeader` · `Tile` · `Directory` (+ `DirectoryGroup`, `DirectoryRow`, `DirectoryJump`) · `Carousel` · `Gallery` · `ScrollArea` · `Disclosure` · `Accordion` · `Tabs`                   |
 | Feedback              | `Alert` · `Badge` · `StatusDot` · `CodeBadge` · `Kbd` · `EmptyState` · `Skeleton` (+ `SkeletonCard`, `SkeletonRows`, `SkeletonTable`) · `Spinner` · `Progress` · `Steps` · `Divider` · `Avatar` · `Rating` · `Price` · `Stat` · `CopyField` · `Breadcrumb` · `ToastHub` (+ `ToastPortal`) · `NotificationCenter`                    |
 | Brand surface (3.0)   | `BrandSurface` (+ `BrandBlueprint`) · `Eyebrow` · `StatStrip`                                                                                                                                                                                                                                                                       |
+| Shell (3.2)           | `AppShell` (+ `AppShellNav`, `AppShellNavGroup`, `AppShellNavItem`) · `UserMenu`                                                                                                                                                                                                                                                    |
 | Modal                 | `Modal` · `Drawer` · `BottomSheet` · `ConfirmDialog` · `PromptDialog` · `CommandPalette`                                                                                                                                                                                                                                            |
 | Data                  | `Table` (+ `TableScroller`) · `DataTable` (+ `DataTableRow`, `DataTableColumnMenu`) · `FilterBar` (+ `FilterBarField`) · `Pagination` · `Timeline`                                                                                                                                                                                  |
 | Theme and hooks       | `UiProvider` · `UiThemeScript` · `useUi` · `useUiTheme` · `useUiTokens` · `useAnnounce` · `useStickToBottom` · `usePositioning` · `useVirtualList` · `useListboxNavigation` · `hasOpenSurface`                                                                                                                                      |
@@ -701,6 +711,70 @@ from a spreadsheet copy (tabs), `;`, `,` or space separated lines, or one
 code per line. Quantities follow the data contract's grammar ("1.250" is
 1250, "2,00" is 2, "1,5" is refused). The parser is a plain function: on the
 server import it from `@handijitcom/ui`, not from the client subpath.
+
+### Application shell (3.2)
+
+`AppShell` (`@handijitcom/ui/app-shell`) is the frame of a signed-in panel or
+desktop program: a 232px sidebar that collapses to a 56px icon rail, a sticky
+52px top bar and the content. Below the tablet width the sidebar becomes a
+`Drawer` opened by a menu button. It is presentational and router-agnostic:
+links go through `UiProvider`'s `linkComponent` (Next's `Link`, an Electron
+router link), the current page comes from `currentPath`.
+
+```tsx
+<AppShell
+  brand={<Logo />}
+  navigation={
+    <AppShellNav
+      currentPath={pathname} // the longest matching href is the current page
+      sections={[
+        { id: 'main', items: [{ id: 'orders', label: 'Siparişler', href: '/orders', icon: <Cart />, badge: 3 }] },
+        {
+          id: 'stock',
+          label: 'Stok',
+          items: [
+            {
+              id: 'depot',
+              label: 'Depo',
+              icon: <Box />,
+              items: [{ id: 'transfers', label: 'Transferler', href: '/stock/transfers' }],
+            },
+          ],
+        },
+      ]}
+    />
+  }
+  title={<Breadcrumb items={crumbs} />}
+  search={<Input type="search" aria-label="Ara" />}
+  actions={
+    <>
+      <NotificationCenter items={notices} />
+      <UserMenu name={user.name} meta={user.role} items={accountItems} />
+    </>
+  }
+  isCollapsed={isCollapsed} // or uncontrolled with isDefaultCollapsed
+  onCollapsedChange={setCollapsed} // persist it yourself
+>
+  {children}
+</AppShell>
+```
+
+- **Accessibility.** A skip link (it focuses `<main>` without touching the
+  address, so a hash router is safe), the `header`, `nav` and `main`
+  landmarks, `aria-current="page"` on the current link, groups as
+  `aria-expanded` buttons. On the icon rail the labels stay for screen
+  readers; a group clicked there expands the sidebar. Counts are read through
+  `labels.appShell.badge`.
+- **Parts.** `AppShellNavItem` and `AppShellNavGroup` also compose by hand
+  (`<AppShellNav><AppShellNavItem … isActive /></AppShellNav>`); outside the
+  shell nothing is collapsed. A link in the drawer closes it.
+- **Lengths on `<html>`.** `--app-sidebar-width` (232px, 56px collapsed, 0
+  below the tablet width; plain CSS) for the notices:
+  `<ToastPortal inset={{ inlineStart: 'var(--app-sidebar-width)' }} />`; and
+  `--ui-header-height`, the top bar's measured height, so sticky components
+  stop below it.
+- Labels: `appShell.skipToContent`, `navigation`, `openNavigation`,
+  `collapse`, `expand`, `badge`, `userMenu` (provider or the `labels` prop).
 
 ### TypeScript resolution
 

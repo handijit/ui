@@ -7,4 +7,6 @@ export const SOLO_ONLY = [
   'Drawer',
   'CommandPalette',
   'ContextMenu',
+  /* 3.2: a whole-window frame (`min-height: 100dvh`, sticky sidebar). */
+  'AppShell',
 ] as const;

@@ -1,0 +1,389 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Compact panel metrics (3.2): the desktop program's 232px sidebar and a 52px top bar, sized for
+// data-heavy screens. The rail keeps a 40px row with the 18px icon centred.
+$sidebar-expanded: 232px;
+$sidebar-collapsed: 56px;
+$topbar-height: 52px;
+$row-height: 36px;
+
+// The sidebar's width, published for what lives outside the shell: `ToastPortal` is portalled to
+// `<body>`, so `inset={{ inlineStart: 'var(--app-sidebar-width)' }}` reads it from `<html>`.
+// Plain CSS: right in the server render and on the first paint, 0 where the sidebar is a drawer.
+:global(:root):has(.shell) {
+  --app-sidebar-width: #{$sidebar-expanded};
+}
+
+:global(:root):has(.shell--collapsed) {
+  --app-sidebar-width: #{$sidebar-collapsed};
+}
+
+@include for-tablet {
+  :global(:root):has(.shell) {
+    --app-sidebar-width: 0px;
+  }
+}
+
+.srOnly {
+  @include visually-hidden;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: $sidebar-expanded minmax(0, 1fr);
+  min-height: 100dvh;
+  background-color: $bg-page;
+  color: $text;
+  transition: grid-template-columns $duration-base $ease-standard;
+
+  @include reduced-motion {
+    transition: none;
+  }
+
+  @include for-tablet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &--collapsed {
+    grid-template-columns: $sidebar-collapsed minmax(0, 1fr);
+
+    @include for-tablet {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  // Hidden until focused: the first Tab of the page lands here.
+  &__skip {
+    @include visually-hidden;
+
+    &:focus-visible {
+      position: fixed;
+      inset-block-start: $space-2;
+      inset-inline-start: $space-2;
+      z-index: $z-tooltip;
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: $space-2 $space-3;
+      overflow: visible;
+      clip-path: none;
+      white-space: nowrap;
+      border-radius: $radius-sm;
+      background-color: $bg-raised;
+      box-shadow: $shadow-2;
+      color: $primary-text;
+      font-size: $font-size-small;
+      font-weight: $weight-semibold;
+      text-decoration: none;
+
+      @include focus-ring-shape;
+    }
+  }
+
+  &__sidebar {
+    position: sticky;
+    inset-block-start: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    min-width: 0;
+    border-inline-end: 1px solid $border;
+    background-color: $bg-surface;
+
+    @include for-tablet {
+      display: none;
+    }
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    min-height: $topbar-height;
+    padding-inline: $space-4;
+    overflow: hidden;
+    border-block-end: 1px solid $border;
+
+    @include block-title;
+  }
+
+  // The links scroll; the brand and the toggle stay.
+  &__navigation {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: $space-3 $space-2;
+
+    @include custom-scrollbar;
+  }
+
+  &__footer {
+    @include row($space-2);
+
+    flex-shrink: 0;
+    justify-content: flex-end;
+    padding: $space-2;
+    border-block-start: 1px solid $border;
+  }
+
+  &--collapsed &__footer {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &--collapsed &__brand {
+    justify-content: center;
+    padding-inline: $space-2;
+  }
+
+  &__toggle {
+    @include mirror-in-rtl;
+
+    transition: rotate $duration-base $ease-standard;
+
+    @include reduced-motion {
+      transition: none;
+    }
+  }
+
+  &--collapsed &__toggle {
+    rotate: 180deg;
+  }
+
+  &__frame {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__topbar {
+    @include row($space-3);
+
+    position: sticky;
+    inset-block-start: 0;
+    z-index: $z-sticky;
+    min-height: $topbar-height;
+    padding-inline: $space-4;
+    border-block-end: 1px solid $border;
+    background-color: $bg-surface;
+
+    @include for-mobile {
+      gap: $space-2;
+      padding-inline: $space-3;
+    }
+  }
+
+  &__menu-button {
+    display: none;
+
+    @include for-tablet {
+      display: inline-flex;
+    }
+  }
+
+  &__title {
+    @include block-title;
+    @include truncate;
+
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  &__search {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 480px;
+  }
+
+  &__actions {
+    @include row($space-2);
+
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+    padding: $space-6;
+
+    // Focused by the skip link (`tabindex="-1"`): the content itself needs no ring.
+    &:focus {
+      outline: none;
+    }
+
+    @include for-tablet {
+      padding: $space-4;
+    }
+  }
+
+  &__drawer-brand {
+    @include block-title;
+
+    margin-block-end: $space-3;
+  }
+}
+
+.nav {
+  @include stack($space-4);
+
+  &__section-label {
+    @include overline;
+
+    margin: 0;
+    padding: 0 $space-3 $space-1;
+    color: $text-3;
+  }
+
+  &__list,
+  &__sublist {
+    @include stack($space-0);
+
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__sublist {
+    margin-inline-start: calc(#{$space-3} + #{$icon-md} / 2);
+    padding-inline-start: $space-2;
+    border-inline-start: 1px solid $border;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  &__item {
+    @include row($space-2);
+    @include interactive-surface;
+    @include focus-ring($focus, -2px);
+
+    position: relative;
+    width: 100%;
+    min-height: $row-height;
+    padding: 0 $space-3;
+    border: 0;
+    border-radius: $radius-sm;
+    color: $text-2;
+    font-family: $font-body;
+    font-size: $font-size-small;
+    font-weight: $weight-medium;
+    line-height: $leading-snug;
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: $text;
+    }
+
+    @include for-touch {
+      min-height: $tap-target-size;
+    }
+
+    &--active {
+      background-color: $primary-soft;
+      color: $primary-text;
+      font-weight: $weight-semibold;
+
+      &:hover:not(:disabled) {
+        background-color: $primary-soft-hover;
+        color: $primary-text;
+      }
+    }
+
+    &--disabled {
+      @include passive-text;
+
+      cursor: default;
+
+      &:hover {
+        background-color: transparent;
+        color: $text-3;
+      }
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    font-size: $icon-md;
+  }
+
+  &__label {
+    @include truncate;
+
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__badge {
+    flex-shrink: 0;
+    min-width: 18px;
+    height: 18px;
+    padding-inline: $space-1;
+    border-radius: $radius-pill;
+    background-color: $primary;
+    color: $on-primary;
+    font-size: $font-size-caption;
+    font-weight: $weight-semibold;
+    line-height: 18px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    box-sizing: border-box;
+
+    @media (forced-colors: active) {
+      border: 1px solid CanvasText;
+    }
+  }
+
+  &__chevron {
+    flex-shrink: 0;
+    font-size: $icon-xs;
+    transition: rotate $duration-fast $ease-standard;
+
+    &--open {
+      rotate: 180deg;
+    }
+
+    @include reduced-motion {
+      transition: none;
+    }
+  }
+}
+
+// The icon rail: labels stay for the screen reader, the count becomes a mark on the icon.
+.shell--collapsed .shell__sidebar {
+  .nav__section-label,
+  .nav__label {
+    @include visually-hidden;
+  }
+
+  .nav__section + .nav__section {
+    padding-block-start: $space-3;
+    border-block-start: 1px solid $border;
+  }
+
+  .nav__item {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .nav__chevron {
+    display: none;
+  }
+
+  .nav__badge {
+    position: absolute;
+    inset-block-start: 2px;
+    inset-inline-end: 2px;
+    min-width: 14px;
+    height: 14px;
+    padding-inline: 3px;
+    font-size: 10px;
+    line-height: 14px;
+  }
+}

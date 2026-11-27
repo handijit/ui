@@ -38,6 +38,11 @@ const {
   DataTableRow,
   Gallery,
   NotificationCenter,
+  AppShell,
+  AppShellNav,
+  AppShellNavGroup,
+  AppShellNavItem,
+  UserMenu,
   TreeSelect,
   DateField,
   DateRange,
@@ -128,6 +133,37 @@ const TREE: ui.TreeSelectNode[] = [
     ],
   },
   { value: 'filtre', label: 'Filtreler', children: [{ value: 'yag', label: 'Yağ filtresi' }] },
+];
+
+const SHELL_SECTIONS: ui.AppShellNavSection[] = [
+  {
+    id: 'main',
+    items: [
+      { id: 'home', label: 'Özet', href: '/panel', icon: <HouseFill /> },
+      { id: 'orders', label: 'Siparişler', href: '/panel/orders', icon: <HeartFill />, badge: 3 },
+    ],
+  },
+  {
+    id: 'stock',
+    label: 'Stok',
+    items: [
+      {
+        id: 'stock',
+        label: 'Depo',
+        icon: <HeartFill />,
+        items: [
+          { id: 'levels', label: 'Seviyeler', href: '/panel/stock' },
+          { id: 'transfers', label: 'Transferler', href: '/panel/stock/transfers', badge: 120 },
+        ],
+      },
+      { id: 'returns', label: 'İadeler', icon: <HeartFill /> },
+    ],
+  },
+];
+
+const USER_ITEMS: ui.MenuItem[] = [
+  { id: 'profile', label: 'Profil', onSelect: () => {} },
+  { id: 'sign-out', label: 'Çıkış yap', onSelect: () => {}, isDanger: true },
 ];
 
 const NOTICES: ui.NotificationItem[] = [
@@ -1050,6 +1086,57 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   },
   BulkPasteInput: {
     default: <BulkPasteInput aria-label="Parça kodları" defaultValue={'SP-1\t2\nSP-2 x'} />,
+  },
+  AppShell: {
+    default: (
+      <AppShell
+        brand={<a href="/panel">Han Dijit</a>}
+        navigation={<AppShellNav sections={SHELL_SECTIONS} currentPath="/panel/stock/transfers" />}
+        title="Transferler"
+        search={<input aria-label="Ara" />}
+        actions={<UserMenu name="Ayşe Yılmaz" meta="Bayi yöneticisi" items={USER_ITEMS} />}
+      >
+        <h1>Transferler</h1>
+      </AppShell>
+    ),
+    collapsed: (
+      <AppShell
+        isCollapsed
+        navigation={<AppShellNav sections={SHELL_SECTIONS} currentPath="/panel/orders" />}
+      >
+        <h1>Siparişler</h1>
+      </AppShell>
+    ),
+  },
+  AppShellNav: {
+    default: <AppShellNav sections={SHELL_SECTIONS} currentPath="/panel" />,
+  },
+  AppShellNavItem: {
+    default: (
+      <AppShellNav label="Ayarlar">
+        <AppShellNavItem label="Profil" href="/profile" isActive badge={2} />
+        <AppShellNavItem label="Yakında" />
+      </AppShellNav>
+    ),
+  },
+  AppShellNavGroup: {
+    open: (
+      <AppShellNav>
+        <AppShellNavGroup label="Raporlar" hasActiveItem>
+          <AppShellNavItem label="Satış" href="/reports/sales" isActive />
+        </AppShellNavGroup>
+      </AppShellNav>
+    ),
+    closed: (
+      <AppShellNav>
+        <AppShellNavGroup label="Raporlar">
+          <AppShellNavItem label="Satış" href="/reports/sales" />
+        </AppShellNavGroup>
+      </AppShellNav>
+    ),
+  },
+  UserMenu: {
+    default: <UserMenu name="Ayşe Yılmaz" items={USER_ITEMS} />,
   },
   Pagination: {
     links: <Pagination page={2} totalPages={9} buildHref={page => `?sayfa=${page}`} />,

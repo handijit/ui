@@ -1,0 +1,57 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.trigger {
+  @include row($space-2);
+  @include interactive-surface;
+  @include focus-ring;
+
+  min-width: 0;
+  max-width: 240px;
+  min-height: 40px;
+  padding: $space-1 $space-2 $space-1 $space-1;
+  border: 0;
+  border-radius: $radius-sm;
+  color: $text;
+  font-family: $font-body;
+  text-align: start;
+  cursor: pointer;
+
+  &__avatar {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    // A phone keeps the avatar only; the name stays the button's name.
+    @include for-mobile {
+      @include visually-hidden;
+    }
+  }
+
+  &__name {
+    @include truncate;
+
+    font-size: $font-size-small;
+    font-weight: $weight-semibold;
+    line-height: $leading-snug;
+  }
+
+  &__meta {
+    @include truncate;
+
+    color: $text-3;
+    font-size: $font-size-caption;
+    line-height: $leading-snug;
+  }
+
+  &__chevron {
+    flex-shrink: 0;
+    color: $text-3;
+    font-size: $icon-xs;
+  }
+}

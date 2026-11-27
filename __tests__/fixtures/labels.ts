@@ -50,6 +50,15 @@ export const LABELS: ui.UiLabels = {
     today: 'Bugün',
     yesterday: 'Dün',
   },
+  appShell: {
+    skipToContent: 'İçeriğe atla',
+    navigation: 'Ana menü',
+    openNavigation: 'Menüyü aç',
+    collapse: 'Kenar çubuğunu daralt',
+    expand: 'Kenar çubuğunu genişlet',
+    badge: count => `${count} yeni`,
+    userMenu: 'Hesap',
+  },
   bulkPaste: {
     summary: count => `${count} satır okundu`,
     invalidSummary: count => `${count} satır okunamadı`,

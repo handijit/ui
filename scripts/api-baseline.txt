@@ -5,6 +5,16 @@ AccordionItem
 Alert
 AlertTone
 AnnouncePoliteness
+AppShell
+AppShellLabels
+AppShellNav
+AppShellNavGroup
+AppShellNavGroupProps
+AppShellNavItem
+AppShellNavItemProps
+AppShellNavLink
+AppShellNavProps
+AppShellNavSection
 Avatar
 Badge
 BadgeTone
@@ -187,6 +197,7 @@ UiProvider
 UiThemeScript
 UiThemeState
 UploadFile
+UserMenu
 VirtualRange
 hasOpenSurface
 matchesSearch

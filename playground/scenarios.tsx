@@ -45,6 +45,11 @@ import {
   DataTableRow,
   Gallery,
   NotificationCenter,
+  AppShell,
+  AppShellNav,
+  AppShellNavGroup,
+  AppShellNavItem,
+  UserMenu,
   TreeSelect,
   DateField,
   DateRange,
@@ -120,6 +125,8 @@ import {
   Tooltip,
   type DataTableColumn,
   type UiLabels,
+  type AppShellNavSection,
+  type MenuItem,
   UISize,
   UIVariant,
 } from '../src/index';
@@ -211,6 +218,15 @@ export const LABELS: UiLabels = {
     unread: 'Okunmamış',
     today: 'Bugün',
     yesterday: 'Dün',
+  },
+  appShell: {
+    skipToContent: 'İçeriğe atla',
+    navigation: 'Ana menü',
+    openNavigation: 'Menüyü aç',
+    collapse: 'Kenar çubuğunu daralt',
+    expand: 'Kenar çubuğunu genişlet',
+    badge: count => `${count} yeni`,
+    userMenu: 'Hesap',
   },
   bulkPaste: {
     summary: count => `${count} satır okundu`,
@@ -479,6 +495,37 @@ const CATEGORIES = [
     ],
   },
 ];
+const SHELL_SECTIONS: AppShellNavSection[] = [
+  {
+    id: 'main',
+    items: [
+      { id: 'home', label: 'Özet', href: '/panel', icon: <HouseFill /> },
+      { id: 'orders', label: 'Siparişler', href: '/panel/orders', icon: <Clipboard />, badge: 3 },
+    ],
+  },
+  {
+    id: 'stock',
+    label: 'Stok',
+    items: [
+      {
+        id: 'stock',
+        label: 'Depo',
+        icon: <ArrowRepeat />,
+        items: [
+          { id: 'levels', label: 'Seviyeler', href: '/panel/stock' },
+          { id: 'transfers', label: 'Transferler', href: '/panel/stock/transfers', badge: 120 },
+        ],
+      },
+      { id: 'returns', label: 'İadeler', icon: <TrashFill /> },
+    ],
+  },
+];
+
+const USER_ITEMS: MenuItem[] = [
+  { id: 'profile', label: 'Profil', onSelect: noop },
+  { id: 'sign-out', label: 'Çıkış yap', onSelect: noop, isDanger: true },
+];
+
 const NOTIFICATIONS = [
   { id: '1', title: 'Siparişiniz kargoya verildi', date: new Date(), description: 'SP-1042' },
   { id: '2', title: 'Fiyat listesi güncellendi', date: Date.now() - 86_400_000, isRead: true },
@@ -2618,6 +2665,56 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         defaultValue={'0986494524\t2\nGDB1550 4\nSP-9 x'}
       />
     ),
+  },
+  AppShell: {
+    default: (
+      <AppShell
+        brand={<strong>Han Dijit</strong>}
+        navigation={<AppShellNav sections={SHELL_SECTIONS} currentPath="/panel/orders" />}
+        title="Siparişler"
+        actions={
+          <>
+            <NotificationCenter items={NOTIFICATIONS} />
+            <UserMenu name="Ayşe Yılmaz" meta="Bayi yöneticisi" items={USER_ITEMS} />
+          </>
+        }
+      >
+        <p>İçerik</p>
+      </AppShell>
+    ),
+    collapsed: (
+      <AppShell
+        isDefaultCollapsed
+        navigation={<AppShellNav sections={SHELL_SECTIONS} currentPath="/panel/orders/42" />}
+        title="Sipariş 42"
+      >
+        <p>İçerik</p>
+      </AppShell>
+    ),
+  },
+  AppShellNav: {
+    default: <AppShellNav sections={SHELL_SECTIONS} currentPath="/panel/stock/transfers" />,
+  },
+  AppShellNavItem: {
+    default: (
+      <AppShellNav>
+        <AppShellNavItem label="Ayarlar" href="#ayarlar" icon={<HouseFill />} isActive />
+        <AppShellNavItem label="Yakında" icon={<HouseFill />} />
+      </AppShellNav>
+    ),
+  },
+  AppShellNavGroup: {
+    default: (
+      <AppShellNav>
+        <AppShellNavGroup label="Raporlar" icon={<HouseFill />} hasActiveItem>
+          <AppShellNavItem label="Satış" href="#satis" isActive />
+          <AppShellNavItem label="Stok" href="#stok" />
+        </AppShellNavGroup>
+      </AppShellNav>
+    ),
+  },
+  UserMenu: {
+    default: <UserMenu name="Ayşe Yılmaz" meta="Bayi yöneticisi" items={USER_ITEMS} />,
   },
   Pagination: {
     links: <Pagination page={4} totalPages={42} buildHref={page => `#sayfa-${page}`} />,

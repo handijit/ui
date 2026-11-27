@@ -30,8 +30,11 @@ export default [
      * ⚠ 54 → 53.5 kB (2026-11-27, 3.1). Measured 52.97 kB after the column menu moved out of
      * `DataTable` into `DataTableColumnMenu` (+0.13 kB: the module and its context); tightened to
      * just above the measurement.
+     * ⚠ 53.5 → 56 kB (2026-11-28, 3.2). Measured 55.54 kB (+2.57): `AppShell` with its navigation
+     * parts and `UserMenu`, the frame every signed-in panel was writing for itself. Own subpaths
+     * (`/app-shell`, `/user-menu`); a page pays its import, measured below.
      */
-    limit: '53.5 kB',
+    limit: '56 kB',
     gzip: true,
   },
   {
@@ -40,7 +43,8 @@ export default [
     /* ⚠ 24 → 25 kB (2026-11-07, 6.0). Ölçüm 24,22 kB: bileşen değişkenlerinin `var(…, varsayılan)` biçimi + `Select sm` dokunma alanı. */
     /* ⚠ 25 → 27 kB (2026-11-27, 3.1). Measured 25.59 kB: the four 3.1 stylesheets and the DataTable additions. */
     /* ⚠ 27 → 26 kB (2026-11-27, 3.1). Measured 25.59 kB again after the menu split; tightened. */
-    limit: '26 kB',
+    /* ⚠ 26 → 27.5 kB (2026-11-28, 3.2). Measured 27.18 kB: the AppShell and UserMenu sheets. */
+    limit: '27.5 kB',
     gzip: true,
   },
   {
@@ -238,6 +242,33 @@ export default [
     import: '{ parseBulkPaste }',
     /* First measurement: 0.52 kB. */
     limit: '0.7 kB',
+    gzip: true,
+  },
+  /*
+   * 3.2: the panel frame. A panel imports the shell with its navigation and usually the account
+   * menu; each figure is what that import pays (the drawer and `IconButton` come with the shell).
+   */
+  {
+    name: 'AppShell with its navigation (3.2)',
+    path: 'build/index.js',
+    import: '{ AppShell, AppShellNav }',
+    /* First measurement (2026-11-28): 5.43 kB — `Drawer`, `IconButton` and the link adapter. */
+    limit: '6 kB',
+    gzip: true,
+  },
+  {
+    name: 'only UserMenu (3.2: Menu + Avatar)',
+    path: 'build/index.js',
+    import: '{ UserMenu }',
+    /* First measurement (2026-11-28): 3.9 kB. */
+    limit: '4.5 kB',
+    gzip: true,
+  },
+  {
+    name: 'only AppShell CSS (components/AppShell/style.css)',
+    path: 'build/components/AppShell/style.css',
+    /* First measurement (2026-11-28): 2.05 kB. */
+    limit: '2.5 kB',
     gzip: true,
   },
   {

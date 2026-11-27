@@ -142,6 +142,24 @@ export type UiLabels = Partial<{
     yesterday: string;
   }>;
 
+  /** `AppShell`, its navigation and `UserMenu` (3.2). */
+  appShell: Partial<{
+    /** The first link of the page, shown on focus ("İçeriğe atla"). */
+    skipToContent: string;
+    /** The navigation landmark and the narrow-window drawer's title ("Ana menü"). */
+    navigation: string;
+    /** The menu button of a narrow window ("Menüyü aç"). */
+    openNavigation: string;
+    /** The sidebar toggle while expanded ("Kenar çubuğunu daralt"). */
+    collapse: string;
+    /** The sidebar toggle while collapsed to icons ("Kenar çubuğunu genişlet"). */
+    expand: string;
+    /** A link's count, read after its name, e.g. `count => count + ' yeni'`. */
+    badge: Formatter<[count: number]>;
+    /** The account menu's name ("Hesap"). `UserMenu`. */
+    userMenu: string;
+  }>;
+
   /** `BulkPasteInput` (3.1). */
   bulkPaste: Partial<{
     /** Parsed rows, e.g. `count => count + ' satır okundu'`. */

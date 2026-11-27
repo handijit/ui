@@ -69,5 +69,9 @@ export default {
     './src/components/BulkPasteInput/': FULL,
     './src/components/DataTableColumnMenu/': FULL,
     './src/helpers/bulk-paste.helper.ts': FULL,
+    /* 3.2: the panel frame. */
+    './src/components/AppShell/': FULL,
+    './src/components/UserMenu/': FULL,
+    './src/helpers/app-shell.helper.ts': FULL,
   },
 };

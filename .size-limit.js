@@ -22,15 +22,21 @@ export default [
      * they belong in a sub-entry: no. A sub-entry is ONE client bundle (`'use client'` banner),
      * while `Eyebrow` and `StatStrip` are drawn on the server and the band is the shop window's own
      * surface; per-component modules keep its cost to the page that draws it (measured below).
+     * ⚠ 46 → 54 kB (2026-11-27, 3.1). Measured 52.84 kB (+7.39): `Gallery`, `TreeSelect`,
+     * `NotificationCenter`, `BulkPasteInput` and the `DataTable` column menu / keyboard rows /
+     * virtualization, asked for by the parts portal as subpaths of their own like every other
+     * component (not a bundled sub-entry: two of them are drawn next to server components on the
+     * product page). No consumer downloads this figure; each pays for its import, measured below.
      */
-    limit: '46 kB',
+    limit: '54 kB',
     gzip: true,
   },
   {
     name: 'styles.css (TAM paket — 6.0: CJS ve paketleyicisiz kullanım için)',
     path: 'build/styles.css',
     /* ⚠ 24 → 25 kB (2026-11-07, 6.0). Ölçüm 24,22 kB: bileşen değişkenlerinin `var(…, varsayılan)` biçimi + `Select sm` dokunma alanı. */
-    limit: '25 kB',
+    /* ⚠ 25 → 27 kB (2026-11-27, 3.1). Measured 25.59 kB: the four 3.1 stylesheets and the DataTable additions. */
+    limit: '27 kB',
     gzip: true,
   },
   {
@@ -163,6 +169,59 @@ export default [
     path: 'build/components/BrandSurface/style.css',
     /* First measurement (2026-11-27): 0.78 kB. */
     limit: '1 kB',
+    gzip: true,
+  },
+  /*
+   * 3.1 — the parts portal's components. Each is its own module and subpath; what a page pays is the
+   * component it imports (measured below), never the four together. First measurements 2026-11-27.
+   */
+  {
+    name: 'only DataTable (3.1: column menu, keyboard rows, virtualization)',
+    path: 'build/index.js',
+    import: '{ DataTable }',
+    /* First measurement: 6.53 kB — the column menu pulls `Popover`, `Checkbox` and `IconButton`. */
+    limit: '7.5 kB',
+    gzip: true,
+  },
+  {
+    name: 'only Gallery (tree shaking)',
+    path: 'build/index.js',
+    import: '{ Gallery }',
+    /* First measurement: 3.38 kB. */
+    limit: '4 kB',
+    gzip: true,
+  },
+  {
+    name: 'only TreeSelect (tree shaking)',
+    path: 'build/index.js',
+    import: '{ TreeSelect }',
+    /* First measurement: 2.61 kB. */
+    limit: '3.2 kB',
+    gzip: true,
+  },
+  {
+    name: 'only NotificationCenter (tree shaking)',
+    path: 'build/index.js',
+    import: '{ NotificationCenter }',
+    /* First measurement: 5.71 kB (`Popover`, `Button`, `IconButton`). */
+    limit: '6.5 kB',
+    gzip: true,
+  },
+  {
+    name: 'only BulkPasteInput (tree shaking)',
+    path: 'build/index.js',
+    import: '{ BulkPasteInput }',
+    /* First measurement: 2.04 kB (`Textarea` + the parser). */
+    limit: '2.5 kB',
+    gzip: true,
+  },
+  {
+    /* The parser alone: a server action pays for no React component. */
+    name: 'only parseBulkPaste (tree shaking)',
+    path: 'build/index.js',
+    import: '{ parseBulkPaste }',
+    /* First measurement: 0.52 kB. */
+    limit: '0.7 kB',
     gzip: true,
   },
   {

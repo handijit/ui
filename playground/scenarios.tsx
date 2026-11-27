@@ -39,8 +39,12 @@ import {
   ConfirmDialog,
   ContextMenu,
   CopyField,
+  BulkPasteInput,
   DataTable,
   DataTableRow,
+  Gallery,
+  NotificationCenter,
+  TreeSelect,
   DateField,
   DateRange,
   Directory,
@@ -180,7 +184,40 @@ export const LABELS: UiLabels = {
   pagination: { label: 'Sayfalar', previous: 'Önceki', next: 'Sonraki' },
   quantity: { label: 'Adet', decrease: 'Azalt', increase: 'Artır' },
   range: { min: 'En az', max: 'En çok' },
-  dataTable: { empty: 'Kayıt yok', loading: 'Yükleniyor' },
+  dataTable: {
+    empty: 'Kayıt yok',
+    loading: 'Yükleniyor',
+    columns: 'Sütunlar',
+    moveUp: column => `${column} sütununu öne al`,
+    moveDown: column => `${column} sütununu geri al`,
+  },
+  gallery: {
+    thumbnails: 'Görseller',
+    thumbnail: (index, total) => `Görsel ${index} / ${total}`,
+    previous: 'Önceki görsel',
+    next: 'Sonraki görsel',
+    fullscreen: 'Tam ekran',
+    zoomIn: 'Yakınlaştır',
+    zoomOut: 'Uzaklaştır',
+  },
+  treeSelect: { search: 'Kategori ara', empty: 'Eşleşen kategori yok' },
+  notificationCenter: {
+    trigger: unread => (unread ? `Bildirimler, ${unread} okunmamış` : 'Bildirimler'),
+    title: 'Bildirimler',
+    markAllRead: 'Tümünü okundu işaretle',
+    markRead: 'Okundu işaretle',
+    empty: 'Bildirim yok',
+    unread: 'Okunmamış',
+    today: 'Bugün',
+    yesterday: 'Dün',
+  },
+  bulkPaste: {
+    summary: count => `${count} satır okundu`,
+    invalidSummary: count => `${count} satır okunamadı`,
+    line: line => `Satır ${line}`,
+    missingCode: 'Kod yok',
+    invalidQuantity: 'Adet okunamadı',
+  },
   copyField: {
     copy: value => `${value} kopyala`,
     copied: value => `${value} kopyalandı`,
@@ -402,6 +439,49 @@ const MEDIA_SAMPLE = `data:image/svg+xml;utf8,${encodeURIComponent(
     '<rect x="3" y="3" width="194" height="94" fill="none" stroke="#ffffff" stroke-width="2"/>' +
     '</svg>',
 )}`;
+
+/* 3.1: data of the parts portal scenarios. */
+type Part = { code: string; name: string; brand: string; stock: number };
+const PARTS: Part[] = Array.from({ length: 2000 }, (_, index) => ({
+  code: `SP-${String(index + 1).padStart(5, '0')}`,
+  name: ['Fren balatası', 'Fren diski', 'Yağ filtresi', 'Hava filtresi'][index % 4],
+  brand: ['Bosch', 'Brembo', 'Mann', 'Valeo'][index % 4],
+  stock: (index * 37) % 120,
+}));
+const PART_COLUMNS: DataTableColumn<Part>[] = [
+  { key: 'code', label: 'Kod', isAlwaysVisible: true, render: part => part.code },
+  { key: 'name', label: 'Ad', render: part => part.name },
+  { key: 'brand', label: 'Marka', render: part => part.brand },
+  { key: 'stock', label: 'Stok', render: part => part.stock },
+];
+const GALLERY_IMAGES = [1, 2, 3, 4].map(index => ({
+  src: MEDIA_SAMPLE,
+  alt: `Fren balatası, görünüm ${index}`,
+  width: 200,
+  height: 100,
+}));
+const CATEGORIES = [
+  {
+    value: 'fren',
+    label: 'Fren sistemi',
+    children: [
+      { value: 'balata', label: 'Balata' },
+      { value: 'disk', label: 'Disk' },
+    ],
+  },
+  {
+    value: 'filtre',
+    label: 'Filtreler',
+    children: [
+      { value: 'yag', label: 'Yağ filtresi' },
+      { value: 'hava', label: 'Hava filtresi', isDisabled: true },
+    ],
+  },
+];
+const NOTIFICATIONS = [
+  { id: '1', title: 'Siparişiniz kargoya verildi', date: new Date(), description: 'SP-1042' },
+  { id: '2', title: 'Fiyat listesi güncellendi', date: Date.now() - 86_400_000, isRead: true },
+];
 
 export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   UiProvider: {
@@ -1770,6 +1850,18 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         </DataTableRow>
       </DataTable>
     ),
+    dataMode: (
+      <DataTable
+        label="Parçalar"
+        columns={PART_COLUMNS}
+        rows={PARTS}
+        getRowKey={part => part.code}
+        hasColumnMenu
+        density="compact"
+        isVirtualized
+        onRowActivate={noop}
+      />
+    ),
   },
   DataTableRow: {
     warning: (
@@ -2474,6 +2566,43 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
           { id: 'turn', label: 'Tur içi', tone: 'chart-5' },
           { id: 'wait', label: 'Bekleme', tone: 'muted' },
         ]}
+      />
+    ),
+  },
+  Gallery: {
+    default: <Gallery label="Ürün görselleri" images={GALLERY_IMAGES} />,
+    single: <Gallery label="Ürün görseli" images={GALLERY_IMAGES.slice(0, 1)} />,
+  },
+  TreeSelect: {
+    single: <TreeSelect label="Kategoriler" nodes={CATEGORIES} value="disk" onChange={noop} />,
+    multiple: (
+      <TreeSelect
+        label="Kategoriler"
+        nodes={CATEGORIES}
+        isMultiple
+        value={['balata', 'yag']}
+        onChange={noop}
+        expanded={['fren', 'filtre']}
+        hasSearch
+      />
+    ),
+  },
+  NotificationCenter: {
+    default: (
+      <NotificationCenter
+        items={NOTIFICATIONS}
+        onMarkAllRead={noop}
+        onMarkRead={noop}
+        onItemSelect={noop}
+      />
+    ),
+    empty: <NotificationCenter items={[]} />,
+  },
+  BulkPasteInput: {
+    default: (
+      <BulkPasteInput
+        aria-label="Parça kodları ve adetler"
+        defaultValue={'0986494524\t2\nGDB1550 4\nSP-9 x'}
       />
     ),
   },

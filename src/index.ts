@@ -200,7 +200,46 @@ export { default as PromptDialog } from './components/PromptDialog';
 
 // --- Veri -------------------------------------------------------------
 export { default as Table, TableScroller } from './components/Table';
-export { default as DataTable, DataTableRow, type DataTableColumn } from './components/DataTable';
+export {
+  default as DataTable,
+  DataTableRow,
+  type DataTableColumn,
+  type DataTableColumnMenuLabels,
+  type DataTableColumnState,
+  type DataTableDensity,
+} from './components/DataTable';
+/* 3.1: the parts portal's dense data and ordering components. */
+export {
+  default as Gallery,
+  type GalleryImage,
+  type GalleryImageVariant,
+  type GalleryLabels,
+  type GalleryRenderImageProps,
+} from './components/Gallery';
+export {
+  default as TreeSelect,
+  type TreeSelectLabels,
+  type TreeSelectNode,
+  type TreeSelectProps,
+} from './components/TreeSelect';
+export {
+  default as NotificationCenter,
+  type NotificationCenterLabels,
+  type NotificationItem,
+} from './components/NotificationCenter';
+export { default as BulkPasteInput, type BulkPasteLabels } from './components/BulkPasteInput';
+/*
+ * The parser comes from the helper, not from the client module: a server component (or a server
+ * action) can call it from the root entry.
+ */
+export {
+  type BulkPasteInvalidLine,
+  type BulkPasteInvalidReason,
+  type BulkPasteOptions,
+  type BulkPasteResult,
+  type BulkPasteRow,
+  parseBulkPaste,
+} from './helpers/bulk-paste.helper';
 export { default as FilterBar, FilterBarField } from './components/FilterBar';
 export { default as Pagination } from './components/Pagination';
 

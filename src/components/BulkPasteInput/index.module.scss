@@ -1,0 +1,72 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.bulkPaste {
+  @include stack($space-2);
+
+  min-width: 0;
+}
+
+// Codes are technical text: the monospace face keeps columns of a pasted sheet readable.
+.field textarea {
+  font-family: $font-mono;
+  font-size: $font-size-code;
+}
+
+.summary {
+  @include wrap-row($space-3);
+
+  font-size: $font-size-small;
+  color: $text-2;
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
+.invalidCount {
+  @include row($space-1);
+
+  color: $danger-fg;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+// The lines that were skipped, each with its number and reason; long lists scroll in their box.
+.invalid {
+  position: relative;
+  max-height: 160px;
+  overflow-y: auto;
+  margin: 0;
+  padding: $space-2 $space-3;
+  list-style: none;
+  border-radius: $radius-sm;
+
+  @include tint(danger);
+  @include custom-scrollbar;
+
+  &__line {
+    @include wrap-row($space-2, baseline);
+
+    font-size: $font-size-small;
+  }
+
+  &__number {
+    font-weight: $weight-semibold;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__text {
+    @include truncate;
+
+    max-width: 24ch;
+    font-family: $font-mono;
+    font-size: $font-size-code;
+  }
+
+  &__reason {
+    color: inherit;
+  }
+}

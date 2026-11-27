@@ -281,7 +281,40 @@ either. Labels are given **once**, on the provider:
     pagination: { label: 'Sayfalar', previous: 'Önceki sayfa', next: 'Sonraki sayfa' },
     quantity: { label: 'Adet', decrease: 'Adeti azalt', increase: 'Adeti artır' },
     range: { min: 'En az', max: 'En çok' },
-    dataTable: { empty: 'Kayıt bulunamadı.', loading: 'Yükleniyor…' },
+    dataTable: {
+      empty: 'Kayıt bulunamadı.',
+      loading: 'Yükleniyor…',
+      columns: 'Sütunlar',
+      moveUp: column => `${column} sütununu öne al`,
+      moveDown: column => `${column} sütununu geri al`,
+    },
+    gallery: {
+      thumbnails: 'Görseller',
+      thumbnail: (index, total) => `Görsel ${index} / ${total}`,
+      previous: 'Önceki görsel',
+      next: 'Sonraki görsel',
+      fullscreen: 'Tam ekran',
+      zoomIn: 'Yakınlaştır',
+      zoomOut: 'Uzaklaştır',
+    },
+    treeSelect: { search: 'Kategori ara', empty: 'Eşleşen kategori yok' },
+    notificationCenter: {
+      trigger: unread => (unread ? `Bildirimler, ${unread} okunmamış` : 'Bildirimler'),
+      title: 'Bildirimler',
+      markAllRead: 'Tümünü okundu işaretle',
+      markRead: 'Okundu işaretle',
+      empty: 'Bildirim yok',
+      unread: 'Okunmamış',
+      today: 'Bugün',
+      yesterday: 'Dün',
+    },
+    bulkPaste: {
+      summary: count => `${count} satır okundu`,
+      invalidSummary: count => `${count} satır okunamadı`,
+      line: line => `Satır ${line}`,
+      missingCode: 'Kod yok',
+      invalidQuantity: 'Adet okunamadı',
+    },
     copyField: {
       copy: value => `${value} kopyala`,
       copied: value => `${value} kopyalandı`,
@@ -380,10 +413,10 @@ and changes when an announcement strip appears.
 | Group                 | Components                                                                                                                                                                                                                                                                                                                          |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Action                | `Button` · `IconButton` · `TextLink` · `Tooltip` · `Menu` · `ContextMenu` · `Popover`                                                                                                                                                                                                                                               |
-| Choice                | `Chip` · `ChipGroup` · `SegmentedControl` · `Select` · `Combobox` · `Checkbox` · `Switch` · `Radio` · `RadioCard` · `RangeSlider` · `RatingInput` · `QuantityStepper` · `TableCheckbox`                                                                                                                                             |
-| Input                 | `Input` · `PasswordInput` · `Textarea` · `TagInput` · `DateField` (+ `DateRange`) · `FileUpload` · `Field` · `ScaledInput` · `MoneyInput` · `QuantityInput` · `RateInput` · `PercentInput`                                                                                                                                          |
-| Surface               | `Card` (+ `CardMedia`, `CardOverlay`, `CardBody`, `CardFooter`) · `SummaryCard` · `Panel` (+ `PanelForm`, `PanelRow`) · `PageHeader` · `SectionHeader` · `Tile` · `Directory` (+ `DirectoryGroup`, `DirectoryRow`, `DirectoryJump`) · `Carousel` · `ScrollArea` · `Disclosure` · `Accordion` · `Tabs`                               |
-| Feedback              | `Alert` · `Badge` · `StatusDot` · `CodeBadge` · `Kbd` · `EmptyState` · `Skeleton` (+ `SkeletonCard`, `SkeletonRows`, `SkeletonTable`) · `Spinner` · `Progress` · `Steps` · `Divider` · `Avatar` · `Rating` · `Price` · `Stat` · `CopyField` · `Breadcrumb` · `ToastHub` (+ `ToastPortal`)                                           |
+| Choice                | `Chip` · `ChipGroup` · `SegmentedControl` · `Select` · `Combobox` · `TreeSelect` · `Checkbox` · `Switch` · `Radio` · `RadioCard` · `RangeSlider` · `RatingInput` · `QuantityStepper` · `TableCheckbox`                                                                                                                              |
+| Input                 | `Input` · `PasswordInput` · `Textarea` · `TagInput` · `DateField` (+ `DateRange`) · `FileUpload` · `Field` · `ScaledInput` · `MoneyInput` · `QuantityInput` · `RateInput` · `PercentInput` · `BulkPasteInput`                                                                                                                       |
+| Surface               | `Card` (+ `CardMedia`, `CardOverlay`, `CardBody`, `CardFooter`) · `SummaryCard` · `Panel` (+ `PanelForm`, `PanelRow`) · `PageHeader` · `SectionHeader` · `Tile` · `Directory` (+ `DirectoryGroup`, `DirectoryRow`, `DirectoryJump`) · `Carousel` · `Gallery` · `ScrollArea` · `Disclosure` · `Accordion` · `Tabs`                   |
+| Feedback              | `Alert` · `Badge` · `StatusDot` · `CodeBadge` · `Kbd` · `EmptyState` · `Skeleton` (+ `SkeletonCard`, `SkeletonRows`, `SkeletonTable`) · `Spinner` · `Progress` · `Steps` · `Divider` · `Avatar` · `Rating` · `Price` · `Stat` · `CopyField` · `Breadcrumb` · `ToastHub` (+ `ToastPortal`) · `NotificationCenter`                    |
 | Brand surface (3.0)   | `BrandSurface` (+ `BrandBlueprint`) · `Eyebrow` · `StatStrip`                                                                                                                                                                                                                                                                       |
 | Modal                 | `Modal` · `Drawer` · `BottomSheet` · `ConfirmDialog` · `PromptDialog` · `CommandPalette`                                                                                                                                                                                                                                            |
 | Data                  | `Table` (+ `TableScroller`) · `DataTable` (+ `DataTableRow`) · `FilterBar` (+ `FilterBarField`) · `Pagination` · `Timeline`                                                                                                                                                                                                         |
@@ -576,6 +609,78 @@ data contract. `123450` with two decimal places is "1.234,50".
   `unitDigits` from the unit. Display elsewhere is the application's
   formatters' (`formatMoney`, `formatQuantity` …); `Price` stays a
   display of an already formatted text.
+
+### Parts portal components (3.1)
+
+Dense data and ordering screens: every one is its own subpath
+(`@handijitcom/ui/gallery`, `/tree-select`, `/notification-center`,
+`/bulk-paste-input`) and works the same in Next and Electron.
+
+**`DataTable` data mode.** Pass `rows` and a `render` per column instead of
+children; then, all opt-in:
+
+```tsx
+<DataTable
+  label="Parçalar"
+  columns={[
+    { key: 'code', label: 'Kod', isAlwaysVisible: true, render: part => part.code },
+    { key: 'name', label: 'Ad', render: part => part.name },
+  ]}
+  rows={parts}
+  getRowKey={part => part.code}
+  columnState={columns} // { order: string[]; hidden: string[] }, or uncontrolled
+  onColumnStateChange={setColumns} // persist it per user
+  hasColumnMenu // visibility checkboxes + move up / down
+  density="compact" // or 'comfortable' (default)
+  onRowActivate={openPart} // ↑ ↓ Home End move, Enter (or a click) activates
+  isVirtualized // only the rows in view; fixed `rowHeight` (36 / 48 px)
+  hasViewportCap
+/>
+```
+
+A virtualized table scrolls in its own box (`hasViewportCap`, or
+`--ui-data-table-max-height`, 480px by default) with a sticky header; its rows
+are `rowHeight` tall and its cells do not wrap. Children mode is unchanged and
+ignores these props.
+
+**`Gallery`** — main image, thumbnails, a hover zoom under a mouse, a
+full-screen view (← → Home End, Escape, swipe, click to zoom).
+`renderImage` is the platform adapter; pass its `className` through:
+
+```tsx
+<Gallery
+  label="Ürün görselleri"
+  images={[{ src, alt: 'Fren balatası, ön', thumbnailSrc, width: 800, height: 800 }]}
+  renderImage={({ src, alt, className, variant, width, height }) => (
+    <Image
+      src={src}
+      alt={alt}
+      className={className}
+      width={width}
+      height={height}
+      sizes={variant === 'thumbnail' ? '64px' : '(max-width: 768px) 100vw, 50vw'}
+    />
+  )}
+/>
+```
+
+**`TreeSelect`** — an inline ARIA tree (put it in a `Popover` or a
+`Drawer` for a dropdown): `isMultiple`, `value` / `onChange`, `expanded` /
+`onExpandedChange` (optional), `hasSearch` (matches stay with their ancestors,
+which open). Each node is selected on its own; what a parent's selection
+means is the caller's.
+
+**`NotificationCenter`** — bell with an unread badge and a panel grouped by
+day (today, yesterday, then the date in `labels.locale`). Presentational:
+`items`, `onItemSelect`, `onMarkRead`, `onMarkAllRead`, optional `isOpen` /
+`onOpenChange`, `formatDay` / `formatTime`.
+
+**`BulkPasteInput`** and **`parseBulkPaste(text, { defaultQuantity, isMergingDuplicates })`**
+— rows `{ code, quantity, line }` and invalid lines `{ line, text, reason }`
+from a spreadsheet copy (tabs), `;`, `,` or space separated lines, or one
+code per line. Quantities follow the data contract's grammar ("1.250" is
+1250, "2,00" is 2, "1,5" is refused). The parser is a plain function: on the
+server import it from `@handijitcom/ui`, not from the client subpath.
 
 ### TypeScript resolution
 

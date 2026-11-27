@@ -95,6 +95,64 @@ export type UiLabels = Partial<{
   dataTable: Partial<{
     empty: string;
     loading: string;
+    /** The column menu: its trigger and panel name ("Sütunlar"), 3.1. */
+    columns: string;
+    /** Moves a column one place earlier, e.g. `column => column + ' sütununu öne al'` (3.1). */
+    moveUp: Formatter<[column: string]>;
+    /** Moves a column one place later, e.g. `column => column + ' sütununu geri al'` (3.1). */
+    moveDown: Formatter<[column: string]>;
+  }>;
+
+  /** `Gallery` (3.1). */
+  gallery: Partial<{
+    /** The thumbnail strip's name ("Görseller"). */
+    thumbnails: string;
+    /** One thumbnail, e.g. `(index, total) => 'Görsel ' + index + ' / ' + total`. */
+    thumbnail: Formatter<[index: number, total: number]>;
+    previous: string;
+    next: string;
+    /** Opens the full-screen view ("Tam ekran"). */
+    fullscreen: string;
+    zoomIn: string;
+    zoomOut: string;
+  }>;
+
+  /** `TreeSelect` (3.1). */
+  treeSelect: Partial<{
+    /** The search field's name and placeholder ("Kategori ara"). */
+    search: string;
+    /** No node matches the search ("Eşleşen kategori yok"). */
+    empty: string;
+  }>;
+
+  /** `NotificationCenter` (3.1). */
+  notificationCenter: Partial<{
+    /** The bell, e.g. `unread => unread ? 'Bildirimler, ' + unread + ' okunmamış' : 'Bildirimler'`. */
+    trigger: Formatter<[unread: number]>;
+    /** The panel's title ("Bildirimler"). */
+    title: string;
+    markAllRead: string;
+    markRead: string;
+    /** No notification at all ("Bildirim yok"). */
+    empty: string;
+    /** Read before an unread notification's title ("Okunmamış"): the dot is not read. */
+    unread: string;
+    /** Day headings of today and yesterday ("Bugün", "Dün"); older days use the date. */
+    today: string;
+    yesterday: string;
+  }>;
+
+  /** `BulkPasteInput` (3.1). */
+  bulkPaste: Partial<{
+    /** Parsed rows, e.g. `count => count + ' satır okundu'`. */
+    summary: Formatter<[count: number]>;
+    /** Lines that could not be read, e.g. `count => count + ' satır okunamadı'`. */
+    invalidSummary: Formatter<[count: number]>;
+    /** A line number, e.g. `line => 'Satır ' + line`. */
+    line: Formatter<[line: number]>;
+    /** Why a line was skipped. */
+    missingCode: string;
+    invalidQuantity: string;
   }>;
 
   /**

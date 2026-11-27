@@ -8,6 +8,55 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-11-27
+
+**Dense data and ordering for a parts portal.** `DataTable` gains a data mode with column state, a
+column menu, density, keyboard rows and virtualization; four new components arrive, each on its
+own subpath. Additive: nothing changes for a 3.0 caller.
+
+### Added
+
+- **`DataTable` data mode** (opt-in; children mode is unchanged and ignores these props):
+  `rows` + `DataTableColumn.render(row, index)`, `getRowKey`; `columnState` /
+  `onColumnStateChange` (`DataTableColumnState = { order, hidden }`, uncontrolled when omitted) and
+  `DataTableColumn.isAlwaysVisible`; `hasColumnMenu` (visibility checkboxes, move up / down, in a
+  `Popover`; `columnMenuLabels`); `density: 'compact' | 'comfortable'`; `onRowActivate` turns on
+  keyboard row navigation (↑ ↓ Home End move a roving active row, Enter or a click activates; a
+  click on a cell's own control does not); `isVirtualized` + `rowHeight` (36 compact / 48
+  comfortable) draw only the rows in view with `aria-rowcount` / `aria-rowindex`, spacer rows and
+  the sticky header, in a box capped by `hasViewportCap` or `--ui-data-table-max-height` (480px).
+  New types `DataTableColumnState`, `DataTableDensity`, `DataTableColumnMenuLabels`;
+  `DataTableColumn` takes the row type (`DataTableColumn<T = unknown>`).
+- **`Gallery`** (`@handijitcom/ui/gallery`): main image, thumbnails (roving focus, ← → Home End),
+  hover zoom toward the pointer, a full-screen modal view with keys, swipe and click-to-zoom.
+  `renderImage` is the platform adapter (`next/image`, an Electron loader); `index` /
+  `onIndexChange` optional. Types `GalleryImage`, `GalleryImageVariant`,
+  `GalleryRenderImageProps`, `GalleryLabels`.
+- **`TreeSelect`** (`@handijitcom/ui/tree-select`): ARIA tree with expand / collapse, single or
+  multiple choice (`isMultiple`), search that keeps matches with their opened ancestors, the APG
+  keyboard (↑ ↓ ← → Home End Enter Space). Types `TreeSelectNode`, `TreeSelectProps`,
+  `TreeSelectLabels`.
+- **`NotificationCenter`** (`@handijitcom/ui/notification-center`): bell with an unread badge
+  (99+), a panel grouped by day (today, yesterday, then the date), read / unread, "mark all read",
+  "mark read", empty state. Presentational. Types `NotificationItem`, `NotificationCenterLabels`.
+- **`BulkPasteInput`** (`@handijitcom/ui/bulk-paste-input`) and the pure **`parseBulkPaste`**:
+  a pasted spreadsheet copy, CSV or list → `{ code, quantity, line }` rows and invalid lines with
+  their reason; quantities in the data contract's grammar; `defaultQuantity`,
+  `isMergingDuplicates`. The root entry exports the parser from a non-client module, callable on
+  the server. Types `BulkPasteRow`, `BulkPasteResult`, `BulkPasteInvalidLine`,
+  `BulkPasteInvalidReason`, `BulkPasteOptions`, `BulkPasteLabels`.
+- **Labels** (`UiLabels`): `dataTable.columns / moveUp / moveDown`, `gallery.*`, `treeSelect.*`,
+  `notificationCenter.*`, `bulkPaste.*`. As every label, given on the provider or as a prop; the
+  README shows the Turkish set.
+
+### Size
+
+- Whole facade 45.45 → 52.84 kB (budget 46 → 54 kB); `styles.css` 24.22 → 25.59 kB (25 → 27 kB).
+  What a page pays is its import: `DataTable` alone 6.53 kB (the column menu brings `Popover`,
+  `Checkbox`, `IconButton`), `Gallery` 3.38, `TreeSelect` 2.61, `NotificationCenter` 5.71,
+  `BulkPasteInput` 2.04, `parseBulkPaste` 0.52 kB.
+- Public API 179 → 202 names (`scripts/api-baseline.txt`).
+
 ## [3.0.0] - 2026-11-27
 
 **Cobalt, coral and ink.** The palette is the brand's three colours plus red for danger: cobalt is

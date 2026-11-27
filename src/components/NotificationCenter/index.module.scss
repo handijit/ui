@@ -1,0 +1,169 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// The surface is `Popover`'s; this sheet only lays out what is inside it.
+.panel {
+  width: min(360px, calc(100vw - #{$space-6}));
+}
+
+.srOnly {
+  @include visually-hidden;
+}
+
+// The bell carries the unread count at its corner: a cobalt mark, read from the button's name.
+.bell {
+  position: relative;
+  display: inline-flex;
+}
+
+.badge {
+  position: absolute;
+  inset-block-start: -6px;
+  inset-inline-end: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding-inline: 4px;
+  border-radius: $radius-pill;
+  background-color: $primary;
+  color: $on-primary;
+  font-size: $font-size-caption;
+  font-weight: $weight-semibold;
+  line-height: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  box-sizing: border-box;
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}
+
+.header {
+  @include row($space-2);
+
+  justify-content: space-between;
+  padding-block-end: $space-2;
+  border-bottom: 1px solid $border;
+}
+
+.heading {
+  @include block-title;
+
+  margin: 0;
+}
+
+// The list scrolls inside the panel; the header stays.
+.list {
+  position: relative;
+  max-height: min(420px, 60dvh);
+  overflow-y: auto;
+  margin-inline: calc(-1 * #{$space-3});
+  padding-inline: $space-3;
+
+  @include custom-scrollbar;
+}
+
+.day {
+  @include overline;
+
+  margin: 0;
+  padding-block: $space-3 $space-1;
+}
+
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  @include row($space-1, flex-start);
+
+  border-radius: $radius-sm;
+
+  &__main {
+    @include row($space-2, flex-start);
+
+    flex: 1;
+    min-width: 0;
+    padding: $space-2;
+    border-radius: $radius-sm;
+    color: $text;
+    text-align: start;
+
+    &--button {
+      border: none;
+      background: none;
+      font: inherit;
+      cursor: pointer;
+
+      @include interactive-surface;
+      @include focus-ring($focus, -2px);
+    }
+  }
+
+  // Unread: a cobalt dot before the title and the title in the strong weight; the dot is not the
+  // only signal (the weight, and a hidden "unread" before the title).
+  &--unread .title {
+    font-weight: $weight-semibold;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-inline-end: $space-2;
+      border-radius: $radius-pill;
+      background-color: $primary;
+      vertical-align: middle;
+
+      @media (forced-colors: active) {
+        background-color: CanvasText;
+      }
+    }
+  }
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding-block-start: 2px;
+  color: $text-2;
+  font-size: $icon-md;
+}
+
+.body {
+  @include stack($space-1);
+
+  min-width: 0;
+}
+
+.title {
+  font-size: $font-size-small;
+  line-height: $leading-snug;
+}
+
+.description {
+  @include muted;
+}
+
+.time {
+  font-size: $font-size-caption;
+  color: $text-3;
+}
+
+.empty {
+  @include stack($space-2);
+
+  align-items: center;
+  margin: 0;
+  padding: $space-6 $space-3;
+  text-align: center;
+
+  @include muted;
+
+  &__icon {
+    font-size: $icon-xl;
+    color: $text-3;
+  }
+}

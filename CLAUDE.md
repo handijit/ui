@@ -1601,7 +1601,7 @@ aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
 
 Ölçüm artık elle değil: `scripts/check-api.mjs` `build/index.d.ts`ten dışa
 aktarım adlarını çıkarır ve `scripts/api-baseline.txt` ile karşılaştırır
-(3.0: **179 names** (`Band*` renamed `BrandSurface` / `BrandBlueprint*`); SCSS 214. 2.0.0 of
+(3.1: **202 names** — `Gallery`, `TreeSelect`, `NotificationCenter`, `BulkPasteInput`, `parseBulkPaste` and the `DataTable` data-mode types, with their types and labels. 3.0: **179 names** (`Band*` renamed `BrandSurface` / `BrandBlueprint*`); SCSS 214. 2.0.0 of
 `@handijitcom/ui`: 179 names, the band's nine; SCSS 235, −4 turquoise +12 band.
 2.0'da **163 ad**; 5.6'da 177'ydi — tema nesneleri, `initUi` ve token tipleri kalktı, design'ın
 tema sabitleri eklendi; 2.4'te 170. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22,

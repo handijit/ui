@@ -1,0 +1,197 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.gallery {
+  @include stack($space-3);
+
+  min-width: 0;
+}
+
+.srOnly {
+  @include visually-hidden;
+}
+
+// The main image: a button that opens the full-screen view. Under a mouse it magnifies toward the
+// pointer (`--ui-gallery-zoom-x/-y`, written by the component without a re-render).
+.stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background-color: $bg-surface;
+
+  &__open {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+    aspect-ratio: var(--ui-gallery-ratio, 1);
+
+    @include focus-ring($focus, -2px);
+  }
+
+  &__hint {
+    position: absolute;
+    inset-block-end: $space-3;
+    inset-inline-end: $space-3;
+    padding: $space-1;
+    border-radius: $radius-xs;
+    background-color: $bg-overlay;
+    color: $text-2;
+    font-size: $icon-md;
+    box-sizing: content-box;
+  }
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: var(--ui-gallery-zoom-x, 50%) var(--ui-gallery-zoom-y, 50%);
+  transition: transform $duration-fast $ease-standard;
+
+  @include reduced-motion {
+    transition: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stage--zoom:hover .image {
+    transform: scale(var(--ui-gallery-zoom, 2));
+  }
+}
+
+.arrow {
+  position: absolute;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+
+  &--previous {
+    inset-inline-start: $space-2;
+  }
+
+  &--next {
+    inset-inline-end: $space-2;
+  }
+}
+
+.arrowIcon {
+  @include mirror-in-rtl;
+}
+
+.thumbs {
+  @include scroll-row($space-2);
+
+  margin: 0;
+  padding-inline: 0;
+  list-style: none;
+}
+
+.thumb {
+  display: block;
+  width: var(--ui-gallery-thumb, 64px);
+  height: var(--ui-gallery-thumb, 64px);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid $border;
+  border-radius: $radius-sm;
+  background-color: $bg-surface;
+  cursor: pointer;
+
+  @include focus-ring;
+
+  // The shown image: the selection colour, with a second ring so that the frame is not hue alone.
+  &[aria-current='true'] {
+    border-color: $primary;
+    box-shadow: 0 0 0 1px $primary;
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// The full-screen view: the page's ground, edge to edge. The arrows and the bar sit over the image.
+.viewer {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: $bg-page;
+  color: $text;
+  overflow: hidden;
+
+  @include surface-transition($has-shift: false);
+  @include backdrop-transition;
+
+  &::backdrop {
+    background-color: $scrim;
+  }
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .arrow {
+    position: fixed;
+  }
+
+  &__bar {
+    @include row($space-2);
+    @include safe-inline($space-3);
+
+    justify-content: flex-end;
+    padding-block: $space-3;
+    flex-shrink: 0;
+  }
+
+  &__count {
+    margin-inline-end: auto;
+    font-size: $font-size-small;
+    color: $text-2;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__stage {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    cursor: zoom-in;
+    touch-action: pan-y;
+
+    &--zoomed {
+      cursor: zoom-out;
+      touch-action: none;
+
+      .viewer__image {
+        transform: scale(var(--ui-gallery-zoom, 2));
+      }
+    }
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+    transform-origin: var(--ui-gallery-zoom-x, 50%) var(--ui-gallery-zoom-y, 50%);
+    transition: transform $duration-fast $ease-standard;
+
+    @include reduced-motion {
+      transition: none;
+    }
+  }
+}

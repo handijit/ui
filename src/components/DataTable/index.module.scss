@@ -11,6 +11,17 @@
 
   &--capped {
     max-height: calc(100dvh - #{$header-offset} - #{$space-12});
+  }
+
+  // 3.1: a virtualized table scrolls in its own box; the cap above wins when both are given.
+  &--virtual:not(.wrapper--capped) {
+    max-height: var(--ui-data-table-max-height, 480px);
+  }
+
+  &--capped,
+  &--virtual {
+    // A row focused by the keyboard stops below the sticky header, not under it.
+    scroll-padding-block-start: $space-12;
 
     .table thead th {
       position: sticky;
@@ -18,10 +29,77 @@
       z-index: $z-sticky;
     }
   }
+
+  &--virtual .table tbody tr {
+    height: var(--ui-data-table-row-height);
+  }
+
+  // A fixed row height holds only while a cell does not wrap.
+  &--virtual .table td {
+    white-space: nowrap;
+  }
 }
 
 .table {
   @include data-table;
+
+  // 3.1: dense lists (parts, stock, price lists) — the same type, half the vertical padding.
+  &--compact {
+    th,
+    td {
+      padding: $space-1 $space-2;
+    }
+  }
+}
+
+// The column menu sits above the scrolling box and never scrolls away (3.1).
+.frame {
+  @include stack($space-2);
+}
+
+.toolbar {
+  @include row($space-2);
+
+  justify-content: flex-end;
+}
+
+.columnMenu {
+  @include stack($space-1);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 220px;
+
+  &__item {
+    @include row($space-1);
+  }
+
+  &__check {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// Rows of keyboard navigation: the active row is the selection colour, the focused one ringed.
+.row--navigable {
+  cursor: pointer;
+
+  @include focus-ring($focus, -2px);
+}
+
+.row--active,
+.row--active:hover {
+  background-color: $primary-soft;
+
+  td:first-child {
+    box-shadow: inset 3px 0 0 $primary;
+  }
+}
+
+.spacer td {
+  padding: 0;
+  border: 0;
 }
 
 .state {

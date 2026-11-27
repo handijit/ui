@@ -1,0 +1,115 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.treeSelect {
+  @include stack($space-2);
+
+  min-width: 0;
+}
+
+.tree,
+.group {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Each level steps in by the width of the toggle, so that a child's label lines up under its
+// parent's label.
+.group {
+  padding-inline-start: $space-5;
+}
+
+.item {
+  outline: none;
+
+  &:focus-visible > .row {
+    @include focus-ring-shape($focus, -2px);
+  }
+}
+
+.row {
+  @include row($space-1);
+  @include interactive-surface;
+
+  min-height: 32px;
+  padding: $space-1 $space-2 $space-1 $space-1;
+  border-radius: $radius-sm;
+  color: $text;
+  font-size: $font-size-small;
+  cursor: pointer;
+  user-select: none;
+
+  // Selected: cobalt, never by fill alone — the soft fill, a cobalt rule at the start, cobalt text.
+  &--selected {
+    @include interactive-surface($primary-soft, $primary-soft-hover, $primary-soft-hover);
+
+    color: $primary-text;
+    box-shadow: inset 3px 0 0 $primary;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+
+    @include passive-text;
+  }
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: $space-5;
+  height: $space-5;
+  color: $text-2;
+  font-size: $icon-xs;
+  transition: rotate $duration-fast $ease-standard;
+
+  @include mirror-in-rtl;
+
+  &--open {
+    rotate: 90deg;
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+}
+
+// The mark of a multiple choice: an empty box, cobalt when chosen (the mark of a `Checkbox`).
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid $text-2;
+  border-radius: $radius-xs;
+  font-size: $icon-xs;
+
+  .row--selected & {
+    border-color: $primary;
+    background-color: $primary;
+    color: $on-primary;
+  }
+
+  @media (forced-colors: active) {
+    border-color: CanvasText;
+  }
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+
+  @include truncate;
+}
+
+.empty {
+  margin: 0;
+  padding: $space-3;
+
+  @include muted;
+}

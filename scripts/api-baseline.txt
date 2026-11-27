@@ -15,6 +15,13 @@ BrandBlueprintShape
 BrandSurface
 BrandSurfaceSide
 Breadcrumb
+BulkPasteInput
+BulkPasteInvalidLine
+BulkPasteInvalidReason
+BulkPasteLabels
+BulkPasteOptions
+BulkPasteResult
+BulkPasteRow
 Button
 Card
 CardBody
@@ -43,6 +50,9 @@ CopyField
 Crumb
 DataTable
 DataTableColumn
+DataTableColumnMenuLabels
+DataTableColumnState
+DataTableDensity
 DataTableRow
 DateField
 DateRange
@@ -63,6 +73,11 @@ FieldChildProps
 FileUpload
 FilterBar
 FilterBarField
+Gallery
+GalleryImage
+GalleryImageVariant
+GalleryLabels
+GalleryRenderImageProps
 IconButton
 IconButtonVariant
 Input
@@ -75,6 +90,9 @@ MenuItem
 Modal
 ModalTone
 MoneyInput
+NotificationCenter
+NotificationCenterLabels
+NotificationItem
 PageHeader
 Pagination
 Panel
@@ -151,6 +169,10 @@ ToastPlacement
 ToastPortal
 ToastTone
 Tooltip
+TreeSelect
+TreeSelectLabels
+TreeSelectNode
+TreeSelectProps
 UISize
 UIVariant
 UiColorPreference
@@ -168,6 +190,7 @@ VirtualRange
 hasOpenSurface
 matchesSearch
 normalizeSearchTerm
+parseBulkPaste
 toast
 useAnnounce
 useListboxNavigation

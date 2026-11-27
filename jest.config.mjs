@@ -62,5 +62,11 @@ export default {
     './src/components/BrandSurface/': FULL,
     './src/components/Eyebrow/': FULL,
     './src/components/StatStrip/': FULL,
+    /* 3.1: the parts portal's components and the bulk paste parser. */
+    './src/components/Gallery/': FULL,
+    './src/components/TreeSelect/': FULL,
+    './src/components/NotificationCenter/': FULL,
+    './src/components/BulkPasteInput/': FULL,
+    './src/helpers/bulk-paste.helper.ts': FULL,
   },
 };

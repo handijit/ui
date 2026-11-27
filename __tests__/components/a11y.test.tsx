@@ -32,8 +32,12 @@ const {
   ConfirmDialog,
   ContextMenu,
   CopyField,
+  BulkPasteInput,
   DataTable,
   DataTableRow,
+  Gallery,
+  NotificationCenter,
+  TreeSelect,
   DateField,
   DateRange,
   Directory,
@@ -111,6 +115,33 @@ const {
 const OPTIONS = [
   { value: 'a', label: 'Birinci' },
   { value: 'b', label: 'İkinci', description: 'İkincil satır' },
+];
+
+const TREE: ui.TreeSelectNode[] = [
+  {
+    value: 'fren',
+    label: 'Fren sistemi',
+    children: [
+      { value: 'balata', label: 'Balata' },
+      { value: 'disk', label: 'Disk', isDisabled: true },
+    ],
+  },
+  { value: 'filtre', label: 'Filtreler', children: [{ value: 'yag', label: 'Yağ filtresi' }] },
+];
+
+const NOTICES: ui.NotificationItem[] = [
+  { id: '1', title: 'Sipariş kargoda', date: new Date(), description: 'SP-1042' },
+  { id: '2', title: 'Fiyat listesi güncellendi', date: new Date(2026, 0, 2), isRead: true },
+];
+
+type Part = { code: string; name: string };
+const PART_COLUMNS: ui.DataTableColumn<Part>[] = [
+  { key: 'code', label: 'Kod', isAlwaysVisible: true, render: part => part.code },
+  { key: 'name', label: 'Ad', render: part => part.name },
+];
+const PARTS: Part[] = [
+  { code: 'SP-1', name: 'Fren balatası' },
+  { code: 'SP-2', name: 'Fren diski' },
 ];
 
 const COLUMNS: ui.DataTableColumn[] = [
@@ -902,6 +933,17 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     loading: <DataTable columns={COLUMNS} isLoading />,
     empty: <DataTable columns={COLUMNS} />,
     error: <DataTable columns={COLUMNS} error="Liste yüklenemedi" />,
+    dataMode: (
+      <DataTable
+        label="Parçalar"
+        columns={PART_COLUMNS}
+        rows={PARTS}
+        hasColumnMenu
+        density="compact"
+        isVirtualized
+        onRowActivate={() => {}}
+      />
+    ),
     sortable: (
       <DataTable
         columns={[
@@ -945,6 +987,56 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         </FilterBarField>
       </FilterBar>
     ),
+  },
+  Gallery: {
+    default: (
+      <Gallery
+        label="Ürün görselleri"
+        images={[
+          { src: 'a.png', alt: 'Ön yüz' },
+          { src: 'b.png', alt: 'Arka yüz' },
+        ]}
+      />
+    ),
+    single: <Gallery label="Ürün görseli" images={[{ src: 'a.png', alt: 'Ön yüz' }]} />,
+  },
+  TreeSelect: {
+    single: (
+      <TreeSelect
+        label="Kategoriler"
+        nodes={TREE}
+        value="disk"
+        onChange={() => {}}
+        expanded={['fren']}
+      />
+    ),
+    multiple: (
+      <TreeSelect
+        label="Kategoriler"
+        nodes={TREE}
+        isMultiple
+        value={['balata']}
+        onChange={() => {}}
+        expanded={['fren']}
+        hasSearch
+      />
+    ),
+  },
+  NotificationCenter: {
+    closed: <NotificationCenter items={NOTICES} />,
+    open: (
+      <NotificationCenter
+        items={NOTICES}
+        isOpen
+        onMarkAllRead={() => {}}
+        onMarkRead={() => {}}
+        onItemSelect={() => {}}
+      />
+    ),
+    empty: <NotificationCenter items={[]} isOpen />,
+  },
+  BulkPasteInput: {
+    default: <BulkPasteInput aria-label="Parça kodları" defaultValue={'SP-1\t2\nSP-2 x'} />,
   },
   Pagination: {
     links: <Pagination page={2} totalPages={9} buildHref={page => `?sayfa=${page}`} />,

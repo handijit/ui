@@ -11,18 +11,70 @@
   padding: 0;
   font-size: $font-size-caption;
 
+  // One line on a narrow screen, never wider than its box (3.2.1). Until 3.2.0 this was a scrolling
+  // strip: the trail ran to the screen's edge with nothing saying that it went on.
   @include for-tablet-portrait {
-    @include scroll-row($space-1);
-
     flex-wrap: nowrap;
-    padding-block: 0;
+    min-width: 0;
   }
 
   &__item {
     display: inline-flex;
     align-items: center;
     gap: $space-1;
+    min-width: 0;
     white-space: nowrap;
+
+    @include for-tablet-portrait {
+      flex-shrink: 0;
+      max-inline-size: 45%;
+
+      &--collapsible {
+        display: none;
+      }
+
+      // The current page gives way first: cut with an ellipsis, its whole text in `title`.
+      &--current {
+        flex-shrink: 1;
+        max-inline-size: none;
+      }
+    }
+  }
+
+  // "…" stands for the folded crumbs; only a narrow screen folds them.
+  &__more {
+    display: none;
+    align-items: center;
+    gap: $space-1;
+    flex-shrink: 0;
+
+    @include for-tablet-portrait {
+      display: inline-flex;
+    }
+  }
+
+  &__expand {
+    @include tap-target;
+
+    padding: 0 $space-1;
+    border: none;
+    border-radius: $radius-xs;
+    background: none;
+    color: $text-2;
+    font: inherit;
+    line-height: inherit;
+    cursor: pointer;
+
+    &:hover {
+      color: $primary-text;
+    }
+
+    @include focus-ring;
+  }
+
+  &__link,
+  &__current {
+    @include truncate;
   }
 
   &__link {
@@ -53,5 +105,16 @@
     color: $text-3;
     font-size: $icon-xs;
     flex-shrink: 0;
+  }
+
+  // Unfolded by "…": the whole trail, on as many lines as it needs.
+  &--expanded {
+    @include for-tablet-portrait {
+      flex-wrap: wrap;
+
+      .breadcrumb__item {
+        max-inline-size: 100%;
+      }
+    }
   }
 }

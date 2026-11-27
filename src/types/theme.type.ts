@@ -49,6 +49,11 @@ export type UiLabels = Partial<{
   filters: string;
   /** Kırıntı yolunun gezinme bölgesi adı. `Breadcrumb`. */
   breadcrumb: string;
+  /**
+   * The "…" button that unfolds a long trail on a narrow screen ("Tüm yolu göster"). `Breadcrumb`
+   * (3.2.1). Optional: without it the button is named by the crumbs it hides.
+   */
+  breadcrumbExpand: string;
   /** Alfabe atlama şeridinin gezinme bölgesi adı. `DirectoryJump`. */
   directoryJump: string;
   /** Seçim yokken `Select` tetikleyicisinde görünen metin. */

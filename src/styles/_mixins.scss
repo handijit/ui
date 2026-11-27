@@ -418,6 +418,14 @@ $header-offset: var(--ui-header-height, 0px);
   color: $text-2;
 }
 
+// An overline that keeps the given case (3.2.1): a brand or a proper name ("Mann-Filter") must not be
+// capitalised by CSS — under `lang="tr"` the browser writes "MANN-FİLTER". The capitals' wide
+// tracking goes with them.
+@mixin overline-as-written {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
 @mixin label {
   font-family: $font-body;
   font-size: $font-size-small;

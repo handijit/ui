@@ -33,8 +33,11 @@ export default [
      * ⚠ 53.5 → 56 kB (2026-11-28, 3.2). Measured 55.54 kB (+2.57): `AppShell` with its navigation
      * parts and `UserMenu`, the frame every signed-in panel was writing for itself. Own subpaths
      * (`/app-shell`, `/user-menu`); a page pays its import, measured below.
+     * ⚠ 56 → 57 kB (2026-11-28, 3.2.1). Measured 56.59 kB (+1.05): the portal's defects — `Tabs`'
+     * edge fade, scroll buttons and strip-only scrolling, `Breadcrumb`'s fold into "…", `Price`'s
+     * currency placement, the case opt-outs, the drawer's brand link.
      */
-    limit: '56 kB',
+    limit: '57 kB',
     gzip: true,
   },
   {
@@ -44,7 +47,8 @@ export default [
     /* ⚠ 25 → 27 kB (2026-11-27, 3.1). Measured 25.59 kB: the four 3.1 stylesheets and the DataTable additions. */
     /* ⚠ 27 → 26 kB (2026-11-27, 3.1). Measured 25.59 kB again after the menu split; tightened. */
     /* ⚠ 26 → 27.5 kB (2026-11-28, 3.2). Measured 27.18 kB: the AppShell and UserMenu sheets. */
-    limit: '27.5 kB',
+    /* ⚠ 27.5 → 28 kB (2026-11-28, 3.2.1). Measured 27.86 kB: Tabs' fade and scroll buttons, the folding Breadcrumb, Gallery's hover arrows. */
+    limit: '28 kB',
     gzip: true,
   },
   {

@@ -4,10 +4,76 @@
 .tabs {
   @include stack($space-5);
 
+  // The rule under the strip lives on the bar, so the edge fade (a mask on the list) leaves it whole.
+  &__bar {
+    position: relative;
+    border-bottom: 1px solid $border;
+  }
+
   &__list {
     @include scroll-row($space-1);
 
-    border-bottom: 1px solid $border;
+    --ui-tabs-fade-start: 0px;
+    --ui-tabs-fade-end: 0px;
+
+    scroll-behavior: smooth;
+    // Tabs that do not fit fade out at the edge they continue past (3.2.1): a hard cut read as the
+    // end of the strip. The mask leaves a visible edge only where tabs are hidden.
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 var(--ui-tabs-fade-start),
+      #000 calc(100% - var(--ui-tabs-fade-end)),
+      transparent 100%
+    );
+
+    @include for-rtl {
+      mask-image: linear-gradient(
+        to left,
+        transparent 0,
+        #000 var(--ui-tabs-fade-start),
+        #000 calc(100% - var(--ui-tabs-fade-end)),
+        transparent 100%
+      );
+    }
+
+    @include reduced-motion {
+      scroll-behavior: auto;
+    }
+  }
+
+  &__bar[data-fade-start] &__list {
+    --ui-tabs-fade-start: #{$space-6};
+  }
+
+  &__bar[data-fade-end] &__list {
+    --ui-tabs-fade-end: #{$space-6};
+  }
+
+  // A mouse has no swipe and the scrollbar is hidden: a round button on each edge that hides tabs.
+  // Touch scrolls with the finger; the fade is the hint there. Two classes: `.iconButton` writes
+  // `position: relative` at one class and comes later in `styles.css`.
+  &__bar > &__scroll {
+    position: absolute;
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    box-shadow: $shadow-1;
+
+    @media (hover: none) {
+      display: none;
+    }
+  }
+
+  &__scroll--start {
+    inset-inline-start: 0;
+  }
+
+  &__scroll--end {
+    inset-inline-end: 0;
+  }
+
+  &__scrollIcon {
+    @include mirror-in-rtl;
   }
 
   &__tab {

@@ -32,6 +32,12 @@
     justify-content: center;
     text-align: center;
   }
+
+  // A brand or a proper name keeps its own case; the wide tracking was set for capitals.
+  &--as-written {
+    letter-spacing: var(--ui-eyebrow-tracking, 0.04em);
+    text-transform: none;
+  }
 }
 
 // On the brand surface the label is white (5.03:1 on cobalt; white at reduced opacity would drop

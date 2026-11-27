@@ -31,6 +31,10 @@
 
   &__eyebrow {
     @include overline;
+
+    &--as-written {
+      @include overline-as-written;
+    }
   }
 
   &__titleRow {

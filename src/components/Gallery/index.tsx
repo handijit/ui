@@ -277,7 +277,7 @@ const Gallery = ({
         icon={<ChevronLeft aria-hidden className={styles.arrowIcon} />}
         label={text.previous}
         variant="secondary"
-        size="sm"
+        shape="round"
         className={cx(styles.arrow, styles['arrow--previous'])}
         onClick={() => select(current - 1)}
       />
@@ -285,7 +285,7 @@ const Gallery = ({
         icon={<ChevronRight aria-hidden className={styles.arrowIcon} />}
         label={text.next}
         variant="secondary"
-        size="sm"
+        shape="round"
         className={cx(styles.arrow, styles['arrow--next'])}
         onClick={() => select(current + 1)}
       />

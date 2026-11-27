@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 // @ts-expect-error — eklenti düz JS; tip bildirimi yok ve gerekmiyor.
@@ -9,6 +10,34 @@ import dts from 'vite-plugin-dts';
 import { clientDirectives, componentCss } from './vite.modules';
 
 const BASE_ENTRY = resolve(__dirname, 'src/styles/base.ts');
+
+/*
+ * EVERY COMPONENT SUBPATH IS AN ENTRY (3.2.1). Under `preserveModules` a module that is not an entry
+ * keeps only the exports another module imports, and the facade imports a re-export from where it is
+ * defined: `components/AppShell/index.js` lost `AppShellNav`, `AppShellNavGroup` and
+ * `AppShellNavItem` (its `.d.ts` still declared them), so `import { AppShellNav } from
+ * '@handijitcom/ui/app-shell'` was `undefined` in Node, Vitest and bundlers alike. An entry keeps
+ * its whole signature. Same discovery as `scripts/build-exports.mjs`; that script's `--check`
+ * imports every subpath and fails on a missing name.
+ */
+const COMPONENT_ENTRIES = Object.fromEntries(
+  [
+    ...new Set(
+      [
+        ...readFileSync(resolve(__dirname, 'src/index.ts'), 'utf8').matchAll(
+          /from '\.\/components\/([A-Z]\w*)'/g,
+        ),
+      ].map(match => match[1]),
+    ),
+  ].map(name => {
+    const tsx = resolve(__dirname, `src/components/${name}/index.tsx`);
+
+    return [
+      `components/${name}/index`,
+      existsSync(tsx) ? tsx : resolve(__dirname, `src/components/${name}/index.ts`),
+    ];
+  }),
+);
 
 /**
  * KÜTÜPHANE DERLEMESİ — bileşen başına modül (6.0; gerekçe `vite.modules.ts`).
@@ -73,6 +102,7 @@ export default defineConfig({
       entry: {
         index: resolve(__dirname, 'src/index.ts'),
         base: BASE_ENTRY,
+        ...COMPONENT_ENTRIES,
       },
       formats: ['es', 'cjs'],
       fileName: (format, name) => `${name}.${format === 'es' ? 'js' : 'cjs'}`,

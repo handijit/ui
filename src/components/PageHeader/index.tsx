@@ -8,6 +8,11 @@ type Props = {
   title: string;
   /** Başlığın üstündeki küçük bağlam etiketi ("HESABIM", "KATEGORİ"). */
   eyebrow?: string;
+  /**
+   * The eyebrow in capitals by CSS (default). `false` keeps it as written — for a brand or a proper
+   * name, which `lang="tr"` would capitalise with a dotted İ ("MANN-FİLTER") (3.2.1).
+   */
+  isEyebrowUppercase?: boolean;
   /** Bir cümlelik açıklama. 68ch ile sınırlı tutulur. */
   description?: ReactNode;
   /** Sağ tarafta duran eylemler. */
@@ -28,6 +33,7 @@ type Props = {
 const PageHeader: FC<Props> = ({
   title,
   eyebrow,
+  isEyebrowUppercase = true,
   description,
   actions,
   breadcrumb,
@@ -49,7 +55,16 @@ const PageHeader: FC<Props> = ({
 
     <div className={styles.header__top}>
       <div className={styles.header__text}>
-        {eyebrow && <span className={styles.header__eyebrow}>{eyebrow}</span>}
+        {eyebrow && (
+          <span
+            className={cx(
+              styles.header__eyebrow,
+              !isEyebrowUppercase && styles['header__eyebrow--as-written'],
+            )}
+          >
+            {eyebrow}
+          </span>
+        )}
 
         <div className={styles.header__titleRow}>
           <Heading className={styles.header__title}>{title}</Heading>

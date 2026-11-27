@@ -82,7 +82,19 @@ render-blocking files hurt LCP more than the bytes did.
 
 Every component also has a subpath (`@handijitcom/ui/button`, `/chip-group`,
 `/combobox`, …). The main entry is a pure re-export, so a bundler reaches the
-same file either way.
+same file either way. **A subpath's default export is its component; its parts
+and types are named exports**, exactly as on the main entry:
+
+```ts
+import AppShell, { AppShellNav } from '@handijitcom/ui/app-shell';
+import { AppShell, AppShellNav } from '@handijitcom/ui'; // the same modules
+```
+
+This holds for `import` and `require` alike, in Node, Vitest and bundlers.
+3.2.0's `app-shell` subpath exported only `default` at run time (its
+`AppShellNav`, `AppShellNavGroup` and `AppShellNavItem` were `undefined`);
+since 3.2.1 every subpath is a build entry and `npm run build` imports each one
+in both formats and fails on a missing name.
 
 The sub-entries have their own stylesheets, imported **after** `styles.css`:
 `@handijitcom/ui/chat.css`, `@handijitcom/ui/charts.css`, `@handijitcom/ui/calendar.css`.
@@ -435,6 +447,18 @@ and changes when an announcement strip appears.
 | Charts, `/charts`     | `LineChart` · `AreaChart` · `BarChart` · `ComposedChart` · `PieChart` · `ScatterPlot` · `Heatmap` · `BoxPlot` · `Histogram` · `RadarChart`                                                                                                                                                                                          |
 | Calendar, `/calendar` | `Calendar`                                                                                                                                                                                                                                                                                                                          |
 
+**Overflow on a narrow screen (3.2.1).** `Tabs` that do not fit fade out at
+the edge they continue past, with a round scroll button there under a mouse
+(touch swipes; the buttons stay out of the tab order and away from screen
+readers), and the selected tab is scrolled into view, on the first paint too,
+by moving the strip only, never the page. A `Breadcrumb` of more than three
+crumbs stays on one line at tablet-portrait width and below: the middle crumbs
+fold into a "…" button that unfolds the whole trail (`expandLabel` or
+`labels.breadcrumbExpand`; without one it is named by the crumbs it hides) and
+the current page is cut with an ellipsis, its full text in `title`. `Gallery`'s
+arrows are round `IconButton`s centred on the image's edges, shown on hover or
+focus under a mouse and always on touch.
+
 ### Variants and sizes
 
 | `UIVariant` | Use                                                                                                 |
@@ -619,6 +643,11 @@ data contract. `123450` with two decimal places is "1.234,50".
   `unitDigits` from the unit. Display elsewhere is the application's
   formatters' (`formatMoney`, `formatQuantity` …); `Price` stays a
   display of an already formatted text.
+- **`Price` writes the lira sign first** (3.2.1), as `@handijitcom/tr`
+  `formatLira` does: `<Price value="2.649,57" currency="₺" />` reads
+  "₺2.649,57", a negative "-₺0,05", no space. Any other symbol or code stays
+  after the amount ("2.649,57 TL" style). `currencyPosition="prefix" | "suffix"`
+  overrides the default either way.
 
 ### Parts portal components (3.1)
 
@@ -728,7 +757,10 @@ router link), the current page comes from `currentPath`.
     <AppShellNav
       currentPath={pathname} // the longest matching href is the current page
       sections={[
-        { id: 'main', items: [{ id: 'orders', label: 'Siparişler', href: '/orders', icon: <Cart />, badge: 3 }] },
+        {
+          id: 'main',
+          items: [{ id: 'orders', label: 'Siparişler', href: '/orders', icon: <Cart />, badge: 3 }],
+        },
         {
           id: 'stock',
           label: 'Stok',
@@ -767,7 +799,12 @@ router link), the current page comes from `currentPath`.
   `labels.appShell.badge`.
 - **Parts.** `AppShellNavItem` and `AppShellNavGroup` also compose by hand
   (`<AppShellNav><AppShellNavItem … isActive /></AppShellNav>`); outside the
-  shell nothing is collapsed. A link in the drawer closes it.
+  shell nothing is collapsed. A link in the drawer closes it, the brand link
+  too (3.2.1).
+- **Sidebar.** The column runs the page's full height; inside it the brand,
+  the links and the toggle are a sticky, viewport-tall box (`100dvh`) whose
+  links scroll on their own (3.2.1). A brand link of an icon and a name
+  (`<TextLink href="/"><Icon />Name</TextLink>`) gets a gap between the two.
 - **Lengths on `<html>`.** `--app-sidebar-width` (232px, 56px collapsed, 0
   below the tablet width; plain CSS) for the notices:
   `<ToastPortal inset={{ inlineStart: 'var(--app-sidebar-width)' }} />`; and
@@ -847,6 +884,12 @@ import { logos } from '@handijitcom/ui/design';
 - `StatStrip` (`page` or `brand`) is a list of value and label facts with thin
   dividers; `Eyebrow` is the mono capital label with its rules (`start` or
   `center`). The text is set in capitals by CSS, so give the page a `lang`.
+- **A brand or a proper name is never capitalised by CSS** (3.2.1). Under
+  `lang="tr"` the browser writes "Mann-Filter" as "MANN-FİLTER". Capitals stay
+  the default (3.x is compatible); for a name pass `isUppercase={false}` to
+  `Eyebrow`, `isEyebrowUppercase={false}` to `PageHeader`,
+  `isOverlineUppercase={false}` to `SectionHeader`; in your own SCSS include
+  the mixin `ui.overline-as-written` after `ui.overline`.
 
 **One `PRIMARY` per screen.** `UIVariant` is a hierarchy of emphasis: two
 filled buttons side by side and neither stands out.

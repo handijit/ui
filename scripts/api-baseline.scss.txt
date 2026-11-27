@@ -189,6 +189,7 @@ $z-tooltip
 @mixin money
 @mixin muted
 @mixin overline
+@mixin overline-as-written
 @mixin page
 @mixin page-title
 @mixin panel

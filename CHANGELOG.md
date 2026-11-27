@@ -8,6 +8,73 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [3.2.1] - 2026-11-28
+
+**Defects found on the parts portal's screens.** Fixes and small additive props; nothing to change
+for a 3.2.0 caller except the lira's place in `Price` (see Changed).
+
+### Fixed
+
+- **`AppShell` sidebar stopped short of a long page.** Its background and rule were painted by the
+  viewport-tall sticky box, so they ended under the first screen (visible in a full-page view of a
+  long list). The sidebar column now stretches to the page's height and paints them; an inner box
+  is the sticky part (`position: sticky; top: 0; height: 100dvh`) with the brand, the links (which
+  scroll on their own) and the toggle.
+- **`AppShell` brand.** A brand link of an icon and a name (`<TextLink><Icon />Name</TextLink>`) had
+  no gap between them; the brand slot (sidebar and drawer) now lines them up a gap apart.
+  Following the brand link inside the narrow-window drawer now closes the drawer, as a nav link
+  does.
+- **`Gallery` arrows** were drawn squeezed and overlapping in a pill at the main image's
+  bottom-left corner: `.iconButton`'s `position: relative` (same specificity, later in
+  `styles.css`) beat the arrows' one-class `position: absolute`, so they fell into the flow under
+  the image. They are now round 40px `IconButton`s centred on the image's left and right edges,
+  shown on hover or focus under a mouse and always on touch; the full-screen view's arrows are the
+  same buttons on the viewport's edges.
+- **`Tabs` cut off on a narrow screen** with nothing saying that the strip went on. The strip fades
+  out at each edge that hides tabs, a round scroll button sits on that edge under a mouse (out of
+  the tab order, hidden from screen readers: the arrow keys already move through the tabs), and the
+  selected tab is kept in view, now on the first paint too, by scrolling the strip only (until
+  3.2.0 `scrollIntoView` was skipped on mount because it also scrolled the page).
+- **`Breadcrumb` ran to the screen's edge on mobile** (a scrolling strip). At tablet-portrait width
+  and below it stays on one line inside its box: a trail of more than three crumbs folds the
+  middle ones into a "…" button that unfolds the whole trail (focus moves to the first revealed
+  crumb), and the current page is cut with an ellipsis, its full text in `title`. No horizontal
+  page overflow.
+- **Subpath named exports were missing at run time.** `@handijitcom/ui/app-shell` declared
+  `AppShellNav`, `AppShellNavGroup` and `AppShellNavItem` in its `.d.ts`, but its JavaScript
+  (`import` and `require`) exported only `default`: under `preserveModules` a module that is not an
+  entry keeps only what another module imports from it. Every component subpath is now a build
+  entry, so it carries its full signature. The convention is unchanged and now documented: a
+  subpath's **default export is its component, its parts and types are named exports**, as on the
+  main entry (`import AppShell, { AppShellNav } from '@handijitcom/ui/app-shell'`), in Node, Vitest
+  and bundlers alike. `npm run build` (`build-exports.mjs --check`) imports every subpath in both
+  formats and fails on a missing name.
+
+### Changed
+
+- **`Price` writes "₺" before the amount**, as `@handijitcom/tr` `formatLira` does:
+  "₺2.649,57", a negative "-₺0,05", no space (3.2.0: "2.649,57₺"). Any other symbol or code stays
+  after the amount. The new `currencyPosition: 'prefix' | 'suffix'` (type `PriceCurrencyPosition`)
+  overrides the default; `currencyPosition="suffix"` restores the 3.2.0 rendering.
+
+### Added
+
+- **Case opt-out for labels set in capitals by CSS.** Under `lang="tr"` the browser writes
+  "Mann-Filter" as "MANN-FİLTER"; a brand or a proper name must not be capitalised by CSS.
+  Capitals stay the default (3.x compatibility): `Eyebrow` `isUppercase={false}`, `PageHeader`
+  `isEyebrowUppercase={false}`, `SectionHeader` `isOverlineUppercase={false}`, and the SCSS mixin
+  `overline-as-written` (after `overline`) keep the text as written, with normal tracking.
+- **`Breadcrumb` `expandLabel`** and **`UiLabels.breadcrumbExpand`**: the "…" button's name
+  ("Tüm yolu göster"). Optional; without it the button is named by the crumbs it hides.
+
+### Size
+
+- Whole facade 55.54 → 56.59 kB (budget 56 → 57 kB); `styles.css` 27.18 → 27.86 kB (27.5 → 28
+  kB): `Tabs`' fade, scroll buttons and strip-only scrolling, `Breadcrumb`'s fold, `Price`'s
+  placement, the case opt-outs. `AppShell` + navigation 5.43 → 5.49 kB, its stylesheet 2.05 → 2.12
+  kB; `Gallery` 3.38 kB (unchanged).
+- Public API 214 → 215 names (`PriceCurrencyPosition`); SCSS API 214 → 215 (`overline-as-written`).
+
 ## [3.2.0] - 2026-11-28
 
 **The application shell.** Every signed-in panel and desktop program was writing its own sidebar

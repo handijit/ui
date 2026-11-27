@@ -25,6 +25,22 @@ $row-height: 36px;
   }
 }
 
+// The brand is usually a link of an icon and the product's name (`TextLink`, which wraps both in
+// one label span): icon and name sit on one line, a gap apart, as in a navigation row.
+@mixin brand-link {
+  :where(a),
+  :where(a) > :where(span) {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    min-width: 0;
+  }
+
+  :where(svg) {
+    flex-shrink: 0;
+  }
+}
+
 .srOnly {
   @include visually-hidden;
 }
@@ -81,12 +97,9 @@ $row-height: 36px;
     }
   }
 
+  // The column stretches to the page's height: its background and rule never stop short of a long
+  // page (3.2.0 painted them on the viewport-tall sticky box, which ended under the first screen).
   &__sidebar {
-    position: sticky;
-    inset-block-start: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
     min-width: 0;
     border-inline-end: 1px solid $border;
     background-color: $bg-surface;
@@ -96,9 +109,19 @@ $row-height: 36px;
     }
   }
 
+  // Viewport-tall and sticky: the brand and the toggle stay in view, the links scroll on their own.
+  &__sidebar-inner {
+    position: sticky;
+    inset-block-start: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+  }
+
   &__brand {
     display: flex;
     align-items: center;
+    gap: $space-2;
     flex-shrink: 0;
     min-height: $topbar-height;
     padding-inline: $space-4;
@@ -106,6 +129,7 @@ $row-height: 36px;
     border-block-end: 1px solid $border;
 
     @include block-title;
+    @include brand-link;
   }
 
   // The links scroll; the brand and the toggle stay.
@@ -221,6 +245,7 @@ $row-height: 36px;
 
   &__drawer-brand {
     @include block-title;
+    @include brand-link;
 
     margin-block-end: $space-3;
   }

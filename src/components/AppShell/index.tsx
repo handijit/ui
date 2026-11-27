@@ -145,6 +145,10 @@ const AppShell = ({
     mainRef.current?.focus();
   };
 
+  const handleDrawerBrandClick = (event: MouseEvent<HTMLDivElement>) => {
+    if ((event.target as Element).closest('a')) closeDrawer();
+  };
+
   const sidebarContext = useMemo<AppShellContextValue>(
     () => ({ isCollapsed: collapsed, onExpandSidebar: expandSidebar, labels: labelProps }),
     [collapsed, expandSidebar, labelProps],
@@ -168,20 +172,26 @@ const AppShell = ({
         {resolveLabel('AppShell.labels.skipToContent', text.skipToContent)}
       </a>
 
+      {/*
+        The column paints the background and the rule down the whole page; the inner box is the
+        sticky, viewport-tall part that holds the brand, the scrolling links and the toggle (3.2.1).
+      */}
       <aside className={styles.shell__sidebar}>
-        {brand && <div className={styles.shell__brand}>{brand}</div>}
-        <AppShellContext.Provider value={sidebarContext}>
-          <div className={styles.shell__navigation}>{navigation}</div>
-        </AppShellContext.Provider>
-        <div className={styles.shell__footer}>
-          {sidebarFooter}
-          <IconButton
-            icon={<ChevronDoubleLeft aria-hidden className={styles.shell__toggle} />}
-            label={toggleLabel}
-            size="sm"
-            className={styles['shell__toggle-button']}
-            onClick={() => setCollapsed(!collapsed)}
-          />
+        <div className={styles['shell__sidebar-inner']}>
+          {brand && <div className={styles.shell__brand}>{brand}</div>}
+          <AppShellContext.Provider value={sidebarContext}>
+            <div className={styles.shell__navigation}>{navigation}</div>
+          </AppShellContext.Provider>
+          <div className={styles.shell__footer}>
+            {sidebarFooter}
+            <IconButton
+              icon={<ChevronDoubleLeft aria-hidden className={styles.shell__toggle} />}
+              label={toggleLabel}
+              size="sm"
+              className={styles['shell__toggle-button']}
+              onClick={() => setCollapsed(!collapsed)}
+            />
+          </div>
         </div>
       </aside>
 
@@ -215,7 +225,12 @@ const AppShell = ({
         {/* Drawn only while open: a closed dialog must not hold a second navigation landmark. */}
         {isDrawerOpen && (
           <AppShellContext.Provider value={drawerContext}>
-            {brand && <div className={styles['shell__drawer-brand']}>{brand}</div>}
+            {brand && (
+              /* The brand is usually a link home: following it closes the drawer like a nav link. */
+              <div className={styles['shell__drawer-brand']} onClick={handleDrawerBrandClick}>
+                {brand}
+              </div>
+            )}
             {navigation}
           </AppShellContext.Provider>
         )}

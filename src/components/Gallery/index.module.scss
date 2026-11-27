@@ -65,17 +65,44 @@
   }
 }
 
-.arrow {
+// The arrows: two IconButtons over the image's edges, vertically centred. TWO classes on purpose:
+// `.iconButton` writes `position: relative` at the same specificity and comes later in `styles.css`,
+// so a lone `.arrow` lost and both buttons fell into the flow under the image, squeezed into a pill
+// at its bottom-left corner (3.2.0, the parts portal's product page).
+.stage .arrow,
+.viewer .arrow {
   position: absolute;
   inset-block-start: 50%;
   translate: 0 -50%;
+  box-shadow: $shadow-1;
+}
 
-  &--previous {
-    inset-inline-start: $space-2;
+.arrow--previous {
+  inset-inline-start: $space-3;
+}
+
+.arrow--next {
+  inset-inline-end: $space-3;
+}
+
+// Under a hovering pointer the arrows appear with the pointer over the image or the focus inside it;
+// on touch (no hover) they are always there.
+@media (hover: hover) {
+  .stage .arrow {
+    opacity: 0;
+    transition:
+      opacity $duration-fast $ease-standard,
+      background-color $duration-fast $ease-standard,
+      border-color $duration-fast $ease-standard;
+
+    @include reduced-motion {
+      transition: none;
+    }
   }
 
-  &--next {
-    inset-inline-end: $space-2;
+  .stage:hover .arrow,
+  .stage:focus-within .arrow {
+    opacity: 1;
   }
 }
 
@@ -143,6 +170,7 @@
     flex-direction: column;
   }
 
+  // Over the viewport's edges: `.viewer .arrow`, later in this file than the shared rule above.
   .arrow {
     position: fixed;
   }

@@ -8,8 +8,13 @@ import styles from './index.module.scss';
 export type EyebrowAlign = 'start' | 'center';
 
 type Props = {
-  /** Short text; it is set in capitals by CSS, so the element's `lang` picks the casing (İ). */
+  /** Short text; set in capitals by CSS unless `isUppercase={false}` (the element's `lang` picks İ). */
   children: ReactNode;
+  /**
+   * Capitals by CSS (default, as before 3.2.1). Pass `false` for a brand or a proper name: under
+   * `lang="tr"` the browser capitalises "Mann-Filter" as "MANN-FİLTER" (3.2.1).
+   */
+  isUppercase?: boolean;
   align?: EyebrowAlign;
   as?: 'p' | 'span' | 'div';
   className?: string;
@@ -21,8 +26,23 @@ type Props = {
  * brand surface (`BrandSurface`) it turns white by itself. The rules are decoration (CSS
  * pseudo-elements); the text is read as written.
  */
-const Eyebrow: FC<Props> = ({ children, align = 'start', as: Tag = 'p', className, testId }) => (
-  <Tag className={cx(styles.eyebrow, styles[`eyebrow--${align}`], className)} data-testid={testId}>
+const Eyebrow: FC<Props> = ({
+  children,
+  align = 'start',
+  isUppercase = true,
+  as: Tag = 'p',
+  className,
+  testId,
+}) => (
+  <Tag
+    className={cx(
+      styles.eyebrow,
+      styles[`eyebrow--${align}`],
+      !isUppercase && styles['eyebrow--as-written'],
+      className,
+    )}
+    data-testid={testId}
+  >
     {children}
   </Tag>
 );

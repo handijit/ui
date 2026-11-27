@@ -117,6 +117,7 @@ PositionSide
 PositioningOptions
 PositioningState
 Price
+PriceCurrencyPosition
 Progress
 ProgressCircle
 PromptDialog

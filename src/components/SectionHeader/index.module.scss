@@ -16,6 +16,10 @@
 
   &__overline {
     @include overline;
+
+    &--as-written {
+      @include overline-as-written;
+    }
   }
 
   &__title {

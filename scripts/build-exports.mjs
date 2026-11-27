@@ -14,7 +14,9 @@
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const PACKAGE = join(ROOT, 'package.json');
@@ -116,8 +118,45 @@ if (isCheck) {
     process.exit(1);
   }
 
+  /*
+   * EVERY SUBPATH CARRIES WHAT THE FACADE TAKES FROM IT (3.2.1) — at run time, in both formats.
+   * 3.2.0's `app-shell` declared `AppShellNav` in its `.d.ts` but its JavaScript exported only
+   * `default` (`vite.config.ts`, `COMPONENT_ENTRIES`). The value names `src/index.ts` re-exports from
+   * `./components/<Name>` (`default as X` is `default`) must be on the ES module and the CommonJS one.
+   */
+  const require = createRequire(import.meta.url);
+  const expected = new Map();
+  for (const [, list, name] of index.matchAll(
+    /export\s*\{([^}]*)\}\s*from\s*'\.\/components\/([A-Z]\w*)'/g,
+  )) {
+    const names = list
+      .split(',')
+      .map(part => part.trim())
+      .filter(part => part !== '' && !part.startsWith('type '))
+      .map(part => part.split(/\s+as\s+/)[0]);
+    expected.set(name, [...(expected.get(name) ?? []), ...names]);
+  }
+
+  const absent = [];
+  for (const [name, names] of expected) {
+    const base = join(ROOT, `build/components/${name}/index`);
+    const esm = await import(pathToFileURL(`${base}.js`).href);
+    const cjs = require(`${base}.cjs`);
+    for (const exported of names) {
+      if (!(exported in esm)) absent.push(`${kebab(name)} (import): ${exported}`);
+      if (!(exported in cjs)) absent.push(`${kebab(name)} (require): ${exported}`);
+    }
+  }
+  if (absent.length > 0) {
+    console.error(
+      `✗ exports: alt yolların çalışma anında eksik adları:\n${absent.map(line => `  ${line}`).join('\n')}`,
+    );
+    process.exit(1);
+  }
+
   console.log(
-    `✓ exports: ${components.length} bileşen alt yolu, ${targets.length} hedef dosya yerinde.`,
+    `✓ exports: ${components.length} bileşen alt yolu, ${targets.length} hedef dosya yerinde; ` +
+      `${expected.size} alt yolun adları import ve require ile yüklendi.`,
   );
   process.exit(0);
 }

@@ -250,6 +250,50 @@ describe('AppShell', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
+  /* 3.2.1: the brand (a link home) left the drawer open over the page it opened. */
+  it('following the brand link in the drawer closes it; a click beside the link does not', async () => {
+    renderShell({
+      brand: (
+        <span>
+          <a href="/panel">
+            <svg aria-hidden />
+            <span>Beta Otomotiv</span>
+          </a>
+          <span>Personel</span>
+        </span>
+      ),
+    });
+    await userEvent.click(screen.getByRole('button', { name: 'Menüyü aç' }));
+    const drawer = screen.getByRole('dialog', { name: 'Ana menü' });
+
+    await userEvent.click(within(drawer).getByText('Personel'));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    const home = within(drawer).getByRole('link', { name: 'Beta Otomotiv' });
+    home.addEventListener('click', event => event.preventDefault());
+    await userEvent.click(within(home).getByText('Beta Otomotiv'));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  /*
+   * 3.2.1: the sidebar's background and rule were painted by the viewport-tall sticky box and stopped
+   * under the first screen of a long page. The column (the grid item) paints them; an inner box is
+   * the sticky part (`__tests__/styles/overlay-controls.test.ts` holds the CSS).
+   */
+  it('the sidebar column holds one sticky box with the brand, the links and the toggle', () => {
+    renderShell();
+    const sidebar = screen.getByRole('complementary');
+
+    expect(sidebar.children).toHaveLength(1);
+    const inner = sidebar.firstElementChild as HTMLElement;
+    expect(inner).toHaveClass('shell__sidebar-inner');
+    expect(inner).toHaveTextContent('Marka');
+    expect(inner).toContainElement(screen.getByRole('navigation', { name: 'Ana menü' }));
+    expect(inner).toContainElement(
+      screen.getByRole('button', { name: LABELS.appShell?.collapse as string }),
+    );
+  });
+
   it('closes the drawer with its close button', async () => {
     renderShell({ brand: undefined });
     await userEvent.click(screen.getByRole('button', { name: 'Menüyü aç' }));

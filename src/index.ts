@@ -138,7 +138,7 @@ export {
 export { default as EmptyState } from './components/EmptyState';
 export { default as PageHeader } from './components/PageHeader';
 export { default as Panel, PanelForm, PanelRow } from './components/Panel';
-export { default as Price } from './components/Price';
+export { default as Price, type PriceCurrencyPosition } from './components/Price';
 export { default as Rating } from './components/Rating';
 export { default as SectionHeader } from './components/SectionHeader';
 export { default as ScrollArea } from './components/ScrollArea';

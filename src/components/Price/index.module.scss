@@ -15,6 +15,11 @@
     font-size: 0.75em;
     font-weight: $weight-semibold;
     margin-inline-start: 2px;
+
+    // "₺2.649,57": before the amount, no space (`@handijitcom/tr` `formatLira`).
+    &--prefix {
+      margin-inline: 0;
+    }
   }
 
   &__list {

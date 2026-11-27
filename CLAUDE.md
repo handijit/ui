@@ -619,6 +619,14 @@ bugün caret'in `margin-inline-start`ıyla açılır.
 **en başta** include edilmeli. Kalan yedi kullanıcı tarandı; sıralama hatası
 yalnızca burada vardı.
 
+⚠ **Aynı arıza DOSYALAR ARASINDA da var (3.2.1).** `IconButton`ın kökü
+`.iconButton { position: relative }` (tek sınıf) ve `styles.css`te `Gallery` ile
+`Tabs`TAN SONRA geliyor; bir bileşenin `IconButton`a verdiği tek sınıflı
+`position: absolute` ölü kalır. 3.2.0'da galeri okları görselin altına akıp sol
+alt köşede bir hapa sıkıştı. **Kural:** bir `IconButton`ı (ya da başka bir
+bileşenin kökünü) üste konumlayan kural en az İKİ sınıf taşır (`.stage .arrow`,
+`.tabs__bar > .tabs__scroll`). Nöbetçi `__tests__/styles/overlay-controls.test.ts`.
+
 ### Nöbetçiler ve ölçülemeyen boşluk
 
 | nöbetçi                                             | ne tutuyor                                                                                                                        |
@@ -1601,7 +1609,7 @@ aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
 
 Ölçüm artık elle değil: `scripts/check-api.mjs` `build/index.d.ts`ten dışa
 aktarım adlarını çıkarır ve `scripts/api-baseline.txt` ile karşılaştırır
-(3.2: **214 names** — `AppShell`, `AppShellNav`, `AppShellNavItem`, `AppShellNavGroup`, `UserMenu` and their types. 3.1: **203 names** — `Gallery`, `TreeSelect`, `NotificationCenter`, `BulkPasteInput`, `parseBulkPaste`, `DataTableColumnMenu` and the `DataTable` data-mode types, with their types and labels. 3.0: **179 names** (`Band*` renamed `BrandSurface` / `BrandBlueprint*`); SCSS 214. 2.0.0 of
+(3.2.1: **215 names** — `PriceCurrencyPosition`, the type of `Price.currencyPosition`; SCSS 215 — `overline-as-written`, the case opt-out of `overline`. 3.2: **214 names** — `AppShell`, `AppShellNav`, `AppShellNavItem`, `AppShellNavGroup`, `UserMenu` and their types. 3.1: **203 names** — `Gallery`, `TreeSelect`, `NotificationCenter`, `BulkPasteInput`, `parseBulkPaste`, `DataTableColumnMenu` and the `DataTable` data-mode types, with their types and labels. 3.0: **179 names** (`Band*` renamed `BrandSurface` / `BrandBlueprint*`); SCSS 214. 2.0.0 of
 `@handijitcom/ui`: 179 names, the band's nine; SCSS 235, −4 turquoise +12 band.
 2.0'da **163 ad**; 5.6'da 177'ydi — tema nesneleri, `initUi` ve token tipleri kalktı, design'ın
 tema sabitleri eklendi; 2.4'te 170. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22,

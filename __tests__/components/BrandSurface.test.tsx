@@ -144,6 +144,19 @@ describe('Eyebrow', () => {
 
     expect(screen.getByText('Hizmetler').tagName).toBe('P');
   });
+
+  /* 3.2.1: under `lang="tr"` CSS capitals turn "Mann-Filter" into "MANN-FİLTER". */
+  it('keeps a proper name as written with isUppercase={false}; capitals stay the default', () => {
+    render(
+      <>
+        <Eyebrow>Hizmetler</Eyebrow>
+        <Eyebrow isUppercase={false}>Mann-Filter</Eyebrow>
+      </>,
+    );
+
+    expect(screen.getByText('Hizmetler')).not.toHaveClass('eyebrow--as-written');
+    expect(screen.getByText('Mann-Filter')).toHaveClass('eyebrow', 'eyebrow--as-written');
+  });
 });
 
 describe('StatStrip', () => {

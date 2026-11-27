@@ -12,9 +12,11 @@ import {
 } from 'react';
 
 import { isDefined } from '@handijitcom/utils';
+import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 
 import { cx } from '../../helpers/class-name.helper';
-import { scrollIntoViewIfPossible } from '../../helpers/scroll.helper';
+import { scrollIntoInlineView } from '../../helpers/scroll.helper';
+import IconButton from '../IconButton';
 
 import styles from './index.module.scss';
 
@@ -41,6 +43,9 @@ type Props = {
   className?: string;
   testId?: string;
 };
+
+/** Width (px) of the edge fade over a strip that scrolls; the selected tab is kept clear of it. */
+const EDGE_FADE = 24;
 
 /** Sekmeler. */
 const Tabs: FC<Props> = ({
@@ -78,23 +83,50 @@ const Tabs: FC<Props> = ({
   }, [activeIndex]);
 
   /*
-   * SECILI SEKME GORUNURE KAYDIRILIR — ama MOUNT'ta DEGIL.
-   * ⚠ Ilk kosu da kaydiriyordu ve `scrollIntoView` yalnizca serit kabini degil SAYFAYI da kaydirir:
-   * serit ilk boyamada ekranin altindaysa (uzun…
+   * SECILI SEKME GORUNURE KAYDIRILIR — yalnizca SERIT kayar (3.2.1).
+   * ⚠ 3.2.0'a dek `scrollIntoView` kullaniliyordu ve mount'ta atlaniyordu: o cagri SAYFAYI da
+   * kaydiriyordu (ekranin altindaki bir serit ilk boyamada sayfayi asagi cekiyordu). Seridin kendi
+   * `scrollLeft`i sayfaya dokunmaz; secili sekme ilk boyamada da gorunur, solmanin altinda kalmaz.
    */
-  const hasMountedRef = useRef(false);
+  useEffect(() => {
+    const list = listRef.current;
+    scrollIntoInlineView(list, list?.querySelector('[aria-selected="true"]'), EDGE_FADE);
+  }, [activeId]);
+
+  /* Hangi ucta gizli sekme var: solma ve kaydirma dugmesi YALNIZCA o uca cizilir. */
+  const [hiddenEdges, setHiddenEdges] = useState({ start: false, end: false });
 
   useEffect(() => {
-    if (!hasMountedRef.current) {
-      hasMountedRef.current = true;
-      return;
-    }
+    const list = listRef.current;
+    if (!list) return;
 
-    scrollIntoViewIfPossible(listRef.current?.querySelector(`[aria-selected="true"]`), {
-      block: 'nearest',
-      inline: 'nearest',
-    });
-  }, [activeId]);
+    const measure = () => {
+      /* RTL'de `scrollLeft` negatif; onemli olan baslangica UZAKLIK. 1 px kesirli yerlesim payi. */
+      const offset = Math.abs(list.scrollLeft);
+      const start = offset > 1;
+      const end = offset + list.clientWidth < list.scrollWidth - 1;
+      setHiddenEdges(prev => (prev.start === start && prev.end === end ? prev : { start, end }));
+    };
+
+    measure();
+    list.addEventListener('scroll', measure, { passive: true });
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
+    observer?.observe(list);
+
+    return () => {
+      list.removeEventListener('scroll', measure);
+      observer?.disconnect();
+    };
+  }, [items]);
+
+  /** Seridi bir ekranin ucte ikisi kadar kaydirir; `direction` 1 sona, -1 basa dogru. */
+  const scrollBy = (direction: 1 | -1) => {
+    const list = listRef.current;
+    if (!list) return;
+
+    const isRtl = getComputedStyle(list).direction === 'rtl';
+    list.scrollLeft += direction * (isRtl ? -1 : 1) * Math.round((list.clientWidth * 2) / 3);
+  };
 
   const select = (id: string) => {
     if (!isControlled) setUncontrolledId(id);
@@ -135,43 +167,79 @@ const Tabs: FC<Props> = ({
    */
   const hasPanel = isDefined(active?.content);
 
+  /*
+   * Kaydirma dugmeleri FARE icin (dokunmatikte CSS gizler, parmak seridi kaydirir). Klavye ok
+   * tuslariyla gezer ve secili sekme kendiliginden gorunur: dugmeler sekme sirasina girmez ve ekran
+   * okuyucudan gizlidir.
+   */
+  const scrollButton = (direction: 1 | -1) => (
+    <IconButton
+      icon={
+        direction < 0 ? (
+          <ChevronLeft aria-hidden className={styles.tabs__scrollIcon} />
+        ) : (
+          <ChevronRight aria-hidden className={styles.tabs__scrollIcon} />
+        )
+      }
+      label=""
+      size="sm"
+      variant="secondary"
+      shape="round"
+      tabIndex={-1}
+      aria-hidden
+      className={cx(
+        styles.tabs__scroll,
+        styles[`tabs__scroll--${direction < 0 ? 'start' : 'end'}`],
+      )}
+      onClick={() => scrollBy(direction)}
+    />
+  );
+
   return (
     <div className={cx(styles.tabs, className)} data-testid={testId}>
       <div
-        ref={listRef}
-        className={styles.tabs__list}
-        role="tablist"
-        aria-label={ariaLabel}
-        onKeyDown={handleKeyDown}
+        className={styles.tabs__bar}
+        data-fade-start={hiddenEdges.start ? '' : undefined}
+        data-fade-end={hiddenEdges.end ? '' : undefined}
       >
-        {items.map(item => {
-          const isActive = item.id === active.id;
+        <div
+          ref={listRef}
+          className={styles.tabs__list}
+          role="tablist"
+          aria-label={ariaLabel}
+          onKeyDown={handleKeyDown}
+        >
+          {items.map(item => {
+            const isActive = item.id === active.id;
 
-          return (
-            <button
-              key={item.id}
-              id={`${baseId}-tab-${item.id}`}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              /* ⚠ YALNIZCA SECILI SEKMEDE. */
-              aria-controls={isActive && hasPanel ? `${baseId}-panel-${item.id}` : undefined}
-              // Yalnızca seçili sekme sekme sırasında; gezinme ok tuşlarıyla.
-              /*
-               * Donen `tabindex` ODAKLANANI izler: manuel kipte secili sekme ile odaklanan sekme
-               * ayri ve Tab'in geri donecegi yer odaklanan olmali.
-               */
-              tabIndex={
-                (isManualActivation ? items[safeFocusIndex]?.id === item.id : isActive) ? 0 : -1
-              }
-              className={cx(styles.tabs__tab, isActive && styles['tabs__tab--active'])}
-              onClick={() => select(item.id)}
-            >
-              {item.label}
-              {isDefined(item.count) && <span className={styles.tabs__count}>{item.count}</span>}
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={item.id}
+                id={`${baseId}-tab-${item.id}`}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                /* ⚠ YALNIZCA SECILI SEKMEDE. */
+                aria-controls={isActive && hasPanel ? `${baseId}-panel-${item.id}` : undefined}
+                // Yalnızca seçili sekme sekme sırasında; gezinme ok tuşlarıyla.
+                /*
+                 * Donen `tabindex` ODAKLANANI izler: manuel kipte secili sekme ile odaklanan sekme
+                 * ayri ve Tab'in geri donecegi yer odaklanan olmali.
+                 */
+                tabIndex={
+                  (isManualActivation ? items[safeFocusIndex]?.id === item.id : isActive) ? 0 : -1
+                }
+                className={cx(styles.tabs__tab, isActive && styles['tabs__tab--active'])}
+                onClick={() => select(item.id)}
+              >
+                {item.label}
+                {isDefined(item.count) && <span className={styles.tabs__count}>{item.count}</span>}
+              </button>
+            );
+          })}
+        </div>
+        {hiddenEdges.start && scrollButton(-1)}
+        {hiddenEdges.end && scrollButton(1)}
       </div>
 
       {hasPanel && (

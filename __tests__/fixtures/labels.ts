@@ -8,6 +8,7 @@ export const LABELS: ui.UiLabels = {
   required: 'zorunlu',
   filters: 'Filtreler',
   breadcrumb: 'Yol',
+  breadcrumbExpand: 'Tüm yolu göster',
   directoryJump: 'Harfe atla',
   selectPlaceholder: 'Seçin',
   passwordShow: 'Şifreyi göster',

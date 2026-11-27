@@ -8,6 +8,110 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-11-27
+
+**Cobalt, coral and ink.** The palette is the brand's three colours plus red for danger: cobalt is
+the interface and the brand surface, coral the conversion action, ink (`#091122`) and its lightness
+steps every neutral. The navy band, the success and warning families, violet and magenta leave;
+the chart series become tints of cobalt, coral and ink. A design test now fails on any hue outside
+cobalt, coral and danger red. 2.0.0 and 2.0.1 were published with the navy band, so this is a
+major; nothing removed is kept as an alias. Migration below, line by line.
+
+### Breaking
+
+- **Palette (`@handijitcom/ui/design`).** Removed: the scales `success`, `warning`, `violet`,
+  `magenta` (`--hd-<scale>-*`, `scales.*`, `hues.*`, `ChromaticScaleName` members) and the colour
+  roles `success-bg/-fg/-line/-solid/-on-solid`, `warning-bg/-fg/-line/-solid/-on-solid`,
+  `band-bg`, `band-deep`, `band-line`, `band-line-strong`, `band-text`, `band-text-2`,
+  `band-focus`, `band-edge`. `StatusName` is `'danger' | 'info'`. The neutral scale `slate` is
+  renamed **`ink`** (`--hd-slate-*` → `--hd-ink-*`, `scales.slate` → `scales.ink`,
+  `ScaleToken` `slate-*` → `ink-*`; values unchanged). Static tokens 180 → 136; colours per theme
+  63 → 46; effects per theme 20 → 16.
+- **Band effects → brand surface effects.** `band-gradient-from/-to/-hold`, `band-glow`,
+  `band-glow-alpha`, `band-dot`, `band-dot-alpha/-cell/-radius`, `band-blueprint-from/-to/-hold/
+-stroke`, `band-accent-glow` are replaced by `brand-surface-*` (below). `effectValues[theme].band`
+  → `effectValues[theme].brandSurface`; the recipe `band` → `brandSurface`; types
+  `BandEffectValues` / `BandRecipe` → `BrandSurfaceEffectValues` / `BrandSurfaceRecipe`.
+- **Chart series.** `chart-1…6` are cobalt 600, coral 600, ink 500, cobalt 900, coral 800, ink 950
+  in light and cobalt 400, coral 400, ink 0, cobalt 600, coral 600, ink 500 in dark: the six steps
+  of the three brand colours at 3:1 or more on every light (dark) ground that lie furthest apart
+  (17.9 / 20.2 ΔE at the closest pair; the gate is 10). Series 4–6 repeat the hues of 1–3 in another
+  lightness: over three series, label directly or add markers or dash patterns.
+- **Components renamed** (2.0.x names removed): `Band` → `BrandSurface`, `BandBlueprint` →
+  `BrandBlueprint`, `BandBlueprintShape` → `BrandBlueprintShape`, `BandSide` →
+  `BrandSurfaceSide`, subpath `@handijitcom/ui/band` → `@handijitcom/ui/brand-surface`,
+  `data-ui-band` → `data-ui-brand-surface`, `StatStrip variant="band"` → `variant="brand"`,
+  `UIVariant.ON_BAND` → `UIVariant.ON_BRAND` (class `button--on-band` → `button--on-brand`), hooks
+  `--ui-band-radius/-padding/-artwork-width` → `--ui-brand-surface-radius/-padding/-artwork-width`.
+- **The brand surface is cobalt.** `BrandSurface` draws `primary` with white on it, deepening to
+  `brand-surface-deep` (cobalt 800); white sheens (6%), white dots, a white blueprint with the coral
+  dot. All text on it is white (there is no secondary text colour), the focus ring is white, and
+  it has no edge in either theme. `ON_BRAND` is a white frame with a white label that hovers to
+  `brand-surface-deep`.
+- **Colour-only tones.** `Badge` `tone`: `success`, `warning` removed, `ink` added (`neutral ·
+ink · info · danger`). `StatusDot` `tone`: `neutral · info · ink · danger`. `Progress` and
+  `ProgressCircle` `tone`: `brand · ink · danger`. `CalendarEventTone` (events and resources):
+  `neutral · primary · ink · danger · info`.
+- **SCSS API.** `$success-*`, `$warning-*` (10) and `$band-*` (18) are removed; `tint()` takes
+  `danger · info · ink · neutral` (`tint(success)` / `tint(warning)` fail the build). The inverse
+  aliases now read `--hd-ink-*`.
+- **Recoloured, same API:** `Alert`, `Toast`, `Modal` and `ConfirmDialog` keep their `success` and
+  `warning` values, drawn in cobalt (`tint(info)`) and ink (`tint(ink)`), told apart by their icon;
+  `Timeline` done marks, `CopyField` copied state, `Rating` / `RatingInput` stars and a positive
+  `Stat` trend are cobalt; a `DataTable` warning row, a `TagInput` duplicate and a `Textarea` near
+  its limit are ink; `Avatar` buckets 1 and 2 are ink and cobalt fills, the brand medallion is
+  cobalt with a white mark; `CodeBlock` strings and literals are `accent-text`, inserted lines
+  `primary-text`; `ToolCall` status dots are `info` / `ink`.
+
+### Added
+
+- Colour role `brand-surface-deep` (cobalt 800, both themes) and effects `brand-surface-hold`
+  (55%), `brand-surface-line` (white at 0.24), `brand-surface-glow-alpha` (0.06),
+  `brand-surface-dot-alpha` (0.22), `brand-surface-dot-cell` (22px), `brand-surface-dot-radius`
+  (1.6px), `brand-surface-blueprint-hold` (70%), `brand-surface-blueprint-fill-alpha` (0.16),
+  `brand-surface-blueprint-stroke-alpha` (0.4), `brand-surface-accent-glow`. SCSS: `$brand-surface-*`
+  (7 names).
+- `tint(ink)`: the emphatic neutral (`bg-raised` + `border-strong` + `text`); `Badge tone="ink"`.
+- Gates: white text on `brand-surface-deep` ≥ 7:1 (10.05), the white ring on `primary` and
+  `brand-surface-deep` ≥ 3:1 (5.03, 10.05), white text over a glow's centre ≥ 4.5:1 (4.58),
+  `primary` on the page ≥ 3:1 (4.86 light, 3.83 dark), `accent-text` on every surface; the palette
+  test (only cobalt, coral, danger red and ink neutrals). `check:contrast`: 100 pairs per theme.
+
+### Migration
+
+| 2.0.x                                                                              | 3.0.0                                                                                                |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `import { Band, BandBlueprint } from '@handijitcom/ui'` (or `/band`)               | `import { BrandSurface, BrandBlueprint } from '@handijitcom/ui'` (or `/brand-surface`)               |
+| `BandBlueprintShape`, `BandSide`                                                   | `BrandBlueprintShape`, `BrandSurfaceSide`                                                            |
+| `<StatStrip variant="band">`                                                       | `<StatStrip variant="brand">`                                                                        |
+| `UIVariant.ON_BAND`                                                                | `UIVariant.ON_BRAND`                                                                                 |
+| `[data-ui-band]` (an application's own band)                                       | `[data-ui-brand-surface]`                                                                            |
+| `--ui-band-radius`, `--ui-band-padding`, `--ui-band-artwork-width`                 | `--ui-brand-surface-radius`, `--ui-brand-surface-padding`, `--ui-brand-surface-artwork-width`        |
+| `--hd-band-bg`, `$band-bg`, `band-gradient-from`                                   | `--hd-primary` / `$primary` (the surface is cobalt)                                                  |
+| `--hd-band-deep`, `$band-deep`, `band-gradient-to`                                 | `--hd-brand-surface-deep` / `$brand-surface-deep`                                                    |
+| `--hd-band-text`, `--hd-band-text-2`, `--hd-band-focus`                            | `--hd-on-primary` (white; no secondary text colour on the surface)                                   |
+| `--hd-band-line`, `--hd-band-line-strong`, `band-dot`, `band-blueprint-stroke`     | `--hd-brand-surface-line` (hairlines); `on-primary` at an opacity for imagery                        |
+| `--hd-band-edge`                                                                   | nothing: cobalt needs no edge on either page                                                         |
+| `band-gradient-hold`, `band-glow-alpha`, `band-dot-*`, `band-blueprint-*`          | `brand-surface-hold`, `brand-surface-glow-alpha`, `brand-surface-dot-*`, `brand-surface-blueprint-*` |
+| `band-glow` (cobalt on navy)                                                       | white at `brand-surface-glow-alpha` (0.06)                                                           |
+| `band-accent-glow`, `$band-accent-glow`                                            | `brand-surface-accent-glow`, `$brand-surface-accent-glow`                                            |
+| `effectValues.light.band`, `band` (recipe), `BandEffectValues`, `BandRecipe`       | `effectValues.light.brandSurface`, `brandSurface`, `BrandSurfaceEffectValues`, `BrandSurfaceRecipe`  |
+| `--hd-success-bg/-fg/-line`, `$success-*`, `tint(success)`                         | `--hd-info-bg/-fg/-line`, `$info-*`, `tint(info)` (cobalt, with a check icon)                        |
+| `--hd-success-solid`, `--hd-success-on-solid`                                      | `--hd-primary`, `--hd-on-primary`                                                                    |
+| `--hd-warning-bg/-fg/-line`, `$warning-*`, `tint(warning)`                         | `--hd-bg-raised` / `--hd-text` / `--hd-border-strong`, `tint(ink)` (with a warning icon)             |
+| `--hd-warning-solid`, `--hd-warning-on-solid`                                      | `--hd-text`, `--hd-bg-surface` (ink fill)                                                            |
+| `--hd-success-*` / `--hd-warning-*` scale steps, `--hd-violet-*`, `--hd-magenta-*` | the role that says what it is for (above); a raw step: `cobalt-*`, `coral-*` or `ink-*`              |
+| `--hd-slate-<step>`, `scales.slate`, `slate-<step>`                                | `--hd-ink-<step>`, `scales.ink`, `ink-<step>` (same values)                                          |
+| `<Badge tone="success">`                                                           | `<Badge tone="info">`                                                                                |
+| `<Badge tone="warning">`                                                           | `<Badge tone="ink">`                                                                                 |
+| `<StatusDot tone="success">` / `tone="warning"`                                    | `tone="info"` / `tone="ink"`                                                                         |
+| `<Progress tone="success">` / `tone="warning"`                                     | `tone="brand"` (or omit) / `tone="ink"`                                                              |
+| `CalendarEvent` / `CalendarResource` `tone: 'success'` / `'warning'`               | `tone: 'info'` / `tone: 'ink'`                                                                       |
+| `<Alert tone="success">`, `toast.success()`, `Modal tone="warning"` …              | unchanged; drawn in cobalt and ink                                                                   |
+| `--hd-chart-1…6` (cobalt, coral, green, amber, magenta, violet)                    | same names, new values (tints of cobalt, coral, ink); over three series add labels or patterns       |
+
+`check:api`: the main entry still has 179 names (four renamed); the SCSS API has 214 (−28, +7).
+
 ## [2.0.1] — 2026-11-27
 
 ### Fixed

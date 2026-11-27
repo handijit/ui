@@ -22,12 +22,12 @@ const THEME_NAMES: ThemeName[] = ['light', 'dark'];
 const SURFACES: ColorToken[] = ['bg-page', 'bg-surface', 'bg-raised'];
 // Every ground a form control is drawn on, the disabled fill included.
 const CONTROL_GROUNDS: ColorToken[] = [...SURFACES, 'bg-inset', 'bg-overlay', 'bg-disabled'];
-const STATUSES: StatusName[] = ['success', 'warning', 'danger', 'info'];
+const STATUSES: StatusName[] = ['danger', 'info'];
 const CHARTS: ColorToken[] = ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5', 'chart-6'];
 
 type Pair = [foreground: ColorToken, background: ColorToken, minimum: number];
 
-/** The pairs the approved recipe gates; the turquoise pairs left with the hue (2.0). */
+/** The pairs the approved recipe gates, for the roles 3.0 keeps (cobalt, coral, ink, danger). */
 const recipePairs = (): Pair[] => [
   ...SURFACES.flatMap((surface): Pair[] => [
     ['text', surface, PRIMARY_TEXT],
@@ -47,11 +47,7 @@ const recipePairs = (): Pair[] => [
   ['on-primary', 'danger-solid', TEXT],
   ['primary-text', 'primary-soft', TEXT],
   ['accent-text', 'accent-soft', TEXT],
-  ['success-fg', 'success-bg', TEXT],
-  ['warning-fg', 'warning-bg', TEXT],
   ['danger-fg', 'danger-bg', TEXT],
-  ['band-text', 'band-bg', PRIMARY_TEXT],
-  ['band-text-2', 'band-bg', TEXT],
 ];
 
 /** Pairs introduced by the tokens this package added to the recipe. */
@@ -63,17 +59,10 @@ const addedPairs = (): Pair[] => [
   ['text-2', 'bg-inset', TEXT],
   ['text', 'selection-bg', PRIMARY_TEXT],
   ['on-primary', 'primary-active', TEXT],
-  ['band-text', 'band-deep', PRIMARY_TEXT],
-  ['band-text-2', 'band-deep', TEXT],
-  ['band-line-strong', 'band-bg', GRAPHIC],
-  ['band-line-strong', 'band-deep', GRAPHIC],
-  ['focus', 'band-bg', GRAPHIC],
-  ['focus', 'band-deep', GRAPHIC],
-  // The band's own ring, and the one coral button the band carries.
-  ['band-focus', 'band-bg', GRAPHIC],
-  ['band-focus', 'band-deep', GRAPHIC],
-  ['accent', 'band-bg', GRAPHIC],
-  ['accent', 'band-deep', GRAPHIC],
+  // The brand surface: white text, the white focus ring and white outlines on cobalt and on its
+  // deeper step. Secondary text there is white too: white at 92% is already 4.50:1.
+  ['on-primary', 'brand-surface-deep', PRIMARY_TEXT],
+  ['on-primary', 'primary', GRAPHIC],
   ['on-accent', 'accent', TEXT],
   ...STATUSES.flatMap((status): Pair[] => [
     [`${status}-fg`, `${status}-bg`, TEXT],
@@ -125,7 +114,7 @@ const composite = (overlay: string, backdrop: string): string => {
 
 describe.each(THEME_NAMES)('accessibility gates: %s theme', theme => {
   test('should pass every contrast pair of the approved recipe', () => {
-    expect(recipePairs()).toHaveLength(52);
+    expect(recipePairs()).toHaveLength(48);
     expect(failures(theme, recipePairs())).toEqual([]);
   });
 
@@ -173,18 +162,22 @@ describe.each(THEME_NAMES)('accessibility gates: %s theme', theme => {
     );
   });
 
-  test('should keep the band text readable over the centre of a glow', () => {
-    const { glow } = effectValues[theme].band;
-    const lit = composite(`rgb(${channels(glow.color)} / ${glow.alpha})`, themes[theme]['band-bg']);
+  test('should keep white text readable over the centre of a glow on the brand surface', () => {
+    const { glow } = effectValues[theme].brandSurface;
+    const lit = composite(`rgb(${channels(glow.color)} / ${glow.alpha})`, themes[theme].primary);
 
-    expect(contrast(themes[theme]['band-text'], lit)).toBeGreaterThanOrEqual(PRIMARY_TEXT);
-    expect(contrast(themes[theme]['band-text-2'], lit)).toBeGreaterThanOrEqual(TEXT);
+    expect(contrast(themes[theme]['on-primary'], lit)).toBeGreaterThanOrEqual(TEXT);
   });
 
-  test('should mark where the band ends on the page', () => {
-    expect(contrast(themes[theme]['band-edge'], themes[theme]['bg-page'])).toBeGreaterThanOrEqual(
-      BORDER,
+  test('should stand the cobalt surface out of the page without an edge', () => {
+    expect(contrast(themes[theme].primary, themes[theme]['bg-page'])).toBeGreaterThanOrEqual(
+      GRAPHIC,
     );
+  });
+
+  test('should keep the brand surface cobalt and identical in both themes', () => {
+    expect(themes[theme].primary).toBe(themes.light.primary);
+    expect(themes[theme]['brand-surface-deep']).toBe(themes.light['brand-surface-deep']);
   });
 
   test('should lift a dialog off the page it dims', () => {

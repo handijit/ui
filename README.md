@@ -384,7 +384,7 @@ and changes when an announcement strip appears.
 | Input                 | `Input` · `PasswordInput` · `Textarea` · `TagInput` · `DateField` (+ `DateRange`) · `FileUpload` · `Field` · `ScaledInput` · `MoneyInput` · `QuantityInput` · `RateInput` · `PercentInput`                                                                                                                                          |
 | Surface               | `Card` (+ `CardMedia`, `CardOverlay`, `CardBody`, `CardFooter`) · `SummaryCard` · `Panel` (+ `PanelForm`, `PanelRow`) · `PageHeader` · `SectionHeader` · `Tile` · `Directory` (+ `DirectoryGroup`, `DirectoryRow`, `DirectoryJump`) · `Carousel` · `ScrollArea` · `Disclosure` · `Accordion` · `Tabs`                               |
 | Feedback              | `Alert` · `Badge` · `StatusDot` · `CodeBadge` · `Kbd` · `EmptyState` · `Skeleton` (+ `SkeletonCard`, `SkeletonRows`, `SkeletonTable`) · `Spinner` · `Progress` · `Steps` · `Divider` · `Avatar` · `Rating` · `Price` · `Stat` · `CopyField` · `Breadcrumb` · `ToastHub` (+ `ToastPortal`)                                           |
-| Brand band (2.0)      | `Band` (+ `BandBlueprint`) · `Eyebrow` · `StatStrip`                                                                                                                                                                                                                                                                                |
+| Brand surface (3.0)   | `BrandSurface` (+ `BrandBlueprint`) · `Eyebrow` · `StatStrip`                                                                                                                                                                                                                                                                       |
 | Modal                 | `Modal` · `Drawer` · `BottomSheet` · `ConfirmDialog` · `PromptDialog` · `CommandPalette`                                                                                                                                                                                                                                            |
 | Data                  | `Table` (+ `TableScroller`) · `DataTable` (+ `DataTableRow`) · `FilterBar` (+ `FilterBarField`) · `Pagination` · `Timeline`                                                                                                                                                                                                         |
 | Theme and hooks       | `UiProvider` · `UiThemeScript` · `useUi` · `useUiTheme` · `useUiTokens` · `useAnnounce` · `useStickToBottom` · `usePositioning` · `useVirtualList` · `useListboxNavigation` · `hasOpenSurface`                                                                                                                                      |
@@ -394,16 +394,16 @@ and changes when an announcement strip appears.
 
 ### Variants and sizes
 
-| `UIVariant` | Use                                                                                                  |
-| ----------- | ---------------------------------------------------------------------------------------------------- |
-| `PRIMARY`   | the one expected action of the screen: cobalt fill                                                   |
-| `ACCENT`    | the conversion action (download, try, subscribe): coral fill, only that; on the band it glows softly |
-| `SECONDARY` | a neutral second action: grey border, body text                                                      |
-| `OUTLINE`   | a cobalt frame: an encouraged navigation that is not the primary action                              |
-| `SOFT`      | a neutral fill: a secondary action inside a card                                                     |
-| `GHOST`     | no surface: toolbar and inline secondary actions, in the link colour                                 |
-| `DANGER`    | a destructive action                                                                                 |
-| `ON_BAND`   | an action on the brand band (deep cobalt in both themes)                                             |
+| `UIVariant` | Use                                                                                                 |
+| ----------- | --------------------------------------------------------------------------------------------------- |
+| `PRIMARY`   | the one expected action of the screen: cobalt fill                                                  |
+| `ACCENT`    | the conversion action (download, try, subscribe): coral fill, only that; glows on the brand surface |
+| `SECONDARY` | a neutral second action: grey border, body text                                                     |
+| `OUTLINE`   | a cobalt frame: an encouraged navigation that is not the primary action                             |
+| `SOFT`      | a neutral fill: a secondary action inside a card                                                    |
+| `GHOST`     | no surface: toolbar and inline secondary actions, in the link colour                                |
+| `DANGER`    | a destructive action                                                                                |
+| `ON_BRAND`  | a second action on the brand surface (cobalt in both themes): white frame, white label              |
 
 `UISize`: `XSMALL` 28px · `SMALL` 32px · `MEDIUM` 40px · `LARGE` 48px. Fields
 are 40px with 15px text on desktop and 44px with 16px text on a narrow or touch
@@ -413,9 +413,11 @@ screen (no iOS zoom, a full touch target).
 `danger`. `secondary` and `outline` are drawn exactly like the `Button` variants
 of the same name: the neutral frame and the cobalt frame. (Until 2.1 `outline`
 was the neutral frame; use `secondary` for that look.)
-`Badge tone`: `neutral` · `success` · `danger` · `warning` · `info`, each as
-`soft`, `solid` or `outline`. (2.0 removed `highlight`: a "New" mark is `info`,
-a "Live" state `success`.)
+`Badge tone`: `neutral` · `ink` · `info` · `danger`, each as `soft`, `solid` or
+`outline`. The palette has one status hue, red (3.0): a good state is `info`
+(cobalt), one that needs a look `ink` (the emphatic neutral). `StatusDot` and
+`Calendar` tones follow the same names; `Alert`, `Toast` and `Modal` keep
+`success` and `warning`, drawn in cobalt and ink and told apart by their icon.
 
 ### The number of options picks the element
 
@@ -586,28 +588,37 @@ the build with `skipLibCheck` off.
 
 ## Decisions the system carries
 
-**Cobalt acts, coral converts, the navy band carries the brand.** Cobalt is the
-primary action, the link, the selection and the focus ring. Coral is the
-conversion button (`UIVariant.ACCENT` on `Button`, `variant="accent"` on
-`IconButton`) and appears nowhere else but the dot of the brand mark. The palette
-has no cyan since 2.0: cobalt, coral, the navy band, neutrals and the status
-colours. `colour-footprint.test.ts` turns a coral or band token in any other
-component's stylesheet into a failing test.
+**Cobalt, coral, ink.** The palette is three colours plus red for danger:
+cobalt is the primary action, the link, the selection, the focus ring and the
+brand surface; coral is the conversion button (`UIVariant.ACCENT` on `Button`,
+`variant="accent"` on `IconButton`) and appears nowhere else but the dot of the
+brand mark and code strings; ink (`#091122`) and its lightness steps are every
+neutral. There is no green, amber, violet, cyan or navy (3.0); a design test
+fails on any other hue. A success is cobalt and a warning ink, each with its
+icon and text. `colour-footprint.test.ts` turns a coral or brand-surface token
+in any other component's stylesheet into a failing test.
 
-**The brand band (2.0).** `Band` is the navy surface of a hero, a closing call,
-a sign-in side or a footer, the same in both themes, with a hairline edge on the
-dark page:
+**The brand surface (3.0).** `BrandSurface` is the cobalt surface of a hero, a
+closing call, a sign-in side or a footer: `primary` with white on it, the same
+in both themes, needing no edge on either page:
 
 ```tsx
-import { Band, BandBlueprint, Button, Eyebrow, StatStrip, UIVariant } from '@handijitcom/ui';
+import {
+  BrandBlueprint,
+  BrandSurface,
+  Button,
+  Eyebrow,
+  StatStrip,
+  UIVariant,
+} from '@handijitcom/ui';
 import { logos } from '@handijitcom/ui/design';
 
-<Band
+<BrandSurface
   aria-labelledby="cta-title"
-  glow="both" // soft cobalt glows: 'start' · 'end' · 'both' (default) · 'none'
-  dots="end" // the faded dot grid: 'start' · 'end' (default) · 'both' · 'none'
-  artwork={<BandBlueprint shape={logos.mark} />} // decorative, from the tablet width up
-  footer={<StatStrip variant="band" items={[{ value: '2 saat', label: 'yanıt süresi' }]} />}
+  glow="both" // soft white sheens: 'start' · 'end' · 'both' (default) · 'none'
+  dots="end" // the faded white dot grid: 'start' · 'end' (default) · 'both' · 'none'
+  artwork={<BrandBlueprint shape={logos.mark} />} // decorative, from the tablet width up
+  footer={<StatStrip variant="brand" items={[{ value: '2 saat', label: 'yanıt süresi' }]} />}
 >
   <Eyebrow>Teklif</Eyebrow>
   <h2 id="cta-title">
@@ -615,25 +626,26 @@ import { logos } from '@handijitcom/ui/design';
     {/* .full-stop: color var(--hd-accent) */}
   </h2>
   <Button variant={UIVariant.ACCENT}>Teklif alın</Button>
-  <Button variant={UIVariant.ON_BAND}>WhatsApp</Button>
-</Band>;
+  <Button variant={UIVariant.ON_BRAND}>WhatsApp</Button>
+</BrandSurface>;
 ```
 
-- The gradient, glows, dot grid and blueprint are **inline SVG**, `aria-hidden`,
-  with ids from `useId`; nothing is a CSS gradient, so a page that forbids
-  computed `background-image` gradients stays clean. In forced colours the
-  imagery is dropped and the band is a framed region.
-- Inside a band every focus ring is `band-focus` (white): `Band` sets the
-  `--ui-ring-color` hook that `$focus` reads. `Eyebrow` and the `ACCENT` button
-  read the band from `data-ui-band` (set by `Band`; an application band of its
-  own can carry the attribute too).
-- **Coral once per view as an action:** the band's one action is the `ACCENT`
-  button, which glows softly there (`band-accent-glow`) and nowhere else; a
-  second action is `ON_BAND`. The coral full stop of the heading and the dot of
-  the mark are the brand's punctuation, not actions. Opacity and gradients live
-  only in the band's imagery.
-- Text on the band is `band-text` / `band-text-2`, never `text-2` or `border`.
-- `StatStrip` (`page` or `band`) is a list of value and label facts with thin
+- The gradient (cobalt into `brand-surface-deep`), sheens, dot grid and
+  blueprint are **inline SVG**, `aria-hidden`, with ids from `useId`; nothing is
+  a CSS gradient. The component renders on the server. In forced colours the
+  imagery is dropped and the surface is a framed region.
+- **Text on it is white only**: white on cobalt is 5.03:1, and white at 92% is
+  already 4.50:1, so there is no secondary text colour; use size and weight.
+  The white sheen stays at 6% so that white text over it is still 4.58:1.
+- Inside it every focus ring is white: `BrandSurface` sets the `--ui-ring-color`
+  hook that `$focus` reads. `Eyebrow` and the `ACCENT` button read the surface
+  from `data-ui-brand-surface` (an application's own surface may carry it too).
+- **Coral once per view as an action:** the surface's one action is the
+  `ACCENT` button, which glows softly there (`brand-surface-accent-glow`) and
+  nowhere else; coral on cobalt is 1.64:1, so its label (6.15:1) identifies it.
+  A second action is `ON_BRAND`. The coral full stop and the mark's dot are the
+  brand's punctuation. Opacity lives only in the surface's imagery.
+- `StatStrip` (`page` or `brand`) is a list of value and label facts with thin
   dividers; `Eyebrow` is the mono capital label with its rules (`start` or
   `center`). The text is set in capitals by CSS, so give the page a `lang`.
 
@@ -679,7 +691,7 @@ smaller; an invisible overlay keeps the area.
 ## Next.js App Router
 
 The package draws the `'use client'` boundary **inside itself, per file**:
-components without hooks (`Alert`, `Badge`, `Band`, `Button`, `Card`, `Chip`,
+components without hooks (`Alert`, `Badge`, `BrandSurface`, `Button`, `Card`, `Chip`,
 `Divider`, `EmptyState`, `IconButton`, `Kbd`, `PageHeader`, `Panel`,
 `Progress`, `SectionHeader`, `Skeleton`, `StatusDot`, `SummaryCard`,
 `TextLink`, `Tile`) render as server components and send no JavaScript; the
@@ -797,7 +809,7 @@ JSON is re-indented with two spaces (values are kept as text: large numbers are
 not rounded) and blank lines at the edges are dropped; other languages keep
 their indentation. More than 30 languages are recognised; an unknown one is
 drawn plain. The token colours are design tokens (keyword `primary-text`,
-string `success-fg`, number `warning-fg`, type `text` at medium weight), so they
+string and number `accent-text`, type `text` at medium weight), so they
 follow the theme and stay inside the measured text pairs. For Shiki-grade
 accuracy pass pre-highlighted HTML as `html` (its safety is yours).
 
@@ -864,7 +876,7 @@ import { Calendar, type CalendarEvent } from '@handijitcom/ui/calendar';
 <Calendar
   label="Ders planı"
   days={week} // [{ date: '2026-11-09', label: 'Pazartesi 9 Kasım', shortLabel: 'Pzt 9', isToday, isOff }]
-  resources={rooms} // optional: [{ id: 'r1', label: 'Derslik 1', detail: '7 / 8', tone: 'warning' }]
+  resources={rooms} // optional: [{ id: 'r1', label: 'Derslik 1', detail: '7 / 8', tone: 'ink' }]
   bands={[{ label: 'Sabah', start: '08:00', end: '12:00' }]} // optional, 2.5
   events={lessons} // [{ id, title, start: '2026-11-09T09:00', end: '2026-11-09T10:30', resourceId, tone, isCancelled, isLocked }]
   startTime="08:00"
@@ -898,7 +910,7 @@ import { Calendar, type CalendarEvent } from '@handijitcom/ui/calendar';
   a day or a week), ⌘/Ctrl ⇧ ↑ ↓ shorten or lengthen it. The new place is
   announced (`labels.calendar.moved`) and the focus follows the event.
 - **Resource headers and bands (2.5).** A resource's `detail` is a second
-  header line and its `tone` tints the header (Teknik Servis: `warning` at 80%
+  header line and its `tone` tints the header (Teknik Servis: `ink` at 80%
   of the day's capacity — the percentage goes in `detail`, colour is never
   alone); `renderResource` draws the header instead. `bands` (`CalendarBand`:
   `{ label, start, end }`, `HH:MM`) draws named stretches of the day ("Sabah",
@@ -991,10 +1003,10 @@ npm run playground # component gallery → http://localhost:5273
   TypeScript sources exists in the tokens of `src/design`; breakpoints
   and layers match it; no stylesheet declares an `--hd-*` property or carries
   a literal colour.
-- **Colour footprint** (`colour-footprint.test.ts`): coral and band tokens are
-  used only by the components on a justified allow-list, and the turquoise
-  roles of 1.x cannot come back. A design test fails on any hue between 170°
-  and 240° (no cyan).
+- **Colour footprint** (`colour-footprint.test.ts`): coral and brand-surface
+  tokens are used only by the components on a justified allow-list, and the
+  removed roles (turquoise, success, warning, band, slate) cannot come back. A
+  design test fails on any hue outside cobalt, coral and danger red.
 - **Contrast**: text ≥ 4.5:1, icons and the focus ring ≥ 3:1, measured on the
   values of the installed design package for every pair a component draws.
 - **Accessibility scan** (`__tests__/components/a11y.test.tsx`): every exported
@@ -1050,13 +1062,6 @@ secret and npm provenance **when `package.json` carries a version that is not
 on npm yet**; otherwise it skips. A published version gets a `vX.Y.Z` tag and a
 GitHub Release whose notes are that version's section of `CHANGELOG.md`, so the
 section must exist before the push.
-
-⚠ **2.0.0 and the old tags.** The 2.x line of the previous package name
-(`@handijit/ui`) left the tags `v2.0.0`, `v2.1.0`, `v2.1.1` and `v2.2.0` on the
-origin. The workflow refuses to release onto an existing tag ("Tag v2.0.0
-already exists"), so before pushing 2.0.0 those four tags are renamed (for
-example to `handijit-ui-v2.0.0`) or deleted on the origin; otherwise the run
-fails after `verify`, before `npm publish`.
 
 ## Design contract
 

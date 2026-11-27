@@ -34,14 +34,15 @@ const GRAPHIC_SURFACES = ['bg-page', 'bg-surface', 'bg-raised', 'bg-overlay'];
 /** The surfaces a caption (`text-3`) is allowed on — NOT the well (`bg-inset`), see below. */
 const CAPTION_SURFACES = ['bg-page', 'bg-surface', 'bg-raised', 'bg-overlay'];
 
-const STATUSES = ['success', 'warning', 'danger', 'info'];
+/** 3.0: one status hue, red; `info` is cobalt. Success and warning are cobalt and ink + an icon. */
+const STATUSES = ['danger', 'info'];
 
 /** The fixed dark surface (`$inverse-*`): terminal output and the code badge, same in both themes. */
 const INVERSE = {
-  'inverse-bg': scales.slate[900],
-  'inverse-bg-2': scales.slate[800],
-  'inverse-text': scales.slate[50],
-  'inverse-text-2': scales.slate[300],
+  'inverse-bg': scales.ink[900],
+  'inverse-bg-2': scales.ink[800],
+  'inverse-text': scales.ink[50],
+  'inverse-text-2': scales.ink[300],
   'inverse-danger': scales.danger[300],
 };
 
@@ -78,11 +79,16 @@ const buildPairs = () => {
     for (const surface of SURFACES) add(`${status}-fg`, surface);
   }
 
-  // --- Brand band: `Band`, its `Eyebrow`, the `StatStrip` at its foot (on `band-deep`) ---
-  for (const fill of ['band-bg', 'band-deep']) {
-    add('band-text', fill);
-    add('band-text-2', fill);
-  }
+  // --- Coral text: strings and literals of `CodeBlock`, in its well and on the surfaces ---
+  for (const surface of SURFACES) add('accent-text', surface);
+
+  // --- Brand surface: `BrandSurface`, its `Eyebrow`, the `StatStrip` at its foot ---
+  /*
+   * Every text on it is white: white at 92% on cobalt is 4.50:1 and drops under 4.5:1 over a
+   * glow, so there is no secondary text colour on the brand surface. The coral CTA's label
+   * (`on-accent` on `accent`) is measured above.
+   */
+  add('on-primary', 'brand-surface-deep');
 
   // --- Fixed dark surface ---
   for (const fill of ['inverse-bg', 'inverse-bg-2']) {
@@ -119,17 +125,11 @@ const buildPairs = () => {
   }
   for (const surface of ['bg-page', 'bg-surface', 'bg-raised'])
     for (const index of [1, 2, 3, 4, 5, 6]) add(`chart-${index}`, surface, 'graphic');
-  /* The ring of a button that sits on the band. */
-  add('band-text', 'band-bg', 'graphic');
-  add('band-line-strong', 'band-bg', 'graphic');
   /*
-   * 2.0: inside `Band` every ring is `band-focus` (the `--ui-ring-color` hook), and the band's one
-   * coral button is a filled shape on navy: both must be seen on either band layer.
+   * Inside `BrandSurface` every ring is white (`on-primary` through `--ui-ring-color`), and the
+   * `ON_BRAND` button is framed in white: both on cobalt and on its deeper step.
    */
-  for (const fill of ['band-bg', 'band-deep']) {
-    add('band-focus', fill, 'graphic');
-    add('accent', fill, 'graphic');
-  }
+  for (const fill of ['primary', 'brand-surface-deep']) add('on-primary', fill, 'graphic');
 
   return pairs;
 };
@@ -145,9 +145,12 @@ const buildAdvisoryPairs = () => {
   add('text-3', 'bg-inset');
   add('focus', 'bg-inset');
   for (const fill of ['primary', 'danger-solid', 'info-solid']) add(fill, 'bg-overlay');
-  /* The band on the page: navy stands out of the light page; on the dark page `band-edge` does. */
-  add('band-bg', 'bg-page');
-  add('band-edge', 'bg-page');
+  /*
+   * The brand surface: coral on cobalt is 1.64:1, so the CTA is identified by its label (6.15:1),
+   * never by its fill's edge. Cobalt on the page (gated above as a fill) needs no edge.
+   */
+  add('accent', 'primary');
+  add('accent', 'brand-surface-deep');
   for (const surface of ['bg-page', 'bg-surface', 'bg-raised']) {
     add('border', surface);
     add('border-strong', surface);

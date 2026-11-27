@@ -34,13 +34,13 @@
   }
 }
 
-// On the brand band the label reads `band-text-2` (gated on `band-bg` and `band-deep`) and the rules
-// are the band's visible line.
-:where([data-ui-band]) .eyebrow {
-  color: $band-text-2;
+// On the brand surface the label is white (5.03:1 on cobalt; white at reduced opacity would drop
+// under 4.5:1) and the rules are the surface's white hairline.
+:where([data-ui-brand-surface]) .eyebrow {
+  color: $on-primary;
 
   &::before,
   &::after {
-    border-top-color: $band-line-strong;
+    border-top-color: $brand-surface-line;
   }
 }

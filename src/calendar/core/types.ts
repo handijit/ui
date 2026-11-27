@@ -6,7 +6,8 @@
  */
 
 /** The tone of an event — a tint of the design's status colours. Never the only signal. */
-export type CalendarEventTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
+/** `ink` is the emphatic neutral (a day near capacity); the palette's one status hue is red. */
+export type CalendarEventTone = 'neutral' | 'primary' | 'ink' | 'danger' | 'info';
 
 export type CalendarEvent = {
   id: string;
@@ -46,7 +47,7 @@ export type CalendarResource = {
   /** A second header line under the label ("6 / 8 iş", "%85 dolu") (2.5). */
   detail?: string;
   /**
-   * Tints the column header (2.5): a technician at 80% of the day's capacity is `warning`. Never
+   * Tints the column header (2.5): a technician at 80% of the day's capacity is `ink`. Never
    * the only signal — say why in `detail` (or in `renderResource`).
    */
   tone?: CalendarEventTone;

@@ -14,8 +14,8 @@ enum UIVariant {
   GHOST = 'GHOST',
   /** Destructive action: a delete confirmation. */
   DANGER = 'DANGER',
-  /** An action on the brand band (deep cobalt in both themes). */
-  ON_BAND = 'ON_BAND',
+  /** A second action on the brand surface (cobalt in both themes): a white frame, white label. */
+  ON_BRAND = 'ON_BRAND',
 }
 
 export default UIVariant;

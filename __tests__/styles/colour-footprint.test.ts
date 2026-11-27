@@ -3,12 +3,13 @@ import { readdirSync, readFileSync } from 'node:fs';
 /*
  * COLOUR FOOTPRINT — the role rule of the theme, as a failing test.
  *
- *   cobalt (`$primary*`)   primary action, link, focus, selection — the interface colour
- *   coral (`$accent*`)     the CONVERSION button (download, try, subscribe) and nothing else
- *   band (`$band-*`)       the navy brand band and what sits on it
+ *   cobalt (`$primary*`)            primary action, link, focus, selection — the interface colour
+ *   coral (`$accent*`)              the CONVERSION button (download, try, subscribe) and nothing else
+ *   brand surface (`$brand-surface-*`) the cobalt brand surface and what sits on it
  *
- * 2.0 removed turquoise (`$highlight*`): the palette is cobalt, coral, the band, neutrals and the
- * status colours. The last test below keeps its names from coming back.
+ * 3.0: the palette is cobalt, coral, ink (the neutrals) and danger red. Turquoise (2.0.0), the
+ * success and warning families and the navy band (3.0) are gone; the last test below keeps their
+ * names from coming back.
  *
  * ⚠ No single declaration is ever wrong on its own: a coral chip here, a coral progress bar there,
  * and coral stops meaning "this is the button that converts". This list turns that drift into a
@@ -17,23 +18,24 @@ import { readdirSync, readFileSync } from 'node:fs';
  */
 const FAMILIES = {
   accent: /\$(?:accent(?:-[a-z]+)?|on-accent)(?![\w-])/g,
-  band: /\$band-[a-z0-9-]+(?![\w-])/g,
+  brandSurface: /\$brand-surface-[a-z0-9-]+(?![\w-])/g,
 } as const;
 
 type Family = keyof typeof FAMILIES;
 
 const ALLOWED: Record<Family, Record<string, string>> = {
   accent: {
-    Band: "`BandBlueprint`'s dot — the coral point of the brand mark, as in the logo; never clickable",
+    BrandSurface:
+      "`BrandBlueprint`'s dot — the coral point of the brand mark, as in the logo; never clickable",
     Button: 'the ACCENT variant — the conversion button',
+    CodeBlock: 'strings and literals in syntax colouring (`accent-text`) — text, never a control',
     IconButton: 'the `accent` variant — the same button without a text label',
   },
-  band: {
-    Avatar: '`tone="brand"` — the brand medallion',
-    Band: 'the band itself: its surface, imagery, edge and focus ring',
-    Button: 'the ON_BAND variant, and the glow of ACCENT on the band',
-    Eyebrow: 'its label and rules on the band',
-    StatStrip: '`variant="band"` — the deep strip at the foot of the band',
+  brandSurface: {
+    BrandSurface: 'the surface itself: its deeper step, white imagery and hairlines',
+    Button: 'the ON_BRAND variant, and the glow of ACCENT on the brand surface',
+    Eyebrow: 'its rules on the brand surface',
+    StatStrip: '`variant="brand"` — the deep strip at the foot of the brand surface',
   },
 };
 
@@ -98,9 +100,11 @@ describe('colour footprint', () => {
     expect(offenders).toEqual([]);
   });
 
-  /* 2.0: turquoise left the palette. Its role names coming back means a copy from a 1.x consumer. */
-  it('the turquoise roles of 1.x do not come back', () => {
-    const turquoise = /\$(?:highlight|on-highlight|turquoise)(?:-[a-z0-9]+)*(?![\w-])/;
+  /* Removed roles coming back mean a copy from an older consumer: turquoise (2.0.0), the success
+   * and warning families and the navy band (3.0). */
+  it('the removed roles do not come back', () => {
+    const turquoise =
+      /\$(?:highlight|on-highlight|turquoise|success|warning|band|slate)(?:-[a-z0-9]+)*(?![\w-])/;
 
     const offenders = componentDirs()
       .filter(([, dir]) =>

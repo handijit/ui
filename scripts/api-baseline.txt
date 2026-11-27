@@ -9,11 +9,11 @@ Avatar
 Badge
 BadgeTone
 BadgeVariant
-Band
-BandBlueprint
-BandBlueprintShape
-BandSide
 BottomSheet
+BrandBlueprint
+BrandBlueprintShape
+BrandSurface
+BrandSurfaceSide
 Breadcrumb
 Button
 Card

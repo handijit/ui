@@ -19,8 +19,8 @@ import {
   Alert,
   Avatar,
   Badge,
-  Band,
-  BandBlueprint,
+  BrandBlueprint,
+  BrandSurface,
   BottomSheet,
   Breadcrumb,
   Button,
@@ -245,7 +245,7 @@ const LESSONS: CalendarEvent[] = [
     start: '2026-11-09T10:00',
     end: '2026-11-09T11:00',
     resourceId: 'r2',
-    tone: 'success',
+    tone: 'info',
   },
   {
     id: 'l3',
@@ -261,7 +261,7 @@ const LESSONS: CalendarEvent[] = [
     start: '2026-11-11T09:30',
     end: '2026-11-11T11:00',
     resourceId: 'r2',
-    tone: 'warning',
+    tone: 'ink',
   },
   {
     id: 'l5',
@@ -308,14 +308,14 @@ const DUES: CalendarEvent[] = [
     title: 'Çek 0042',
     start: '2026-11-12T00:00',
     end: '2026-11-12T00:00',
-    tone: 'warning',
+    tone: 'ink',
   },
   {
     id: 'd3',
     title: 'Tahsilat — Yıldız Ltd.',
     start: '2026-11-12T00:00',
     end: '2026-11-12T00:00',
-    tone: 'success',
+    tone: 'info',
   },
   { id: 'd4', title: 'Senet 12', start: '2026-11-12T00:00', end: '2026-11-12T00:00' },
   { id: 'd5', title: 'Elektrik', start: '2026-11-12T00:00', end: '2026-11-12T00:00' },
@@ -386,8 +386,8 @@ const ORDERS_BY_HOUR = WEEKDAYS.map((_, day) =>
   ),
 );
 
-/** The trust facts of the band scenarios: value first, then the label. */
-const BAND_FACTS = [
+/** The trust facts of the brand surface scenarios: value first, then the label. */
+const BRAND_FACTS = [
   { value: '4,9', label: 'ortalama puan' },
   { value: '2 saat', label: 'yanıt süresi' },
   { value: '30 gün', label: 'koşulsuz iade' },
@@ -424,14 +424,14 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     soft: <Button variant={UIVariant.SOFT}>Filtrele</Button>,
     ghost: <Button variant={UIVariant.GHOST}>Daha fazla</Button>,
     danger: <Button variant={UIVariant.DANGER}>Sil</Button>,
-    /* On the band: the one coral action (with its glow) and the band's own outline button. */
-    onBand: (
-      <Band as="div" glow="none" dots="none">
+    /* On the brand surface: the one coral action (with its glow) and the white-framed second action. */
+    onBrand: (
+      <BrandSurface as="div" glow="none" dots="none">
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <Button variant={UIVariant.ACCENT}>Teklif alın</Button>
-          <Button variant={UIVariant.ON_BAND}>Belgeleri oku</Button>
+          <Button variant={UIVariant.ON_BRAND}>Belgeleri oku</Button>
         </div>
-      </Band>
+      </BrandSurface>
     ),
     accentDisabled: (
       <Button variant={UIVariant.ACCENT} disabled>
@@ -821,16 +821,12 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     soft: <Badge>Yeni</Badge>,
     solid: <Badge variant="solid">Kampanya</Badge>,
     outline: <Badge variant="outline">Muadil</Badge>,
-    success: <Badge tone="success">Stokta</Badge>,
-    warning: <Badge tone="warning">Son 2 adet</Badge>,
+    ink: <Badge tone="ink">Son 2 adet</Badge>,
     danger: <Badge tone="danger">Tükendi</Badge>,
     info: <Badge tone="info">Yeni</Badge>,
     solidTones: (
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <Badge tone="success" variant="solid">
-          Etkin
-        </Badge>
-        <Badge tone="warning" variant="solid">
+        <Badge tone="ink" variant="solid">
           Bekliyor
         </Badge>
         <Badge tone="danger" variant="solid">
@@ -843,8 +839,8 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     ),
     outlineTones: (
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <Badge tone="success" variant="outline">
-          Etkin
+        <Badge tone="ink" variant="outline">
+          Bekliyor
         </Badge>
         <Badge tone="danger" variant="outline">
           Hata
@@ -855,33 +851,33 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       </div>
     ),
   },
-  Band: {
+  BrandSurface: {
     /* The closing call: eyebrow, heading with the coral full stop, one coral action, the facts. */
     closingWide: (
-      <Band
-        aria-labelledby="band-heading"
-        artwork={<BandBlueprint shape={logos.mark} />}
-        footer={<StatStrip variant="band" items={BAND_FACTS} />}
+      <BrandSurface
+        aria-labelledby="brand-heading"
+        artwork={<BrandBlueprint shape={logos.mark} />}
+        footer={<StatStrip variant="brand" items={BRAND_FACTS} />}
       >
         <div style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
           <Eyebrow>Teklif</Eyebrow>
-          <h2 id="band-heading" style={{ margin: 0, fontSize: 30, lineHeight: 1.15 }}>
+          <h2 id="brand-heading" style={{ margin: 0, fontSize: 30, lineHeight: 1.15 }}>
             Projenizi konuşalım
             <span style={{ color: 'var(--hd-accent)' }}>.</span>
           </h2>
-          <p style={{ margin: 0, maxWidth: '52ch', color: 'var(--hd-band-text-2)' }}>
+          <p style={{ margin: 0, maxWidth: '52ch', color: 'var(--hd-on-primary)' }}>
             Yazılı teklif bir iş günü içinde gelir; fiyat ve takvim baştan bellidir.
           </p>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <Button variant={UIVariant.ACCENT}>Teklif alın</Button>
-            <Button variant={UIVariant.ON_BAND}>WhatsApp</Button>
+            <Button variant={UIVariant.ON_BRAND}>WhatsApp</Button>
           </div>
         </div>
-      </Band>
+      </BrandSurface>
     ),
     /* Centred, the dot grid on both sides, as in the share image. */
     centeredWide: (
-      <Band aria-label="Tanıtım" dots="both">
+      <BrandSurface aria-label="Tanıtım" dots="both">
         <div style={{ display: 'grid', gap: 12, justifyItems: 'center', textAlign: 'center' }}>
           <Eyebrow align="center">Yazılım · Kurumsal site</Eyebrow>
           <p style={{ margin: 0, fontSize: 30, lineHeight: 1.15 }}>
@@ -889,21 +885,21 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
             <span style={{ color: 'var(--hd-accent)' }}>.</span>
           </p>
         </div>
-      </Band>
+      </BrandSurface>
     ),
     plain: (
-      <Band as="div" glow="none" dots="none">
+      <BrandSurface as="div" glow="none" dots="none">
         Düz bant: yalnızca degrade.
-      </Band>
+      </BrandSurface>
     ),
   },
-  BandBlueprint: {
+  BrandBlueprint: {
     default: (
-      <Band as="div" glow="none" dots="none">
+      <BrandSurface as="div" glow="none" dots="none">
         <div style={{ width: 96 }}>
-          <BandBlueprint shape={logos.mark} />
+          <BrandBlueprint shape={logos.mark} />
         </div>
-      </Band>
+      </BrandSurface>
     ),
   },
   Breadcrumb: {
@@ -974,8 +970,8 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   StatusDot: {
     neutral: <StatusDot label="Hazır" />,
     pulsing: <StatusDot label="Çalışıyor" isPulsing />,
-    success: <StatusDot tone="success" label="Bağlı" />,
-    warning: <StatusDot tone="warning" label="Yeniden bağlanıyor" isPulsing />,
+    info: <StatusDot tone="info" label="Bağlı" />,
+    ink: <StatusDot tone="ink" label="Yeniden bağlanıyor" isPulsing />,
     danger: <StatusDot tone="danger" label="Bağlantı yok" />,
   },
   Kbd: {
@@ -992,10 +988,10 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   Eyebrow: {
     start: <Eyebrow>Hizmetler</Eyebrow>,
     center: <Eyebrow align="center">Sektör · Çözüm</Eyebrow>,
-    onBand: (
-      <Band as="div" glow="none" dots="none">
+    onBrand: (
+      <BrandSurface as="div" glow="none" dots="none">
         <Eyebrow>Teklif</Eyebrow>
-      </Band>
+      </BrandSurface>
     ),
   },
   Directory: {
@@ -1188,7 +1184,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
       <Progress value={60} max={100} label="Yükleme" valueText="3 / 5 dosya" isValueVisible />
     ),
     indeterminate: <Progress label="Yükleme" />,
-    success: <Progress value={100} label="Yükleme" tone="success" isValueVisible />,
+    ink: <Progress value={92} label="Kota" tone="ink" isValueVisible />,
     danger: <Progress value={35} label="Yükleme" tone="danger" isValueVisible />,
     xsmall: <Progress value={72} label="Bağlam doluluğu" size="xs" />,
   },
@@ -1434,16 +1430,16 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     ),
   },
   StatStrip: {
-    pageWide: <StatStrip items={BAND_FACTS} aria-label="Rakamlarla" />,
-    bandWide: (
-      <Band
+    pageWide: <StatStrip items={BRAND_FACTS} aria-label="Rakamlarla" />,
+    brandWide: (
+      <BrandSurface
         as="div"
         glow="none"
         dots="none"
-        footer={<StatStrip variant="band" items={BAND_FACTS} />}
+        footer={<StatStrip variant="brand" items={BRAND_FACTS} />}
       >
-        Bandın altındaki şerit.
-      </Band>
+        Yüzeyin altındaki şerit.
+      </BrandSurface>
     ),
   },
   Stat: {
@@ -2074,7 +2070,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         label="Gün planı — teknisyenler"
         days={WEEK_DAYS.slice(0, 1)}
         resources={[
-          { id: 'r1', label: 'Ali Yılmaz', detail: '7 / 8 iş · %88', tone: 'warning' },
+          { id: 'r1', label: 'Ali Yılmaz', detail: '7 / 8 iş · %88', tone: 'ink' },
           { id: 'r2', label: 'Ayşe Kaya', detail: '3 / 8 iş · %38' },
         ]}
         bands={[
@@ -2109,7 +2105,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
             <StarFill aria-hidden /> Acme Chat
           </>
         }
-        start={<StatusDot tone="success" label="Bağlı" />}
+        start={<StatusDot tone="info" label="Bağlı" />}
         end={
           <>
             <IconButton icon={<MoonStarsFill aria-hidden />} label="Tema" size="sm" />
@@ -2411,7 +2407,7 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
           <ActionListItem
             key={index}
             start={`A${index + 1}`}
-            end={<StatusDot tone="success" label="Bağlı" />}
+            end={<StatusDot tone="info" label="Bağlı" />}
             onClick={noop}
           >
             Girdi {index + 1}

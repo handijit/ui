@@ -1,6 +1,6 @@
 /** @jest-environment node */
 import type {
-  BandRecipe,
+  BrandSurfaceRecipe,
   BreakpointName,
   ColorToken,
   EffectValues,
@@ -15,7 +15,7 @@ import type {
 } from '@/design';
 import { expectTypeOf } from 'expect-type';
 import {
-  band,
+  brandSurface,
   breakpoints,
   contrast,
   CSS_VARIABLE_PREFIX,
@@ -53,13 +53,13 @@ describe('type surface', () => {
 
   test('should accept every kind of token name', () => {
     expectTypeOf<'cobalt-600'>().toExtend<ScaleToken>();
-    expectTypeOf<'slate-25'>().toExtend<TokenName>();
+    expectTypeOf<'ink-25'>().toExtend<TokenName>();
     expectTypeOf<'chart-6'>().toExtend<ColorToken>();
     expectTypeOf<'border-control'>().toExtend<ColorToken>();
     expectTypeOf<'info-on-solid'>().toExtend<ColorToken>();
     expectTypeOf<'shadow-2'>().toExtend<TokenName>();
-    expectTypeOf<'band-glow-alpha'>().toExtend<TokenName>();
-    expectTypeOf<'band-focus'>().toExtend<ColorToken>();
+    expectTypeOf<'brand-surface-glow-alpha'>().toExtend<TokenName>();
+    expectTypeOf<'brand-surface-deep'>().toExtend<ColorToken>();
     expectTypeOf<'type-h1-line-height'>().toExtend<TokenName>();
     expectTypeOf<'space-24'>().toExtend<TokenName>();
     expectTypeOf<'z-modal'>().toExtend<TokenName>();
@@ -70,6 +70,9 @@ describe('type surface', () => {
     expectTypeOf<'chart-7'>().not.toExtend<TokenName>();
     expectTypeOf<'highlight'>().not.toExtend<TokenName>();
     expectTypeOf<'turquoise-500'>().not.toExtend<TokenName>();
+    expectTypeOf<'success-bg'>().not.toExtend<TokenName>();
+    expectTypeOf<'band-bg'>().not.toExtend<TokenName>();
+    expectTypeOf<'slate-500'>().not.toExtend<TokenName>();
     expectTypeOf<'space-7'>().not.toExtend<TokenName>();
     expectTypeOf<'breakpoint-md'>().not.toExtend<TokenName>();
 
@@ -93,8 +96,8 @@ describe('type surface', () => {
     expectTypeOf(effectValues.dark.scrim.alpha).toEqualTypeOf<number>();
     expectTypeOf(effectValues.light.shadows[2]).toEqualTypeOf<readonly ShadowLayer[]>();
 
-    expectTypeOf(effectValues.light.band.dots.cell).toEqualTypeOf<number>();
-    expectTypeOf(band).toEqualTypeOf<BandRecipe>();
+    expectTypeOf(effectValues.light.brandSurface.dots.cell).toEqualTypeOf<number>();
+    expectTypeOf(brandSurface).toEqualTypeOf<BrandSurfaceRecipe>();
 
     // @ts-expect-error there are three elevation levels
     expect(effectValues.light.shadows[4]).toBe(undefined);
@@ -102,7 +105,7 @@ describe('type surface', () => {
 
   test('should index the scales by family and step', () => {
     expectTypeOf(scales.cobalt[600]).toEqualTypeOf<string>();
-    expectTypeOf(scales.slate[25]).toEqualTypeOf<string>();
+    expectTypeOf(scales.ink[25]).toEqualTypeOf<string>();
 
     // @ts-expect-error only the neutral scale has a 25 step
     expect(scales.cobalt[25]).toBe(undefined);

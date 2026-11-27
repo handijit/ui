@@ -49,9 +49,10 @@
     background-color $duration-fast $ease-standard,
     border-color $duration-fast $ease-standard;
 
+  // A repeated value flashes in ink: the emphatic neutral, no status hue (3.0).
   &--duplicate {
-    background-color: $warning-bg;
-    border-color: $warning-line;
+    background-color: $bg-inset;
+    border-color: $text-2;
   }
 
   @include reduced-motion {

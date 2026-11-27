@@ -11,7 +11,7 @@ import motion from '@/design/tokens/motion';
 import radii from '@/design/tokens/radii';
 import scales from '@/design/tokens/scales';
 import spacing from '@/design/tokens/spacing';
-import band from '@/design/tokens/band';
+import brandSurface from '@/design/tokens/brand-surface';
 import themes from '@/design/tokens/themes';
 import typography from '@/design/tokens/typography';
 
@@ -37,23 +37,30 @@ describe('scales', () => {
   });
 
   test('should lean the neutrals to cobalt without colouring them', () => {
-    const { c, h } = hexToOklch(scales.slate[500]);
+    const { c, h } = hexToOklch(scales.ink[500]);
 
     expect(c).toBeLessThan(0.04);
     expect(Math.abs(h - hues.cobalt)).toBeLessThan(6);
-    expect(scales.slate[0]).toBe('#ffffff');
+    expect(scales.ink[0]).toBe('#ffffff');
   });
 });
 
-// 2.0 removed turquoise: the palette is cobalt, coral, the navy band, neutrals and the status
-// and series hues. Cyan, teal and turquoise sit between these angles in OKLCH.
-const CYAN_FROM = 170;
-const CYAN_TO = 240;
-// Below this chroma a colour reads as a neutral whatever its hue angle.
-const NEUTRAL_CHROMA = 0.02;
+// 3.0: the palette is cobalt and coral (the brand), red (danger, the one status colour) and
+// ink's neutral steps. Any other hue, cyan, green, amber or violet, fails here. Each range is the
+// family's angle ± its drift across the scale.
+const ALLOWED_HUES: readonly (readonly [name: string, from: number, to: number])[] = [
+  ['coral', 25, 45],
+  ['danger', 0, 25],
+  ['cobalt', 250, 275],
+];
+// Below this chroma a colour reads as a neutral (ink) whatever its hue angle.
+const NEUTRAL_CHROMA = 0.045;
+
+const isAllowedHue = (h: number): boolean =>
+  ALLOWED_HUES.some(([, from, to]) => h >= from && h <= to) || h >= 355;
 
 describe('palette', () => {
-  test('should carry no cyan: no hue, scale step or theme colour in the cyan range', () => {
+  test('should hold only cobalt, coral, danger red and ink: no other hue anywhere', () => {
     const colours = [
       ...Object.entries(scales).flatMap(([name, steps]) =>
         Object.entries(steps).map(([step, hex]) => [`${name}-${step}`, hex] as const),
@@ -62,24 +69,49 @@ describe('palette', () => {
         Object.entries(themes[theme]).map(([token, hex]) => [`${theme} ${token}`, hex] as const),
       ),
     ];
-    const cyan = colours
+    const offHue = colours
       .filter(([, hex]) => {
         const { c, h } = hexToOklch(hex);
-        return c > NEUTRAL_CHROMA && h > CYAN_FROM && h < CYAN_TO;
+        return c > NEUTRAL_CHROMA && !isAllowedHue(h);
       })
       .map(([name]) => name);
 
-    expect(Object.values(hues).filter(hue => hue > CYAN_FROM && hue < CYAN_TO)).toEqual([]);
-    expect(cyan).toEqual([]);
+    expect(Object.keys(hues).sort()).toEqual(['cobalt', 'coral', 'danger']);
+    expect(Object.values(hues).filter(hue => !isAllowedHue(hue))).toEqual([]);
+    expect(offHue).toEqual([]);
+  });
+
+  test('should keep the neutrals on ink: ink is the darkest step, every step leans to it', () => {
+    const steps = Object.values(scales.ink)
+      .slice(1)
+      .map(hex => hexToOklch(hex));
+    const inkHue = hexToOklch(scales.ink[950]).h;
+
+    expect(scales.ink[950]).toBe(themes.light.text);
+    expect(steps.every(({ c }) => c < NEUTRAL_CHROMA)).toBe(true);
+    // The palest steps round to a hex whose hue angle is noise; the rest lean to ink's angle.
+    expect(steps.filter(({ c }) => c > 0.012).every(({ h }) => Math.abs(h - inkHue) < 6)).toBe(
+      true,
+    );
   });
 });
 
-describe('band', () => {
+describe('brandSurface', () => {
   test('should hold offsets and opacities between 0 and 1, and lengths in pixels', () => {
-    for (const value of [band.gradientHold, band.glowAlpha, band.dotAlpha, band.blueprintHold])
+    const { gradientHold, lineAlpha, glowAlpha, dotAlpha, blueprintHold } = brandSurface;
+    const { blueprintFillAlpha, blueprintStrokeAlpha } = brandSurface;
+    for (const value of [
+      gradientHold,
+      lineAlpha,
+      glowAlpha,
+      dotAlpha,
+      blueprintHold,
+      blueprintFillAlpha,
+      blueprintStrokeAlpha,
+    ])
       expect(value > 0 && value < 1).toBe(true);
-    expect(band.dotRadius * 2).toBeLessThan(band.dotCell);
-    expect(band.accentGlow.alpha).toBeLessThan(1);
+    expect(brandSurface.dotRadius * 2).toBeLessThan(brandSurface.dotCell);
+    expect(brandSurface.accentGlow.alpha).toBeLessThan(1);
   });
 });
 

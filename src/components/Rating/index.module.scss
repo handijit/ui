@@ -9,7 +9,8 @@
   &__stars {
     display: inline-flex;
     gap: 1px;
-    color: $warning-solid;
+    // 3.0: cobalt stars; the palette has no amber, and the number beside them carries the value.
+    color: $primary;
   }
 
   &__empty {

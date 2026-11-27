@@ -335,16 +335,10 @@ $header-offset: var(--ui-header-height, 0px);
   }
 }
 
+// A state label. The palette has one status hue, red: `info` is cobalt, `ink` is the emphatic
+// neutral (a warning: ink and an icon), `neutral` the quiet one. A success is `info` with its icon.
 @mixin tint($tone: neutral) {
-  @if $tone == success {
-    background-color: $success-bg;
-    border: 1px solid $success-line;
-    color: $success-fg;
-  } @else if $tone == warning {
-    background-color: $warning-bg;
-    border: 1px solid $warning-line;
-    color: $warning-fg;
-  } @else if $tone == danger {
+  @if $tone == danger {
     background-color: $danger-bg;
     border: 1px solid $danger-line;
     color: $danger-fg;
@@ -352,12 +346,16 @@ $header-offset: var(--ui-header-height, 0px);
     background-color: $info-bg;
     border: 1px solid $info-line;
     color: $info-fg;
+  } @else if $tone == ink {
+    background-color: $bg-raised;
+    border: 1px solid $border-strong;
+    color: $text;
   } @else if $tone == neutral {
     background-color: $bg-raised;
     border: 1px solid $border;
     color: $text-2;
   } @else {
-    @error 'tint(): unknown tone `#{$tone}`. Valid: success, warning, danger, info, neutral.';
+    @error 'tint(): unknown tone `#{$tone}`. Valid: danger, info, ink, neutral.';
   }
 }
 

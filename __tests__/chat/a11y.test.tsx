@@ -183,7 +183,7 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     default: (
       <AppBar
         brand="Acme Chat"
-        start={<ui.StatusDot tone="success" label="Bağlı" />}
+        start={<ui.StatusDot tone="info" label="Bağlı" />}
         end={<ui.IconButton icon={<span>t</span>} label="Tema" />}
       />
     ),

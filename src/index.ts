@@ -172,18 +172,17 @@ export {
   type TimelineStatus,
 } from './components/Timeline';
 
-// --- Brand band (2.0) -------------------------------------------------
+// --- Brand surface (3.0) -----------------------------------------------
 /*
- * The navy band of the brand and what sits on it: the surface with its SVG imagery, the eyebrow
- * label and the strip of facts. `Eyebrow` and `StatStrip` are server-drawable; `Band` is a client
- * module for its SVG ids (`useId`). The coral glow of `ACCENT` on the band lives in `Button`.
+ * The brand's cobalt surface and what sits on it: the surface with its SVG imagery, the eyebrow
+ * label and the strip of facts. All three are server-drawable (`useId` runs on the server too). The coral glow of `ACCENT` on it lives in `Button`.
  */
 export {
-  default as Band,
-  BandBlueprint,
-  type BandBlueprintShape,
-  type BandSide,
-} from './components/Band';
+  BrandBlueprint,
+  type BrandBlueprintShape,
+  default as BrandSurface,
+  type BrandSurfaceSide,
+} from './components/BrandSurface';
 export { default as Eyebrow, type EyebrowAlign } from './components/Eyebrow';
 export {
   default as StatStrip,

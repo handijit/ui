@@ -1,12 +1,12 @@
 import type {
-  BandEffectValues,
+  BrandSurfaceEffectValues,
   EffectValues,
   ShadowLayer,
   ShadowLevel,
   ThemeEffectValues,
   ThemeName,
 } from '../types';
-import band from './band';
+import brandSurface from './brand-surface';
 import themes from './themes';
 
 type LayerRecipe = {
@@ -55,31 +55,33 @@ const layers = (theme: ThemeName, level: ShadowLevel): ShadowLayer[] =>
     alpha: alpha(SHADOW_TONE[theme].alpha * strength),
   }));
 
-/** The band's imagery: the recipe's numbers on the theme's own band, cobalt and coral roles. */
-const bandValues = (theme: ThemeName): BandEffectValues => {
+/** The brand surface's imagery: the recipe's numbers on the theme's cobalt, white and coral roles. */
+const brandSurfaceValues = (theme: ThemeName): BrandSurfaceEffectValues => {
   const colours = themes[theme];
+  const white = colours['on-primary'];
 
   return {
     gradient: [
-      { offset: 0, color: colours['band-bg'] },
-      { offset: band.gradientHold, color: colours['band-bg'] },
-      { offset: 1, color: colours['band-deep'] },
+      { offset: 0, color: colours.primary },
+      { offset: brandSurface.gradientHold, color: colours.primary },
+      { offset: 1, color: colours['brand-surface-deep'] },
     ],
-    glow: { color: colours.primary, alpha: band.glowAlpha },
+    line: { color: white, alpha: brandSurface.lineAlpha },
+    glow: { color: white, alpha: brandSurface.glowAlpha },
     dots: {
-      color: colours['band-line-strong'],
-      alpha: band.dotAlpha,
-      cell: band.dotCell,
-      radius: band.dotRadius,
+      color: white,
+      alpha: brandSurface.dotAlpha,
+      cell: brandSurface.dotCell,
+      radius: brandSurface.dotRadius,
     },
     blueprint: {
-      fill: [
-        { offset: 0, color: colours['band-line'] },
-        { offset: band.blueprintHold, color: colours['band-bg'] },
-      ],
-      stroke: colours['band-line-strong'],
+      color: white,
+      fillAlpha: brandSurface.blueprintFillAlpha,
+      hold: brandSurface.blueprintHold,
+      strokeAlpha: brandSurface.blueprintStrokeAlpha,
+      dot: colours.accent,
     },
-    accentGlow: { color: colours.accent, layer: band.accentGlow },
+    accentGlow: { color: colours.accent, layer: brandSurface.accentGlow },
   };
 };
 
@@ -94,11 +96,11 @@ const buildValues = (theme: ThemeName, scrimBase: string): ThemeEffectValues => 
     3: layers(theme, 3),
   },
   scrim: { color: scrimBase, alpha: alpha(SCRIM_ALPHA[theme]) },
-  band: bandValues(theme),
+  brandSurface: brandSurfaceValues(theme),
 });
 
 /**
- * The shadows, the scrim and the band's imagery as hex and numbers, for anything that cannot read a custom
+ * The shadows, the scrim and the brand surface's imagery as hex and numbers, for anything that cannot read a custom
  * property: an Electron main process, an Open Graph image, a PDF. This is the single source;
  * the CSS strings in `effects` are rendered from it.
  */

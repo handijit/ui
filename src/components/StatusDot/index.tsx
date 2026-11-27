@@ -5,7 +5,8 @@ import { named } from '../../helpers/component.helper';
 
 import styles from './index.module.scss';
 
-export type StatusDotTone = 'neutral' | 'success' | 'warning' | 'danger';
+/** `info` (cobalt) for a good or live state, `ink` for one that needs a look, `danger` for a fault. */
+export type StatusDotTone = 'neutral' | 'info' | 'ink' | 'danger';
 
 type Props = {
   tone?: StatusDotTone;
@@ -23,8 +24,9 @@ type Props = {
 /**
  * Durum noktası — bağlantı, araç çağrısı, meşguliyet.
  *
- * ⚠ Marka tonu YOK (`brand`): nokta bir durum taşır, marka yüzeyi değil. Süren iş `neutral` +
- * `isPulsing` ile anlatılır; yeşil yalnızca anlamsal başarıda (`success`).
+ * ⚠ No brand tone (`brand`): a dot carries a state, not the brand. Ongoing work is `neutral` +
+ * `isPulsing`. 3.0: the palette has no green or amber; a good state is `info` (cobalt), one
+ * that needs a look `ink`, and the label says which.
  */
 const StatusDot: FC<Props> = ({ tone = 'neutral', label, isPulsing, className, testId }) => (
   <span className={cx(styles.status, className)} data-testid={testId}>

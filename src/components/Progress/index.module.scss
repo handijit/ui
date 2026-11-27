@@ -45,12 +45,10 @@
   background-color: $primary;
   transition: inline-size $duration-base $ease-standard;
 
-  &--success {
-    background-color: $success-solid;
-  }
-
-  &--warning {
-    background-color: $warning-solid;
+  // 3.0: the palette has no green or amber. A finished or good bar stays cobalt; one that needs
+  // a look is ink.
+  &--ink {
+    background-color: $text;
   }
 
   &--danger {
@@ -93,12 +91,8 @@
     stroke-linecap: round;
     transition: stroke-dashoffset $duration-base $ease-standard;
 
-    &--success {
-      stroke: $success-solid;
-    }
-
-    &--warning {
-      stroke: $warning-solid;
+    &--ink {
+      stroke: $text;
     }
 
     &--danger {

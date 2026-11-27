@@ -37,9 +37,9 @@ type Props = {
 
 const DOT_TONE = {
   running: 'neutral',
-  ok: 'success',
+  ok: 'info',
   error: 'danger',
-  aborted: 'warning',
+  aborted: 'ink',
   interrupted: 'danger',
 } as const;
 

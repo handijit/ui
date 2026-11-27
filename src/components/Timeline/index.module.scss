@@ -40,13 +40,13 @@
   border-radius: $radius-pill;
   border: 2px solid $border-strong;
   background-color: $bg-surface;
-  color: $success-on-solid;
+  color: $on-primary;
   font-size: $font-size-caption;
   z-index: $z-raised;
 
   .timeline__item--done & {
-    background-color: $success-solid;
-    border-color: $success-solid;
+    background-color: $primary;
+    border-color: $primary;
   }
 
   .timeline__item--current & {

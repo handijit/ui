@@ -43,7 +43,7 @@ const EVENTS: CalendarEvent[] = [
     title: 'Matematik',
     start: '2026-11-09T13:00',
     end: '2026-11-09T14:00',
-    tone: 'success',
+    tone: 'info',
   },
   {
     id: 'c',
@@ -139,7 +139,7 @@ describe('Calendar — time grid', () => {
       'İptal: 12:00–13:00 Fizik , Çarşamba 11 Kasım',
     );
     expect(eventButton(/Fizik/)).toHaveClass('event--cancelled');
-    expect(eventButton(/Matematik/)).toHaveClass('event--success');
+    expect(eventButton(/Matematik/)).toHaveClass('event--info');
     expect(within(group).getByRole('group', { name: 'Salı 10 Kasım' })).toBeInTheDocument();
     expect(screen.getByText('Salı 10 Kasım', { selector: '.header' })).toHaveAttribute(
       'aria-current',
@@ -486,7 +486,7 @@ describe('Calendar — time grid', () => {
         label="Gün planı"
         days={DAYS.slice(0, 1)}
         resources={[
-          { id: 't1', label: 'Ali', detail: '7 / 8 iş', tone: 'warning' },
+          { id: 't1', label: 'Ali', detail: '7 / 8 iş', tone: 'ink' },
           { id: 't2', label: 'Ayşe', detail: '2 / 8 iş' },
         ]}
         events={[]}
@@ -495,8 +495,8 @@ describe('Calendar — time grid', () => {
     const headers = [...container.querySelectorAll<HTMLElement>('.resource')];
 
     expect(headers.map(header => header.textContent)).toEqual(['Ali7 / 8 iş', 'Ayşe2 / 8 iş']);
-    expect(headers[0]).toHaveClass('resource--warning');
-    expect(headers[0]).toHaveAttribute('data-tone', 'warning');
+    expect(headers[0]).toHaveClass('resource--ink');
+    expect(headers[0]).toHaveAttribute('data-tone', 'ink');
     expect(headers[1].className).not.toMatch(/resource--/);
     expect(headers[1]).not.toHaveAttribute('data-tone');
     expect(screen.getByText('7 / 8 iş')).toHaveClass('resource__detail');
@@ -585,7 +585,7 @@ describe('Calendar — time grid', () => {
       <Calendar
         label="Ders planı"
         days={DAYS}
-        resources={[{ id: 'r', label: 'Derslik', detail: '%85 dolu', tone: 'warning' }]}
+        resources={[{ id: 'r', label: 'Derslik', detail: '%85 dolu', tone: 'ink' }]}
         bands={[{ label: 'Sabah', start: '08:00', end: '12:00' }]}
         events={EVENTS.map(event => ({ ...event, resourceId: 'r' }))}
         onEventChange={() => {}}

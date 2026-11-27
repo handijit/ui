@@ -75,12 +75,14 @@ $alert-text-min: 16rem;
     @include tint(info);
   }
 
+  // 3.0: one status hue, red. A success is cobalt with its check icon; a warning is ink, the
+  // emphatic neutral, with its triangle. The icon and the text carry the difference.
   &--success {
-    @include tint(success);
+    @include tint(info);
   }
 
   &--warning {
-    @include tint(warning);
+    @include tint(ink);
   }
 
   &--danger {

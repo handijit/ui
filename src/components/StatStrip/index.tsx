@@ -10,8 +10,8 @@ export type StatStripItem = {
   label: ReactNode;
 };
 
-/** `page`: on a theme surface. `band`: the deep strip at the foot of a `Band`, full width. */
-export type StatStripVariant = 'page' | 'band';
+/** `page`: on a theme surface. `brand`: the deep strip at the foot of a `BrandSurface`, full width. */
+export type StatStripVariant = 'page' | 'brand';
 
 type Props = {
   items: readonly StatStripItem[];
@@ -24,7 +24,7 @@ type Props = {
 
 /**
  * StatStrip — a row of short facts (value and label) separated by thin dividers: the trust
- * line under a hero or at the foot of the brand band. A list, read value then label; the
+ * line under a hero or at the foot of the brand surface. A list, read value then label; the
  * dividers are borders, never content. Rows wrap on a narrow screen and a wrapped row starts
  * without a divider.
  */

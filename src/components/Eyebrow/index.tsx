@@ -18,7 +18,7 @@ type Props = {
 
 /**
  * Eyebrow — the small label above a heading: monospace capitals framed by thin rules. On the
- * brand band (`Band`) it takes the band's colours by itself. The rules are decoration (CSS
+ * brand surface (`BrandSurface`) it turns white by itself. The rules are decoration (CSS
  * pseudo-elements); the text is read as written.
  */
 const Eyebrow: FC<Props> = ({ children, align = 'start', as: Tag = 'p', className, testId }) => (

@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 
-import Band, { BandBlueprint } from '@/components/Band';
+import BrandSurface, { BrandBlueprint } from '@/components/BrandSurface';
 import Eyebrow from '@/components/Eyebrow';
 import StatStrip from '@/components/StatStrip';
-import { band } from '@handijitcom/ui/design';
+import { brandSurface } from '@handijitcom/ui/design';
 
 const SHAPE = { viewBox: '0 0 10 10', body: 'M0 0h10v10H0z', dot: 'M1 1h2v2H1z' };
 
@@ -15,22 +15,22 @@ const references = (root: Element): { urls: string[]; ids: string[] } => ({
   ids: [...root.querySelectorAll('[id]')].map(element => element.id),
 });
 
-describe('Band', () => {
+describe('BrandSurface', () => {
   it('is a named region with its content, and marks itself for what sits on it', () => {
     render(
-      <Band aria-labelledby="band-title" testId="band">
-        <h2 id="band-title">Projenizi konuşalım</h2>
-      </Band>,
+      <BrandSurface aria-labelledby="surface-title" testId="surface">
+        <h2 id="surface-title">Projenizi konuşalım</h2>
+      </BrandSurface>,
     );
 
     const region = screen.getByRole('region', { name: 'Projenizi konuşalım' });
     expect(region.tagName).toBe('SECTION');
-    expect(region).toHaveAttribute('data-ui-band', '');
-    expect(screen.getByTestId('band')).toBe(region);
+    expect(region).toHaveAttribute('data-ui-brand-surface', '');
+    expect(screen.getByTestId('surface')).toBe(region);
   });
 
   it('draws the imagery as decorative SVG, not as a CSS gradient', () => {
-    const { container } = render(<Band as="div">Metin</Band>);
+    const { container } = render(<BrandSurface as="div">Metin</BrandSurface>);
     const svg = container.querySelector('svg');
 
     expect(svg).toHaveAttribute('aria-hidden', 'true');
@@ -38,15 +38,15 @@ describe('Band', () => {
     expect(container.firstElementChild?.getAttribute('style')).toBeNull();
   });
 
-  it('points every url() at an id of its own, unique per band', () => {
+  it('points every url() at an id of its own, unique per surface', () => {
     const { container } = render(
       <>
-        <Band as="div" dots="both">
+        <BrandSurface as="div" dots="both">
           A
-        </Band>
-        <Band as="div" dots="both">
+        </BrandSurface>
+        <BrandSurface as="div" dots="both">
           B
-        </Band>
+        </BrandSurface>
       </>,
     );
     const { urls, ids } = references(container);
@@ -60,9 +60,9 @@ describe('Band', () => {
   it('draws the glows and the dot grid on the sides asked for', () => {
     const count = (glow: 'start' | 'end' | 'both' | 'none', dots: typeof glow) => {
       const { container, unmount } = render(
-        <Band as="div" glow={glow} dots={dots}>
+        <BrandSurface as="div" glow={glow} dots={dots}>
           x
-        </Band>,
+        </BrandSurface>,
       );
       const svg = container.querySelector('svg') as SVGSVGElement;
       const result = {
@@ -81,26 +81,26 @@ describe('Band', () => {
   });
 
   it('takes the geometry from the design recipe', () => {
-    const { container } = render(<Band as="div">x</Band>);
+    const { container } = render(<BrandSurface as="div">x</BrandSurface>);
     const pattern = container.querySelector('pattern');
 
-    expect(pattern).toHaveAttribute('width', String(band.dotCell));
-    expect(pattern?.querySelector('circle')).toHaveAttribute('r', String(band.dotRadius));
+    expect(pattern).toHaveAttribute('width', String(brandSurface.dotCell));
+    expect(pattern?.querySelector('circle')).toHaveAttribute('r', String(brandSurface.dotRadius));
     expect(container.querySelector('linearGradient stop:nth-child(2)')).toHaveAttribute(
       'offset',
-      String(band.gradientHold),
+      String(brandSurface.gradientHold),
     );
   });
 
   it('hides the artwork from assistive technology and puts the footer under the content', () => {
     const { container } = render(
-      <Band
+      <BrandSurface
         aria-label="Kapanış"
-        artwork={<BandBlueprint shape={SHAPE} testId="art" />}
-        footer={<StatStrip variant="band" items={[{ value: '4,9', label: 'puan' }]} />}
+        artwork={<BrandBlueprint shape={SHAPE} testId="art" />}
+        footer={<StatStrip variant="brand" items={[{ value: '4,9', label: 'puan' }]} />}
       >
         <p>İçerik</p>
-      </Band>,
+      </BrandSurface>,
     );
 
     expect(screen.getByTestId('art').parentElement).toHaveAttribute('aria-hidden', 'true');
@@ -110,9 +110,9 @@ describe('Band', () => {
   });
 });
 
-describe('BandBlueprint', () => {
+describe('BrandBlueprint', () => {
   it('draws the body in its own gradient and the dot only when given', () => {
-    const { container, rerender } = render(<BandBlueprint shape={SHAPE} />);
+    const { container, rerender } = render(<BrandBlueprint shape={SHAPE} />);
     const { urls, ids } = references(container);
 
     expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
@@ -120,7 +120,7 @@ describe('BandBlueprint', () => {
     expect(urls).toEqual(ids);
     expect(container.querySelectorAll('path')).toHaveLength(2);
 
-    rerender(<BandBlueprint shape={{ viewBox: SHAPE.viewBox, body: SHAPE.body }} />);
+    rerender(<BrandBlueprint shape={{ viewBox: SHAPE.viewBox, body: SHAPE.body }} />);
     expect(container.querySelectorAll('path')).toHaveLength(1);
   });
 });

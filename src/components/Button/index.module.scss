@@ -138,7 +138,7 @@
   }
 
   // Coral: the conversion action (download, try, subscribe) — and nothing else in the library. On the
-  // brand band it is the band's one action (see the glow at the end of this file).
+  // brand surface it is the surface's one action (see the glow at the end of this file).
   &--accent {
     background-color: $accent;
     border-color: $accent;
@@ -230,51 +230,50 @@
     }
   }
 
-  // An action on the brand band, which is deep cobalt in both themes.
-  &--on-band {
+  // A second action on the brand surface (cobalt in both themes): a white frame and a white label
+  // (5.03:1 on `primary`). It never takes a translucent fill: white text over a white veil drops
+  // under 4.5:1, so hover and press go one cobalt step deeper (10.05:1).
+  &--on-brand {
     background-color: transparent;
-    border-color: $band-line-strong;
-    color: $band-text;
+    border-color: $on-primary;
+    color: $on-primary;
 
-    &:hover:not(:disabled) {
-      background-color: $band-line;
-      border-color: $band-text-2;
-    }
-
+    &:hover:not(:disabled),
     &:active:not(:disabled) {
-      background-color: $band-deep;
+      background-color: $brand-surface-deep;
     }
 
     &:disabled {
       background-color: transparent;
-      border-color: $band-line;
-      color: $band-line-strong;
+      border-color: $brand-surface-line;
+      color: $on-primary;
     }
   }
 
   // One passive look for every variant on a theme surface: the fill withdraws, the text stays
   // readable enough to recognise the action (`text-disabled` on `bg-disabled`).
-  &:disabled:not(.button--on-band) {
+  &:disabled:not(.button--on-brand) {
     background-color: $bg-disabled;
     border-color: transparent;
     color: $text-disabled;
   }
 
-  &--outline:disabled:not(.button--on-band),
-  &--ghost:disabled:not(.button--on-band) {
+  &--outline:disabled:not(.button--on-brand),
+  &--ghost:disabled:not(.button--on-brand) {
     background-color: transparent;
   }
 
-  &--outline:disabled:not(.button--on-band) {
+  &--outline:disabled:not(.button--on-brand) {
     border-color: $border;
   }
 }
 
-// The brand band (`Band`, or any element that carries `data-ui-band`): the conversion button is the
-// band's one action, coral on navy (5.07:1 on `band-bg`, gated), and glows softly there. Everywhere
-// else every button is flat.
-:where([data-ui-band]) .button--accent:not(:disabled) {
-  box-shadow: $band-accent-glow;
+// The brand surface (`BrandSurface`, or any element that carries `data-ui-brand-surface`): the
+// conversion button is the surface's one action, coral with its ink label (6.15:1), and glows
+// softly there. Coral on cobalt is 1.64:1, so the label, not the fill's edge, identifies it.
+// Everywhere else every button is flat.
+:where([data-ui-brand-surface]) .button--accent:not(:disabled) {
+  box-shadow: $brand-surface-accent-glow;
 }
 
 .button__spinner {

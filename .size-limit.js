@@ -17,7 +17,8 @@ export default [
      * satırları, bağlantı düğmesinin `inert` sınıfı. Tüketici bunu indirmez (yalnızca ulaşılan
      * modüller); asıl koruma aşağıdaki tek bileşen ölçümleri — 6.0'da `Button` 5,12 → 1,33 kB.
      * ⚠ 44 → 46 kB (2026-11-27, 2.0 of @handijitcom/ui). Measured 45.44 kB: the brand band (`Band`
-     * with `BandBlueprint` 1.3 kB, `StatStrip` 0.4 kB, `Eyebrow` 0.3 kB alone). Asked first whether
+     * with `BandBlueprint` 1.3 kB, `StatStrip` 0.4 kB, `Eyebrow` 0.3 kB alone; 3.0 renamed them
+     * `BrandSurface` / `BrandBlueprint`, 45.45 kB). Asked first whether
      * they belong in a sub-entry: no. A sub-entry is ONE client bundle (`'use client'` banner),
      * while `Eyebrow` and `StatStrip` are drawn on the server and the band is the shop window's own
      * surface; per-component modules keep its cost to the page that draws it (measured below).
@@ -149,17 +150,17 @@ export default [
     gzip: true,
   },
   {
-    /* 2.0: the band pulls only its recipe numbers from the design entry, never the palette. */
-    name: 'only Band (tree shaking)',
+    /* The brand surface pulls only its recipe numbers from the design entry, never the palette. */
+    name: 'only BrandSurface (tree shaking)',
     path: 'build/index.js',
-    import: '{ Band, BandBlueprint }',
+    import: '{ BrandSurface, BrandBlueprint }',
     /* First measurement (2026-11-27): 1.4 kB. */
     limit: '1.8 kB',
     gzip: true,
   },
   {
-    name: 'only Band CSS (components/Band/style.css)',
-    path: 'build/components/Band/style.css',
+    name: 'only BrandSurface CSS (components/BrandSurface/style.css)',
+    path: 'build/components/BrandSurface/style.css',
     /* First measurement (2026-11-27): 0.78 kB. */
     limit: '1 kB',
     gzip: true,

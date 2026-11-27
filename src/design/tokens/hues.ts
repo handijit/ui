@@ -1,14 +1,13 @@
 import type { HueName } from '../types';
 
-/** OKLCH hue angle of every chromatic family. Neutrals lean to the cobalt hue. */
+/**
+ * OKLCH hue angle of every chromatic family: the brand's cobalt and coral, and red for danger,
+ * the one status colour. The neutrals (`ink`) lean to the cobalt angle, which is ink's own.
+ */
 const hues: Readonly<Record<HueName, number>> = {
   cobalt: 264,
   coral: 33,
-  success: 156,
-  warning: 78,
   danger: 14,
-  violet: 310,
-  magenta: 348,
 };
 
 export default hues;

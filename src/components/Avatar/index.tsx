@@ -12,7 +12,7 @@ export type AvatarShape = 'circle' | 'rounded';
 
 /**
  * `auto`: the initials medallion is painted from a FIXED bucket chosen by the name. `brand`: the
- * brand medallion — the navy band with a white mark, the same in both themes (the logo's colours;
+ * brand medallion — cobalt with a white mark, the same in both themes (the logo's colours;
  * the assistant's avatar, the tile of an empty chat).
  */
 export type AvatarTone = 'auto' | 'brand';

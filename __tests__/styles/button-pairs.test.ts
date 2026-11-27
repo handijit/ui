@@ -92,8 +92,8 @@ describe.each(['secondary', 'outline'])(
         state: 'disabled',
         button: [
           `.button--${variant}`,
-          '.button:disabled:not(.button--on-band)',
-          ...(variant === 'outline' ? ['.button--outline:disabled:not(.button--on-band)'] : []),
+          '.button:disabled:not(.button--on-brand)',
+          ...(variant === 'outline' ? ['.button--outline:disabled:not(.button--on-brand)'] : []),
         ],
         iconButton: [
           '.iconButton',

@@ -12,8 +12,8 @@ const {
   Alert,
   Avatar,
   Badge,
-  Band,
-  BandBlueprint,
+  BrandBlueprint,
+  BrandSurface,
   BottomSheet,
   Breadcrumb,
   Button,
@@ -300,28 +300,29 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
     brand: <Avatar name="Asistan" icon={<HeartFill />} tone="brand" shape="rounded" />,
   },
   Badge: { default: <Badge>Yeni</Badge>, solid: <Badge variant="solid">Yeni</Badge> },
-  /* The imagery is `aria-hidden`; a section band is a landmark only with its heading as its name. */
-  Band: {
+  /* The imagery is `aria-hidden`; a section surface is a landmark only with its heading as name. */
+  BrandSurface: {
     section: (
-      <Band
-        aria-labelledby="band-a11y"
-        artwork={<BandBlueprint shape={{ viewBox: '0 0 10 10', body: 'M0 0h10v10H0z' }} />}
-        footer={<StatStrip variant="band" items={[{ value: '4,9', label: 'puan' }]} />}
+      <BrandSurface
+        aria-labelledby="brand-a11y"
+        artwork={<BrandBlueprint shape={{ viewBox: '0 0 10 10', body: 'M0 0h10v10H0z' }} />}
+        footer={<StatStrip variant="brand" items={[{ value: '4,9', label: 'puan' }]} />}
       >
         <Eyebrow>Teklif</Eyebrow>
-        <h2 id="band-a11y">Projenizi konuşalım</h2>
+        <h2 id="brand-a11y">Projenizi konuşalım</h2>
         <Button variant={UIVariant.ACCENT}>Teklif alın</Button>
-      </Band>
+        <Button variant={UIVariant.ON_BRAND}>WhatsApp</Button>
+      </BrandSurface>
     ),
     plain: (
-      <Band as="div" glow="none" dots="none">
+      <BrandSurface as="div" glow="none" dots="none">
         Metin
-      </Band>
+      </BrandSurface>
     ),
   },
-  BandBlueprint: {
+  BrandBlueprint: {
     default: (
-      <BandBlueprint shape={{ viewBox: '0 0 10 10', body: 'M0 0h10v10H0z', dot: 'M1 1h2v2H1z' }} />
+      <BrandBlueprint shape={{ viewBox: '0 0 10 10', body: 'M0 0h10v10H0z', dot: 'M1 1h2v2H1z' }} />
     ),
   },
   Eyebrow: {
@@ -492,7 +493,7 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   },
   StatusDot: {
     default: <StatusDot label="Hazır" />,
-    pulsing: <StatusDot tone="success" label="Bağlı" isPulsing />,
+    pulsing: <StatusDot tone="info" label="Bağlı" isPulsing />,
   },
   Kbd: {
     combo: <Kbd keys={['Shift', 'Enter']} />,

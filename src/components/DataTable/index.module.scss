@@ -45,11 +45,13 @@
   }
 }
 
+// A row that needs attention: ink, the emphatic neutral, with a rule at its start (3.0: the
+// palette has no amber). The row's own text says why.
 .row--warning {
-  background-color: $warning-bg;
+  background-color: $bg-raised;
 
   td:first-child {
-    box-shadow: inset 3px 0 0 $warning-fg;
+    box-shadow: inset 3px 0 0 $text;
   }
 }
 

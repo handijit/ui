@@ -28,7 +28,7 @@ describe('tokens.scss', () => {
   });
 
   test('should declare one variable per token, pointing at its custom property', () => {
-    expect(TOKEN_NAMES).toHaveLength(263);
+    expect(TOKEN_NAMES).toHaveLength(198);
     for (const name of TOKEN_NAMES) {
       expect(scss).toContain(`\n$hd-${name}: var(--hd-${name});\n`);
     }

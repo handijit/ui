@@ -1,6 +1,6 @@
 {
   "name": "@handijitcom/ui",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Accessible React component library on SCSS Modules, themed by its own design tokens (@handijitcom/ui/design): light and dark from one set of --hd-* tokens, a CSP-ready theme boot script, and Bootstrap Icons for iconography.",
   "author": "Ahmet ilhan <ahmetilhan.dev@gmail.com>",
   "license": "MIT",
@@ -66,16 +66,6 @@
         "default": "./build/components/Badge/index.cjs"
       }
     },
-    "./band": {
-      "import": {
-        "types": "./build/components/Band/index.d.ts",
-        "default": "./build/components/Band/index.js"
-      },
-      "require": {
-        "types": "./build/components/Band/index.d.cts",
-        "default": "./build/components/Band/index.cjs"
-      }
-    },
     "./bottom-sheet": {
       "import": {
         "types": "./build/components/BottomSheet/index.d.ts",
@@ -84,6 +74,16 @@
       "require": {
         "types": "./build/components/BottomSheet/index.d.cts",
         "default": "./build/components/BottomSheet/index.cjs"
+      }
+    },
+    "./brand-surface": {
+      "import": {
+        "types": "./build/components/BrandSurface/index.d.ts",
+        "default": "./build/components/BrandSurface/index.js"
+      },
+      "require": {
+        "types": "./build/components/BrandSurface/index.d.cts",
+        "default": "./build/components/BrandSurface/index.cjs"
       }
     },
     "./breadcrumb": {

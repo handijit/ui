@@ -1,26 +1,26 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
-// The brand band: navy in both themes. The surface colour is `band-bg`; the gradient, the glows and
-// the dot grid are an inline SVG under the content (never a CSS gradient), so the band reads the
-// same in a browser, a screenshot and an Open Graph image.
-.band {
+// The brand surface: cobalt `primary` with white on it, the same in both themes. The fill is
+// `primary`; the gradient into `brand-surface-deep`, the white sheens and the white dot grid are an
+// inline SVG under the content (never a CSS gradient), so the surface reads the same in a browser,
+// a screenshot and an Open Graph image. Cobalt is 4.86:1 on the light page and 3.83:1 on the dark
+// one, so it needs no edge in either theme.
+.surface {
   position: relative;
   // The SVG and the artwork sit at `z-index: -1`, under the content and above the fill.
   isolation: isolate;
   overflow: clip;
   display: flex;
   flex-direction: column;
-  // The band's own colour on a light page; its hairline on the dark page, where navy is 1.24:1.
-  border: 1px solid $band-edge;
-  border-radius: var(--ui-band-radius, #{$radius-lg});
-  background-color: $band-bg;
-  color: $band-text;
-  // Every focus ring inside reads against navy: `$focus` follows this hook.
-  --ui-ring-color: #{$band-focus};
+  border-radius: var(--ui-brand-surface-radius, #{$radius-lg});
+  background-color: $primary;
+  color: $on-primary;
+  // Every focus ring inside is white (5.03:1 on cobalt): `$focus` follows this hook.
+  --ui-ring-color: #{$on-primary};
 
   @include for-mobile {
-    border-radius: var(--ui-band-radius, #{$radius-md});
+    border-radius: var(--ui-brand-surface-radius, #{$radius-md});
   }
 
   &__backdrop {
@@ -36,25 +36,26 @@
   }
 
   &__stop-from {
-    stop-color: $band-gradient-from;
+    stop-color: $primary;
   }
 
   &__stop-to {
-    stop-color: $band-gradient-to;
+    stop-color: $brand-surface-deep;
   }
 
+  // A white sheen, not a light: white text over its centre stays 4.58:1 (gated).
   &__glow-centre {
-    stop-color: $band-glow;
-    stop-opacity: $band-glow-alpha;
+    stop-color: $on-primary;
+    stop-opacity: $brand-surface-glow-alpha;
   }
 
   &__glow-edge {
-    stop-color: $band-glow;
+    stop-color: $on-primary;
     stop-opacity: 0;
   }
 
   &__dot {
-    fill: $band-dot;
+    fill: $on-primary;
   }
 
   // The mask reads the stops' opacity only; their colour plays no part.
@@ -63,7 +64,7 @@
   }
 
   &__fade-edge {
-    stop-opacity: $band-dot-alpha;
+    stop-opacity: $brand-surface-dot-alpha;
   }
 
   &__fade-clear {
@@ -75,7 +76,7 @@
     inset-inline-end: clamp(#{$space-6}, 3.5vw, #{$space-12});
     bottom: 0;
     z-index: -1;
-    width: var(--ui-band-artwork-width, 120px);
+    width: var(--ui-brand-surface-artwork-width, 120px);
     pointer-events: none;
 
     @include for-tablet {
@@ -86,7 +87,7 @@
   &__body {
     position: relative;
     padding: var(
-      --ui-band-padding,
+      --ui-brand-surface-padding,
       clamp(#{$space-6}, 4vw, #{$space-12}) clamp(#{$space-5}, 4vw, #{$space-12})
     );
   }
@@ -94,7 +95,7 @@
   // Room for the artwork beside the content, where the artwork is drawn.
   &--artwork &__body {
     @include for-desktop-up {
-      padding-inline-end: calc(var(--ui-band-artwork-width, 120px) + #{$space-16});
+      padding-inline-end: calc(var(--ui-brand-surface-artwork-width, 120px) + #{$space-16});
     }
   }
 
@@ -103,9 +104,9 @@
   }
 
   // Forced colours keep the system's text colour on top of whatever the SVG paints: the imagery
-  // goes and the band is a framed region of the system canvas.
+  // goes and the surface is a framed region of the system canvas.
   @media (forced-colors: active) {
-    border-color: CanvasText;
+    border: 1px solid CanvasText;
 
     &__backdrop,
     &__artwork {
@@ -121,15 +122,18 @@
   overflow: visible;
 
   &__stop-from {
-    stop-color: $band-blueprint-from;
+    stop-color: $on-primary;
+    stop-opacity: $brand-surface-blueprint-fill-alpha;
   }
 
   &__stop-to {
-    stop-color: $band-blueprint-to;
+    stop-color: $on-primary;
+    stop-opacity: 0;
   }
 
   &__body {
-    stroke: $band-blueprint-stroke;
+    stroke: $on-primary;
+    stroke-opacity: $brand-surface-blueprint-stroke-alpha;
     stroke-width: 2px;
     stroke-linejoin: round;
     // The outline keeps its width at any size the artwork is drawn.

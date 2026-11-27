@@ -83,9 +83,10 @@ const staticGroups = (): DeclarationGroup<StaticToken>[] => [
   },
 ];
 
-const isBandEffect = ([name]: Declaration<ThemedToken>): boolean => name.startsWith('band-');
+const isBrandSurfaceEffect = ([name]: Declaration<ThemedToken>): boolean =>
+  name.startsWith('brand-surface-');
 
-/** Tokens whose value depends on the theme: semantic colours, shadows, the scrim, band imagery. */
+/** Tokens whose value depends on the theme: semantic colours, shadows, the scrim, brand surface imagery. */
 const themedGroups = (theme: ThemeName): DeclarationGroup<ThemedToken>[] => {
   const effectDeclarations = entries(effects[theme]);
 
@@ -93,9 +94,12 @@ const themedGroups = (theme: ThemeName): DeclarationGroup<ThemedToken>[] => {
     { title: 'Colours', declarations: entries(themes[theme]) },
     {
       title: 'Elevation',
-      declarations: effectDeclarations.filter(declaration => !isBandEffect(declaration)),
+      declarations: effectDeclarations.filter(declaration => !isBrandSurfaceEffect(declaration)),
     },
-    { title: 'Brand band imagery', declarations: effectDeclarations.filter(isBandEffect) },
+    {
+      title: 'Brand surface imagery',
+      declarations: effectDeclarations.filter(isBrandSurfaceEffect),
+    },
   ];
 };
 

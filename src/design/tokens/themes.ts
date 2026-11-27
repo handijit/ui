@@ -4,11 +4,11 @@ import type { Theme, Themes } from '../types';
 import hues from './hues';
 import scales from './scales';
 
-const { cobalt, coral, success, warning, danger, violet, magenta, slate } = scales;
+const { cobalt, coral, danger, ink } = scales;
 
 const WHITE = '#ffffff';
 
-/** Dark theme neutrals: deep cobalt night, never pure black. */
+/** Dark theme neutrals: ink's own night steps, never pure black. */
 const night = {
   inset: neutral(0.135, 0.026),
   page: neutral(0.165, 0.03),
@@ -33,17 +33,13 @@ const cobaltNight = {
   line: oklchToHex({ l: 0.4, c: 0.13, h: 265 }),
 };
 
-/** The brand band: the same deep cobalt in both themes (hero, footer, sign-in side). */
-const band = {
-  'band-bg': oklchToHex({ l: 0.27, c: 0.13, h: 266 }),
-  'band-deep': oklchToHex({ l: 0.2, c: 0.09, h: 268 }),
-  'band-line': oklchToHex({ l: 0.38, c: 0.13, h: 266 }),
-  // The hairline is decorative; control outlines on the band need 3:1 against it.
-  'band-line-strong': oklchToHex({ l: 0.6, c: 0.13, h: 266 }),
-  'band-text': WHITE,
-  'band-text-2': oklchToHex({ l: 0.86, c: 0.05, h: 262 }),
-  // The cobalt ring is 4.6:1 here but reads as part of the cobalt band; the white one cannot be missed.
-  'band-focus': WHITE,
+/**
+ * The brand surface is the cobalt `primary` in both themes, with white (`on-primary`) on it.
+ * Its one deeper step (the gradient's foot, the strip of facts) comes from the cobalt scale:
+ * the light theme's pressed primary, 10.05:1 under white.
+ */
+const brandSurface = {
+  'brand-surface-deep': cobalt[800],
 } as const;
 
 /** The conversion colour and its ink are identical in both themes. */
@@ -51,30 +47,30 @@ const accent = {
   accent: coral[500],
   'accent-hover': coral[400],
   'accent-active': oklchToHex({ l: 0.65, c: 0.2, h: hues.coral }),
-  'on-accent': slate[950],
+  'on-accent': ink[950],
 } as const;
 
 /**
- * Light-theme boundary of interactive controls. It sits between slate 400 and 500 because
- * no step of the scale lands in the band: 400 is 2.4:1 on a surface, 500 is 5:1. Bound by
+ * Light-theme boundary of interactive controls. It sits between ink 400 and 500 because
+ * no step of the scale lands in that range: 400 is 2.4:1 on a surface, 500 is 5:1. Bound by
  * the inset ground, the darkest one a control sits on: 3.08:1 there.
  */
 const lightBorderControl = neutral(0.63, 0.029);
 
 const light: Theme = {
-  'bg-page': slate[25],
-  'bg-surface': slate[0],
-  'bg-raised': slate[50],
-  'bg-inset': slate[100],
-  'bg-overlay': slate[0],
-  'bg-disabled': slate[100],
-  border: slate[200],
-  'border-strong': slate[300],
+  'bg-page': ink[25],
+  'bg-surface': ink[0],
+  'bg-raised': ink[50],
+  'bg-inset': ink[100],
+  'bg-overlay': ink[0],
+  'bg-disabled': ink[100],
+  border: ink[200],
+  'border-strong': ink[300],
   'border-control': lightBorderControl,
-  text: slate[950],
-  'text-2': slate[600],
-  'text-3': slate[500],
-  'text-disabled': slate[400],
+  text: ink[950],
+  'text-2': ink[600],
+  'text-3': ink[500],
+  'text-disabled': ink[400],
   primary: cobalt[600],
   'primary-hover': cobalt[700],
   'primary-active': cobalt[800],
@@ -88,16 +84,6 @@ const light: Theme = {
   'accent-text': coral[700],
   focus: cobalt[500],
   'selection-bg': cobalt[200],
-  'success-bg': success[50],
-  'success-fg': success[700],
-  'success-line': success[200],
-  'success-solid': success[600],
-  'success-on-solid': slate[950],
-  'warning-bg': warning[50],
-  'warning-fg': warning[700],
-  'warning-line': warning[200],
-  'warning-solid': warning[600],
-  'warning-on-solid': slate[950],
   'danger-bg': danger[50],
   'danger-fg': danger[700],
   'danger-line': danger[200],
@@ -108,16 +94,15 @@ const light: Theme = {
   'info-line': cobalt[200],
   'info-solid': cobalt[600],
   'info-on-solid': WHITE,
+  // Series are tints of the three brand colours only (cobalt, coral, ink): the six steps at
+  // least 3:1 on every light ground that lie furthest apart (17.9 ΔE at the closest pair).
   'chart-1': cobalt[600],
   'chart-2': coral[600],
-  // Green, the one family of the palette at least 16 ΔE from every other series in both themes.
-  'chart-3': success[600],
-  'chart-4': warning[600],
-  'chart-5': magenta[600],
-  'chart-6': violet[600],
-  ...band,
-  // The navy band stands out of a light page on its own (15:1); no edge.
-  'band-edge': band['band-bg'],
+  'chart-3': ink[500],
+  'chart-4': cobalt[900],
+  'chart-5': coral[800],
+  'chart-6': ink[950],
+  ...brandSurface,
 };
 
 const dark: Theme = {
@@ -147,16 +132,6 @@ const dark: Theme = {
   'accent-text': coral[300],
   focus: cobalt[400],
   'selection-bg': cobaltNight.line,
-  'success-bg': oklchToHex({ l: 0.26, c: 0.05, h: hues.success }),
-  'success-fg': success[300],
-  'success-line': oklchToHex({ l: 0.38, c: 0.08, h: hues.success }),
-  'success-solid': success[400],
-  'success-on-solid': slate[950],
-  'warning-bg': oklchToHex({ l: 0.27, c: 0.05, h: hues.warning }),
-  'warning-fg': warning[300],
-  'warning-line': oklchToHex({ l: 0.4, c: 0.075, h: hues.warning }),
-  'warning-solid': warning[400],
-  'warning-on-solid': slate[950],
   'danger-bg': oklchToHex({ l: 0.26, c: 0.065, h: hues.danger }),
   'danger-fg': danger[300],
   'danger-line': oklchToHex({ l: 0.39, c: 0.11, h: hues.danger }),
@@ -167,15 +142,14 @@ const dark: Theme = {
   'info-line': cobaltNight.line,
   'info-solid': cobalt[600],
   'info-on-solid': WHITE,
+  // The same search on the dark grounds: 20.2 ΔE at the closest pair, every step 3.24:1 or more.
   'chart-1': cobalt[400],
   'chart-2': coral[400],
-  'chart-3': success[400],
-  'chart-4': warning[400],
-  'chart-5': magenta[400],
-  'chart-6': violet[400],
-  ...band,
-  // The navy band is 1.24:1 on the dark page; its hairline (1.87:1) marks where it ends.
-  'band-edge': band['band-line'],
+  'chart-3': ink[0],
+  'chart-4': cobalt[600],
+  'chart-5': coral[600],
+  'chart-6': ink[500],
+  ...brandSurface,
 };
 
 /**

@@ -40,7 +40,7 @@ describe('README', () => {
         ),
     );
 
-    expect(keysOf(api.themes.light)).toHaveLength(63);
+    expect(keysOf(api.themes.light)).toHaveLength(46);
     expect(missing).toEqual([]);
   });
 

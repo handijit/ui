@@ -47,14 +47,15 @@
     --ui-strip-label: #{$text-2};
   }
 
-  // The deep strip at the foot of the band: `band-deep` under a `band-line` hairline.
-  &--band {
-    --ui-strip-line: #{$band-line};
-    --ui-strip-value: #{$band-text};
-    --ui-strip-label: #{$band-text-2};
+  // The deep strip at the foot of the brand surface: one cobalt step deeper, under a white
+  // hairline; value and label both white (10.05:1).
+  &--brand {
+    --ui-strip-line: #{$brand-surface-line};
+    --ui-strip-value: #{$on-primary};
+    --ui-strip-label: #{$on-primary};
 
     padding-block: $space-4;
-    border-top: 1px solid $band-line;
-    background-color: $band-deep;
+    border-top: 1px solid $brand-surface-line;
+    background-color: $brand-surface-deep;
   }
 }

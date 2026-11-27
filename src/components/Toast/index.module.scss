@@ -71,12 +71,13 @@
     border-inline-start: 3px solid $primary;
   }
 
+  // 3.0: one status hue, red. A success is cobalt, a warning ink; the icon says which.
   &--success {
-    border-inline-start: 3px solid $success-solid;
+    border-inline-start: 3px solid $primary;
   }
 
   &--warning {
-    border-inline-start: 3px solid $warning-solid;
+    border-inline-start: 3px solid $text;
   }
 
   &--danger {
@@ -99,11 +100,11 @@
   }
 
   .toast--success & {
-    color: $success-solid;
+    color: $primary;
   }
 
   .toast--warning & {
-    color: $warning-solid;
+    color: $text;
   }
 
   .toast--danger & {

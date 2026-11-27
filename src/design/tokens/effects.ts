@@ -29,13 +29,13 @@ const shadow = (color: string, layers: readonly ShadowLayer[]): string =>
 // An offset of 0–1 as a CSS percentage, without the float noise of `0.55 * 100`.
 const percent = (offset: number): string => `${Math.round(offset * 1000) / 10}%`;
 
-const render = ({ shadow: tone, shadows, scrim, band }: ThemeEffectValues): ThemeEffects => {
-  const [gradientFrom, gradientHold, gradientTo] = band.gradient as [
-    GradientStop,
-    GradientStop,
-    GradientStop,
-  ];
-  const [blueprintFrom, blueprintTo] = band.blueprint.fill as [GradientStop, GradientStop];
+const render = ({
+  shadow: tone,
+  shadows,
+  scrim,
+  brandSurface,
+}: ThemeEffectValues): ThemeEffects => {
+  const { gradient, line, glow, dots, blueprint, accentGlow } = brandSurface;
 
   return {
     'shadow-color': channels(tone.color),
@@ -44,28 +44,24 @@ const render = ({ shadow: tone, shadows, scrim, band }: ThemeEffectValues): Them
     'shadow-2': shadow(tone.color, shadows[2]),
     'shadow-3': shadow(tone.color, shadows[3]),
     scrim: rgb(scrim),
-    'band-gradient-from': gradientFrom.color,
-    'band-gradient-to': gradientTo.color,
-    'band-gradient-hold': percent(gradientHold.offset),
-    'band-glow': band.glow.color,
-    'band-glow-alpha': String(band.glow.alpha),
-    'band-dot': band.dots.color,
-    'band-dot-alpha': String(band.dots.alpha),
-    'band-dot-cell': px(band.dots.cell),
-    'band-dot-radius': px(band.dots.radius),
-    'band-blueprint-from': blueprintFrom.color,
-    'band-blueprint-to': blueprintTo.color,
-    'band-blueprint-hold': percent(blueprintTo.offset),
-    'band-blueprint-stroke': band.blueprint.stroke,
-    'band-accent-glow': shadow(band.accentGlow.color, [band.accentGlow.layer]),
+    'brand-surface-hold': percent((gradient[1] as GradientStop).offset),
+    'brand-surface-line': rgb(line),
+    'brand-surface-glow-alpha': String(glow.alpha),
+    'brand-surface-dot-alpha': String(dots.alpha),
+    'brand-surface-dot-cell': px(dots.cell),
+    'brand-surface-dot-radius': px(dots.radius),
+    'brand-surface-blueprint-hold': percent(blueprint.hold),
+    'brand-surface-blueprint-fill-alpha': String(blueprint.fillAlpha),
+    'brand-surface-blueprint-stroke-alpha': String(blueprint.strokeAlpha),
+    'brand-surface-accent-glow': shadow(accentGlow.color, [accentGlow.layer]),
   };
 };
 
 /**
  * Theme-dependent values that are not plain colours: the three elevation shadows, the raw
- * shadow colour and opacity for custom shadows, the dialog scrim, and the brand band's
- * imagery (gradient stops, glow, dot grid, blueprint, the conversion button's glow; the same
- * in both themes, like the band). These are the CSS strings of `effectValues`, which holds
+ * shadow colour and opacity for custom shadows, the dialog scrim, and the brand surface's
+ * imagery (gradient hold, white hairline, glow, dot grid, blueprint, the conversion button's
+ * glow; the same in both themes, like the cobalt surface). These are the CSS strings of `effectValues`, which holds
  * the same data as hex and numbers.
  */
 const effects: Effects = {

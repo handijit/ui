@@ -116,8 +116,9 @@
     flex-shrink: 0;
   }
 
+  // 3.0: a good change is cobalt, a bad one red; the arrow and the text say which.
   &--positive {
-    color: $success-fg;
+    color: $primary-text;
   }
 
   &--negative {

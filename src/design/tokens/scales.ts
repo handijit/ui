@@ -19,43 +19,29 @@ const LIGHTNESS: readonly number[] = [
 /** Share of the gamut's maximum chroma each step uses. */
 const SATURATION: readonly number[] = [0.8, 0.8, 0.82, 0.86, 0.9, 0.95, 0.96, 0.94, 0.9, 0.85, 0.8];
 
-/** Per-family lightness shift: warm and green hues peak lighter than blue. */
+/** Per-family lightness shift: the warm hue peaks lighter than blue. */
 const LIGHTNESS_SHIFT: Readonly<Partial<Record<ChromaticScaleName, number>>> = {
   coral: 0.04,
-  warning: 0.06,
-  success: 0.03,
 };
 
 /** How much of the family shift each step receives. */
 const SHIFT_CURVE: readonly number[] = [0, 0, 0.25, 0.6, 1, 1, 1, 1, 0.5, 0.25, 0];
 
-/** Green tints turn neon at full saturation; this family keeps quieter tints. */
-const TINT: Readonly<Partial<Record<ChromaticScaleName, number>>> = {
-  success: 0.5,
-};
-
-const tintFactor = (index: number, tint: number): number => {
-  if (index <= 2) return tint;
-  // Step 300 eases from the quiet tints into the fully saturated mid-tones.
-  if (index === 3) return (tint + 1) / 2;
-  return 1;
-};
-
 const buildScale = (name: ChromaticScaleName): ChromaticScale => {
   const h = hues[name];
   const shift = LIGHTNESS_SHIFT[name] ?? 0;
-  const tint = TINT[name] ?? 1;
 
   return Object.fromEntries(
     STEPS.map((step, index) => {
       const l = (LIGHTNESS[index] as number) + shift * (SHIFT_CURVE[index] as number);
-      const s = (SATURATION[index] as number) * tintFactor(index, tint);
+      const s = SATURATION[index] as number;
       return [step, oklchToHex({ l, c: maxChroma(l, h) * s, h })];
     }),
   ) as ChromaticScale;
 };
 
-const slate: NeutralScale = {
+/** Ink, the brand's text colour (`#091122`), and its lightness steps: every neutral. */
+const ink: NeutralScale = {
   0: '#ffffff',
   25: neutral(0.988, 0.004),
   50: neutral(0.974, 0.007),
@@ -78,12 +64,8 @@ const slate: NeutralScale = {
 const scales: Scales = {
   cobalt: buildScale('cobalt'),
   coral: buildScale('coral'),
-  success: buildScale('success'),
-  warning: buildScale('warning'),
   danger: buildScale('danger'),
-  violet: buildScale('violet'),
-  magenta: buildScale('magenta'),
-  slate,
+  ink,
 };
 
 export default scales;

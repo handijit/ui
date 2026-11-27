@@ -44,7 +44,7 @@ type Props = ProgressNameProps & {
    * DEĞİL: yeşil yalnızca eylem, bağlantı ve odakta. Ad 4.x'ten kaldı; değiştirmek her çağrıyı
    * kırardı ve kazancı yalnızca isim olurdu.
    */
-  tone?: 'brand' | 'success' | 'warning' | 'danger';
+  tone?: 'brand' | 'ink' | 'danger';
   /** `xs` 2 px — satır içi gösterge (bağlam doluluğu); etiket yanında okunur. */
   size?: 'xs' | 'sm' | 'md';
   className?: string;
@@ -117,7 +117,7 @@ type CircleProps = ProgressNameProps & {
    * DEĞİL: yeşil yalnızca eylem, bağlantı ve odakta. Ad 4.x'ten kaldı; değiştirmek her çağrıyı
    * kırardı ve kazancı yalnızca isim olurdu.
    */
-  tone?: 'brand' | 'success' | 'warning' | 'danger';
+  tone?: 'brand' | 'ink' | 'danger';
   /** Dış çap (px). */
   size?: number;
   className?: string;

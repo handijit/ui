@@ -6,10 +6,10 @@ import styles from './index.module.scss';
 
 export type BadgeTone =
   | 'neutral'
-  | 'success'
+  /** Ink, the emphatic neutral: a label that needs a look (a low stock, a pending state). */
+  | 'ink'
   | 'danger'
-  | 'warning'
-  /** Cobalt: information, a counter, a navigation label, a "New" mark. */
+  /** Cobalt: information, a counter, a navigation label, a "New" mark, a good state. */
   | 'info';
 
 /** `soft` is the tint, `solid` the filled pair (a counter, a discount), `outline` line and text. */

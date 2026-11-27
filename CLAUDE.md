@@ -13,7 +13,8 @@ only record what deviates.
 ⚠ **Version names.** `@handijitcom/ui` restarted at 1.0.0 (the code of `@handijit/ui` 2.5.0).
 "2.0" alone in this file is `@handijit/ui` 2.0, the move to the design tokens; **2.0.0 of
 `@handijitcom/ui`** (2026-11-27) is named with the package: it removed turquoise and made the
-brand band a part of the system ("Brand band" below).
+brand band a part of the system. **3.0** (unreleased) narrows the palette to cobalt, coral and ink
+plus danger red, and turns the navy band into the cobalt brand surface ("Brand surface" below).
 
 ⚠ **This file describes 2.x.** The visual language (palette, type, radii, spacing, motion, layers,
 shadows) belongs to `@handijitcom/ui/design`. This library declares no colour and decides no value; what
@@ -172,9 +173,10 @@ not change its fill. Not valid for a row, a menu item or a button.
 
 ## Colour roles (2.0)
 
-**One sentence: cobalt is the interface, coral is the button that converts, the navy band
-carries the brand.** There is no cyan (2.0.0 of `@handijitcom/ui` removed turquoise; a design
-test fails on any hue between 170° and 240°). The palette, both themes and every value live in `@handijitcom/ui/design`; this library
+**One sentence: cobalt is the interface and the brand surface, coral is the button that converts,
+ink is every neutral.** Red is the one status colour (danger). There is no other hue (3.0): no
+green, amber, violet, magenta, cyan or navy; a design test fails on any hue outside cobalt, coral
+and danger red. The palette, both themes and every value live in `@handijitcom/ui/design`; this library
 loads none of it (`styles.css` and `base.css` declare no token) and the application imports
 `@handijitcom/ui/tokens.css` once.
 
@@ -191,19 +193,19 @@ loads none of it (`styles.css` and `base.css` declare no token) and the applicat
 
 ### Who draws with what
 
-| Family                                                                                                                                                    | Role                                                | Where it lives                                                                                                                    |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Cobalt — `primary`, `primary-hover/-active`, `on-primary`, `primary-soft`, `primary-line`, `primary-text`, `focus`                                        | primary action, link, selection, focus              | everywhere it is the interface colour: `Button` PRIMARY / OUTLINE / GHOST, links, selected states, progress, the focus ring       |
-| Coral — `accent*`, `on-accent`                                                                                                                            | the CONVERSION action: download, try, subscribe     | `Button` `UIVariant.ACCENT`, `IconButton variant="accent"` — **and nowhere else** but the dot of the brand mark (`BandBlueprint`) |
-| Brand band — `band-*` colours and imagery                                                                                                                 | the navy band of the brand, the SAME in both themes | `Band` (+ `BandBlueprint`), `Eyebrow` and `StatStrip` on it, `Button` `ON_BAND` and the glow of `ACCENT`, `Avatar tone="brand"`   |
-| Inverse — `inverse-*`                                                                                                                                     | a dark technical surface, the SAME in both themes   | `TerminalOutput`, `CodeBadge`                                                                                                     |
-| Status — `success` / `warning` / `danger` / `info` × `-bg` `-fg` `-line` `-solid` `-on-solid`                                                             | a state, not an action                              | `Alert`, `Badge`, `Toast`, `StatusDot`, field errors; `danger-solid` is also the fill of a destructive BUTTON                     |
-| Series — `chart-1…6`                                                                                                                                      | chart series, legend squares, category dots         | `/charts`, `Legend`, `SegmentBar`; `muted` is the neutral tone                                                                    |
-| Neutrals — `bg-page/-surface/-raised/-inset/-overlay/-disabled`, `border`, `border-strong`, `border-control`, `text`, `text-2`, `text-3`, `text-disabled` | everything else                                     | `border-control` is the resting edge of a form control and nothing else (see "State layers")                                      |
+| Family                                                                                                                                                    | Role                                                                        | Where it lives                                                                                                                                                                               |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cobalt — `primary`, `primary-hover/-active`, `on-primary`, `primary-soft`, `primary-line`, `primary-text`, `focus`                                        | primary action, link, selection, focus                                      | everywhere it is the interface colour: `Button` PRIMARY / OUTLINE / GHOST, links, selected states, progress, the focus ring                                                                  |
+| Coral — `accent*`, `on-accent`                                                                                                                            | the CONVERSION action: download, try, subscribe                             | `Button` `UIVariant.ACCENT`, `IconButton variant="accent"` — **and nowhere else** but the dot of the brand mark (`BrandBlueprint`) and code strings (`accent-text` in `CodeBlock`)           |
+| Brand surface — `primary` + `on-primary`, `brand-surface-deep`, `brand-surface-*` imagery                                                                 | the cobalt brand surface, the SAME in both themes                           | `BrandSurface` (+ `BrandBlueprint`), `Eyebrow` and `StatStrip` on it, `Button` `ON_BRAND` and the glow of `ACCENT`, `Avatar tone="brand"`                                                    |
+| Inverse — `inverse-*`                                                                                                                                     | a dark technical surface, the SAME in both themes                           | `TerminalOutput`, `CodeBadge`                                                                                                                                                                |
+| Status — `danger` / `info` × `-bg` `-fg` `-line` `-solid` `-on-solid`                                                                                     | a state, not an action; red is the one status hue, `info` is cobalt         | `Alert`, `Badge`, `Toast`, `StatusDot`, field errors; `danger-solid` is also the fill of a destructive BUTTON. A success is cobalt (`info`), a warning ink (`tint(ink)`), each with its icon |
+| Series — `chart-1…6`                                                                                                                                      | chart series, legend squares, category dots: tints of cobalt, coral and ink | `/charts`, `Legend`, `SegmentBar`; `muted` is the neutral tone. Over three series, label directly or add markers / dashes                                                                    |
+| Neutrals — `bg-page/-surface/-raised/-inset/-overlay/-disabled`, `border`, `border-strong`, `border-control`, `text`, `text-2`, `text-3`, `text-disabled` | everything else: ink and its lightness steps (`ink-*`, 3.0: was `slate`)    | `border-control` is the resting edge of a form control and nothing else (see "State layers")                                                                                                 |
 
-⚠ **Guard `__tests__/styles/colour-footprint.test.ts`.** Coral and the band are tied to an
-allow-list of components, each with its reason; the turquoise names (`$highlight*`) cannot come
-back. A component outside the list that reaches for
+⚠ **Guard `__tests__/styles/colour-footprint.test.ts`.** Coral and the brand surface are tied to
+an allow-list of components, each with its reason; the removed names (`$highlight*`, `$success-*`,
+`$warning-*`, `$band-*`, `$slate-*`) cannot come back. A component outside the list that reaches for
 one of them fails the test; so does a stale allowance, and so does a 1.x role name coming back
 (`cart`, `oem`, `shell` …). No single declaration is ever wrong on its own: a coral chip here, a
 coral progress bar there, and coral stops meaning "this is the button that converts". Cobalt is not
@@ -230,16 +232,16 @@ in a consumer.
 
 ### Buttons
 
-| `UIVariant` | Drawn with                                | For                                                                 |
-| ----------- | ----------------------------------------- | ------------------------------------------------------------------- |
-| `PRIMARY`   | `primary` fill, `on-primary` label        | the primary action of the screen                                    |
-| `ACCENT`    | `accent` fill, `on-accent` label          | the conversion action (download, try, subscribe); glows on the band |
-| `SECONDARY` | `bg-surface` + `border-strong`, body text | the neutral second action ("Cancel")                                |
-| `OUTLINE`   | cobalt frame                              | an encouraged navigation that is not the primary action ("See all") |
-| `SOFT`      | neutral fill                              | a secondary action inside a card                                    |
-| `GHOST`     | no surface, link colour                   | toolbar and inline secondary actions                                |
-| `DANGER`    | `danger-solid` fill                       | a destructive action: a delete confirmation                         |
-| `ON_BAND`   | `band-*`                                  | an action on the brand band                                         |
+| `UIVariant` | Drawn with                                           | For                                                                          |
+| ----------- | ---------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `PRIMARY`   | `primary` fill, `on-primary` label                   | the primary action of the screen                                             |
+| `ACCENT`    | `accent` fill, `on-accent` label                     | the conversion action (download, try, subscribe); glows on the brand surface |
+| `SECONDARY` | `bg-surface` + `border-strong`, body text            | the neutral second action ("Cancel")                                         |
+| `OUTLINE`   | cobalt frame                                         | an encouraged navigation that is not the primary action ("See all")          |
+| `SOFT`      | neutral fill                                         | a secondary action inside a card                                             |
+| `GHOST`     | no surface, link colour                              | toolbar and inline secondary actions                                         |
+| `DANGER`    | `danger-solid` fill                                  | a destructive action: a delete confirmation                                  |
+| `ON_BRAND`  | white frame and label, `brand-surface-deep` on hover | a second action on the brand surface (3.0: was `ON_BAND`)                    |
 
 `IconButton variant`: `ghost` (default) · `secondary` · `outline` · `solid` · `accent` · `danger`.
 `secondary` and `outline` are `SECONDARY` and `OUTLINE` of the table above, value for value in
@@ -258,10 +260,10 @@ Measured (`check:contrast`, light / dark): `on-primary` on `primary` 5.03 / 5.03
 `on-accent` on `accent` 6.15 / 6.15:1. The tightest step of the two families is `on-primary` on
 `primary-hover` in dark: 4.60:1.
 
-### Theme-independent surfaces: `band-*` and `inverse-*`
+### Theme-independent surfaces: the brand surface and `inverse-*`
 
-Both are the same in light and dark **by token**, not by scoping a theme (one exception:
-`band-edge`, see "Brand band"): a button on the brand band reads `band-text` / `band-line-strong`, terminal output reads `inverse-text` /
+Both are the same in light and dark **by token**, not by scoping a theme: the brand surface is
+`primary` (the same cobalt in both themes) with `on-primary` on it, terminal output reads `inverse-text` /
 `inverse-text-2` and `inverse-danger` for stderr (a light theme's `danger-fg` is unreadable on a
 dark surface). Nothing that sits on such a surface may read `text-2` or `border`.
 
@@ -269,42 +271,44 @@ A subtree CAN be themed in 2.0 — `data-theme="dark"` on any element re-declare
 that subtree (design's selectors). That is the application's tool for a dark section; a component
 never sets the attribute.
 
-### Brand band (2.0.0 of `@handijitcom/ui`)
+### Brand surface (3.0)
 
-The navy band is the brand's surface: a hero, the closing call of a page, a sign-in side, a footer,
-an Open Graph image. Until 2.0.0 every application drew it by hand; now it is `Band`, drawn with
-design's `band-*` colours and band imagery (`band-gradient-*`, `band-glow*`, `band-dot*`,
-`band-blueprint-*`, `band-accent-glow`) and the `band` recipe numbers.
+The brand's surface — a hero, the closing call of a page, a sign-in side, a footer, an Open Graph
+image — is **cobalt**: `primary` with white (`on-primary`) on it, the same in both themes. 2.0.0
+drew it as a navy band (`Band`); 3.0 removed navy from the palette and renamed the components
+`BrandSurface` / `BrandBlueprint`. It is drawn with `primary`, `brand-surface-deep` (cobalt 800,
+its one deeper step), `on-primary`, the `brand-surface-*` imagery tokens and the `brandSurface`
+recipe numbers.
 
-| Part           | Drawn with                                                                                                                                                            | Rule                                                                                                      |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Surface        | `band-bg` fill, an SVG gradient `band-bg` → `band-deep` (held to 55%)                                                                                                 | **SVG, never a CSS gradient**: the main consumer's e2e test rejects computed `background-image` gradients |
-| Glow           | `radialGradient` of `primary` at `band-glow-alpha` (0.5) → 0; `glow` start · end · both · none                                                                        | `band-text-2` over its centre is 5.85:1, `band-text` 8.95:1 (gated in the design tests)                   |
-| Dot grid       | `pattern` of `band-dot` dots (r 1.6, every 22px), alpha-masked from `band-dot-alpha` (0.7) to 0 by a quarter of the width; `dots` start · end (default) · both · none | keep it off the content column: with start-aligned content use `end`                                      |
-| Artwork        | `artwork` slot, bottom end, `aria-hidden`; `BandBlueprint`: `band-blueprint-from` → `-to` fill, `band-blueprint-stroke` outline (2px, non-scaling), `accent` dot      | decorative; hidden below the tablet width                                                                 |
-| Edge           | `band-edge`: the band's own colour in light, `band-line` in dark                                                                                                      | navy is 1.24:1 on the dark page; the hairline (1.87:1) marks where the band ends                          |
-| Focus          | `band-focus` (white) through the `--ui-ring-color` hook that `$focus` reads                                                                                           | 15.53 / 18.33:1 on `band-bg` / `band-deep`; a cobalt ring (4.60:1) read as part of the cobalt band        |
-| The one action | `Button` `ACCENT` (5.07:1 on `band-bg`) with `band-accent-glow`; a second action is `ON_BAND`                                                                         | **coral once per view as an action**; the glow exists only on the band, every other button is flat        |
-| Label          | `Eyebrow`: mono capitals, 0.15em tracking, `text-2` + `border-strong` rules, on the band `band-text-2` + `band-line-strong`                                           | `start` (one rule before) or `center` (a rule each side); capitals by CSS, so the page's `lang` cases İ   |
-| Facts          | `StatStrip` `page` (`text` / `text-2` / `border` dividers) or `band` (`band-deep` strip under a `band-line` hairline)                                                 | a list, read value then label; dividers are borders, a wrapped row starts without one                     |
+| Part           | Drawn with                                                                                                                                                                 | Rule                                                                                                                                                    |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Surface        | `primary` fill, an SVG gradient `primary` → `brand-surface-deep` (held to 55%)                                                                                             | **SVG, never a CSS gradient**: the main consumer's e2e test rejects computed `background-image` gradients                                               |
+| Text           | `on-primary` only: 5.03:1 on `primary`, 10.05:1 on `brand-surface-deep`                                                                                                    | **no secondary text colour**: white at 92% is 4.50:1 and drops under 4.5:1 over a glow; use size and weight                                             |
+| Glow           | white (`on-primary`) at `brand-surface-glow-alpha` (0.06) → 0; `glow` start · end · both · none                                                                            | a sheen, not a light: white text over its centre is 4.58:1 (gated); at 0.08 it would be 4.40:1                                                          |
+| Dot grid       | `pattern` of white dots (r 1.6, every 22px), alpha-masked from `brand-surface-dot-alpha` (0.22) to 0 by a quarter of the width; `dots` start · end (default) · both · none | keep it off the content column: with start-aligned content use `end`                                                                                    |
+| Artwork        | `artwork` slot, bottom end, `aria-hidden`; `BrandBlueprint`: white fill 0.16 → 0, white outline at 0.4 (2px, non-scaling), solid `accent` dot                              | decorative; hidden below the tablet width                                                                                                               |
+| Edge           | none                                                                                                                                                                       | cobalt is 4.86:1 on the light page and 3.83:1 on the dark one                                                                                           |
+| Focus          | white (`on-primary`) through the `--ui-ring-color` hook that `$focus` reads                                                                                                | 5.03 / 10.05:1 on `primary` / `brand-surface-deep`                                                                                                      |
+| The one action | `Button` `ACCENT` with `brand-surface-accent-glow`; a second action is `ON_BRAND` (white frame, white label, `brand-surface-deep` on hover)                                | **coral once per view as an action**; coral on cobalt is 1.64:1, so the label (6.15:1) identifies the button, never its edge; the glow exists only here |
+| Label          | `Eyebrow`: mono capitals, 0.15em tracking, `text-2` + `border-strong` rules; on the surface white + `brand-surface-line` (white at 0.24) rules                             | `start` (one rule before) or `center` (a rule each side); capitals by CSS, so the page's `lang` cases İ                                                 |
+| Facts          | `StatStrip` `page` (`text` / `text-2` / `border` dividers) or `brand` (`brand-surface-deep` strip under a white hairline, all text white)                                  | a list, read value then label; dividers are borders, a wrapped row starts without one                                                                   |
 
-- **Where the band is used:** once or twice per page, for the brand's moments (hero, closing
-  call, footer). It is not a card style and not a section background for ordinary content.
-- **Text on the band** is `band-text` / `band-text-2`. Nothing on it reads `text-2` or `border`.
-  The heading's coral full stop and the mark's coral dot are the brand's punctuation, not actions.
-- **Opacity only in band imagery.** The glow, the dot grid and the CTA glow are the only places
-  where an alpha is a design value; everywhere else the rule of "State layers" stands.
-- **Context, not props:** `Band` writes `data-ui-band` on its root. `Eyebrow` and the `ACCENT`
-  button read it (`:where([data-ui-band])`, no specificity); an application's own band element
-  may carry the attribute too. `Band` also sets `--ui-ring-color`.
-- **Motion and modes:** nothing in the band moves (`prefers-reduced-motion` has nothing to stop;
-  the button's transition already obeys it). In forced colours the imagery and the artwork are
-  hidden and the band is a region framed in `CanvasText`.
-- **Ids:** every SVG id comes from `useId` (sanitised for `url(#…)`), so two bands never share a
-  gradient. `useId` also runs in a server component, so `Band`, `Eyebrow` and `StatStrip` are all
-  server-drawable (2.0.1; 2.0.0 marked `Band` a client module and every page paid ~2 KB gz for it).
-- Hooks: `--ui-band-radius` (default `radius-lg`, `radius-md` on a phone), `--ui-band-padding`,
-  `--ui-band-artwork-width` (120px), `--ui-eyebrow-tracking`.
+- **Where it is used:** once or twice per page, for the brand's moments (hero, closing call,
+  footer). It is not a card style and not a section background for ordinary content.
+- **No translucent fill under text.** `ON_BRAND` hovers to `brand-surface-deep`, never to a white
+  veil: white text over a white veil falls under 4.5:1.
+- **Opacity only in the surface's imagery.** The glow, the dot grid, the blueprint, the hairline
+  and the CTA glow are the only places where an alpha is a design value.
+- **Context, not props:** `BrandSurface` writes `data-ui-brand-surface` on its root. `Eyebrow` and
+  the `ACCENT` button read it (`:where([data-ui-brand-surface])`, no specificity); an
+  application's own surface may carry the attribute too. `BrandSurface` also sets
+  `--ui-ring-color`.
+- **Motion and modes:** nothing on it moves. In forced colours the imagery and the artwork are
+  hidden and the surface is a region framed in `CanvasText`.
+- **Ids:** every SVG id comes from `useId` (sanitised for `url(#…)`). `useId` runs in a server
+  component, so `BrandSurface`, `Eyebrow` and `StatStrip` are all server-drawable (2.0.1).
+- Hooks: `--ui-brand-surface-radius` (default `radius-lg`, `radius-md` on a phone),
+  `--ui-brand-surface-padding`, `--ui-brand-surface-artwork-width` (120px), `--ui-eyebrow-tracking`.
 
 ### Link and focus
 
@@ -322,12 +326,18 @@ design's `band-*` colours and band imagery (`band-gradient-*`, `band-glow*`, `ba
 
 ### Status tints
 
-`@include tint($tone)` — `success`, `warning`, `danger`, `info`, `neutral` (2.0.0 of
-`@handijitcom/ui` removed `highlight`). An unknown
+`@include tint($tone)` — `danger`, `info`, `ink`, `neutral` (2.0.0 removed `highlight`; 3.0
+removed `success` and `warning`: a success is `info`, a warning `ink`, the emphatic neutral:
+`bg-raised` + `border-strong` + `text`). An unknown
 tone is a **compile error** (in 1.x it fell back to neutral and a typo shipped as a grey label).
 
 - The shop tones are gone: `oem`, `alt`, `sale`, `off`, `action`, `link`. A domain tone is the
   application's wording on a generic tone, not a new colour.
+- **State names stay where an icon carries them (3.0).** `Alert`, `Toast`, `Modal`,
+  `ConfirmDialog`, `Timeline`, `DataTable isWarning` keep `success` / `warning`: they draw a state
+  icon (and `Alert` a role), so the meaning survives the loss of green and amber. Colour-only tone
+  props (`Badge`, `StatusDot`, `Progress`, `Calendar`) take colour-family names instead: `info`
+  (cobalt), `ink`, `danger` (and `primary` / `brand` where they had it).
 - `info` is cobalt (`info-solid` is the value of `primary`), `neutral` is `bg-raised` +
   `border` + `text-2`.
 - The line of a tint is advisory (1.22 – 1.29:1 in light, 1.57 – 1.63:1 in dark): it is not the only carrier of the meaning, the
@@ -336,8 +346,8 @@ tone is a **compile error** (in 1.x it fell back to neutral and a typo shipped a
 ### Contrast gate — `scripts/check-contrast.mjs`
 
 It measures **the pairs the components actually draw**, with the values of the installed design
-package, in both themes: 124 pairs per theme, 248 in total (2.0.0 of `@handijitcom/ui`: −7
-turquoise pairs, +4 band pairs: `band-focus` and `accent` on `band-bg` / `band-deep`), text ≥ 4.5:1, focus and graphics
+package, in both themes: 100 pairs per theme, 200 in total (3.0: the success, warning and band
+pairs left; `on-primary` on `brand-surface-deep` and `accent-text` on every surface came in), text ≥ 4.5:1, focus and graphics
 ≥ 3:1. `UI_CONTRAST_VERBOSE=1 npm run check:contrast` prints every number. A failing pair is fixed
 by drawing with **another token**, never with a one-off colour, and never by editing a value: the
 value is design's.
@@ -351,7 +361,7 @@ Advisory pairs (measured and printed, never failing) and what they mean:
 | `text-3` on `bg-inset`                                    | 4.35        | 6.97            | tertiary text is not written in a well; `CodeBlock` comments use `text-2`                                                                                                                                                                                                                                                                 |
 | `primary` / `danger-solid` / `info-solid` on `bg-overlay` | 5.03 – 5.31 | **2.70 – 2.85** | Design gates these fills on page, surface and raised only. On a dark menu or dialog a filled control is never the only carrier (its glyph is measured as text on a fill), but a bare status ICON in that colour, e.g. in a dark toast, is under 3:1. Known limit; the fix belongs to design (an overlay-safe fill), not to a local colour |
 | `border` / `border-strong` on surfaces                    | 1.19 – 1.53 | 1.25 – 2.27     | hairlines; a card is separated from the page by the border AND the fill. A form control is NOT drawn with them: its edge is `border-control`, gated at 3:1                                                                                                                                                                                |
-| `band-bg` / `band-edge` on `bg-page`                      | 15.01       | 1.24 / 1.87     | the band on the page: navy stands out of the light page by itself; on the dark page its edge is the `band-line` hairline (see "Brand band")                                                                                                                                                                                               |
+| `accent` on `primary` / `brand-surface-deep`              | 1.64 / 3.28 | 1.64 / 3.28     | coral on the brand surface: the CTA is identified by its label (`on-accent` 6.15:1), never by its fill's edge; the coral full stop and the mark's dot are decoration                                                                                                                                                                      |
 
 ## Typography roles
 
@@ -753,8 +763,7 @@ girişinin cephe dosyasındaki `export { … } from` satırlarını okur.
 |          | `Legend` · `DescriptionList`       | Kategorik palet; `tone` (`color` değil — tek ad kuralı)                                                                                                                                                                                  |
 
 **Plandan sapmalar:** `ChatMessage.role` → `author` (`role` HTML özniteliğiyle
-çakışıyordu); `StatusDot`ta `brand` tonu yok (tonlar: `neutral`, `success`, `warning`,
-`danger`); `SegmentBar`
+çakışıyordu); `StatusDot`ta `brand` tonu yok (3.0 tones: `neutral`, `info`, `ink`, `danger`); `SegmentBar`
 parça başına `Tooltip` yerine tek bir okunan özet (çubuğun içinde sekme durağı
 dizmek daha az bilgi verip daha çok tuş istiyordu); `code-bg` / `terminal-*`
 token'ları eklenmedi (2.0 adlarıyla `bg-inset` ve `inverse-*` karşılıyor).
@@ -803,34 +812,34 @@ kipi):
 - Kopyalanan metin ekranda görünendir. `html` verildiyse `code` biçimlendirilmez
   ve olduğu gibi kopyalanır — HTML ondan üretildi, ikisi ayrışmamalı.
 
-**Syntax colours (2.0) — semantic design tokens, no `syntax-*` family:**
+**Syntax colours (3.0) — semantic design tokens, no `syntax-*` family:**
 
-| Kind                                               | Token                      | On the code well (`bg-inset`), light / dark |
-| -------------------------------------------------- | -------------------------- | ------------------------------------------- |
-| keyword, HTML tag, diff header                     | `primary-text`             | 6.42 / 11.62:1                              |
-| string, regular expression                         | `success-fg`               | 4.88 / 13.00:1                              |
-| number, literal (`true`, `null`), CONSTANT         | `warning-fg`               | 4.61 / 13.03:1                              |
-| function call, property / key, attribute, variable | `text`                     | 16.47 / 18.04:1                             |
-| type, class, JSX component (medium weight)         | `text`                     | 16.47 / 18.04:1                             |
-| comment (italic), punctuation                      | `text-2`                   | 5.98 / 11.08:1                              |
-| diff `+` / `-` line                                | `success-fg` / `danger-fg` | 4.88 / 13.00 · 6.44 / 11.24:1               |
+| Kind                                               | Token                        | On the code well (`bg-inset`), light / dark |
+| -------------------------------------------------- | ---------------------------- | ------------------------------------------- |
+| keyword, HTML tag, diff header                     | `primary-text`               | 6.42 / 11.62:1                              |
+| string, regular expression                         | `accent-text`                | 5.38 / 12.33:1                              |
+| number, literal (`true`, `null`), CONSTANT         | `accent-text`                | 5.38 / 12.33:1                              |
+| function call, property / key, attribute, variable | `text`                       | 16.47 / 18.04:1                             |
+| type, class, JSX component (medium weight)         | `text`                       | 16.47 / 18.04:1                             |
+| comment (italic), punctuation                      | `text-2`                     | 5.98 / 11.08:1                              |
+| diff `+` / `-` line                                | `primary-text` / `danger-fg` | 6.42 / 11.62 · 6.44 / 11.24:1               |
 
 - The five `syntax-*` tokens of 1.x (plum, clay, violet, blue, ochre; generated into
   `_syntax.generated.scss`, overridden through `--ui-syntax-*`) are gone with the palette recipe.
   Design has no syntax family and none is invented here: a code block draws with text pairs that
   `check:contrast` already measures, in both themes.
-- ⚠ The 1.x rule "no green in a code block" is gone with the green brand: a string is
-  `success-fg`. Type names were turquoise until 2.0.0 of `@handijitcom/ui`; they are the text
-  colour at medium weight now (IBM Plex Mono ships 500, so no synthesised bold, and a monospace
-  weight keeps the columns), told from a variable by the weight.
+- ⚠ 3.0: the palette has cobalt, coral and ink only, so strings and literals are coral text
+  (`accent-text`) — the one place coral is text, on the colour-footprint allow-list as text, never
+  a control. Type names are the text colour at medium weight (IBM Plex Mono ships 500, so no
+  synthesised bold, and a monospace weight keeps the columns), told from a variable by the weight.
 - ⚠ A comment is `text-2`, NOT `text-3`: `text-3` is 4.35:1 on `bg-inset` in light. The italic
   carries the difference from punctuation.
 - The Shiki path (`html`) is unchanged: `--shiki-light` / `--shiki-dark` picked with
   `light-dark()`, which follows design's `color-scheme` on the root and on a `data-theme` island.
   Its colours are the caller's and are not measured here.
-- The tightest pair is a number in light (4.61:1). 1.x also gated the distance BETWEEN the kinds
-  (ΔE ≥ 8); that gate is gone with the generator — keyword and name now differ by cobalt against
-  the text colour, string and number by green against amber.
+- The tightest pair is a string in light (5.38:1). 1.x also gated the distance BETWEEN the kinds
+  (ΔE ≥ 8); that gate is gone with the generator — keyword, name and string differ by cobalt,
+  ink and coral.
 
 **Bütçe:** sohbet girişi 6,29 → 11,78 kB (vurgulayıcı 4,93, biçimlendirici 0,43);
 bütçe 8 → 13 kB. Bedeli yalnızca `CodeBlock` alan öder — diller ve kelime kümeleri
@@ -966,6 +975,21 @@ girişi etkilenmemişti (orada `export type {` satırı yok).
 çalışmaya devam eder**, `@deprecated` işaretlenir ve buraya yazılır. Sessiz
 kırılma yok. Nöbetçi: `__tests__/api-consistency.test.ts` — burada kayıtlı
 olmayan bir `@deprecated` prop derlemeyi kırar.
+
+### 3.0 (`@handijitcom/ui`) — cobalt, coral and ink; the brand surface; BREAKING, no alias
+
+The line-by-line migration is in `CHANGELOG.md` under 3.0.0. 2.0.0 and 2.0.1 were published with
+the navy band; 3.0 removes it in a major, as every major of this library does, without aliases.
+
+| What                        | 2.0.x                                                                                     | 3.0                                                                                    |
+| --------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Palette                     | cobalt, coral, navy band, success, warning, danger, violet, magenta, slate                | cobalt, coral, ink (`ink-*`, was `slate-*`), danger; no other hue (tested)             |
+| Brand surface               | `Band` on navy `band-*`, `BandBlueprint`, `StatStrip variant="band"`, `UIVariant.ON_BAND` | `BrandSurface` on `primary`, `BrandBlueprint`, `variant="brand"`, `UIVariant.ON_BRAND` |
+| Status                      | `success-*`, `warning-*`, `danger-*`, `info-*`                                            | `danger-*`, `info-*`; success → cobalt, warning → ink, with icons                      |
+| `Badge` / `StatusDot` tones | `success`, `warning`                                                                      | `info`, `ink`                                                                          |
+| `Progress` tone             | `success`, `warning`                                                                      | `brand`, `ink`                                                                         |
+| `Calendar` tones            | `success`, `warning`                                                                      | `info`, `ink`                                                                          |
+| Series `chart-1…6`          | cobalt, coral, green, amber, magenta, violet                                              | cobalt, coral, ink, deep cobalt, deep coral, ink (dark: lighter steps)                 |
 
 ### 2.0.0 (`@handijitcom/ui`) — no cyan, the brand band; BREAKING, no alias
 
@@ -1577,7 +1601,8 @@ aktarım kümesi taşımadan önce ve sonra **birebir aynı**.
 
 Ölçüm artık elle değil: `scripts/check-api.mjs` `build/index.d.ts`ten dışa
 aktarım adlarını çıkarır ve `scripts/api-baseline.txt` ile karşılaştırır
-(2.0.0 of `@handijitcom/ui`: **179 names**, the band's nine; SCSS 235, −4 turquoise +12 band.
+(3.0: **179 names** (`Band*` renamed `BrandSurface` / `BrandBlueprint*`); SCSS 214. 2.0.0 of
+`@handijitcom/ui`: 179 names, the band's nine; SCSS 235, −4 turquoise +12 band.
 2.0'da **163 ad**; 5.6'da 177'ydi — tema nesneleri, `initUi` ve token tipleri kalktı, design'ın
 tema sabitleri eklendi; 2.4'te 170. Alt girişler ayrı taban çizgilerinde: sohbet 30, grafikler 22,
 takvim 8 → 2.5'te 9 (`CalendarBand`), SCSS 227). Kapı

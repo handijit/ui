@@ -22,7 +22,7 @@ const COMPONENTS = join(ROOT, 'src/components');
 const DIRECTIVE = /^\s*(['"])use client\1;?/;
 /*
  * `useId` is the one hook a server component may call (React's `react-server` build exports it), so
- * it alone does not decide the directive: `Band` drops it (no JavaScript for a decorative surface),
+ * it alone does not decide the directive: `BrandSurface` drops it (no JavaScript for a decorative surface),
  * the form controls (`Checkbox`, `Radio`, `Switch`) keep it. `SERVER_SAFE` below fixes the choice.
  */
 const HOOK = /\buse(?!Id\()[A-Z]\w*\(/;
@@ -52,8 +52,8 @@ const needsClient = (source: string): boolean =>
 const SERVER_SAFE = [
   'Alert',
   'Badge',
-  /* 2.0.1: `useId` runs on the server; the band sends no JavaScript. */
-  'Band',
+  /* `useId` runs on the server; the brand surface sends no JavaScript (2.0.1, renamed in 3.0). */
+  'BrandSurface',
   'Button',
   'Card',
   'Chip',

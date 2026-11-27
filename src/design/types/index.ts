@@ -13,10 +13,10 @@ type ThemeName = 'light' | 'dark';
 /** What the user picked; `system` follows the operating system. */
 type ThemePreference = ThemeName | 'system';
 
-type ChromaticScaleName =
-  'cobalt' | 'coral' | 'success' | 'warning' | 'danger' | 'violet' | 'magenta';
+/** The brand's cobalt and coral, and red, the one status colour (danger). */
+type ChromaticScaleName = 'cobalt' | 'coral' | 'danger';
 
-type ScaleName = ChromaticScaleName | 'slate';
+type ScaleName = ChromaticScaleName | 'ink';
 
 type ChromaticStep = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
 
@@ -27,12 +27,12 @@ type ChromaticScale = Readonly<Record<ChromaticStep, string>>;
 type NeutralScale = Readonly<Record<NeutralStep, string>>;
 
 type Scales = Readonly<Record<ChromaticScaleName, ChromaticScale>> & {
-  readonly slate: NeutralScale;
+  readonly ink: NeutralScale;
 };
 
 type HueName = ChromaticScaleName;
 
-type StatusName = 'success' | 'warning' | 'danger' | 'info';
+type StatusName = 'danger' | 'info';
 
 type ChartIndex = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -69,14 +69,7 @@ type ColorToken =
   | 'selection-bg'
   | `${StatusName}-${'bg' | 'fg' | 'line' | 'solid' | 'on-solid'}`
   | `chart-${ChartIndex}`
-  | 'band-bg'
-  | 'band-deep'
-  | 'band-line'
-  | 'band-line-strong'
-  | 'band-text'
-  | 'band-text-2'
-  | 'band-focus'
-  | 'band-edge';
+  | 'brand-surface-deep';
 
 type Theme = Readonly<Record<ColorToken, string>>;
 
@@ -133,34 +126,26 @@ type ThemeEffects = {
   readonly 'shadow-3': string;
   /** Translucent backdrop behind dialogs. */
   readonly scrim: string;
-  /** First stop of the band's vertical gradient (`band-bg`). */
-  readonly 'band-gradient-from': string;
-  /** Last stop of the band's vertical gradient (`band-deep`). */
-  readonly 'band-gradient-to': string;
-  /** How far down the band holds its first colour before it deepens, as a percentage. */
-  readonly 'band-gradient-hold': string;
-  /** Centre colour of the soft glows on the band (`primary`). */
-  readonly 'band-glow': string;
-  /** Opacity of a glow at its centre; it fades to 0 at its edge. */
-  readonly 'band-glow-alpha': string;
-  /** Colour of the dots of the band's dot grid (`band-line-strong`). */
-  readonly 'band-dot': string;
-  /** Opacity of the dot grid at the band's edge; it fades to 0 towards the content. */
-  readonly 'band-dot-alpha': string;
+  /** How far down the brand surface holds `primary` before it deepens, as a percentage. */
+  readonly 'brand-surface-hold': string;
+  /** Hairline on the brand surface: white at low opacity, as a CSS colour. */
+  readonly 'brand-surface-line': string;
+  /** Opacity of the white glow at its centre; it fades to 0 at its edge. */
+  readonly 'brand-surface-glow-alpha': string;
+  /** Opacity of the white dot grid at the surface's edge; it fades to 0 towards the content. */
+  readonly 'brand-surface-dot-alpha': string;
   /** Side of one cell of the dot grid. */
-  readonly 'band-dot-cell': string;
+  readonly 'brand-surface-dot-cell': string;
   /** Radius of one dot. */
-  readonly 'band-dot-radius': string;
-  /** Top stop of a blueprint supergraphic's fill (`band-line`). */
-  readonly 'band-blueprint-from': string;
-  /** Bottom stop of a blueprint supergraphic's fill (`band-bg`). */
-  readonly 'band-blueprint-to': string;
-  /** Where the blueprint fill reaches its bottom colour, as a percentage. */
-  readonly 'band-blueprint-hold': string;
-  /** Outline of a blueprint supergraphic (`band-line-strong`). */
-  readonly 'band-blueprint-stroke': string;
-  /** The soft coral glow of the conversion button on the band, as a `box-shadow`. */
-  readonly 'band-accent-glow': string;
+  readonly 'brand-surface-dot-radius': string;
+  /** Where a blueprint supergraphic's white fill has faded out, as a percentage. */
+  readonly 'brand-surface-blueprint-hold': string;
+  /** Opacity of a blueprint's white fill at its top. */
+  readonly 'brand-surface-blueprint-fill-alpha': string;
+  /** Opacity of a blueprint's white outline. */
+  readonly 'brand-surface-blueprint-stroke-alpha': string;
+  /** The soft coral glow of the conversion button on the brand surface, as a `box-shadow`. */
+  readonly 'brand-surface-accent-glow': string;
 };
 
 type EffectToken = keyof ThemeEffects;
@@ -205,42 +190,57 @@ type ThemeEffectValues = {
   readonly shadows: Readonly<Record<ShadowLevel, readonly ShadowLayer[]>>;
   /** Translucent backdrop behind dialogs. */
   readonly scrim: EffectTone;
-  /** The decorative layers of the brand band; the same in both themes. */
-  readonly band: BandEffectValues;
+  /** The decorative layers of the brand surface; the same in both themes. */
+  readonly brandSurface: BrandSurfaceEffectValues;
 };
 
-/** The brand band's imagery as hex and numbers: gradient, glow, dot grid, blueprint, CTA glow. */
-type BandEffectValues = {
-  /** The band's vertical background, top to bottom. */
+/** The brand surface's imagery as hex and numbers: gradient, line, glow, dot grid, blueprint. */
+type BrandSurfaceEffectValues = {
+  /** The surface's vertical background, top to bottom (`primary` into `brand-surface-deep`). */
   readonly gradient: readonly GradientStop[];
-  /** The soft glow: its centre colour and opacity; it fades to transparent at its edge. */
+  /** The hairline: white and its opacity. */
+  readonly line: EffectTone;
+  /** The soft glow: its centre colour (white) and opacity; it fades to transparent. */
   readonly glow: EffectTone;
-  /** The dot grid: dot colour, opacity at the band's edge, cell side and dot radius in pixels. */
+  /** The dot grid: dot colour (white), opacity at the edge, cell side and dot radius in pixels. */
   readonly dots: EffectTone & { readonly cell: number; readonly radius: number };
-  /** A blueprint supergraphic: its fill top to bottom and its outline colour. */
-  readonly blueprint: { readonly fill: readonly GradientStop[]; readonly stroke: string };
-  /** The glow of the conversion button on the band, painted in `color`. */
+  /** A blueprint supergraphic: white fill fading out by `hold`, white outline, coral dot. */
+  readonly blueprint: {
+    readonly color: string;
+    readonly fillAlpha: number;
+    readonly hold: number;
+    readonly strokeAlpha: number;
+    readonly dot: string;
+  };
+  /** The glow of the conversion button on the surface, painted in `color`. */
   readonly accentGlow: { readonly color: string; readonly layer: ShadowLayer };
 };
 
 /**
- * The brand band's recipe as plain numbers: what every theme's band imagery is built from.
- * The colours are not here; they are the theme's `band-*`, `primary` and `accent` roles.
+ * The brand surface's recipe as plain numbers: what every theme's imagery is built from. The
+ * colours are not here; they are the theme's `primary`, `brand-surface-deep`, `on-primary` and
+ * `accent` roles.
  */
-type BandRecipe = {
-  /** Offset (0–1) down to which the band holds `band-bg` before it deepens into `band-deep`. */
+type BrandSurfaceRecipe = {
+  /** Offset (0–1) down to which the surface holds `primary` before it deepens. */
   readonly gradientHold: number;
-  /** Opacity of a glow at its centre. */
+  /** Opacity of the white hairline. */
+  readonly lineAlpha: number;
+  /** Opacity of the white glow at its centre. */
   readonly glowAlpha: number;
   /** Side of one dot-grid cell, in CSS pixels. */
   readonly dotCell: number;
   /** Radius of one dot, in CSS pixels. */
   readonly dotRadius: number;
-  /** Opacity of the dot grid at the band's edge. */
+  /** Opacity of the dot grid at the surface's edge. */
   readonly dotAlpha: number;
-  /** Offset (0–1) at which a blueprint fill reaches `band-bg`. */
+  /** Offset (0–1) by which a blueprint's white fill has faded out. */
   readonly blueprintHold: number;
-  /** The conversion button's glow on the band; its opacity applies to the accent colour. */
+  /** Opacity of a blueprint's white fill at its top. */
+  readonly blueprintFillAlpha: number;
+  /** Opacity of a blueprint's white outline. */
+  readonly blueprintStrokeAlpha: number;
+  /** The conversion button's glow; its opacity applies to the accent colour. */
   readonly accentGlow: ShadowLayer;
 };
 
@@ -266,7 +266,7 @@ type BreakpointName = 'sm' | 'md' | 'lg' | 'xl';
 
 type Breakpoints = Readonly<Record<BreakpointName, number>>;
 
-type ScaleToken = `${ChromaticScaleName}-${ChromaticStep}` | `slate-${NeutralStep}`;
+type ScaleToken = `${ChromaticScaleName}-${ChromaticStep}` | `ink-${NeutralStep}`;
 
 type TypeProperty = 'size' | 'line-height' | 'weight' | 'letter-spacing' | 'stretch';
 
@@ -306,8 +306,8 @@ type Logo = {
 type Logos = Readonly<Record<LogoName, Logo>>;
 
 export type {
-  BandEffectValues,
-  BandRecipe,
+  BrandSurfaceEffectValues,
+  BrandSurfaceRecipe,
   BreakpointName,
   Breakpoints,
   ChartIndex,

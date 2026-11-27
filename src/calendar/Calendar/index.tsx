@@ -61,7 +61,7 @@ type Props = {
   view?: CalendarView;
   /**
    * Time grid: a column per resource under every day (teacher, room, technician). A resource's
-   * `detail` is a second header line and its `tone` tints the header (a full day: `warning`).
+   * `detail` is a second header line and its `tone` tints the header (a full day: `ink`).
    */
   resources?: readonly CalendarResource[];
   /** Time grid (2.5): the header of a resource column; its label and detail by default. */

@@ -6,7 +6,7 @@ import deltaE from './modules/delta-e';
 import hexToOklch from './modules/hex-to-oklch';
 import maxChroma from './modules/max-chroma';
 import oklchToHex from './modules/oklch-to-hex';
-import band from './tokens/band';
+import brandSurface from './tokens/brand-surface';
 import breakpoints from './tokens/breakpoints';
 import CSS_VARIABLE_PREFIX from './tokens/css-variable-prefix';
 import effectValues from './tokens/effect-values';
@@ -27,8 +27,8 @@ import THEME_STORAGE_KEY from './tokens/theme-storage-key';
 import themes from './tokens/themes';
 import typography from './tokens/typography';
 import type {
-  BandEffectValues,
-  BandRecipe,
+  BrandSurfaceEffectValues,
+  BrandSurfaceRecipe,
   BreakpointName,
   Breakpoints,
   ChartIndex,
@@ -83,7 +83,7 @@ import type {
 } from './types';
 
 export {
-  band,
+  brandSurface,
   breakpoints,
   contrast,
   CSS_VARIABLE_PREFIX,
@@ -112,8 +112,8 @@ export {
   typography,
 };
 export type {
-  BandEffectValues,
-  BandRecipe,
+  BrandSurfaceEffectValues,
+  BrandSurfaceRecipe,
   BreakpointName,
   Breakpoints,
   ChartIndex,

@@ -112,12 +112,8 @@
     @include tint(neutral);
   }
 
-  &--success {
-    @include tint(success);
-  }
-
-  &--warning {
-    @include tint(warning);
+  &--ink {
+    @include tint(ink);
   }
 
   &--danger {
@@ -129,8 +125,7 @@
   }
 
   &--neutral,
-  &--success,
-  &--warning,
+  &--ink,
   &--danger,
   &--info {
     font-weight: $weight-semibold;
@@ -241,12 +236,8 @@
     @include tint(neutral);
   }
 
-  &--success {
-    @include tint(success);
-  }
-
-  &--warning {
-    @include tint(warning);
+  &--ink {
+    @include tint(ink);
   }
 
   &--danger {

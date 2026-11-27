@@ -33,7 +33,7 @@ $primary-soft: var(--hd-primary-soft);
 $primary-soft-hover: var(--hd-primary-soft-hover);
 $primary-line: var(--hd-primary-line);
 $primary-text: var(--hd-primary-text);
-// `--ui-ring-color` is set by a surface that needs its own ring (`Band`: `band-focus`); every
+// `--ui-ring-color` is set by a surface that needs its own ring (`BrandSurface`: `on-primary`); every
 // descendant's ring follows it.
 $focus: var(--ui-ring-color, var(--hd-focus));
 // The ring of a control that sits IN a well (`bg-inset`): `focus` is 2.95:1 there in the light theme.
@@ -49,16 +49,6 @@ $accent-soft: var(--hd-accent-soft);
 $accent-text: var(--hd-accent-text);
 
 // --- Status ---
-$success-bg: var(--hd-success-bg);
-$success-fg: var(--hd-success-fg);
-$success-line: var(--hd-success-line);
-$success-solid: var(--hd-success-solid);
-$success-on-solid: var(--hd-success-on-solid);
-$warning-bg: var(--hd-warning-bg);
-$warning-fg: var(--hd-warning-fg);
-$warning-line: var(--hd-warning-line);
-$warning-solid: var(--hd-warning-solid);
-$warning-on-solid: var(--hd-warning-on-solid);
 $danger-bg: var(--hd-danger-bg);
 $danger-fg: var(--hd-danger-fg);
 $danger-line: var(--hd-danger-line);
@@ -78,36 +68,26 @@ $chart-4: var(--hd-chart-4);
 $chart-5: var(--hd-chart-5);
 $chart-6: var(--hd-chart-6);
 
-// --- Brand band: deep cobalt in both themes ---
-$band-bg: var(--hd-band-bg);
-$band-deep: var(--hd-band-deep);
-$band-line: var(--hd-band-line);
-$band-line-strong: var(--hd-band-line-strong);
-$band-text: var(--hd-band-text);
-$band-text-2: var(--hd-band-text-2);
-$band-focus: var(--hd-band-focus);
-// The band's own colour on a light page, its hairline on the dark one.
-$band-edge: var(--hd-band-edge);
-// The band's imagery (gradient stops, glow, dot grid, blueprint), drawn as SVG by `Band`.
-$band-gradient-from: var(--hd-band-gradient-from);
-$band-gradient-to: var(--hd-band-gradient-to);
-$band-glow: var(--hd-band-glow);
-$band-glow-alpha: var(--hd-band-glow-alpha);
-$band-dot: var(--hd-band-dot);
-$band-dot-alpha: var(--hd-band-dot-alpha);
-$band-blueprint-from: var(--hd-band-blueprint-from);
-$band-blueprint-to: var(--hd-band-blueprint-to);
-$band-blueprint-stroke: var(--hd-band-blueprint-stroke);
-// The soft coral glow of the conversion button, only on the band.
-$band-accent-glow: var(--hd-band-accent-glow);
+// --- Brand surface: cobalt `primary` with white on it, the same in both themes ---
+// Its one deeper step (the gradient's foot, the strip of facts), from the cobalt scale.
+$brand-surface-deep: var(--hd-brand-surface-deep);
+// White at low opacity: hairlines, dividers and the rules of an eyebrow on the surface.
+$brand-surface-line: var(--hd-brand-surface-line);
+// The surface's imagery (glow, dot grid, blueprint), drawn as SVG by `BrandSurface`.
+$brand-surface-glow-alpha: var(--hd-brand-surface-glow-alpha);
+$brand-surface-dot-alpha: var(--hd-brand-surface-dot-alpha);
+$brand-surface-blueprint-fill-alpha: var(--hd-brand-surface-blueprint-fill-alpha);
+$brand-surface-blueprint-stroke-alpha: var(--hd-brand-surface-blueprint-stroke-alpha);
+// The soft coral glow of the conversion button, only on the brand surface.
+$brand-surface-accent-glow: var(--hd-brand-surface-accent-glow);
 
 // --- Inverse surface: dark in both themes (tooltip, terminal output, code badge) ---
-// Static slate steps, so the block does not flip with the theme the way a `bg-*` role does.
-$inverse-bg: var(--hd-slate-900);
-$inverse-bg-2: var(--hd-slate-800);
-$inverse-line: var(--hd-slate-700);
-$inverse-text: var(--hd-slate-50);
-$inverse-text-2: var(--hd-slate-300);
+// Static ink steps, so the block does not flip with the theme the way a `bg-*` role does.
+$inverse-bg: var(--hd-ink-900);
+$inverse-bg-2: var(--hd-ink-800);
+$inverse-line: var(--hd-ink-700);
+$inverse-text: var(--hd-ink-50);
+$inverse-text-2: var(--hd-ink-300);
 $inverse-danger: var(--hd-danger-300);
 
 // --- Elevation ---

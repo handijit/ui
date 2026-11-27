@@ -9,12 +9,11 @@ script that works under a strict Content Security Policy.
 - **One source, five outputs.** `tokens.css`, `tokens.scss`, `tokens.json`,
   `fonts.css` and the logo SVGs are generated from the TypeScript tokens at
   build time; the build fails if they disagree with the JavaScript entry.
-- **263 tokens, 0 runtime dependencies.** 180 theme-independent custom
-  properties and 83 per theme (63 colours, 20 effects), all prefixed `--hd-`.
-- **Cobalt, coral and the navy band.** The brand palette is cobalt (the
-  interface), coral (the conversion action) and the navy band, on neutrals and
-  the status colours. There is no cyan: a test fails on any hue between 170° and
-  240° (2.0).
+- **198 tokens, 0 runtime dependencies.** 136 theme-independent custom
+  properties and 62 per theme (46 colours, 16 effects), all prefixed `--hd-`.
+- **Cobalt, coral and ink.** The palette is cobalt (the interface and the brand
+  surface), coral (the conversion action) and ink with its neutral steps, plus
+  red for danger, the one status colour. A test fails on any other hue (3.0).
 - **Light and dark, gated.** Both themes pass the same contrast gates in the
   test suite: text at 4.5:1 or better (primary text 7:1), focus rings, control
   boundaries and chart colours at 3:1, chart colours at least 10 ΔE apart
@@ -24,14 +23,14 @@ script that works under a strict Content Security Policy.
   system.
 - **CSP-ready theme boot script.** A 283-byte inline script and its `sha256-…`
   digest, computed at build time, for a `script-src` without `unsafe-inline`.
-- **3.15 kB gzip** for `tokens.css`; **5.53 kB gzip** for the whole minified
+- **2.56 kB gzip** for `tokens.css`; **5.08 kB gzip** for the whole minified
   browser bundle ([Bundle size](#bundle-size)).
 - **Self-hosted fonts.** Archivo (variable weight and width), Inter (variable
   weight) and IBM Plex Mono (400, 500) as 8 `woff2` files, 366 kB in total,
   split by `unicode-range` so a page downloads only the subsets it uses.
 - **ESM, CommonJS and a `<script>` build**, each with type declarations. The
   JavaScript entry has no import side effects.
-- **230 tests, 100% coverage** of statements, branches, functions and
+- **233 tests, 100% coverage** of statements, branches, functions and
   lines, enforced in CI.
 
 ---
@@ -192,7 +191,7 @@ is free to drop everything you do not use from the JavaScript entry.
 
 | Rule                                                                      | Declares                                  |
 | ------------------------------------------------------------------------- | ----------------------------------------- |
-| `:root`                                                                   | The 180 theme-independent tokens          |
+| `:root`                                                                   | The 136 theme-independent tokens          |
 | `:root, [data-theme="light"]`                                             | The light theme and `color-scheme: light` |
 | `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) }` | The dark theme and `color-scheme: dark`   |
 | `:root[data-theme="dark"], [data-theme="dark"]`                           | The dark theme and `color-scheme: dark`   |
@@ -223,159 +222,152 @@ already computed above it. Give an island its own paint:
 
 ### Colour tokens
 
-63 per theme. Every value is a six-digit hex colour. In TypeScript the names are
+46 per theme. Every value is a six-digit hex colour. In TypeScript the names are
 the `ColorToken` union and the values are `themes.light` and `themes.dark`.
 
-| Custom property           | Light     | Dark      | Use                                                     |
-| ------------------------- | --------- | --------- | ------------------------------------------------------- |
-| `--hd-bg-page`            | `#fafbfe` | `#080e1b` | Page background                                         |
-| `--hd-bg-surface`         | `#ffffff` | `#0f1727` | Cards, panels, inputs                                   |
-| `--hd-bg-raised`          | `#f4f6fb` | `#172032` | Hovered rows and fills one step above a surface         |
-| `--hd-bg-inset`           | `#ecf0f6` | `#040813` | Wells, code blocks, table headers                       |
-| `--hd-bg-overlay`         | `#ffffff` | `#202a3e` | Menus, popovers, dialogs                                |
-| `--hd-bg-disabled`        | `#ecf0f6` | `#172032` | Fill of a disabled control                              |
-| `--hd-border`             | `#dee3ed` | `#283145` | Default hairline                                        |
-| `--hd-border-strong`      | `#cbd1de` | `#414d64` | Dividers that must be seen, outlines of neutral buttons |
-| `--hd-border-control`     | `#80899b` | `#69758d` | Boundary of a form control; 3:1 on every background     |
-| `--hd-text`               | `#091122` | `#f1f3f9` | Primary text                                            |
-| `--hd-text-2`             | `#515b6e` | `#bac1d0` | Secondary text                                          |
-| `--hd-text-3`             | `#677083` | `#8f99ab` | Tertiary text and placeholders                          |
-| `--hd-text-disabled`      | `#a1a9ba` | `#4e586d` | Disabled text; deliberately below 4.5:1                 |
-| `--hd-primary`            | `#2661fa` | `#2661fa` | Primary action fill                                     |
-| `--hd-primary-hover`      | `#053dea` | `#2e69fe` | Primary fill, hovered                                   |
-| `--hd-primary-active`     | `#0631b2` | `#053dea` | Primary fill, pressed                                   |
-| `--hd-on-primary`         | `#ffffff` | `#ffffff` | Text and icons on the primary fill                      |
-| `--hd-primary-soft`       | `#f4f7fd` | `#11234f` | Tinted background of a selected item                    |
-| `--hd-primary-soft-hover` | `#e6edfb` | `#172c62` | Tinted background, hovered                              |
-| `--hd-primary-line`       | `#cfddf9` | `#24418d` | Border of a tinted primary area                         |
-| `--hd-primary-text`       | `#053dea` | `#adc6f7` | Links and primary-coloured text                         |
-| `--hd-accent`             | `#fb6041` | `#fb6041` | Conversion button fill                                  |
-| `--hd-accent-hover`       | `#f99884` | `#f99884` | Accent fill, hovered                                    |
-| `--hd-accent-active`      | `#f05133` | `#f05133` | Accent fill, pressed                                    |
-| `--hd-on-accent`          | `#091122` | `#091122` | Text on the accent fill: dark navy in both themes       |
-| `--hd-accent-soft`        | `#fdf5f2` | `#3f1a12` | Tinted accent background                                |
-| `--hd-accent-text`        | `#b72e11` | `#f9bdb0` | Accent-coloured text                                    |
-| `--hd-focus`              | `#5487fa` | `#82a8f7` | Focus ring                                              |
-| `--hd-selection-bg`       | `#cfddf9` | `#24418d` | `::selection` background, under `text`                  |
-| `--hd-success-bg`         | `#effaf3` | `#0b2b1a` | Success message background                              |
-| `--hd-success-fg`         | `#157748` | `#7de5a7` | Text and icons on `success-bg`                          |
-| `--hd-success-line`       | `#bbedcc` | `#144f30` | Border of a success message                             |
-| `--hd-success-solid`      | `#159358` | `#3ad184` | Solid success fill: buttons, badges, icons on a surface |
-| `--hd-success-on-solid`   | `#091122` | `#091122` | Text on `success-solid`                                 |
-| `--hd-warning-bg`         | `#fdf6ea` | `#342305` | Warning message background                              |
-| `--hd-warning-fg`         | `#8e6413` | `#f9c97c` | Text and icons on `warning-bg`                          |
-| `--hd-warning-line`       | `#faddb1` | `#5e420f` | Border of a warning message                             |
-| `--hd-warning-solid`      | `#ad7a13` | `#f0af36` | Solid warning fill: buttons, badges, icons on a surface |
-| `--hd-warning-on-solid`   | `#091122` | `#091122` | Text on `warning-solid`                                 |
-| `--hd-danger-bg`          | `#fdf4f5` | `#3e141a` | Danger message background                               |
-| `--hd-danger-fg`          | `#a9143c` | `#f8afb5` | Text and icons on `danger-bg`                           |
-| `--hd-danger-line`        | `#f9d1d3` | `#742633` | Border of a danger message                              |
-| `--hd-danger-solid`       | `#d2154c` | `#d2154c` | Solid danger fill: buttons, badges, icons on a surface  |
-| `--hd-danger-on-solid`    | `#ffffff` | `#ffffff` | Text on `danger-solid`                                  |
-| `--hd-info-bg`            | `#f4f7fd` | `#11234f` | Info message background                                 |
-| `--hd-info-fg`            | `#053dea` | `#adc6f7` | Text and icons on `info-bg`                             |
-| `--hd-info-line`          | `#cfddf9` | `#24418d` | Border of a info message                                |
-| `--hd-info-solid`         | `#2661fa` | `#2661fa` | Solid info fill: buttons, badges, icons on a surface    |
-| `--hd-info-on-solid`      | `#ffffff` | `#ffffff` | Text on `info-solid`                                    |
-| `--hd-chart-1`            | `#2661fa` | `#82a8f7` | Chart series 1 (cobalt)                                 |
-| `--hd-chart-2`            | `#e03611` | `#f99884` | Chart series 2 (coral)                                  |
-| `--hd-chart-3`            | `#159358` | `#3ad184` | Chart series 3 (green)                                  |
-| `--hd-chart-4`            | `#ad7a13` | `#f0af36` | Chart series 4 (amber)                                  |
-| `--hd-chart-5`            | `#c71589` | `#f874bd` | Chart series 5 (magenta)                                |
-| `--hd-chart-6`            | `#a217e4` | `#c988f7` | Chart series 6 (violet)                                 |
-| `--hd-band-bg`            | `#091b64` | `#091b64` | Brand band (hero, footer); the same in both themes      |
-| `--hd-band-deep`          | `#060f3e` | `#060f3e` | Deeper band layer                                       |
-| `--hd-band-line`          | `#213b86` | `#213b86` | Hairline on a band                                      |
-| `--hd-band-line-strong`   | `#5b7cce` | `#5b7cce` | Outline on a band that must be seen                     |
-| `--hd-band-text`          | `#ffffff` | `#ffffff` | Primary text on a band                                  |
-| `--hd-band-text-2`        | `#bfd2f3` | `#bfd2f3` | Secondary text on a band                                |
-| `--hd-band-focus`         | `#ffffff` | `#ffffff` | Focus ring on a band                                    |
-| `--hd-band-edge`          | `#091b64` | `#213b86` | Edge of a band; marks it on the dark page               |
+The palette is **cobalt, coral and ink**, plus red for danger: cobalt is the
+interface and the brand surface, coral the conversion action, ink (`#091122`,
+the text colour) and its lightness steps every neutral. There is no other hue
+(3.0): no green, amber, violet, magenta, cyan or navy, and a test fails on any.
 
-The status families are `success`, `warning`, `danger` and `info`. `info` is the
-cobalt family, so an informational message and a primary action share a hue.
+| Custom property           | Light     | Dark      | Use                                                             |
+| ------------------------- | --------- | --------- | --------------------------------------------------------------- |
+| `--hd-bg-page`            | `#fafbfe` | `#080e1b` | Page background                                                 |
+| `--hd-bg-surface`         | `#ffffff` | `#0f1727` | Cards, panels, inputs                                           |
+| `--hd-bg-raised`          | `#f4f6fb` | `#172032` | Hovered rows and fills one step above a surface                 |
+| `--hd-bg-inset`           | `#ecf0f6` | `#040813` | Wells, code blocks, table headers                               |
+| `--hd-bg-overlay`         | `#ffffff` | `#202a3e` | Menus, popovers, dialogs                                        |
+| `--hd-bg-disabled`        | `#ecf0f6` | `#172032` | Fill of a disabled control                                      |
+| `--hd-border`             | `#dee3ed` | `#283145` | Default hairline                                                |
+| `--hd-border-strong`      | `#cbd1de` | `#414d64` | Dividers that must be seen, outlines of neutral buttons         |
+| `--hd-border-control`     | `#80899b` | `#69758d` | Boundary of a form control; 3:1 on every background             |
+| `--hd-text`               | `#091122` | `#f1f3f9` | Primary text: ink                                               |
+| `--hd-text-2`             | `#515b6e` | `#bac1d0` | Secondary text                                                  |
+| `--hd-text-3`             | `#677083` | `#8f99ab` | Tertiary text and placeholders                                  |
+| `--hd-text-disabled`      | `#a1a9ba` | `#4e586d` | Disabled text; deliberately below 4.5:1                         |
+| `--hd-primary`            | `#2661fa` | `#2661fa` | Primary action fill; the brand surface                          |
+| `--hd-primary-hover`      | `#053dea` | `#2e69fe` | Primary fill, hovered                                           |
+| `--hd-primary-active`     | `#0631b2` | `#053dea` | Primary fill, pressed                                           |
+| `--hd-on-primary`         | `#ffffff` | `#ffffff` | Text and icons on the primary fill and on the brand surface     |
+| `--hd-primary-soft`       | `#f4f7fd` | `#11234f` | Tinted background of a selected item                            |
+| `--hd-primary-soft-hover` | `#e6edfb` | `#172c62` | Tinted background, hovered                                      |
+| `--hd-primary-line`       | `#cfddf9` | `#24418d` | Border of a tinted primary area                                 |
+| `--hd-primary-text`       | `#053dea` | `#adc6f7` | Links and primary-coloured text                                 |
+| `--hd-accent`             | `#fb6041` | `#fb6041` | Conversion button fill                                          |
+| `--hd-accent-hover`       | `#f99884` | `#f99884` | Accent fill, hovered                                            |
+| `--hd-accent-active`      | `#f05133` | `#f05133` | Accent fill, pressed                                            |
+| `--hd-on-accent`          | `#091122` | `#091122` | Text on the accent fill: ink in both themes                     |
+| `--hd-accent-soft`        | `#fdf5f2` | `#3f1a12` | Tinted accent background                                        |
+| `--hd-accent-text`        | `#b72e11` | `#f9bdb0` | Accent-coloured text                                            |
+| `--hd-focus`              | `#5487fa` | `#82a8f7` | Focus ring                                                      |
+| `--hd-selection-bg`       | `#cfddf9` | `#24418d` | `::selection` background, under `text`                          |
+| `--hd-danger-bg`          | `#fdf4f5` | `#3e141a` | Danger message background                                       |
+| `--hd-danger-fg`          | `#a9143c` | `#f8afb5` | Text and icons on `danger-bg`                                   |
+| `--hd-danger-line`        | `#f9d1d3` | `#742633` | Border of a danger message                                      |
+| `--hd-danger-solid`       | `#d2154c` | `#d2154c` | Solid danger fill: buttons, badges, icons on a surface          |
+| `--hd-danger-on-solid`    | `#ffffff` | `#ffffff` | Text on `danger-solid`                                          |
+| `--hd-info-bg`            | `#f4f7fd` | `#11234f` | Info message background (cobalt)                                |
+| `--hd-info-fg`            | `#053dea` | `#adc6f7` | Text and icons on `info-bg`                                     |
+| `--hd-info-line`          | `#cfddf9` | `#24418d` | Border of an info message                                       |
+| `--hd-info-solid`         | `#2661fa` | `#2661fa` | Solid info fill: buttons, badges, icons on a surface            |
+| `--hd-info-on-solid`      | `#ffffff` | `#ffffff` | Text on `info-solid`                                            |
+| `--hd-chart-1`            | `#2661fa` | `#82a8f7` | Chart series 1 (cobalt)                                         |
+| `--hd-chart-2`            | `#e03611` | `#f99884` | Chart series 2 (coral)                                          |
+| `--hd-chart-3`            | `#677083` | `#ffffff` | Chart series 3 (ink)                                            |
+| `--hd-chart-4`            | `#05247e` | `#2661fa` | Chart series 4 (deep cobalt / cobalt)                           |
+| `--hd-chart-5`            | `#87230f` | `#e03611` | Chart series 5 (deep coral / coral)                             |
+| `--hd-chart-6`            | `#091122` | `#677083` | Chart series 6 (ink)                                            |
+| `--hd-brand-surface-deep` | `#0631b2` | `#0631b2` | The brand surface's deeper cobalt step; the same in both themes |
 
-`chart-3` is the green of the `success` family (2.0; it was turquoise): measured
-with `deltaE` and `contrast`, it is the only family of the palette at least
-16 ΔE from every other series in both themes (16.6 light, 20.1 dark) and at
-least 3.63:1 on the light backgrounds. Red sat 6.6–8 ΔE from coral and magenta,
-a second amber or violet step under 12 ΔE from its own series. A chart names its
-series in a legend, so the shared hue never says "success" on its own.
+The status families are `danger` and `info`. `info` is the cobalt family, so an
+informational message and a primary action share a hue. There is no success or
+warning family (3.0): a success is drawn in cobalt and a warning in ink, each
+with its icon and its text, which carry the meaning (WCAG 1.4.1).
 
-The band roles are the same in both themes except `band-edge`: on a light page
-the navy band stands out by itself (15:1) and the edge is the band's own colour;
-on the dark page the band is 1.24:1, so its edge is the `band-line` hairline.
+The chart series are tints of the three brand colours (3.0). Measured with
+`deltaE` and `contrast` over every step of cobalt, coral and ink at 3:1 or more
+on the page, surface and raised backgrounds, these six lie furthest apart: 17.9
+ΔE at the closest pair in light (cobalt 600, coral 600, ink 500, cobalt 900,
+coral 800, ink 950), 20.2 ΔE in dark (cobalt 400, coral 400, ink 0, cobalt 600,
+coral 600, ink 500). Two series of one hue differ only in lightness, so a chart
+with more than three series names them in a legend and, where it can, adds
+direct labels, markers or dash patterns.
+
+`brand-surface-deep` is the brand surface's one deeper step: cobalt 800, the
+light theme's pressed primary, 10.05:1 under white. The surface itself is
+`primary` with `on-primary` on it, the same in both themes; it stands out of the
+page without an edge (4.86:1 light, 3.83:1 dark).
 
 ### Effect tokens
 
-20 per theme. Shadows and the scrim are complete values, resolved per theme, so
-they are correct inside a theme island as well. The `band-*` effects are the
-brand band's imagery and, like the band colours, the same in both themes.
+16 per theme. Shadows and the scrim are complete values, resolved per theme, so
+they are correct inside a theme island as well. The `brand-surface-*` effects
+are the brand surface's imagery and, like the surface, the same in both themes.
 
-| Custom property              | Light                                                                  | Dark                                                              |
-| ---------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `--hd-shadow-color`          | `15 23 60`                                                             | `0 0 0`                                                           |
-| `--hd-shadow-alpha`          | `0.1`                                                                  | `0.45`                                                            |
-| `--hd-shadow-1`              | `0 1px 2px rgb(15 23 60 / 0.1)`                                        | `0 1px 2px rgb(0 0 0 / 0.45)`                                     |
-| `--hd-shadow-2`              | `0 1px 2px rgb(15 23 60 / 0.1), 0 12px 32px -12px rgb(15 23 60 / 0.2)` | `0 1px 2px rgb(0 0 0 / 0.45), 0 12px 32px -12px rgb(0 0 0 / 0.9)` |
-| `--hd-shadow-3`              | `0 2px 4px rgb(15 23 60 / 0.1), 0 24px 56px -16px rgb(15 23 60 / 0.3)` | `0 2px 4px rgb(0 0 0 / 0.45), 0 24px 56px -16px rgb(0 0 0 / 0.9)` |
-| `--hd-scrim`                 | `rgb(9 17 34 / 0.48)`                                                  | `rgb(4 8 19 / 0.64)`                                              |
-| `--hd-band-gradient-from`    | `#091b64`                                                              | `#091b64`                                                         |
-| `--hd-band-gradient-to`      | `#060f3e`                                                              | `#060f3e`                                                         |
-| `--hd-band-gradient-hold`    | `55%`                                                                  | `55%`                                                             |
-| `--hd-band-glow`             | `#2661fa`                                                              | `#2661fa`                                                         |
-| `--hd-band-glow-alpha`       | `0.5`                                                                  | `0.5`                                                             |
-| `--hd-band-dot`              | `#5b7cce`                                                              | `#5b7cce`                                                         |
-| `--hd-band-dot-alpha`        | `0.7`                                                                  | `0.7`                                                             |
-| `--hd-band-dot-cell`         | `22px`                                                                 | `22px`                                                            |
-| `--hd-band-dot-radius`       | `1.6px`                                                                | `1.6px`                                                           |
-| `--hd-band-blueprint-from`   | `#213b86`                                                              | `#213b86`                                                         |
-| `--hd-band-blueprint-to`     | `#091b64`                                                              | `#091b64`                                                         |
-| `--hd-band-blueprint-hold`   | `60%`                                                                  | `60%`                                                             |
-| `--hd-band-blueprint-stroke` | `#5b7cce`                                                              | `#5b7cce`                                                         |
-| `--hd-band-accent-glow`      | `0 8px 24px -10px rgb(251 96 65 / 0.45)`                               | `0 8px 24px -10px rgb(251 96 65 / 0.45)`                          |
+| Custom property                             | Light                                                                  | Dark                                                              |
+| ------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `--hd-shadow-color`                         | `15 23 60`                                                             | `0 0 0`                                                           |
+| `--hd-shadow-alpha`                         | `0.1`                                                                  | `0.45`                                                            |
+| `--hd-shadow-1`                             | `0 1px 2px rgb(15 23 60 / 0.1)`                                        | `0 1px 2px rgb(0 0 0 / 0.45)`                                     |
+| `--hd-shadow-2`                             | `0 1px 2px rgb(15 23 60 / 0.1), 0 12px 32px -12px rgb(15 23 60 / 0.2)` | `0 1px 2px rgb(0 0 0 / 0.45), 0 12px 32px -12px rgb(0 0 0 / 0.9)` |
+| `--hd-shadow-3`                             | `0 2px 4px rgb(15 23 60 / 0.1), 0 24px 56px -16px rgb(15 23 60 / 0.3)` | `0 2px 4px rgb(0 0 0 / 0.45), 0 24px 56px -16px rgb(0 0 0 / 0.9)` |
+| `--hd-scrim`                                | `rgb(9 17 34 / 0.48)`                                                  | `rgb(4 8 19 / 0.64)`                                              |
+| `--hd-brand-surface-hold`                   | `55%`                                                                  | `55%`                                                             |
+| `--hd-brand-surface-line`                   | `rgb(255 255 255 / 0.24)`                                              | `rgb(255 255 255 / 0.24)`                                         |
+| `--hd-brand-surface-glow-alpha`             | `0.06`                                                                 | `0.06`                                                            |
+| `--hd-brand-surface-dot-alpha`              | `0.22`                                                                 | `0.22`                                                            |
+| `--hd-brand-surface-dot-cell`               | `22px`                                                                 | `22px`                                                            |
+| `--hd-brand-surface-dot-radius`             | `1.6px`                                                                | `1.6px`                                                           |
+| `--hd-brand-surface-blueprint-hold`         | `70%`                                                                  | `70%`                                                             |
+| `--hd-brand-surface-blueprint-fill-alpha`   | `0.16`                                                                 | `0.16`                                                            |
+| `--hd-brand-surface-blueprint-stroke-alpha` | `0.4`                                                                  | `0.4`                                                             |
+| `--hd-brand-surface-accent-glow`            | `0 8px 24px -10px rgb(251 96 65 / 0.45)`                               | `0 8px 24px -10px rgb(251 96 65 / 0.45)`                          |
 
 `--hd-shadow-color` and `--hd-shadow-alpha` are the parts, for a shadow the three
 levels do not cover: `box-shadow: 0 8px 24px rgb(var(--hd-shadow-color) / var(--hd-shadow-alpha))`.
 
-The band imagery is composed from existing roles, no new colour:
+The brand surface's imagery is white and cobalt at an opacity, plus the coral of
+the logo; no new colour:
 
-| Layer           | Tokens                                                                                                       | Drawn as                                                                              |
-| --------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
-| Background      | `band-gradient-from` → `band-gradient-to`, holding the first colour to `band-gradient-hold`                  | a vertical gradient, `band-bg` to `band-deep`                                         |
-| Glow            | `band-glow` at `band-glow-alpha`, fading to 0                                                                | a radial gradient of `primary`; `band-text-2` over its centre is still 5.85:1 (gated) |
-| Dot grid        | `band-dot` dots of `band-dot-radius` every `band-dot-cell`, at most `band-dot-alpha`                         | a pattern of `band-line-strong` dots, masked so it fades towards the content          |
-| Blueprint       | fill `band-blueprint-from` → `band-blueprint-to` (at `band-blueprint-hold`), outline `band-blueprint-stroke` | a supergraphic (the mark) in band colours; its dot is the `accent` of the logo        |
-| Conversion glow | `band-accent-glow`                                                                                           | the `box-shadow` of the one coral button on the band                                  |
+| Layer           | Tokens                                                                                                                                                   | Drawn as                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Background      | `primary` held to `brand-surface-hold`, then `brand-surface-deep`                                                                                        | a vertical gradient of two cobalt steps                                                       |
+| Glow            | `on-primary` at `brand-surface-glow-alpha` (0.06), fading to 0                                                                                           | a white sheen; white text over its centre is still 4.58:1 (gated). At 0.08 it would be 4.40:1 |
+| Hairline        | `brand-surface-line` (white at 0.24)                                                                                                                     | dividers, the rules of an eyebrow, the top of the strip of facts                              |
+| Dot grid        | `on-primary` dots of `brand-surface-dot-radius` every `brand-surface-dot-cell`, at most `brand-surface-dot-alpha`                                        | a pattern of white dots, masked so it fades towards the content                               |
+| Blueprint       | white fill at `brand-surface-blueprint-fill-alpha` fading out by `brand-surface-blueprint-hold`, white outline at `brand-surface-blueprint-stroke-alpha` | a supergraphic (the mark); its dot is the solid `accent` of the logo                          |
+| Conversion glow | `brand-surface-accent-glow`                                                                                                                              | the `box-shadow` of the one coral button on the surface                                       |
+
+Text on the brand surface is white only. White at 92% is already 4.50:1 on
+cobalt and falls below 4.5:1 over a glow, so there is no secondary text colour
+there: hierarchy comes from size and weight. Coral on cobalt is 1.64:1, so the
+coral button is identified by its label (`on-accent`, 6.15:1), not by its edge.
 
 Draw the layers as SVG (`<linearGradient>`, `<radialGradient>`, `<pattern>`,
 `<mask>`): SVG attributes cannot read custom properties, so the geometry is also
-exported as numbers in [`band`](#token-maps). `@handijitcom/ui` draws all of it
-in its `Band` component.
+exported as numbers in [`brandSurface`](#token-maps). `@handijitcom/ui` draws all
+of it in its `BrandSurface` component.
 
 Outside CSS, read the same values as hex and numbers from
 [`effectValues`](#effect-values).
 
 ### Colour scales
 
-90 custom properties, `--hd-<scale>-<step>`, identical in both themes. Seven
-chromatic scales of 11 steps and one neutral scale of 13. In TypeScript:
-`scales.cobalt[600]`.
+46 custom properties, `--hd-<scale>-<step>`, identical in both themes. Three
+chromatic scales of 11 steps (cobalt, coral, danger) and the neutral scale of
+13, `ink`. In TypeScript: `scales.cobalt[600]`, `scales.ink[950]`.
 
-| Scale     | 0         | 25        | 50        | 100       | 200       | 300       | 400       | 500       | 600       | 700       | 800       | 900       | 950       |
-| --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- |
-| `cobalt`  |           |           | `#f4f7fd` | `#e6edfb` | `#cfddf9` | `#adc6f7` | `#82a8f7` | `#5487fa` | `#2661fa` | `#053dea` | `#0631b2` | `#05247e` | `#031650` |
-| `coral`   |           |           | `#fdf5f2` | `#fbe8e3` | `#fad7cf` | `#f9bdb0` | `#f99884` | `#fb6041` | `#e03611` | `#b72e11` | `#87230f` | `#5d190c` | `#380e06` |
-| `success` |           |           | `#effaf3` | `#dbf4e3` | `#bbedcc` | `#7de5a7` | `#3ad184` | `#20b26d` | `#159358` | `#157748` | `#135835` | `#0f3d25` | `#082415` |
-| `warning` |           |           | `#fdf6ea` | `#fbead1` | `#faddb1` | `#f9c97c` | `#f0af36` | `#cf931d` | `#ad7a13` | `#8e6413` | `#664811` | `#46310d` | `#281c06` |
-| `danger`  |           |           | `#fdf4f5` | `#fbe7e8` | `#f9d1d3` | `#f8afb5` | `#f87e8d` | `#fa2f61` | `#d2154c` | `#a9143c` | `#81142e` | `#5c1020` | `#3a0913` |
-| `violet`  |           |           | `#f9f5fd` | `#f3e8fb` | `#e8d3f9` | `#dab4f7` | `#c988f7` | `#bb51fa` | `#a217e4` | `#8216b7` | `#63168c` | `#461263` | `#2c0b3e` |
-| `magenta` |           |           | `#fdf4f8` | `#fbe6f0` | `#f9cee3` | `#f8abd1` | `#f874bd` | `#f220a8` | `#c71589` | `#a0146e` | `#7a1354` | `#57103b` | `#370924` |
-| `slate`   | `#ffffff` | `#fafbfe` | `#f4f6fb` | `#ecf0f6` | `#dee3ed` | `#cbd1de` | `#a1a9ba` | `#677083` | `#515b6e` | `#3f495d` | `#263044` | `#141e31` | `#091122` |
+| Scale    | 0         | 25        | 50        | 100       | 200       | 300       | 400       | 500       | 600       | 700       | 800       | 900       | 950       |
+| -------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- | --------- |
+| `cobalt` |           |           | `#f4f7fd` | `#e6edfb` | `#cfddf9` | `#adc6f7` | `#82a8f7` | `#5487fa` | `#2661fa` | `#053dea` | `#0631b2` | `#05247e` | `#031650` |
+| `coral`  |           |           | `#fdf5f2` | `#fbe8e3` | `#fad7cf` | `#f9bdb0` | `#f99884` | `#fb6041` | `#e03611` | `#b72e11` | `#87230f` | `#5d190c` | `#380e06` |
+| `danger` |           |           | `#fdf4f5` | `#fbe7e8` | `#f9d1d3` | `#f8afb5` | `#f87e8d` | `#fa2f61` | `#d2154c` | `#a9143c` | `#81142e` | `#5c1020` | `#3a0913` |
+| `ink`    | `#ffffff` | `#fafbfe` | `#f4f6fb` | `#ecf0f6` | `#dee3ed` | `#cbd1de` | `#a1a9ba` | `#677083` | `#515b6e` | `#3f495d` | `#263044` | `#141e31` | `#091122` |
 
-Each scale is derived in OKLCH from one hue angle (`hues`): cobalt 264°, coral
-33°, success 156°, warning 78°, danger 14°, violet 310°, magenta
-348°. The neutral scale leans towards the cobalt hue.
+Each chromatic scale is derived in OKLCH from one hue angle (`hues`): cobalt
+264°, coral 33°, danger 14°. `ink` is the text colour (`ink-950`, `#091122`) and
+its lightness steps; it leans to ink's own hue, the cobalt angle, at a chroma
+low enough to read as neutral. 3.0 renamed it from `slate`.
 
 ### Typography tokens
 
@@ -470,7 +462,7 @@ read `exports` by itself, use the package importer:
 
 | Member                                   | Kind     | What it gives                                                                                  |
 | ---------------------------------------- | -------- | ---------------------------------------------------------------------------------------------- |
-| `$hd-<token>`                            | variable | `var(--hd-<token>)` for each of the 263 tokens: `$hd-text`, `$hd-cobalt-600`, `$hd-space-4`    |
+| `$hd-<token>`                            | variable | `var(--hd-<token>)` for each of the 198 tokens: `$hd-text`, `$hd-cobalt-600`, `$hd-space-4`    |
 | `$hd-tokens`                             | map      | Token name to `var()` reference                                                                |
 | `$hd-breakpoint-sm`, `-md`, `-lg`, `-xl` | variable | `640px`, `768px`, `1024px`, `1280px`: real lengths, usable in a media query                    |
 | `$hd-breakpoints`                        | map      | Breakpoint name to length                                                                      |
@@ -509,7 +501,7 @@ JavaScript entry.
 import {
   // token maps
   scales,
-  band,
+  brandSurface,
   themes,
   effects,
   effectValues,
@@ -543,23 +535,23 @@ import {
 
 #### Token maps
 
-| Export         | Type                                | Example                                                          |
-| -------------- | ----------------------------------- | ---------------------------------------------------------------- |
-| `scales`       | `Scales`                            | `scales.cobalt[600]` is `"#2661fa"`                              |
-| `themes`       | `Themes`                            | `themes.dark.text` is `"#f1f3f9"`                                |
-| `effects`      | `Effects`                           | `effects.light["shadow-1"]`                                      |
-| `effectValues` | `EffectValues`                      | `effectValues.dark.scrim` is `{ color: "#040813", alpha: 0.64 }` |
-| `hues`         | `Readonly<Record<HueName, number>>` | `hues.coral` is `33`                                             |
-| `fonts`        | `Fonts`                             | `fonts.mono` is the IBM Plex Mono stack                          |
-| `fontWeights`  | `FontWeights`                       | `fontWeights.semibold` is `600`                                  |
-| `typography`   | `Typography`                        | `typography.body.size` is `15`                                   |
-| `spacing`      | `Spacing`                           | `spacing[6]` is `24`                                             |
-| `radii`        | `Radii`                             | `radii.pill` is `999`                                            |
-| `motion`       | `Motion`                            | `motion.duration.fast` is `120`                                  |
-| `layers`       | `Layers`                            | `layers.toast` is `1400`                                         |
-| `breakpoints`  | `Breakpoints`                       | `breakpoints.lg` is `1024`                                       |
-| `logos`        | `Logos`                             | `logos.mark.viewBox` is `"0 0 618.034 1000"`                     |
-| `band`         | `BandRecipe`                        | `band.dotCell` is `22`, `band.glowAlpha` is `0.5`                |
+| Export         | Type                                | Example                                                            |
+| -------------- | ----------------------------------- | ------------------------------------------------------------------ |
+| `scales`       | `Scales`                            | `scales.cobalt[600]` is `"#2661fa"`                                |
+| `themes`       | `Themes`                            | `themes.dark.text` is `"#f1f3f9"`                                  |
+| `effects`      | `Effects`                           | `effects.light["shadow-1"]`                                        |
+| `effectValues` | `EffectValues`                      | `effectValues.dark.scrim` is `{ color: "#040813", alpha: 0.64 }`   |
+| `hues`         | `Readonly<Record<HueName, number>>` | `hues.coral` is `33`                                               |
+| `fonts`        | `Fonts`                             | `fonts.mono` is the IBM Plex Mono stack                            |
+| `fontWeights`  | `FontWeights`                       | `fontWeights.semibold` is `600`                                    |
+| `typography`   | `Typography`                        | `typography.body.size` is `15`                                     |
+| `spacing`      | `Spacing`                           | `spacing[6]` is `24`                                               |
+| `radii`        | `Radii`                             | `radii.pill` is `999`                                              |
+| `motion`       | `Motion`                            | `motion.duration.fast` is `120`                                    |
+| `layers`       | `Layers`                            | `layers.toast` is `1400`                                           |
+| `breakpoints`  | `Breakpoints`                       | `breakpoints.lg` is `1024`                                         |
+| `logos`        | `Logos`                             | `logos.mark.viewBox` is `"0 0 618.034 1000"`                       |
+| `brandSurface` | `BrandSurfaceRecipe`                | `brandSurface.dotCell` is `22`, `brandSurface.glowAlpha` is `0.06` |
 
 Lengths are numbers of CSS pixels and durations are numbers of milliseconds; the
 CSS output adds the units. The maps are typed `Readonly` and are plain objects:
@@ -570,7 +562,7 @@ they are literals in the bundle, not computed when the module loads.
 `effects` holds CSS strings (`"rgb(9 17 34 / 0.48)"`), which only a CSS engine
 can use. `effectValues` holds the same shadows and scrim as hex colours and
 numbers, for an Electron main process, an Open Graph image or a PDF; so does
-the band's imagery (`band`). It is the
+the brand surface's imagery (`brandSurface`). It is the
 source the strings in `effects` and the custom properties in `tokens.css` are
 rendered from, and the test suite re-renders them to prove it, so the two cannot
 drift apart.
@@ -589,20 +581,21 @@ shadows[2];
 // ]: the layers of --hd-shadow-2, each painted in shadow.color
 ```
 
-| Field     | Type                                                    | Description                                             |
-| --------- | ------------------------------------------------------- | ------------------------------------------------------- |
-| `shadow`  | `EffectTone`                                            | Shadow colour (`#rrggbb`) and base opacity of the theme |
-| `shadows` | `Readonly<Record<ShadowLevel, readonly ShadowLayer[]>>` | Layers of the three elevation shadows, in CSS order     |
-| `scrim`   | `EffectTone`                                            | Backdrop colour (`#rrggbb`) and opacity behind a dialog |
-| `band`    | `BandEffectValues`                                      | The brand band's imagery, the same in both themes       |
+| Field          | Type                                                    | Description                                             |
+| -------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+| `shadow`       | `EffectTone`                                            | Shadow colour (`#rrggbb`) and base opacity of the theme |
+| `shadows`      | `Readonly<Record<ShadowLevel, readonly ShadowLayer[]>>` | Layers of the three elevation shadows, in CSS order     |
+| `scrim`        | `EffectTone`                                            | Backdrop colour (`#rrggbb`) and opacity behind a dialog |
+| `brandSurface` | `BrandSurfaceEffectValues`                              | The brand surface's imagery, the same in both themes    |
 
-`band` holds `gradient` (three `GradientStop`s, `{ offset, color }`), `glow`
-(`EffectTone`), `dots` (`EffectTone` with `cell` and `radius`), `blueprint`
-(`fill`: two `GradientStop`s, `stroke`) and `accentGlow` (`{ color, layer }`).
-An Open Graph image draws the band from it without a stylesheet:
+`brandSurface` holds `gradient` (three `GradientStop`s, `{ offset, color }`:
+`primary`, `primary`, `brand-surface-deep`), `line`, `glow` (`EffectTone`s of
+white), `dots` (`EffectTone` with `cell` and `radius`), `blueprint` (`color`,
+`fillAlpha`, `hold`, `strokeAlpha`, `dot`) and `accentGlow` (`{ color, layer }`).
+An Open Graph image draws the cobalt surface from it without a stylesheet:
 
 ```tsx
-const { gradient, glow, dots } = effectValues.light.band;
+const { gradient, glow, dots } = effectValues.light.brandSurface;
 
 <radialGradient id="glow">
   <stop offset="0" stopColor={glow.color} stopOpacity={glow.alpha} />
@@ -827,7 +820,7 @@ const Mark = () => (
 
 ```css
 .footer-logo {
-  color: var(--hd-band-text);
+  color: var(--hd-on-primary);
   --hd-logo-dot: currentColor; /* one-colour version */
 }
 ```
@@ -884,8 +877,9 @@ whenever the system setting changes.
 }
 ```
 
-For a brand section that is the same in both themes, use the band tokens instead
-of an island: `--hd-band-bg`, `--hd-band-text`, `--hd-band-text-2`.
+For a brand section that is the same in both themes, use the brand surface
+instead of an island: `--hd-primary` with `--hd-on-primary` on it, and
+`--hd-brand-surface-deep` for its deeper step.
 
 ### Colour a chart
 
@@ -902,8 +896,11 @@ const seriesColours = (element: Element): string[] => {
 };
 ```
 
-Use the six colours in order. They are at least 10 ΔE apart and at least 3:1
-against the page, surface and raised backgrounds in both themes. For an SVG
+Use the six colours in order. They are at least 10 ΔE apart (17.9 light, 20.2
+dark) and at least 3:1 against the page, surface and raised backgrounds in both
+themes. They are tints of cobalt, coral and ink, so series 4 to 6 repeat the hues
+of 1 to 3 in another lightness: with more than three series, label the lines or
+bars directly, or add markers or dash patterns, and keep the legend. For an SVG
 chart, `stroke: var(--hd-chart-1)` needs no JavaScript at all.
 
 ### Content Security Policy
@@ -1008,12 +1005,11 @@ stylesheet finds the fonts by relative URL.
 | `on-primary` on `primary`, `primary-hover`, `primary-active`                                      | 4.5:1                   |
 | `on-accent` on `accent`, `accent-hover`, `accent-active`                                          | 4.5:1                   |
 | `<status>-fg` on `<status>-bg`; `<status>-on-solid` on `<status>-solid`                           | 4.5:1                   |
-| `band-text` on `band-bg`, `band-deep`                                                             | 7:1                     |
-| `band-text-2` on `band-bg`, `band-deep`                                                           | 4.5:1                   |
+| `on-primary` on `brand-surface-deep`                                                              | 7:1                     |
 | `focus`, `chart-1` to `chart-6`, `<status>-solid` on `bg-page`, `bg-surface`, `bg-raised`         | 3:1                     |
-| `focus`, `band-focus`, `band-line-strong`, `accent` on `band-bg`, `band-deep`                     | 3:1                     |
-| `band-text` and `band-text-2` over the centre of a glow on `band-bg`                              | 7:1 and 4.5:1           |
-| `band-edge` on `bg-page`                                                                          | 1.25:1                  |
+| `on-primary` (the white ring and outlines) on `primary`, `brand-surface-deep`                     | 3:1                     |
+| `on-primary` over the centre of a glow on `primary`                                               | 4.5:1                   |
+| `primary` on `bg-page` (the brand surface needs no edge)                                          | 3:1                     |
 | `border-control` on `bg-page`, `bg-surface`, `bg-raised`, `bg-inset`, `bg-overlay`, `bg-disabled` | 3:1, and below `text-3` |
 | `border-strong` on `bg-page`, `bg-surface`, `bg-raised`                                           | 1.25:1                  |
 | `text-disabled` on `bg-page`, `bg-surface`, `bg-raised`, `bg-disabled`                            | 2:1, and below `text-3` |
@@ -1023,8 +1019,11 @@ stylesheet finds the fonts by relative URL.
 Not guaranteed, by design:
 
 - `text-3` on `bg-inset` is 4.35:1 in the light theme. Use `text-2` in wells.
-- No chromatic colour, scale step or hue lies between 170° and 240° in OKLCH:
-  the palette has no cyan, teal or turquoise (2.0).
+- Every chromatic colour, scale step and hue is cobalt (250°–275°), coral
+  (25°–45°) or danger red (355°–25°) in OKLCH; everything else is an ink neutral
+  (chroma ≤ 0.045). The palette has no green, amber, violet, cyan or navy (3.0).
+- Coral on cobalt is 1.64:1: the coral button on the brand surface is identified
+  by its label (6.15:1), and coral punctuation there is decoration.
 - `border` is a hairline between surfaces, not a WCAG-rated indicator. Use
   `border-control` where an outline is what identifies a control. `border-strong`
   is a stronger hairline, 1.3:1 to 2.4:1, and is not rated either.
@@ -1062,18 +1061,18 @@ do a fixed amount of arithmetic per call (`maxChroma` and an out-of-gamut
 
 ## Bundle size
 
-Measured on the design build (`build/design/`), 2.0.0 (gzip level 9, Brotli
+Measured on the design build (`build/design/`), 3.0.0 (gzip level 9, Brotli
 quality 11):
 
 | File                         | Raw      | Gzip    | Brotli  |
 | ---------------------------- | -------- | ------- | ------- |
-| `build/design/index.mjs`     | 27.26 kB | 8.34 kB | 6.94 kB |
-| `build/design/index.cjs`     | 27.77 kB | 8.41 kB | 7.00 kB |
-| `build/design/index.umd.cjs` | 15.06 kB | 5.53 kB | 4.66 kB |
-| `build/design/index.d.mts`   | 17.13 kB | 5.63 kB | 4.82 kB |
-| `build/design/tokens.css`    | 14.44 kB | 3.15 kB | 2.51 kB |
-| `build/design/tokens.scss`   | 24.21 kB | 4.10 kB | 2.75 kB |
-| `build/design/tokens.json`   | 15.17 kB | 2.83 kB | 2.33 kB |
+| `build/design/index.mjs`     | 25.42 kB | 7.97 kB | 6.72 kB |
+| `build/design/index.cjs`     | 25.93 kB | 8.04 kB | 6.78 kB |
+| `build/design/index.umd.cjs` | 13.67 kB | 5.08 kB | 4.33 kB |
+| `build/design/index.d.mts`   | 17.46 kB | 5.69 kB | 4.87 kB |
+| `build/design/tokens.css`    | 11.47 kB | 2.56 kB | 2.09 kB |
+| `build/design/tokens.scss`   | 19.29 kB | 3.44 kB | 2.42 kB |
+| `build/design/tokens.json`   | 12.77 kB | 2.35 kB | 1.96 kB |
 | `build/design/fonts.css`     | 3.13 kB  | 0.52 kB | 0.43 kB |
 | `build/logos/mark.svg`       | 0.60 kB  | 0.31 kB | 0.27 kB |
 | `build/logos/horizontal.svg` | 2.83 kB  | 1.04 kB | 0.88 kB |
@@ -1104,15 +1103,15 @@ token maps you do not import. CI fails when the minified browser bundle exceeds
 ## TypeScript
 
 - Token names are unions, so a typo is a compile error: `TokenName` is every
-  token, `ColorToken` the 63 theme colours, `EffectToken` the 20 effects,
-  `ThemedToken` both, `ScaleToken` the 90 scale steps and `StaticToken` every
+  token, `ColorToken` the 46 theme colours, `EffectToken` the 16 effects,
+  `ThemedToken` both, `ScaleToken` the 46 scale steps and `StaticToken` every
   theme-independent token.
 - `Theme` is `Readonly<Record<ColorToken, string>>`: a theme cannot miss a token,
   and neither can an object you declare as `Theme`.
 - The remaining exported types name the keys and shapes of the maps:
   `ThemeName`, `ThemePreference`, `Themes`, `ThemeEffects`, `Effects`,
   `EffectValues`, `ThemeEffectValues`, `EffectTone`, `ShadowLayer`,
-  `BandEffectValues`, `BandRecipe`, `GradientStop`,
+  `BrandSurfaceEffectValues`, `BrandSurfaceRecipe`, `GradientStop`,
   `ShadowLevel`, `Scales`, `ScaleName`, `ChromaticScaleName`, `ChromaticScale`,
   `ChromaticStep`, `NeutralScale`, `NeutralStep`, `HueName`, `StatusName`,
   `ChartIndex`, `Oklch`, `FontRole`, `Fonts`, `FontWeightName`, `FontWeights`,

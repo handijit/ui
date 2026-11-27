@@ -50,11 +50,10 @@
     }
   }
 
-  // The brand medallion: the navy band with a white mark, the same in both themes (the logo's
-  // colours).
+  // The brand medallion: cobalt with a white mark, the same in both themes (the logo's colours).
   &--brand {
-    background-color: $band-bg;
-    color: $band-text;
+    background-color: $primary;
+    color: $on-primary;
   }
 
   &--sm {
@@ -76,21 +75,21 @@
   }
 }
 
-// Karma tonlar: altısından YALNIZCA BİRİ yeşil. 4.x'te üçü yeşildi (rol, olumlu, OEM) ve avatar
-// listesi markanın rengini taşıyordu.
+// The six buckets in the palette's own colours (3.0): cobalt, ink and red only; no bucket
+// borrows a status hue that the palette no longer has.
 .avatar--tone-0 {
   background-color: $primary-soft;
   color: $text;
 }
 
 .avatar--tone-1 {
-  background-color: $success-bg;
-  color: $success-fg;
+  background-color: $text;
+  color: $bg-surface;
 }
 
 .avatar--tone-2 {
-  background-color: $warning-bg;
-  color: $warning-fg;
+  background-color: $primary;
+  color: $on-primary;
 }
 
 // Cobalt text in a well: told from bucket 0 (a cobalt tint under body text) by which part is blue.

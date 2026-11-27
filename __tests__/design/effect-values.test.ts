@@ -45,54 +45,43 @@ describe.each(THEME_NAMES)('effect values: %s theme', theme => {
     );
   });
 
-  test('should say the same as the CSS band imagery', () => {
-    const { band } = values;
+  test('should say the same as the CSS brand surface imagery', () => {
+    const { gradient, line, glow, dots, blueprint, accentGlow } = values.brandSurface;
     const css = effects[theme];
 
-    expect(band.gradient.map(stop => stop.color)).toEqual([
-      css['band-gradient-from'],
-      css['band-gradient-from'],
-      css['band-gradient-to'],
+    expect(percent(gradient[1]?.offset)).toBe(css['brand-surface-hold']);
+    expect(`rgb(${channels(line.color)} / ${line.alpha})`).toBe(css['brand-surface-line']);
+    expect(String(glow.alpha)).toBe(css['brand-surface-glow-alpha']);
+    expect([String(dots.alpha), length(dots.cell), length(dots.radius)]).toEqual([
+      css['brand-surface-dot-alpha'],
+      css['brand-surface-dot-cell'],
+      css['brand-surface-dot-radius'],
     ]);
-    expect(percent(band.gradient[1]?.offset)).toBe(css['band-gradient-hold']);
-    expect([band.glow.color, String(band.glow.alpha)]).toEqual([
-      css['band-glow'],
-      css['band-glow-alpha'],
+    expect([
+      percent(blueprint.hold),
+      String(blueprint.fillAlpha),
+      String(blueprint.strokeAlpha),
+    ]).toEqual([
+      css['brand-surface-blueprint-hold'],
+      css['brand-surface-blueprint-fill-alpha'],
+      css['brand-surface-blueprint-stroke-alpha'],
     ]);
-    expect([band.dots.color, String(band.dots.alpha)]).toEqual([
-      css['band-dot'],
-      css['band-dot-alpha'],
-    ]);
-    expect([length(band.dots.cell), length(band.dots.radius)]).toEqual([
-      css['band-dot-cell'],
-      css['band-dot-radius'],
-    ]);
-    expect(band.blueprint.fill.map(stop => stop.color)).toEqual([
-      css['band-blueprint-from'],
-      css['band-blueprint-to'],
-    ]);
-    expect(percent(band.blueprint.fill[1]?.offset)).toBe(css['band-blueprint-hold']);
-    expect(band.blueprint.stroke).toBe(css['band-blueprint-stroke']);
-    expect(layerCss(band.accentGlow.color, band.accentGlow.layer)).toBe(css['band-accent-glow']);
+    expect(layerCss(accentGlow.color, accentGlow.layer)).toBe(css['brand-surface-accent-glow']);
   });
 
-  test('should compose the band imagery from the theme roles, no new colour', () => {
+  test('should compose the brand surface from cobalt, white and coral, no new colour', () => {
     const colours = themes[theme];
-    const { band } = values;
+    const { gradient, line, glow, dots, blueprint, accentGlow } = values.brandSurface;
 
-    expect(band.gradient.map(stop => stop.color)).toEqual([
-      colours['band-bg'],
-      colours['band-bg'],
-      colours['band-deep'],
+    expect(gradient.map(stop => stop.color)).toEqual([
+      colours.primary,
+      colours.primary,
+      colours['brand-surface-deep'],
     ]);
-    expect(band.glow.color).toBe(colours.primary);
-    expect(band.dots.color).toBe(colours['band-line-strong']);
-    expect(band.blueprint.fill.map(stop => stop.color)).toEqual([
-      colours['band-line'],
-      colours['band-bg'],
-    ]);
-    expect(band.blueprint.stroke).toBe(colours['band-line-strong']);
-    expect(band.accentGlow.color).toBe(colours.accent);
+    expect(new Set([line.color, glow.color, dots.color, blueprint.color])).toEqual(
+      new Set([colours['on-primary']]),
+    );
+    expect([blueprint.dot, accentGlow.color]).toEqual([colours.accent, colours.accent]);
   });
 
   test('should hold opaque six-digit hex and opacities a shadow can have', () => {
@@ -123,8 +112,8 @@ describe('effect values', () => {
     expect(effectValues.dark.scrim.color).toBe(themes.dark['bg-inset']);
   });
 
-  test('should draw the band the same in both themes, like its colours', () => {
-    expect(effectValues.dark.band).toEqual(effectValues.light.band);
+  test('should draw the brand surface the same in both themes, like its cobalt', () => {
+    expect(effectValues.dark.brandSurface).toEqual(effectValues.light.brandSurface);
   });
 
   test('should need a denser shadow and scrim on the dark theme', () => {

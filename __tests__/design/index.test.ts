@@ -2,7 +2,7 @@
 import * as api from '@/design';
 
 const EXPECTED_EXPORTS = [
-  'band',
+  'brandSurface',
   'breakpoints',
   'contrast',
   'CSS_VARIABLE_PREFIX',
@@ -60,7 +60,7 @@ describe('public entry point', () => {
 
   test('should hold plain data in every token export', () => {
     const data = [
-      api.band,
+      api.brandSurface,
       api.breakpoints,
       api.effects,
       api.effectValues,

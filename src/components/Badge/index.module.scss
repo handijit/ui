@@ -46,7 +46,7 @@
 
 // Status tones: `soft` is the tint triple (bg / line / fg), `solid` the filled pair, `outline` the
 // line and text alone.
-@each $tone in (success, warning, danger, info) {
+@each $tone in (danger, info) {
   .badge--#{$tone} {
     &.badge--soft {
       @include tint($tone);
@@ -62,5 +62,24 @@
       border-color: var(--hd-#{$tone}-line);
       color: var(--hd-#{$tone}-fg);
     }
+  }
+}
+
+// Ink: the emphatic neutral — a label that needs a look (3.0: there is no amber). Soft is the ink
+// tint, solid the text colour filled, outline an ink line and ink text.
+.badge--ink {
+  &.badge--soft {
+    @include tint(ink);
+  }
+
+  &.badge--solid {
+    background-color: $text;
+    border-color: $text;
+    color: $bg-surface;
+  }
+
+  &.badge--outline {
+    border-color: $text;
+    color: $text;
   }
 }

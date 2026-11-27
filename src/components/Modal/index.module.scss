@@ -108,12 +108,13 @@
       @include tint(danger);
     }
 
+    // 3.0: a warning is ink and a success cobalt; the icon tells them from neutral and info.
     &--warning {
-      @include tint(warning);
+      @include tint(ink);
     }
 
     &--success {
-      @include tint(success);
+      @include tint(info);
     }
 
     &--info {

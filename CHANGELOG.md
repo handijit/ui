@@ -11,22 +11,27 @@ README of the 1.0.0 tarball.
 ## [3.1.0] - 2026-11-27
 
 **Dense data and ordering for a parts portal.** `DataTable` gains a data mode with column state, a
-column menu, density, keyboard rows and virtualization; four new components arrive, each on its
-own subpath. Additive: nothing changes for a 3.0 caller.
+column menu (`DataTableColumnMenu`), density, keyboard rows and virtualization; four new
+components arrive, each on its own subpath. Additive: nothing changes for a 3.0 caller.
 
 ### Added
 
 - **`DataTable` data mode** (opt-in; children mode is unchanged and ignores these props):
   `rows` + `DataTableColumn.render(row, index)`, `getRowKey`; `columnState` /
   `onColumnStateChange` (`DataTableColumnState = { order, hidden }`, uncontrolled when omitted) and
-  `DataTableColumn.isAlwaysVisible`; `hasColumnMenu` (visibility checkboxes, move up / down, in a
-  `Popover`; `columnMenuLabels`); `density: 'compact' | 'comfortable'`; `onRowActivate` turns on
+  `DataTableColumn.isAlwaysVisible`; the `columnMenu` slot, drawn in a toolbar above the table;
+  `density: 'compact' | 'comfortable'`; `onRowActivate` turns on
   keyboard row navigation (↑ ↓ Home End move a roving active row, Enter or a click activates; a
   click on a cell's own control does not); `isVirtualized` + `rowHeight` (36 compact / 48
   comfortable) draw only the rows in view with `aria-rowcount` / `aria-rowindex`, spacer rows and
   the sticky header, in a box capped by `hasViewportCap` or `--ui-data-table-max-height` (480px).
-  New types `DataTableColumnState`, `DataTableDensity`, `DataTableColumnMenuLabels`;
-  `DataTableColumn` takes the row type (`DataTableColumn<T = unknown>`).
+  New types `DataTableColumnState`, `DataTableDensity`; `DataTableColumn` takes the row type
+  (`DataTableColumn<T = unknown>`).
+- **`DataTableColumnMenu`** (`@handijitcom/ui/data-table-column-menu`): the column menu of a
+  data-mode `DataTable` (visibility checkboxes, move up / down, in a `Popover`), passed as
+  `columnMenu={<DataTableColumnMenu />}`. It edits the table's `columnState`, controlled or not;
+  `labels` (`DataTableColumnMenuLabels`) override `UiLabels.dataTable`. A module of its own, so a
+  `DataTable` without a menu does not bundle `Popover`, `Checkbox` and `IconButton`.
 - **`Gallery`** (`@handijitcom/ui/gallery`): main image, thumbnails (roving focus, ← → Home End),
   hover zoom toward the pointer, a full-screen modal view with keys, swipe and click-to-zoom.
   `renderImage` is the platform adapter (`next/image`, an Electron loader); `index` /
@@ -51,11 +56,11 @@ own subpath. Additive: nothing changes for a 3.0 caller.
 
 ### Size
 
-- Whole facade 45.45 → 52.84 kB (budget 46 → 54 kB); `styles.css` 24.22 → 25.59 kB (25 → 27 kB).
-  What a page pays is its import: `DataTable` alone 6.53 kB (the column menu brings `Popover`,
-  `Checkbox`, `IconButton`), `Gallery` 3.38, `TreeSelect` 2.61, `NotificationCenter` 5.71,
-  `BulkPasteInput` 2.04, `parseBulkPaste` 0.52 kB.
-- Public API 179 → 202 names (`scripts/api-baseline.txt`).
+- Whole facade 45.45 → 52.97 kB (budget 46 → 53.5 kB); `styles.css` 24.22 → 25.59 kB (25 → 26 kB).
+  What a page pays is its import: `DataTable` alone 2.85 kB (3.0: no data mode), with
+  `DataTableColumnMenu` 6.66 kB, `Gallery` 3.38, `TreeSelect` 2.61, `NotificationCenter` 5.71,
+  `BulkPasteInput` 2.03, `parseBulkPaste` 0.52 kB.
+- Public API 179 → 203 names (`scripts/api-baseline.txt`).
 
 ## [3.0.0] - 2026-11-27
 

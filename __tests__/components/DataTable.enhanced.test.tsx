@@ -7,6 +7,7 @@ import DataTable, {
   type DataTableColumn,
   type DataTableColumnState,
 } from '@/components/DataTable';
+import DataTableColumnMenu from '@/components/DataTableColumnMenu';
 import UiProvider from '@/theme/UiProvider';
 import { LABELS } from '@tests/fixtures/labels';
 
@@ -91,7 +92,11 @@ describe('DataTable column state', () => {
 
   it('applies no column state to children rows', () => {
     renderTable(
-      <DataTable columns={COLUMNS} columnState={{ order: ['stock'], hidden: ['name'] }}>
+      <DataTable
+        columns={COLUMNS}
+        columnState={{ order: ['stock'], hidden: ['name'] }}
+        columnMenu={<DataTableColumnMenu />}
+      >
         <DataTableRow>
           <td>SP-1</td>
           <td>Ad</td>
@@ -110,7 +115,7 @@ describe('DataTable column state', () => {
       <DataTable
         columns={COLUMNS}
         rows={PARTS}
-        hasColumnMenu
+        columnMenu={<DataTableColumnMenu />}
         onColumnStateChange={onColumnStateChange}
         testId="parts"
         className="custom"
@@ -147,7 +152,7 @@ describe('DataTable column state', () => {
       <DataTable
         columns={COLUMNS}
         rows={PARTS}
-        hasColumnMenu
+        columnMenu={<DataTableColumnMenu />}
         columnState={{ order: [], hidden: [] }}
         onColumnStateChange={onColumnStateChange}
       />,
@@ -171,14 +176,17 @@ describe('DataTable column state', () => {
         <DataTable
           columns={COLUMNS}
           rows={PARTS}
-          hasColumnMenu
+          columnMenu={
+            <DataTableColumnMenu
+              labels={{
+                columns: 'Görünüm',
+                moveUp: name => `${name} yukarı`,
+                moveDown: name => `${name} aşağı`,
+              }}
+            />
+          }
           columnState={state}
           onColumnStateChange={setState}
-          columnMenuLabels={{
-            columns: 'Görünüm',
-            moveUp: name => `${name} yukarı`,
-            moveDown: name => `${name} aşağı`,
-          }}
         />
       );
     };
@@ -192,12 +200,25 @@ describe('DataTable column state', () => {
     expect(headers()).toEqual(['Kod', 'Stok', 'Ad']);
   });
 
+  it('draws no toolbar for a falsy columnMenu', () => {
+    renderTable(<DataTable columns={COLUMNS} rows={PARTS} columnMenu={false} testId="parts" />);
+
+    expect(screen.getByTestId('parts').querySelector('table')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Sütunlar' })).not.toBeInTheDocument();
+  });
+
+  it('the column menu draws nothing outside a data-mode DataTable', () => {
+    const { container } = renderTable(<DataTableColumnMenu />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it('a column with a node label is named by its key in the menu', async () => {
     renderTable(
       <DataTable
         columns={[{ key: 'icon', label: <span>★</span>, render: () => '' }]}
         rows={PARTS}
-        hasColumnMenu
+        columnMenu={<DataTableColumnMenu />}
       />,
     );
 

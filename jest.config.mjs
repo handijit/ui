@@ -67,6 +67,7 @@ export default {
     './src/components/TreeSelect/': FULL,
     './src/components/NotificationCenter/': FULL,
     './src/components/BulkPasteInput/': FULL,
+    './src/components/DataTableColumnMenu/': FULL,
     './src/helpers/bulk-paste.helper.ts': FULL,
   },
 };

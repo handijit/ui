@@ -226,6 +226,16 @@
         "default": "./build/components/DataTable/index.cjs"
       }
     },
+    "./data-table-column-menu": {
+      "import": {
+        "types": "./build/components/DataTableColumnMenu/index.d.ts",
+        "default": "./build/components/DataTableColumnMenu/index.js"
+      },
+      "require": {
+        "types": "./build/components/DataTableColumnMenu/index.d.cts",
+        "default": "./build/components/DataTableColumnMenu/index.cjs"
+      }
+    },
     "./date-field": {
       "import": {
         "types": "./build/components/DateField/index.d.ts",

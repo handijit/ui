@@ -34,6 +34,7 @@ const {
   CopyField,
   BulkPasteInput,
   DataTable,
+  DataTableColumnMenu,
   DataTableRow,
   Gallery,
   NotificationCenter,
@@ -938,7 +939,7 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         label="Parçalar"
         columns={PART_COLUMNS}
         rows={PARTS}
-        hasColumnMenu
+        columnMenu={<DataTableColumnMenu />}
         density="compact"
         isVirtualized
         onRowActivate={() => {}}
@@ -958,6 +959,18 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
           <td />
         </DataTableRow>
       </DataTable>
+    ),
+  },
+  DataTableColumnMenu: {
+    default: (
+      <DataTable
+        label="Parçalar"
+        columns={PART_COLUMNS}
+        rows={PARTS}
+        columnMenu={
+          <DataTableColumnMenu labels={{ columns: 'Görünüm', moveUp: name => `${name} yukarı` }} />
+        }
+      />
     ),
   },
   DataTableRow: {

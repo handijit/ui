@@ -419,7 +419,7 @@ and changes when an announcement strip appears.
 | Feedback              | `Alert` · `Badge` · `StatusDot` · `CodeBadge` · `Kbd` · `EmptyState` · `Skeleton` (+ `SkeletonCard`, `SkeletonRows`, `SkeletonTable`) · `Spinner` · `Progress` · `Steps` · `Divider` · `Avatar` · `Rating` · `Price` · `Stat` · `CopyField` · `Breadcrumb` · `ToastHub` (+ `ToastPortal`) · `NotificationCenter`                    |
 | Brand surface (3.0)   | `BrandSurface` (+ `BrandBlueprint`) · `Eyebrow` · `StatStrip`                                                                                                                                                                                                                                                                       |
 | Modal                 | `Modal` · `Drawer` · `BottomSheet` · `ConfirmDialog` · `PromptDialog` · `CommandPalette`                                                                                                                                                                                                                                            |
-| Data                  | `Table` (+ `TableScroller`) · `DataTable` (+ `DataTableRow`) · `FilterBar` (+ `FilterBarField`) · `Pagination` · `Timeline`                                                                                                                                                                                                         |
+| Data                  | `Table` (+ `TableScroller`) · `DataTable` (+ `DataTableRow`, `DataTableColumnMenu`) · `FilterBar` (+ `FilterBarField`) · `Pagination` · `Timeline`                                                                                                                                                                                  |
 | Theme and hooks       | `UiProvider` · `UiThemeScript` · `useUi` · `useUiTheme` · `useUiTokens` · `useAnnounce` · `useStickToBottom` · `usePositioning` · `useVirtualList` · `useListboxNavigation` · `hasOpenSurface`                                                                                                                                      |
 | Chat, `/chat`         | `ChatThread` · `ChatMessage` · `PromptInput` · `PromptSuggestions` · `Prose` · `CodeBlock` · `ReasoningBlock` (+ `ReasoningText`) · `ToolCall` (+ `ToolCallSection`) · `TerminalOutput` · `SourceList` · `Citation` · `MessageActions` · `AppBar` · `ActionList` (+ `ActionListItem`) · `SegmentBar` · `Legend` · `DescriptionList` |
 | Charts, `/charts`     | `LineChart` · `AreaChart` · `BarChart` · `ComposedChart` · `PieChart` · `ScatterPlot` · `Heatmap` · `BoxPlot` · `Histogram` · `RadarChart`                                                                                                                                                                                          |
@@ -614,7 +614,8 @@ data contract. `123450` with two decimal places is "1.234,50".
 
 Dense data and ordering screens: every one is its own subpath
 (`@handijitcom/ui/gallery`, `/tree-select`, `/notification-center`,
-`/bulk-paste-input`) and works the same in Next and Electron.
+`/bulk-paste-input`, `/data-table-column-menu`) and works the same in Next and
+Electron.
 
 **`DataTable` data mode.** Pass `rows` and a `render` per column instead of
 children; then, all opt-in:
@@ -630,7 +631,7 @@ children; then, all opt-in:
   getRowKey={part => part.code}
   columnState={columns} // { order: string[]; hidden: string[] }, or uncontrolled
   onColumnStateChange={setColumns} // persist it per user
-  hasColumnMenu // visibility checkboxes + move up / down
+  columnMenu={<DataTableColumnMenu />} // visibility checkboxes + move up / down
   density="compact" // or 'comfortable' (default)
   onRowActivate={openPart} // ↑ ↓ Home End move, Enter (or a click) activates
   isVirtualized // only the rows in view; fixed `rowHeight` (36 / 48 px)
@@ -642,6 +643,25 @@ A virtualized table scrolls in its own box (`hasViewportCap`, or
 `--ui-data-table-max-height`, 480px by default) with a sticky header; its rows
 are `rowHeight` tall and its cells do not wrap. Children mode is unchanged and
 ignores these props.
+
+**`DataTableColumnMenu`** (`@handijitcom/ui/data-table-column-menu`) is the
+column menu, a component of its own so that a table without one does not bundle
+`Popover`, `Checkbox` and `IconButton` (`DataTable` alone 2.85 kB gzip, with the
+menu 6.66 kB). Pass it as `columnMenu`; it is drawn in a toolbar above the
+table and edits that table's `columnState`, controlled or not. Its texts come
+from `UiLabels.dataTable` (`columns`, `moveUp`, `moveDown`) or its `labels`
+prop. Outside a data-mode `DataTable` it draws nothing.
+
+```tsx
+import DataTable from '@handijitcom/ui/data-table';
+import DataTableColumnMenu from '@handijitcom/ui/data-table-column-menu';
+
+<DataTable
+  columns={columns}
+  rows={parts}
+  columnMenu={<DataTableColumnMenu labels={{ columns: 'Görünüm' }} />}
+/>;
+```
 
 **`Gallery`** — main image, thumbnails, a hover zoom under a mouse, a
 full-screen view (← → Home End, Escape, swipe, click to zoom).
@@ -1126,9 +1146,10 @@ npm run playground # component gallery → http://localhost:5273
   dropped name is **breaking** and surfaces as a build error at the consumer's
   next install. For a deliberate change: `npm run build`, then
   `node scripts/check-api.mjs --update`, and a line in the CHANGELOG.
-- **Bundle size**: budgets in `.size-limit.js` (main entry 46 kB, `styles.css`
-  25 kB gzip). When `size-limit` turns red, measure what was added before
-  raising a limit.
+- **Bundle size**: budgets in `.size-limit.js` (whole main entry 53.5 kB,
+  `styles.css` 26 kB gzip; per import, e.g. `DataTable` alone 3 kB, with
+  `DataTableColumnMenu` 7 kB). When `size-limit` turns red, measure what was
+  added before raising a limit.
 - **Sub-entry boundary**: `chat` and `charts` import the main entry by PACKAGE
   NAME only (`subentry-boundary.test.ts`); a relative path would bundle a
   second copy of the provider context and the modal stack.

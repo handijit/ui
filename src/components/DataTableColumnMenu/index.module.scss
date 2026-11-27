@@ -1,0 +1,21 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// The panel of `DataTableColumnMenu` (3.1); `DataTable` draws the toolbar it sits in.
+.columnMenu {
+  @include stack($space-1);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 220px;
+
+  &__item {
+    @include row($space-1);
+  }
+
+  &__check {
+    flex: 1;
+    min-width: 0;
+  }
+}

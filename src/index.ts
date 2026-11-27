@@ -204,10 +204,14 @@ export {
   default as DataTable,
   DataTableRow,
   type DataTableColumn,
-  type DataTableColumnMenuLabels,
   type DataTableColumnState,
   type DataTableDensity,
 } from './components/DataTable';
+/* 3.1: its own module and subpath, so a `DataTable` without a column menu does not bundle it. */
+export {
+  default as DataTableColumnMenu,
+  type DataTableColumnMenuLabels,
+} from './components/DataTableColumnMenu';
 /* 3.1: the parts portal's dense data and ordering components. */
 export {
   default as Gallery,

@@ -52,7 +52,7 @@
   }
 }
 
-// The column menu sits above the scrolling box and never scrolls away (3.1).
+// The toolbar of `columnMenu` sits above the scrolling box and never scrolls away (3.1).
 .frame {
   @include stack($space-2);
 }
@@ -61,24 +61,6 @@
   @include row($space-2);
 
   justify-content: flex-end;
-}
-
-.columnMenu {
-  @include stack($space-1);
-
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  min-width: 220px;
-
-  &__item {
-    @include row($space-1);
-  }
-
-  &__check {
-    flex: 1;
-    min-width: 0;
-  }
 }
 
 // Rows of keyboard navigation: the active row is the selection colour, the focused one ringed.

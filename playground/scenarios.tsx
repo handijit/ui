@@ -41,6 +41,7 @@ import {
   CopyField,
   BulkPasteInput,
   DataTable,
+  DataTableColumnMenu,
   DataTableRow,
   Gallery,
   NotificationCenter,
@@ -1856,10 +1857,22 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         columns={PART_COLUMNS}
         rows={PARTS}
         getRowKey={part => part.code}
-        hasColumnMenu
+        columnMenu={<DataTableColumnMenu />}
         density="compact"
         isVirtualized
         onRowActivate={noop}
+      />
+    ),
+  },
+  DataTableColumnMenu: {
+    default: (
+      <DataTable
+        label="Parçalar"
+        columns={PART_COLUMNS.slice(0, 3)}
+        rows={PARTS.slice(0, 5)}
+        getRowKey={part => part.code}
+        columnMenu={<DataTableColumnMenu />}
+        density="compact"
       />
     ),
   },

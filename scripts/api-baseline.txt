@@ -50,6 +50,7 @@ CopyField
 Crumb
 DataTable
 DataTableColumn
+DataTableColumnMenu
 DataTableColumnMenuLabels
 DataTableColumnState
 DataTableDensity

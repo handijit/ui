@@ -27,8 +27,11 @@ export default [
      * virtualization, asked for by the parts portal as subpaths of their own like every other
      * component (not a bundled sub-entry: two of them are drawn next to server components on the
      * product page). No consumer downloads this figure; each pays for its import, measured below.
+     * ⚠ 54 → 53.5 kB (2026-11-27, 3.1). Measured 52.97 kB after the column menu moved out of
+     * `DataTable` into `DataTableColumnMenu` (+0.13 kB: the module and its context); tightened to
+     * just above the measurement.
      */
-    limit: '54 kB',
+    limit: '53.5 kB',
     gzip: true,
   },
   {
@@ -36,7 +39,8 @@ export default [
     path: 'build/styles.css',
     /* ⚠ 24 → 25 kB (2026-11-07, 6.0). Ölçüm 24,22 kB: bileşen değişkenlerinin `var(…, varsayılan)` biçimi + `Select sm` dokunma alanı. */
     /* ⚠ 25 → 27 kB (2026-11-27, 3.1). Measured 25.59 kB: the four 3.1 stylesheets and the DataTable additions. */
-    limit: '27 kB',
+    /* ⚠ 27 → 26 kB (2026-11-27, 3.1). Measured 25.59 kB again after the menu split; tightened. */
+    limit: '26 kB',
     gzip: true,
   },
   {
@@ -176,11 +180,23 @@ export default [
    * component it imports (measured below), never the four together. First measurements 2026-11-27.
    */
   {
-    name: 'only DataTable (3.1: column menu, keyboard rows, virtualization)',
+    name: 'only DataTable (3.1: column state, keyboard rows, virtualization; no column menu)',
     path: 'build/index.js',
     import: '{ DataTable }',
-    /* First measurement: 6.53 kB — the column menu pulls `Popover`, `Checkbox` and `IconButton`. */
-    limit: '7.5 kB',
+    /*
+     * First measurement: 6.53 kB, when the column menu lived inside and pulled `Popover`,
+     * `Checkbox` and `IconButton` into every table. The menu is now `DataTableColumnMenu`, passed
+     * in as `columnMenu`: 2.85 kB.
+     */
+    limit: '3 kB',
+    gzip: true,
+  },
+  {
+    name: 'DataTable with DataTableColumnMenu',
+    path: 'build/index.js',
+    import: '{ DataTable, DataTableColumnMenu }',
+    /* First measurement: 6.66 kB — what a table with the menu pays (6.53 kB before the split). */
+    limit: '7 kB',
     gzip: true,
   },
   {

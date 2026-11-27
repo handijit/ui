@@ -16,22 +16,14 @@ import {
   useState,
 } from 'react';
 
-import {
-  ArrowDown,
-  ArrowUp,
-  ExclamationCircleFill,
-  LayoutThreeColumns,
-} from 'react-bootstrap-icons';
+import { ExclamationCircleFill } from 'react-bootstrap-icons';
 
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';
-import { resolveFormatter, resolveLabel } from '../../helpers/label.helper';
+import { resolveLabel } from '../../helpers/label.helper';
 import { useUi } from '../../theme/context';
-import type { Formatter } from '../../types/theme.type';
-import Checkbox from '../Checkbox';
-import IconButton from '../IconButton';
-import Popover from '../Popover';
 
+import DataTableColumnMenuContext, { type DataTableColumnMenuContextValue } from './context';
 import styles from './index.module.scss';
 
 export type DataTableColumn<T = unknown> = {
@@ -66,13 +58,6 @@ export type DataTableColumnState = {
 /** Row density (3.1): `comfortable` is the 3.0 spacing. */
 export type DataTableDensity = 'compact' | 'comfortable';
 
-export type DataTableColumnMenuLabels = {
-  /** Trigger and panel name ("Sütunlar"). */
-  columns: string;
-  moveUp: Formatter<[column: string]>;
-  moveDown: Formatter<[column: string]>;
-};
-
 type Props<T> = {
   columns: DataTableColumn<T>[];
   /**
@@ -87,7 +72,7 @@ type Props<T> = {
   children?: ReactNode;
   /**
    * Data mode (3.1): the table draws one row per item with each column's `render`. Column state,
-   * the column menu, keyboard row navigation and virtualization work in this mode only.
+   * `columnMenu`, keyboard row navigation and virtualization work in this mode only.
    */
   rows?: readonly T[];
   /** The React key of a row in data mode; the index when omitted. */
@@ -111,9 +96,12 @@ type Props<T> = {
   /** Controlled column order and visibility (data mode); uncontrolled when omitted. */
   columnState?: DataTableColumnState;
   onColumnStateChange?: (state: DataTableColumnState) => void;
-  /** Shows the column menu (visibility and order) above the table, data mode. */
-  hasColumnMenu?: boolean;
-  columnMenuLabels?: Partial<DataTableColumnMenuLabels>;
+  /**
+   * The column menu, drawn above the table (data mode): `<DataTableColumnMenu />` from
+   * `@handijitcom/ui/data-table-column-menu`. It edits this table's column state; a separate
+   * module, so a table without it does not bundle the menu.
+   */
+  columnMenu?: ReactNode;
   /** Row density; `comfortable` by default. */
   density?: DataTableDensity;
   /**
@@ -140,9 +128,6 @@ const OVERSCAN = 8;
 
 /* A click on the cell's own control (a link, a button, a field) does not activate the row. */
 const INTERACTIVE = 'a,button,input,select,textarea,label,[role="button"],[contenteditable="true"]';
-
-const columnName = (column: DataTableColumn<never>): string =>
-  column.srLabel ?? (typeof column.label === 'string' ? column.label : column.key);
 
 /** Every column in display order: the keys of `order` first, the rest in definition order. */
 const orderColumns = <T,>(
@@ -234,8 +219,7 @@ const DataTable = <T,>({
   bulkBar,
   columnState,
   onColumnStateChange,
-  hasColumnMenu,
-  columnMenuLabels,
+  columnMenu,
   density,
   onRowActivate,
   isVirtualized,
@@ -404,7 +388,8 @@ const DataTable = <T,>({
           : children;
 
   const isShowingRows = !error && !isLoading && rowCount > 0;
-  const hasMenu = isDataMode && Boolean(hasColumnMenu);
+  /* `columnMenu={canEdit && <DataTableColumnMenu />}`: no menu, no toolbar. */
+  const hasMenu = isDataMode && Boolean(columnMenu);
 
   const scroller = (
     <div
@@ -491,87 +476,31 @@ const DataTable = <T,>({
 
   if (!hasMenu) return scroller;
 
-  const menuLabels = {
-    columns: resolveLabel(
-      'DataTable.columnMenuLabels.columns',
-      columnMenuLabels?.columns,
-      labels?.dataTable?.columns,
-    ),
-    moveUp: columnMenuLabels?.moveUp ?? labels?.dataTable?.moveUp,
-    moveDown: columnMenuLabels?.moveDown ?? labels?.dataTable?.moveDown,
-  };
-
-  const toggleColumn = (key: string) =>
-    commitState({
-      order: state.order,
-      hidden: hidden.has(key) ? state.hidden.filter(item => item !== key) : [...state.hidden, key],
-    });
-
-  const moveColumn = (index: number, step: -1 | 1) => {
-    const order = orderedColumns.map(column => column.key);
-    const target = index + step;
-    if (target < 0 || target >= order.length) return;
-    [order[index], order[target]] = [order[target], order[index]];
-    commitState({ order, hidden: state.hidden });
+  const menu: DataTableColumnMenuContextValue = {
+    columns: orderedColumns,
+    hidden,
+    toggleColumn: key =>
+      commitState({
+        order: state.order,
+        hidden: hidden.has(key)
+          ? state.hidden.filter(item => item !== key)
+          : [...state.hidden, key],
+      }),
+    moveColumn: (index, step) => {
+      const order = orderedColumns.map(column => column.key);
+      const target = index + step;
+      if (target < 0 || target >= order.length) return;
+      [order[index], order[target]] = [order[target], order[index]];
+      commitState({ order, hidden: state.hidden });
+    },
   };
 
   return (
     <div className={cx(styles.frame, className)} data-testid={testId}>
       <div className={styles.toolbar}>
-        <Popover
-          label={menuLabels.columns}
-          align="end"
-          trigger={
-            <IconButton
-              icon={<LayoutThreeColumns aria-hidden />}
-              label={menuLabels.columns}
-              size="sm"
-            />
-          }
-        >
-          <ul className={styles.columnMenu}>
-            {orderedColumns.map((column, index) => {
-              const name = columnName(column);
-              const isFirst = index === 0;
-              const isLast = index === orderedColumns.length - 1;
-
-              return (
-                <li key={column.key} className={styles.columnMenu__item}>
-                  <Checkbox
-                    label={name}
-                    checked={column.isAlwaysVisible || !hidden.has(column.key)}
-                    disabled={column.isAlwaysVisible}
-                    onChange={() => toggleColumn(column.key)}
-                    className={styles.columnMenu__check}
-                  />
-                  {/* `aria-disabled`, not `disabled`: the focused button keeps the focus at the edge. */}
-                  <IconButton
-                    icon={<ArrowUp aria-hidden />}
-                    label={resolveFormatter(
-                      'DataTable.columnMenuLabels.moveUp',
-                      menuLabels.moveUp,
-                      name,
-                    )}
-                    size="sm"
-                    aria-disabled={isFirst || undefined}
-                    onClick={() => moveColumn(index, -1)}
-                  />
-                  <IconButton
-                    icon={<ArrowDown aria-hidden />}
-                    label={resolveFormatter(
-                      'DataTable.columnMenuLabels.moveDown',
-                      menuLabels.moveDown,
-                      name,
-                    )}
-                    size="sm"
-                    aria-disabled={isLast || undefined}
-                    onClick={() => moveColumn(index, 1)}
-                  />
-                </li>
-              );
-            })}
-          </ul>
-        </Popover>
+        <DataTableColumnMenuContext.Provider value={menu}>
+          {columnMenu}
+        </DataTableColumnMenuContext.Provider>
       </div>
       {scroller}
     </div>

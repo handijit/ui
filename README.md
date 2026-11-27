@@ -679,7 +679,7 @@ smaller; an invisible overlay keeps the area.
 ## Next.js App Router
 
 The package draws the `'use client'` boundary **inside itself, per file**:
-components without hooks (`Alert`, `Badge`, `Button`, `Card`, `Chip`,
+components without hooks (`Alert`, `Badge`, `Band`, `Button`, `Card`, `Chip`,
 `Divider`, `EmptyState`, `IconButton`, `Kbd`, `PageHeader`, `Panel`,
 `Progress`, `SectionHeader`, `Skeleton`, `StatusDot`, `SummaryCard`,
 `TextLink`, `Tile`) render as server components and send no JavaScript; the

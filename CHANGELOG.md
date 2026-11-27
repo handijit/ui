@@ -8,6 +8,16 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [2.0.1] — 2026-11-27
+
+### Fixed
+
+- **`Band` and `BandBlueprint` render as server components.** 2.0.0 marked the module
+  `'use client'` because of `useId`, but `useId` runs in a server component too; the directive made
+  every band a hydration boundary and shipped its code and the `band` tokens to the browser
+  (measured on handijit.com: service page 169.8 → 167.8 KB gz). The ids are unchanged. The
+  client-boundary test now treats `useId` as server-safe.
+
 ## [2.0.0] - 2026-11-27
 
 **No cyan, and the brand band is part of the system.** Turquoise leaves the palette: the brand is

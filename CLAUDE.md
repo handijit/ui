@@ -301,7 +301,8 @@ design's `band-*` colours and band imagery (`band-gradient-*`, `band-glow*`, `ba
   the button's transition already obeys it). In forced colours the imagery and the artwork are
   hidden and the band is a region framed in `CanvasText`.
 - **Ids:** every SVG id comes from `useId` (sanitised for `url(#…)`), so two bands never share a
-  gradient. That hook makes `Band` a client module; `Eyebrow` and `StatStrip` stay server-drawable.
+  gradient. `useId` also runs in a server component, so `Band`, `Eyebrow` and `StatStrip` are all
+  server-drawable (2.0.1; 2.0.0 marked `Band` a client module and every page paid ~2 KB gz for it).
 - Hooks: `--ui-band-radius` (default `radius-lg`, `radius-md` on a phone), `--ui-band-padding`,
   `--ui-band-artwork-width` (120px), `--ui-eyebrow-tracking`.
 

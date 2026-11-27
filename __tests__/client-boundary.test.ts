@@ -20,7 +20,13 @@ const ROOT = join(__dirname, '..');
 const COMPONENTS = join(ROOT, 'src/components');
 
 const DIRECTIVE = /^\s*(['"])use client\1;?/;
-const HOOK = /\buse[A-Z]\w*\(/;
+/*
+ * `useId` is the one hook a server component may call (React's `react-server` build exports it), so
+ * it alone does not decide the directive: `Band` drops it (no JavaScript for a decorative surface),
+ * the form controls (`Checkbox`, `Radio`, `Switch`) keep it. `SERVER_SAFE` below fixes the choice.
+ */
+const HOOK = /\buse(?!Id\()[A-Z]\w*\(/;
+const SERVER_HOOK = /\buseId\(/;
 const BROWSER = /\b(createPortal|window|document|navigator|localStorage|matchMedia)\b/;
 const INLINE_HANDLER = /\bon[A-Z]\w*=\{\s*(?:\(|function\b|\w+\s*=>)/;
 
@@ -46,6 +52,8 @@ const needsClient = (source: string): boolean =>
 const SERVER_SAFE = [
   'Alert',
   'Badge',
+  /* 2.0.1: `useId` runs on the server; the band sends no JavaScript. */
+  'Band',
   'Button',
   'Card',
   'Chip',
@@ -76,7 +84,9 @@ describe("'use client' dosya başına", () => {
     const source = sourceOf(name);
     const hasDirective = DIRECTIVE.test(source);
 
-    expect({ name, hasDirective }).toEqual({ name, hasDirective: needsClient(source) });
+    const expected = needsClient(source) || (SERVER_HOOK.test(source) && hasDirective);
+
+    expect({ name, hasDirective }).toEqual({ name, hasDirective: expected });
   });
 
   it('sunucuda çizilebilen küme sabit', () => {

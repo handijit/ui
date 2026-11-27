@@ -1,5 +1,3 @@
-'use client';
-
 import { type FC, memo, type ReactNode, useId } from 'react';
 
 import { band } from '@handijitcom/ui/design';
@@ -82,9 +80,10 @@ const fadeStops = (side: BandSide): [offset: number, isEdge: boolean][] =>
   );
 
 /*
- * `useId` makes the module a client one (`'use client'`): two bands on a page, or the same band
- * rendered twice, must not share gradient ids. It returns `:r1:`, `«r1»` or `_r_1_` by React
- * version; an SVG `url(#…)` wants plain characters.
+ * Ids come from `useId`: two bands on a page, or the same band rendered twice, must not share
+ * gradient ids. `useId` also runs in a server component, so the module carries no `'use client'`
+ * and the band sends no JavaScript. It returns `:r1:`, `«r1»` or `_r_1_` by React version; an SVG
+ * `url(#…)` wants plain characters.
  */
 const svgId = (prefix: string, id: string): string => `${prefix}-${id.replace(/[^\w-]/g, '')}`;
 

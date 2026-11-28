@@ -23,6 +23,14 @@ const renderGroups = (groups: readonly DeclarationGroup[], indent: string): stri
 const renderTheme = (theme: ThemeName, indent: string): string =>
   `${indent}color-scheme: ${theme};\n\n${renderGroups(themedGroups(theme), indent)}`;
 
+/*
+ * Paper is light. Every selector that can turn a theme dark (the system preference on the root,
+ * an explicit dark root, a dark island) is redeclared light inside `@media print`, with the same
+ * specificity and later in the file, so a dark page printed with Ctrl/Cmd+P never puts light text
+ * on white paper. `:root:not([data-theme="light"])` covers the bare and the dark root alike.
+ */
+const PRINT_SELECTORS = [`:root:not(${themeSelector('light')})`, themeSelector('dark')] as const;
+
 /**
  * Renders `tokens.css`. Theme-dependent values are redeclared inside every theme selector,
  * never referenced through `var()` from `:root`: a custom property is resolved where it is
@@ -36,6 +44,8 @@ const renderTokensCss = (): string =>
     '/* System mode: no explicit choice on the root element. */',
     `@media (prefers-color-scheme: dark) {\n  :root:not(${themeSelector('light')}) {\n${renderTheme('dark', '    ')}\n  }\n}`,
     `:root${themeSelector('dark')},\n${themeSelector('dark')} {\n${renderTheme('dark', '  ')}\n}`,
+    '/* Print: paper is light, whatever the theme on screen. */',
+    `@media print {\n  ${PRINT_SELECTORS.join(',\n  ')} {\n${renderTheme('light', '    ')}\n  }\n}`,
     `@media (prefers-reduced-motion: reduce) {\n  :root {\n${Object.keys(motion.duration)
       .map(
         name =>

@@ -187,7 +187,7 @@ is free to drop everything you do not use from the JavaScript entry.
 
 ### Theme model
 
-`tokens.css` consists of five rules, in this order:
+`tokens.css` consists of six rules, in this order:
 
 | Rule                                                                      | Declares                                  |
 | ------------------------------------------------------------------------- | ----------------------------------------- |
@@ -195,6 +195,7 @@ is free to drop everything you do not use from the JavaScript entry.
 | `:root, [data-theme="light"]`                                             | The light theme and `color-scheme: light` |
 | `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) }` | The dark theme and `color-scheme: dark`   |
 | `:root[data-theme="dark"], [data-theme="dark"]`                           | The dark theme and `color-scheme: dark`   |
+| `@media print { :root:not([data-theme="light"]), [data-theme="dark"] }`   | The light theme and `color-scheme: light` |
 | `@media (prefers-reduced-motion: reduce) { :root }`                       | The three durations as `0.01ms`           |
 
 Which theme an element gets:
@@ -209,6 +210,11 @@ Which theme an element gets:
 Containers nest to any depth; the nearest `data-theme` ancestor wins. Any other
 attribute value is ignored: a container with `data-theme="sepia"` keeps the
 theme around it, and a root element with it behaves as if it had no attribute.
+
+**Paper is light (3.3.1).** In print every row of the table above is light: the
+print rule redeclares the light theme for every selector that can turn a theme
+dark, as specific and later in the file. A dark page printed with Ctrl/Cmd+P
+needs no "print" button of its own to switch the theme first.
 
 A container changes the _variables_ below it, not the properties that were
 already computed above it. Give an island its own paint:

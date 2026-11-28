@@ -248,6 +248,15 @@
       border-color: $brand-surface-line;
       color: $on-primary;
     }
+
+    // On paper the brand surface prints without its cobalt fill: an ink frame and an ink label.
+    @media print {
+      &,
+      &:disabled {
+        border-color: $border-strong;
+        color: $text;
+      }
+    }
   }
 
   // One passive look for every variant on a theme surface: the fill withdraws, the text stays

@@ -57,5 +57,15 @@
     padding-block: $space-4;
     border-top: 1px solid $brand-surface-line;
     background-color: $brand-surface-deep;
+
+    // Paper: no deep cobalt fill to waste ink on (or to lose under white text); the page look.
+    @media print {
+      --ui-strip-line: #{$border};
+      --ui-strip-value: #{$text};
+      --ui-strip-label: #{$text-2};
+
+      border-top-color: $border-strong;
+      background-color: transparent;
+    }
   }
 }

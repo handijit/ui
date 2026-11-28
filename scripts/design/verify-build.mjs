@@ -68,9 +68,9 @@ for (const [key, value] of Object.entries(json)) {
   );
 }
 
-// 4. tokens.css declares the values of the JavaScript entry, in every theme block.
+// 4. tokens.css declares the values of the JavaScript entry, in every theme block: light in its
+// own rule and in the print rule, dark in the system and the explicit rule.
 for (const theme of ['light', 'dark']) {
-  const expected = theme === 'light' ? 1 : 2;
   for (const [token, value] of Object.entries({
     ...esm.themes[theme],
     ...esm.effects[theme],
@@ -78,8 +78,8 @@ for (const theme of ['light', 'dark']) {
     const declaration = `--${esm.CSS_VARIABLE_PREFIX}-${token}: ${value};`;
     const count = css.split(declaration).length - 1;
     check(
-      // A value shared by both themes appears in all three theme blocks.
-      count === expected || count === 3,
+      // A value shared by both themes appears in all four theme blocks.
+      count === 2 || count === 4,
       `build/design/tokens.css: expected "${declaration}" in the ${theme} theme`,
     );
   }

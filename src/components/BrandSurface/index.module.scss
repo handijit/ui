@@ -103,6 +103,22 @@
     position: relative;
   }
 
+  // Paper: a cobalt block is a page of ink, and with background graphics off the browser drops the
+  // fill but keeps the white text. The surface prints as a framed region of the page: no fill, no
+  // imagery, ink text. What sits on it (`Eyebrow`, the `ON_BRAND` button, a `brand` `StatStrip`)
+  // takes its page colours in its own print rule: overriding a token is the application's call.
+  @media print {
+    border: 1px solid $border-strong;
+    background-color: transparent;
+    color: $text;
+    break-inside: avoid;
+
+    &__backdrop,
+    &__artwork {
+      display: none;
+    }
+  }
+
   // Forced colours keep the system's text colour on top of whatever the SVG paints: the imagery
   // goes and the surface is a framed region of the system canvas.
   @media (forced-colors: active) {

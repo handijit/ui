@@ -52,7 +52,7 @@ const THEMED_NAMES = themedGroups('light').flatMap(({ declarations: list }) =>
 );
 
 describe('tokens.css', () => {
-  test('should consist of exactly the five documented rules', () => {
+  test('should consist of exactly the six documented rules', () => {
     expect(
       rules.map(({ selector, media }) => (media === null ? selector : `${media} { ${selector} }`)),
     ).toEqual([
@@ -60,6 +60,7 @@ describe('tokens.css', () => {
       ':root, [data-theme="light"]',
       '@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) }',
       ':root[data-theme="dark"], [data-theme="dark"]',
+      '@media print { :root:not([data-theme="light"]), [data-theme="dark"] }',
       '@media (prefers-reduced-motion: reduce) { :root }',
     ]);
   });
@@ -122,6 +123,41 @@ describe('tokens.css', () => {
     );
   });
 
+  describe('print', () => {
+    const PRINT_MEDIA = '@media print';
+    const PRINT_SELECTOR = ':root:not([data-theme="light"]), [data-theme="dark"]';
+
+    test('should map every themed token to its light value on paper', () => {
+      const block = declarations(find(PRINT_SELECTOR, PRINT_MEDIA).body);
+      const light = { ...themes.light, ...effects.light };
+
+      expect(Object.keys(block)).toEqual(['color-scheme', ...THEMED_NAMES]);
+      expect(block['color-scheme']).toBe('light');
+      expect(Object.keys(light)).toHaveLength(THEMED_NAMES.length);
+      for (const [token, value] of Object.entries(light)) {
+        expect(block[`--hd-${token}`]).toBe(value);
+      }
+      // The dark palette really differs, so the block is not a no-op.
+      expect(block['--hd-text']).not.toBe(themes.dark.text);
+      expect(block['--hd-bg-page']).not.toBe(themes.dark['bg-page']);
+    });
+
+    test('should cover every rule that can turn a theme dark, later and as specific', () => {
+      const darkRules = rules.filter(({ body }) => /color-scheme: dark/.test(body));
+      const printRule = find(PRINT_SELECTOR, PRINT_MEDIA);
+
+      expect(darkRules.map(({ selector }) => selector)).toEqual([
+        ':root:not([data-theme="light"])',
+        ':root[data-theme="dark"], [data-theme="dark"]',
+      ]);
+      // `:root:not([data-theme="light"])` (0,2,0) also matches `:root[data-theme="dark"]` (0,2,0);
+      // `[data-theme="dark"]` (0,1,0) matches every dark island. Source order then decides.
+      expect(rules.indexOf(printRule)).toBeGreaterThan(
+        Math.max(...darkRules.map(rule => rules.indexOf(rule))),
+      );
+    });
+  });
+
   test('should shorten every duration for reduced motion without zeroing it', () => {
     const reduced = declarations(find(':root', '@media (prefers-reduced-motion: reduce)').body);
 
@@ -141,7 +177,7 @@ describe('tokens.css', () => {
       ([, property]) => property as string,
     );
 
-    expect(properties).toHaveLength(136 + 3 * 62 + 3);
+    expect(properties).toHaveLength(136 + 4 * 62 + 3);
     expect(properties.every(property => property.startsWith('--hd-'))).toBe(true);
   });
 

@@ -131,6 +131,40 @@ describe('print styles', () => {
     expect(printed(table, '.table tr')).toMatchObject({ 'break-inside': 'avoid' });
   });
 
+  /*
+   * PRINT THEME (3.3.1): tokens.css resolves every theme to light on paper; the brand surface is
+   * cobalt in both themes, so it prints as a framed region with ink text instead of a block of ink.
+   */
+  it('BrandSurface: drops its fill and imagery and prints as a framed region with ink text', () => {
+    const surface = 'src/components/BrandSurface/index.module.scss';
+
+    expect(printed(surface, '.surface')).toMatchObject({
+      'background-color': 'transparent',
+      color: 'var(--hd-text)',
+    });
+    for (const selector of ['.surface__backdrop', '.surface__artwork'])
+      expect(printed(surface, selector)).toMatchObject({ display: 'none' });
+  });
+
+  it('what sits on the brand surface prints in its page colours, never white', () => {
+    expect(printed('src/components/StatStrip/index.module.scss', '.strip--brand')).toMatchObject({
+      'background-color': 'transparent',
+      '--ui-strip-value': 'var(--hd-text)',
+      '--ui-strip-label': 'var(--hd-text-2)',
+    });
+    expect(
+      printed(
+        'src/components/Eyebrow/index.module.scss',
+        ':where([data-ui-brand-surface]) .eyebrow',
+      ),
+    ).toMatchObject({ color: 'var(--hd-text-2)' });
+    for (const selector of ['.button--on-brand', '.button--on-brand:disabled'])
+      expect(printed('src/components/Button/index.module.scss', selector)).toMatchObject({
+        color: 'var(--hd-text)',
+        'border-color': 'var(--hd-border-strong)',
+      });
+  });
+
   it('a stylesheet without print rules reads as none (the helper measures something)', () => {
     expect(printRulesOf('src/components/Badge/index.module.scss')).toEqual([]);
   });

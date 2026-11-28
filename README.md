@@ -864,6 +864,8 @@ rules are in each component's stylesheet under `@media print`.
 | `DataTable`                                                 | every row; no scroll box, cap or sticky header/column; the header repeats on each page; rows never break across pages; no column menu or bulk bar |
 | `Table`                                                     | no scroll box or sticky head; the header repeats; rows never break across pages                                                                   |
 | `TotalsList`                                                | rows never break across pages                                                                                                                     |
+| every theme (`tokens.css`, 3.3.1)                           | light, whatever `data-theme` or the system says: a dark page printed with Ctrl/Cmd+P is dark text on white paper, with no print button of its own |
+| `BrandSurface` (3.3.1)                                      | no cobalt fill or imagery: a framed region with ink text; `Eyebrow`, the `ON_BRAND` button and a `brand` `StatStrip` on it print in page colours  |
 
 **A virtualized `DataTable` renders all of its rows while printing.** On
 `beforeprint` (or when the `print` media query starts to match) it turns its

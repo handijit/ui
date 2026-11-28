@@ -50,3 +50,15 @@
     border-top-color: $brand-surface-line;
   }
 }
+
+// On paper the brand surface prints without its cobalt fill, so the label takes its page look.
+@media print {
+  :where([data-ui-brand-surface]) .eyebrow {
+    color: $text-2;
+
+    &::before,
+    &::after {
+      border-top-color: $border-strong;
+    }
+  }
+}

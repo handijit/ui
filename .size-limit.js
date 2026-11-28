@@ -36,8 +36,11 @@ export default [
      * ⚠ 56 → 57 kB (2026-11-28, 3.2.1). Measured 56.59 kB (+1.05): the portal's defects — `Tabs`'
      * edge fade, scroll buttons and strip-only scrolling, `Breadcrumb`'s fold into "…", `Price`'s
      * currency placement, the case opt-outs, the drawer's brand link.
+     * ⚠ 57 → 58 kB (2026-11-28, 3.3.0). Measured 57.06 kB on CI (56.95 locally): `TotalsList`
+     * and `usePrinting` (the virtualized table's print path) join the root entry. Own subpath
+     * `/totals-list`; a page that imports only it pays 358 B.
      */
-    limit: '57 kB',
+    limit: '58 kB',
     gzip: true,
   },
   {

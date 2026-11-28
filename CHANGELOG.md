@@ -8,11 +8,10 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
-## [3.2.2] - 2026-11-28
+## [3.3.0] - 2026-11-28
 
 **Print styles and a totals list, asked for by the parts portal.** Additive; nothing to change for
-a 3.2.1 caller. (`TotalsList` is a new name in a patch release, as the portal asked for 3.2.2;
-`check:api` records it.)
+a 3.2.1 caller. A minor release because `TotalsList` adds public names (`check:api` records it).
 
 ### Added
 

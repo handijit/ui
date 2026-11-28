@@ -813,7 +813,7 @@ router link), the current page comes from `currentPath`.
 - Labels: `appShell.skipToContent`, `navigation`, `openNavigation`,
   `collapse`, `expand`, `badge`, `userMenu` (provider or the `labels` prop).
 
-### Totals (3.2.2)
+### Totals (3.3.0)
 
 `TotalsList` (`@handijitcom/ui/totals-list`) is the "label → amount" list of a
 cart, an order or an invoice. `SummaryCard` is a link card and the chat
@@ -852,7 +852,7 @@ and one flag.
   rule. Give its `Price` a larger `size` for more weight; usually one row has it.
 - A row never breaks across two printed pages.
 
-### Printing (3.2.2)
+### Printing (3.3.0)
 
 The paper holds the page, not the screen's controls. Nothing to call: the
 rules are in each component's stylesheet under `@media print`.

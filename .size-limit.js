@@ -48,7 +48,7 @@ export default [
     /* ⚠ 27 → 26 kB (2026-11-27, 3.1). Measured 25.59 kB again after the menu split; tightened. */
     /* ⚠ 26 → 27.5 kB (2026-11-28, 3.2). Measured 27.18 kB: the AppShell and UserMenu sheets. */
     /* ⚠ 27.5 → 28 kB (2026-11-28, 3.2.1). Measured 27.86 kB: Tabs' fade and scroll buttons, the folding Breadcrumb, Gallery's hover arrows. */
-    /* ⚠ 28 → 28.5 kB (2026-11-28, 3.2.2). Measured 28.22 kB: the `@media print` rules (shell, overlays, toasts, tables) and the TotalsList sheet. */
+    /* ⚠ 28 → 28.5 kB (2026-11-28, 3.3.0). Measured 28.22 kB: the `@media print` rules (shell, overlays, toasts, tables) and the TotalsList sheet. */
     limit: '28.5 kB',
     gzip: true,
   },
@@ -196,14 +196,14 @@ export default [
      * First measurement: 6.53 kB, when the column menu lived inside and pulled `Popover`,
      * `Checkbox` and `IconButton` into every table. The menu is now `DataTableColumnMenu`, passed
      * in as `columnMenu`: 2.85 kB.
-     * ⚠ 3 → 3.3 kB (2026-11-28, 3.2.2). Measured 3.15 kB: printing — `usePrinting` (a virtualized
+     * ⚠ 3 → 3.3 kB (2026-11-28, 3.3.0). Measured 3.15 kB: printing — `usePrinting` (a virtualized
      * table renders every row while printing) and the table's `@media print` rules in its sheet.
      */
     limit: '3.3 kB',
     gzip: true,
   },
   {
-    name: 'only TotalsList (3.2.2)',
+    name: 'only TotalsList (3.3.0)',
     path: 'build/index.js',
     import: '{ TotalsList }',
     limit: '500 B',

@@ -73,5 +73,8 @@ export default {
     './src/components/AppShell/': FULL,
     './src/components/UserMenu/': FULL,
     './src/helpers/app-shell.helper.ts': FULL,
+    /* 3.2.2: totals and printing. */
+    './src/components/TotalsList/': FULL,
+    './src/hooks/usePrinting.ts': FULL,
   },
 };

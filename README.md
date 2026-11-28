@@ -436,7 +436,7 @@ and changes when an announcement strip appears.
 | Action                | `Button` · `IconButton` · `TextLink` · `Tooltip` · `Menu` · `ContextMenu` · `Popover`                                                                                                                                                                                                                                               |
 | Choice                | `Chip` · `ChipGroup` · `SegmentedControl` · `Select` · `Combobox` · `TreeSelect` · `Checkbox` · `Switch` · `Radio` · `RadioCard` · `RangeSlider` · `RatingInput` · `QuantityStepper` · `TableCheckbox`                                                                                                                              |
 | Input                 | `Input` · `PasswordInput` · `Textarea` · `TagInput` · `DateField` (+ `DateRange`) · `FileUpload` · `Field` · `ScaledInput` · `MoneyInput` · `QuantityInput` · `RateInput` · `PercentInput` · `BulkPasteInput`                                                                                                                       |
-| Surface               | `Card` (+ `CardMedia`, `CardOverlay`, `CardBody`, `CardFooter`) · `SummaryCard` · `Panel` (+ `PanelForm`, `PanelRow`) · `PageHeader` · `SectionHeader` · `Tile` · `Directory` (+ `DirectoryGroup`, `DirectoryRow`, `DirectoryJump`) · `Carousel` · `Gallery` · `ScrollArea` · `Disclosure` · `Accordion` · `Tabs`                   |
+| Surface               | `Card` (+ `CardMedia`, `CardOverlay`, `CardBody`, `CardFooter`) · `SummaryCard` · `Panel` (+ `PanelForm`, `PanelRow`) · `TotalsList` · `PageHeader` · `SectionHeader` · `Tile` · `Directory` (+ `DirectoryGroup`, `DirectoryRow`, `DirectoryJump`) · `Carousel` · `Gallery` · `ScrollArea` · `Disclosure` · `Accordion` · `Tabs`    |
 | Feedback              | `Alert` · `Badge` · `StatusDot` · `CodeBadge` · `Kbd` · `EmptyState` · `Skeleton` (+ `SkeletonCard`, `SkeletonRows`, `SkeletonTable`) · `Spinner` · `Progress` · `Steps` · `Divider` · `Avatar` · `Rating` · `Price` · `Stat` · `CopyField` · `Breadcrumb` · `ToastHub` (+ `ToastPortal`) · `NotificationCenter`                    |
 | Brand surface (3.0)   | `BrandSurface` (+ `BrandBlueprint`) · `Eyebrow` · `StatStrip`                                                                                                                                                                                                                                                                       |
 | Shell (3.2)           | `AppShell` (+ `AppShellNav`, `AppShellNavGroup`, `AppShellNavItem`) · `UserMenu`                                                                                                                                                                                                                                                    |
@@ -812,6 +812,70 @@ router link), the current page comes from `currentPath`.
   stop below it.
 - Labels: `appShell.skipToContent`, `navigation`, `openNavigation`,
   `collapse`, `expand`, `badge`, `userMenu` (provider or the `labels` prop).
+
+### Totals (3.2.2)
+
+`TotalsList` (`@handijitcom/ui/totals-list`) is the "label → amount" list of a
+cart, an order or an invoice. `SummaryCard` is a link card and the chat
+entry's `DescriptionList` puts each value right after its label, so neither
+lines amounts up. `TotalsList` is a native `<dl>`: labels at the start,
+amounts at the end in tabular figures (the digits of every row sit under each
+other), and an `isTotal` row emphasized below a divider. Its items have
+`DescriptionList`'s shape (`term`, `description`), so a switch is the import
+and one flag.
+
+```tsx
+<Panel title="Sipariş özeti" footer={<Button>Siparişi ver</Button>}>
+  <TotalsList
+    items={[
+      { term: 'Liste toplamı', description: <Price value="12.480,00" size="sm" /> },
+      { term: 'İskonto', description: <Price value="-1.248,00" size="sm" /> },
+      {
+        term: 'Kargo',
+        description: (
+          <Badge tone="info" variant="soft">
+            Ücretsiz
+          </Badge>
+        ),
+      },
+      { term: 'KDV (%20)', description: <Price value="2.246,40" size="sm" /> },
+      { term: 'Genel toplam', description: <Price value="13.478,40" size="lg" />, isTotal: true },
+    ]}
+  />
+</Panel>
+```
+
+- **Amounts.** Any node: a `Price` (a negative value keeps its minus in front
+  of the sign, "-₺1.248,00"), plain text, or an inline `Badge`. Amounts do not
+  wrap; a long label wraps at the start.
+- **Grand total.** `isTotal` sets the row in body size and semibold below a
+  rule. Give its `Price` a larger `size` for more weight; usually one row has it.
+- A row never breaks across two printed pages.
+
+### Printing (3.2.2)
+
+The paper holds the page, not the screen's controls. Nothing to call: the
+rules are in each component's stylesheet under `@media print`.
+
+| Component                                                   | On paper                                                                                                                                          |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AppShell`                                                  | the sidebar, the top bar and the skip link are hidden; the content takes the full width without the frame's padding                               |
+| `Drawer` · `Modal` · `BottomSheet` · `Popover` · `ToastHub` | never printed, open or not (so the dialogs built on `Modal` too)                                                                                  |
+| `DataTable`                                                 | every row; no scroll box, cap or sticky header/column; the header repeats on each page; rows never break across pages; no column menu or bulk bar |
+| `Table`                                                     | no scroll box or sticky head; the header repeats; rows never break across pages                                                                   |
+| `TotalsList`                                                | rows never break across pages                                                                                                                     |
+
+**A virtualized `DataTable` renders all of its rows while printing.** On
+`beforeprint` (or when the `print` media query starts to match) it turns its
+row window off and renders synchronously, so the pages are laid out with
+every row; `afterprint` brings the window back. The alternative, a "only the
+rows in view are printed" note, would have left the printout incomplete. Two
+limits: a very long list makes a long render before the print dialog (it is
+what the paper needs), and a headless PDF renderer that switches to print
+media without firing `beforeprint` (e.g. `page.pdf()` in some setups) prints
+the window only, without the blank spacers. Dispatch the event first:
+`await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')))`,
+or render that table without `isVirtualized`.
 
 ### TypeScript resolution
 

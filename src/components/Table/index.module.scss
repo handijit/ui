@@ -65,3 +65,22 @@
     background-color: $bg-raised;
   }
 }
+
+// Print (3.2.2): the whole table on paper, rows never cut across two pages, the header repeated.
+@media print {
+  .scroller {
+    overflow: visible;
+  }
+
+  .table--sticky-head thead th {
+    position: static;
+  }
+
+  .table thead {
+    display: table-header-group;
+  }
+
+  .table tr {
+    break-inside: avoid;
+  }
+}

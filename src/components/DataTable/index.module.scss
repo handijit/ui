@@ -205,3 +205,48 @@ thead .sticky {
   font-size: $font-size-small;
   color: $text;
 }
+
+// Print (3.2.2): every row on paper, none cut across two pages, the header repeated on each page.
+// The scrolling box, its cap and the sticky parts are screen behaviour; a virtualized table draws
+// all of its rows while printing (`usePrinting`), so its fixed row height and spacers go too.
+@media print {
+  .wrapper,
+  .wrapper--capped,
+  .wrapper--virtual:not(.wrapper--capped) {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .wrapper--capped .table thead th,
+  .wrapper--virtual .table thead th,
+  .sticky {
+    position: static;
+  }
+
+  .sticky::after {
+    content: none;
+  }
+
+  .table thead {
+    display: table-header-group;
+  }
+
+  .table tr {
+    break-inside: avoid;
+  }
+
+  .wrapper--virtual .table tbody tr {
+    height: auto;
+  }
+
+  .wrapper--virtual .table td {
+    white-space: normal;
+  }
+
+  // Screen controls: the column menu, the selection's bulk actions, the windowing spacers.
+  .toolbar,
+  .bulkBar,
+  .spacer {
+    display: none;
+  }
+}

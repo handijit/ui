@@ -77,6 +77,7 @@ const SERVER_SAFE = [
   'SummaryCard',
   'TextLink',
   'Tile',
+  'TotalsList',
 ];
 
 describe("'use client' dosya başına", () => {

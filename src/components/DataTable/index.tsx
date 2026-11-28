@@ -21,6 +21,7 @@ import { ExclamationCircleFill } from 'react-bootstrap-icons';
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';
 import { resolveLabel } from '../../helpers/label.helper';
+import usePrinting from '../../hooks/usePrinting';
 import { useUi } from '../../theme/context';
 
 import DataTableColumnMenuContext, { type DataTableColumnMenuContextValue } from './context';
@@ -248,7 +249,12 @@ const DataTable = <T,>({
   const hasNavigation = isDataMode && onRowActivate !== undefined;
   const isWindowed = isDataMode && Boolean(isVirtualized);
   const height = rowHeight ?? ROW_HEIGHT[density ?? 'comfortable'];
-  const rowWindow = useRowWindow(rowCount, height, isWindowed);
+  /*
+   * Printing draws every row (3.2.2): a window of the rows in view would put a few dozen rows and
+   * blank spacers on paper. `usePrinting` renders before the browser lays the pages out.
+   */
+  const isPrinting = usePrinting(isWindowed);
+  const rowWindow = useRowWindow(rowCount, height, isWindowed && !isPrinting);
 
   const [activeIndex, setActiveIndex] = useState(-1);
   const current = Math.min(activeIndex, rowCount - 1);

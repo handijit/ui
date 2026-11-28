@@ -181,6 +181,8 @@ ToastPlacement
 ToastPortal
 ToastTone
 Tooltip
+TotalsList
+TotalsListItem
 TreeSelect
 TreeSelectLabels
 TreeSelectNode

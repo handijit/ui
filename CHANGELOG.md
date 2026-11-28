@@ -8,6 +8,41 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [3.2.2] - 2026-11-28
+
+**Print styles and a totals list, asked for by the parts portal.** Additive; nothing to change for
+a 3.2.1 caller. (`TotalsList` is a new name in a patch release, as the portal asked for 3.2.2;
+`check:api` records it.)
+
+### Added
+
+- **`TotalsList`** (`@handijitcom/ui/totals-list`, type `TotalsListItem`): the "label → amount"
+  totals of a cart, an order or an invoice as a native `<dl>`. Labels at the start, amounts at the
+  end in tabular figures so the digits line up; an amount may be a `Price` (a negative discount
+  too), text or an inline `Badge` ("Ücretsiz"); an `isTotal` row is emphasized below a divider.
+  Items have `DescriptionList`'s `term` / `description` shape: the portal's `Panel` +
+  `DescriptionList` totals switch with the import and one flag. `SummaryCard` stays a link card.
+- **Print styles.** `AppShell` hides the sidebar, the top bar and the skip link and gives the
+  content the full width. `Drawer`, `Modal` (and the dialogs on it), `BottomSheet`, `Popover`
+  and the toasts never print. `DataTable` and `Table` print every row: no scroll box, cap or
+  sticky header/column, the header repeated on each page, rows never broken across pages;
+  `DataTable`'s column menu, bulk bar and windowing spacers are hidden.
+- **A virtualized `DataTable` renders all of its rows while printing** (`beforeprint` or the
+  `print` media query, rendered synchronously; `afterprint` restores the window). Headless PDF
+  renderers that skip `beforeprint` are covered in the README.
+
+### Budgets
+
+- `styles.css` 28 → 28.5 kB (measured 28.22 kB: the print rules and the totals sheet); "only
+  DataTable" 3 → 3.3 kB (3.15 kB: `usePrinting` and the table's print rules); new "only
+  TotalsList" 500 B (358 B). The facade stays at 57 kB (56.95 kB).
+
+### Tests
+
+- `__tests__/styles/print.test.ts` compiles the stylesheets and checks each `@media print` rule
+  (and the totals' alignment); `usePrinting`, the printing `DataTable` and `TotalsList` have unit
+  tests; `TotalsList` is in the axe and gallery registries.
+
 ## [3.2.1] - 2026-11-28
 
 **Defects found on the parts portal's screens.** Fixes and small additive props; nothing to change

@@ -21,3 +21,6 @@ export const SHEET_MEDIA_QUERY = `(max-width: ${MOBILE_BREAKPOINT}px) and (point
 
 /** A touch screen is the primary pointer: a focused text field opens the on-screen keyboard. */
 export const TOUCH_MEDIA_QUERY = '(hover: none) and (pointer: coarse)';
+
+/** The page is being printed (or laid out for a PDF). */
+export const PRINT_MEDIA_QUERY = 'print';

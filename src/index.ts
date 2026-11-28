@@ -150,6 +150,7 @@ export {
 } from './components/Skeleton';
 export { default as Stat, type StatTrend } from './components/Stat';
 export { default as SummaryCard, type SummaryCardHeadingLevel } from './components/SummaryCard';
+export { default as TotalsList, type TotalsListItem } from './components/TotalsList';
 export { default as Progress, ProgressCircle } from './components/Progress';
 export { default as Spinner } from './components/Spinner';
 export {

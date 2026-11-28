@@ -1,0 +1,47 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Each row is its own line: the label takes the room it needs at the start, the amount sits at the
+// end. Amounts share no column width, they share the end edge, and tabular figures make the digits
+// of every row line up under each other (3.2.2; `DescriptionList` puts values after the labels).
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  margin: 0;
+  font-size: $font-size-small;
+
+  &__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: $space-4;
+    break-inside: avoid;
+
+    &--total {
+      margin-block-start: $space-1;
+      padding-block-start: $space-3;
+      border-block-start: 1px solid $border;
+      font-size: $font-size-body;
+      font-weight: $weight-semibold;
+    }
+  }
+
+  &__term {
+    min-width: 0;
+    color: $text-2;
+  }
+
+  &__row--total &__term {
+    color: $text;
+  }
+
+  &__value {
+    flex-shrink: 0;
+    margin: 0;
+    color: $text;
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    white-space: nowrap;
+  }
+}

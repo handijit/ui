@@ -192,3 +192,11 @@
     }
   }
 }
+
+// Print (3.2.2): an overlay is a screen control, never part of the page on paper.
+@media print {
+  .modal,
+  .modal[open] {
+    display: none;
+  }
+}

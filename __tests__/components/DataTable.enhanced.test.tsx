@@ -336,6 +336,27 @@ describe('DataTable virtualization', () => {
     expect(container.querySelectorAll('tbody tr[aria-hidden="true"]')).toHaveLength(1);
   });
 
+  it('draws every row while printing and windows again afterwards (3.2.2)', () => {
+    const { container } = renderTable(
+      <DataTable columns={COLUMNS} rows={MANY.slice(0, 500)} isVirtualized label="Parçalar" />,
+    );
+    const drawn = () => container.querySelectorAll('tbody tr[data-row-index]').length;
+    const spacers = () => container.querySelectorAll('tbody tr[aria-hidden="true"]').length;
+    expect(drawn()).toBe(28);
+
+    act(() => {
+      window.dispatchEvent(new Event('beforeprint'));
+    });
+    expect(drawn()).toBe(500);
+    expect(spacers()).toBe(0);
+
+    act(() => {
+      window.dispatchEvent(new Event('afterprint'));
+    });
+    expect(drawn()).toBe(28);
+    expect(spacers()).toBe(1);
+  });
+
   it('follows the scroll position with a fixed row height', () => {
     const { container } = renderTable(
       <DataTable columns={COLUMNS} rows={MANY} isVirtualized density="compact" />,

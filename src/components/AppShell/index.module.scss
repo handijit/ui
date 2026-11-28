@@ -412,3 +412,25 @@ $row-height: 36px;
     line-height: 14px;
   }
 }
+
+// Print (3.2.2): the paper holds the page, not the frame. The sidebar, the top bar and the skip
+// link stay on screen; the content takes the full width without the frame's padding. Toasts hide
+// themselves (`Toast`'s hub is portalled outside the shell), and so do drawers.
+@media print {
+  .shell,
+  .shell--collapsed {
+    display: block;
+    min-height: 0;
+    background: none;
+  }
+
+  .shell__skip,
+  .shell__sidebar,
+  .shell__topbar {
+    display: none;
+  }
+
+  .shell__content {
+    padding: 0;
+  }
+}

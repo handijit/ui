@@ -108,6 +108,7 @@ import {
   StatusDot,
   Steps,
   SummaryCard,
+  TotalsList,
   Switch,
   Table,
   TableCheckbox,
@@ -1604,6 +1605,30 @@ export const SCENARIOS: Record<string, Record<string, ReactElement>> = {
         headingLevel={2}
         description="Buji, bobin veya motor takozu kaynaklı olabilir."
         media={<HeartFill />}
+      />
+    ),
+  },
+  TotalsList: {
+    cart: (
+      <TotalsList
+        items={[
+          { term: 'Liste toplamı', description: <Price value="12.480,00" size="sm" /> },
+          { term: 'İskonto', description: <Price value="-1.248,00" size="sm" /> },
+          {
+            term: 'Kargo',
+            description: (
+              <Badge tone="info" variant="soft">
+                Ücretsiz
+              </Badge>
+            ),
+          },
+          { term: 'KDV (%20)', description: <Price value="2.246,40" size="sm" /> },
+          {
+            term: 'Genel toplam',
+            description: <Price value="13.478,40" size="lg" />,
+            isTotal: true,
+          },
+        ]}
       />
     ),
   },

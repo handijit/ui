@@ -39,8 +39,13 @@ export default [
      * ⚠ 57 → 58 kB (2026-11-28, 3.3.0). Measured 57.06 kB on CI (56.95 locally): `TotalsList`
      * and `usePrinting` (the virtualized table's print path) join the root entry. Own subpath
      * `/totals-list`; a page that imports only it pays 358 B.
+     * ⚠ 58 → 67 kB (2026-11-28, 3.4.0). Measured 66.03 kB (+8.97): eleven commerce components
+     * (`FacetSidebar`, `FacetSection`, `AppliedFilters`, `FilterToolbar`, `SortableList`,
+     * `CodeText`, `BrandLockup`, `StickyActionBar`, `CompareTray`, `ProductCarousel`, `MegaMenu`)
+     * and the options of five others. Each on its own subpath, measured one by one below; no page
+     * downloads this figure.
      */
-    limit: '58 kB',
+    limit: '67 kB',
     gzip: true,
   },
   {
@@ -52,7 +57,8 @@ export default [
     /* ⚠ 26 → 27.5 kB (2026-11-28, 3.2). Measured 27.18 kB: the AppShell and UserMenu sheets. */
     /* ⚠ 27.5 → 28 kB (2026-11-28, 3.2.1). Measured 27.86 kB: Tabs' fade and scroll buttons, the folding Breadcrumb, Gallery's hover arrows. */
     /* ⚠ 28 → 28.5 kB (2026-11-28, 3.3.0). Measured 28.22 kB: the `@media print` rules (shell, overlays, toasts, tables) and the TotalsList sheet. */
-    limit: '28.5 kB',
+    /* ⚠ 28.5 → 33 kB (2026-11-28, 3.4.0). Measured 32.61 kB: the eleven commerce sheets (MegaMenu 1.55, CompareTray 1.07, FacetSection 1.01 kB gzipped alone) and the table, gallery, steps and carousel options. An app that imports per-component CSS pays only its own. */
+    limit: '33 kB',
     gzip: true,
   },
   {
@@ -217,7 +223,8 @@ export default [
     path: 'build/index.js',
     import: '{ DataTable, DataTableColumnMenu }',
     /* First measurement: 6.66 kB — what a table with the menu pays (6.53 kB before the split). */
-    limit: '7 kB',
+    /* ⚠ 7 → 7.3 kB (2026-11-28, 3.4.0). Measured 7.04 kB: column `align` / `isNumeric` classes (the table alone 3.25 kB, under its 3.3 kB). */
+    limit: '7.3 kB',
     gzip: true,
   },
   {
@@ -286,6 +293,90 @@ export default [
     path: 'build/components/AppShell/style.css',
     /* First measurement (2026-11-28): 2.05 kB. */
     limit: '2.5 kB',
+    gzip: true,
+  },
+  /*
+   * 3.4 — the commerce building blocks, each its own module and subpath. First measurements
+   * 2026-11-28; each limit sits just above what the import measured.
+   */
+  {
+    name: 'FacetSidebar with FacetSection (3.4: Drawer, Disclosure, Checkbox, Radio, MoneyInput)',
+    path: 'build/index.js',
+    import: '{ FacetSidebar, FacetSection }',
+    /* First measurement: 9.33 kB. */
+    limit: '10 kB',
+    gzip: true,
+  },
+  {
+    name: 'only AppliedFilters (3.4)',
+    path: 'build/index.js',
+    import: '{ AppliedFilters }',
+    /* First measurement: 2.54 kB: `Chip` and `Button`. */
+    limit: '2.9 kB',
+    gzip: true,
+  },
+  {
+    name: 'only FilterToolbar (3.4: Select, SegmentedControl, Skeleton)',
+    path: 'build/index.js',
+    import: '{ FilterToolbar }',
+    /* First measurement: 8.57 kB: `Select` with its sheet mode, `SegmentedControl`. */
+    limit: '9.2 kB',
+    gzip: true,
+  },
+  {
+    name: 'only SortableList (3.4)',
+    path: 'build/index.js',
+    import: '{ SortableList }',
+    /* First measurement: 2.12 kB. */
+    limit: '2.5 kB',
+    gzip: true,
+  },
+  {
+    name: 'only CodeText (3.4)',
+    path: 'build/index.js',
+    import: '{ CodeText }',
+    /* First measurement: 1.09 kB with the copy button. */
+    limit: '1.3 kB',
+    gzip: true,
+  },
+  {
+    name: 'only BrandLockup (3.4)',
+    path: 'build/index.js',
+    import: '{ BrandLockup }',
+    /* First measurement: 647 B. */
+    limit: '800 B',
+    gzip: true,
+  },
+  {
+    name: 'only StickyActionBar (3.4)',
+    path: 'build/index.js',
+    import: '{ StickyActionBar }',
+    /* First measurement: 779 B. */
+    limit: '950 B',
+    gzip: true,
+  },
+  {
+    name: 'only CompareTray (3.4)',
+    path: 'build/index.js',
+    import: '{ CompareTray }',
+    /* First measurement: 2.6 kB. */
+    limit: '3 kB',
+    gzip: true,
+  },
+  {
+    name: 'only ProductCarousel (3.4: Carousel, SectionHeader)',
+    path: 'build/index.js',
+    import: '{ ProductCarousel }',
+    /* First measurement: 3.79 kB. */
+    limit: '4.3 kB',
+    gzip: true,
+  },
+  {
+    name: 'only MegaMenu (3.4: Drawer, Disclosure)',
+    path: 'build/index.js',
+    import: '{ MegaMenu }',
+    /* First measurement: 5.24 kB: `Drawer` and `Disclosure` for the narrow screen. */
+    limit: '5.8 kB',
     gzip: true,
   },
   {

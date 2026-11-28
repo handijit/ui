@@ -1,0 +1,18 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// A showcase rail (3.4). The cards are the app's (`Card` + `Price`): each slot stretches its card
+// to the rail's height, so a row of cards with titles of different lengths ends on one line.
+.rail {
+  min-width: 0;
+
+  &__item {
+    display: flex;
+    min-width: 0;
+
+    > * {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+}

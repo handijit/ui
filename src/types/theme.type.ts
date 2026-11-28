@@ -165,6 +165,108 @@ export type UiLabels = Partial<{
     userMenu: string;
   }>;
 
+  /** `FacetSidebar` and `FacetSection` (3.4). */
+  facets: Partial<{
+    /** The sidebar's name and the drawer's title ("Filtreler"). */
+    title: string;
+    /** Clears every filter ("Tümünü temizle"). */
+    clearAll: string;
+    /** Clears one section ("Temizle"). */
+    clear: string;
+    /** The drawer's apply button when the call passes no `applyLabel` ("Sonuçları göster"). */
+    apply: string;
+    /** Applies a min/max range ("Uygula"). */
+    applyRange: string;
+    /** Unfolds a long list, e.g. `count => count + ' seçenek daha'`. */
+    showMore: Formatter<[count: number]>;
+    /** Folds it back ("Daha az göster"). */
+    showLess: string;
+    /** The search field of a long list, e.g. `title => title + ' içinde ara'`. */
+    search: Formatter<[title: string]>;
+    /** No option matches the search, e.g. `term => '“' + term + '” için sonuç yok'`. */
+    noMatch: Formatter<[term: string]>;
+    /** Read after a section's title, e.g. `count => count + ' seçili'`: the badge is not read. */
+    selected: Formatter<[count: number]>;
+  }>;
+
+  /** `AppliedFilters` (3.4). */
+  appliedFilters: Partial<{
+    /** The strip's name and its lead ("Uygulanan filtreler"). */
+    title: string;
+    /** One chip, e.g. `(group, value) => group + ': ' + value + ' filtresini kaldır'`. */
+    remove: Formatter<[group: string, value: string]>;
+    clearAll: string;
+    /** Filters without a chip, e.g. `count => '+' + count + ' filtre daha'`. */
+    more: Formatter<[count: number]>;
+  }>;
+
+  /** `FilterToolbar` (3.4). */
+  filterToolbar: Partial<{
+    /** The narrow-screen button that opens the filters ("Filtrele"). */
+    filter: string;
+    /** Read after it, e.g. `count => count + ' filtre uygulandı'`. */
+    activeFilters: Formatter<[count: number]>;
+    sort: string;
+    /** The view switch's name and its two options ("Görünüm", "Tablo", "Kartlar"). */
+    view: string;
+    viewTable: string;
+    viewCards: string;
+    /** The density switch ("Yoğunluk", "Rahat", "Sıkı"). */
+    density: string;
+    densityComfortable: string;
+    densityCompact: string;
+    /** The page size select's name ("Sayfa başına"). */
+    pageSize: string;
+    /** One page size, e.g. `size => size + ' / sayfa'`. */
+    perPage: Formatter<[size: number]>;
+  }>;
+
+  /** `SortableList` (3.4). Positions are 1-based. */
+  sortableList: Partial<{
+    /** Read once by the handles, e.g. "Boşluk ile tutun, oklarla taşıyın, Boşluk ile bırakın, Escape ile vazgeçin." */
+    instructions: string;
+    /** A handle's name, e.g. `item => item + ' öğesini taşı'`. */
+    handle: Formatter<[item: string]>;
+    grabbed: Formatter<[item: string, position: number, total: number]>;
+    moved: Formatter<[item: string, position: number, total: number]>;
+    dropped: Formatter<[item: string, position: number, total: number]>;
+    cancelled: Formatter<[item: string]>;
+  }>;
+
+  /** `CompareTray` (3.4). */
+  compareTray: Partial<{
+    /** The tray's name and title ("Karşılaştırma listesi"). */
+    title: string;
+    /** e.g. `(count, max) => count + '/' + max`. */
+    count: Formatter<[count: number, max: number]>;
+    /** e.g. `item => item + ' ürününü karşılaştırmadan çıkar'`. */
+    remove: Formatter<[item: string]>;
+    clear: string;
+    /** e.g. `count => 'Karşılaştır (' + count + ')'`. */
+    compare: Formatter<[count: number]>;
+    /** Why compare is disabled, e.g. `min => 'En az ' + min + ' ürün seçin'`. */
+    needMore: Formatter<[min: number]>;
+  }>;
+
+  /** `ProductCarousel` (3.4). */
+  productCarousel: Partial<{
+    /** e.g. `title => title + ': önceki ürünler'`. */
+    previous: Formatter<[title: string]>;
+    next: Formatter<[title: string]>;
+    /** The rail's "see all" link ("Tümünü gör"). */
+    seeAll: string;
+  }>;
+
+  /** `MegaMenu` (3.4). */
+  megaMenu: Partial<{
+    /** The navigation landmark's name ("Kategoriler"). */
+    navigation: string;
+    /** The narrow-screen drawer's title ("Menü"). */
+    menu: string;
+    /** The panel's link to the whole category, e.g. `label => 'Tüm ' + label`. */
+    seeAll: Formatter<[label: string]>;
+  }>;
+
   /** `BulkPasteInput` (3.1). */
   bulkPaste: Partial<{
     /** Parsed rows, e.g. `count => count + ' satır okundu'`. */

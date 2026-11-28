@@ -6,7 +6,8 @@
   align-items: center;
   gap: $space-3;
   margin: 0;
-  font-family: $font-mono;
+  // The overline hook (3.4): the application's label family when it sets one; mono otherwise.
+  font-family: var(--ui-overline-font, #{$font-mono});
   font-size: $font-size-caption;
   font-weight: $weight-medium;
   line-height: $leading-snug;

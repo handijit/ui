@@ -250,3 +250,30 @@ thead .sticky {
     display: none;
   }
 }
+
+// Column alignment (3.4), in the writing direction. The sort button fills its header, so it moves
+// its own content too; numbers line up in tabular figures and never wrap inside a figure.
+.table .cell--start {
+  text-align: start;
+}
+
+.table .cell--end {
+  text-align: end;
+
+  .sort {
+    justify-content: flex-end;
+  }
+}
+
+.table .cell--center {
+  text-align: center;
+
+  .sort {
+    justify-content: center;
+  }
+}
+
+.table .cell--numeric {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

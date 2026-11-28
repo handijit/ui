@@ -1,0 +1,72 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// A calm inline code (3.4): the mono family a step below the text around it, tabular figures, no
+// surface. A long code wraps at its spaces and dashes instead of overflowing a narrow cell.
+.code {
+  font-family: $font-mono;
+  font-size: 0.9375em;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: $text;
+  overflow-wrap: anywhere;
+
+  &--sm {
+    font-size: $font-size-caption;
+  }
+
+  &--md {
+    font-size: $font-size-small;
+  }
+
+  &--muted {
+    color: $text-2;
+  }
+
+  // One click selects the whole code: a dragged half code was being pasted into searches.
+  &__value {
+    user-select: all;
+  }
+}
+
+.copyable {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  vertical-align: baseline;
+
+  &__code {
+    min-width: 0;
+    font: inherit;
+    color: inherit;
+  }
+}
+
+.copy {
+  @include tap-target;
+
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: $radius-xs;
+  color: $text-2;
+  font-size: $icon-xs;
+  cursor: pointer;
+
+  @include interactive-surface;
+  @include focus-ring($focus, -1px);
+
+  &--done {
+    color: $primary-text;
+  }
+}
+
+.srOnly {
+  @include visually-hidden;
+}

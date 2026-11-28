@@ -47,8 +47,30 @@ export type DataTableColumn<T = unknown> = {
   render?: (row: T, index: number) => ReactNode;
   /** The column menu cannot hide this column (the code column of a parts list), 3.1. */
   isAlwaysVisible?: boolean;
+  /**
+   * Horizontal alignment of the header and the cells (3.4), in the writing direction: `end` is
+   * right in a left-to-right page. `isNumeric` columns default to `end`; others to `start`.
+   */
+  align?: DataTableColumnAlign;
+  /**
+   * A column of numbers — amounts, quantities, stock (3.4): aligned to the `end` and drawn in
+   * tabular figures, so the digits of every row line up.
+   */
+  isNumeric?: boolean;
   className?: string;
 };
+
+/** Where a column's content sits (3.4). */
+export type DataTableColumnAlign = 'start' | 'end' | 'center';
+
+/** The alignment and figure classes of a column's header and cells (3.4). */
+const columnClass = (column: DataTableColumn<never>): string =>
+  cx(
+    column.className,
+    column.isSticky && styles.sticky,
+    styles[`cell--${column.align ?? (column.isNumeric ? 'end' : 'start')}`],
+    column.isNumeric && styles['cell--numeric'],
+  );
 
 /** Column order and visibility (3.1). Keys missing from `order` follow in definition order. */
 export type DataTableColumnState = {
@@ -359,10 +381,7 @@ const DataTable = <T,>({
             )}
           >
             {visibleColumns.map(column => (
-              <td
-                key={column.key}
-                className={cx(column.className, column.isSticky && styles.sticky)}
-              >
+              <td key={column.key} className={columnClass(column)}>
                 {column.render?.(item, index)}
               </td>
             ))}
@@ -430,7 +449,7 @@ const DataTable = <T,>({
                   key={column.key}
                   scope="col"
                   aria-sort={column.ariaSort}
-                  className={cx(column.className, column.isSticky && styles.sticky)}
+                  className={columnClass(column)}
                 >
                   {isSortable ? (
                     /* Siralama bir DUGME, ` `ye yazilan `onClick` degil. */

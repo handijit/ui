@@ -101,6 +101,17 @@ const {
   Steps,
   SummaryCard,
   TotalsList,
+  FacetSidebar,
+  FacetSection,
+  AppliedFilters,
+  FilterToolbar,
+  SortableList,
+  CodeText,
+  BrandLockup,
+  StickyActionBar,
+  CompareTray,
+  ProductCarousel,
+  MegaMenu,
   Switch,
   Table,
   TableCheckbox,
@@ -118,6 +129,8 @@ const {
   UiThemeScript,
   UIVariant,
 } = ui;
+
+const noop = () => {};
 
 const OPTIONS = [
   { value: 'a', label: 'Birinci' },
@@ -1162,6 +1175,219 @@ const SCENARIOS: Record<string, Record<string, ReactElement>> = {
   },
   UserMenu: {
     default: <UserMenu name="Ayşe Yılmaz" items={USER_ITEMS} />,
+  },
+  FacetSidebar: {
+    default: (
+      <FacetSidebar activeCount={2} onClearAll={noop}>
+        <FacetSection
+          title="Marka"
+          options={[
+            { value: 'bosch', label: 'Bosch', count: 124 },
+            { value: 'mann', label: 'Mann-Filter', count: 86 },
+            { value: 'febi', label: 'Febi', count: 0 },
+          ]}
+          selected={['bosch', 'mann']}
+          onChange={noop}
+          onClear={noop}
+        />
+        <FacetSection
+          title="Stok"
+          mode="radio"
+          options={[{ value: 'in', label: 'Stokta', count: 310 }]}
+          onChange={noop}
+        />
+      </FacetSidebar>
+    ),
+  },
+  FacetSection: {
+    checkbox: (
+      <FacetSection
+        title="Marka"
+        visibleCount={3}
+        searchThreshold={4}
+        options={['Bosch', 'Mann-Filter', 'Febi', 'Valeo', 'Sachs', 'Hella'].map(
+          (label, index) => ({
+            value: label.toLowerCase(),
+            label,
+            count: 40 - index * 6,
+          }),
+        )}
+        selected={['hella']}
+        onChange={noop}
+        onClear={noop}
+      />
+    ),
+    radio: (
+      <FacetSection
+        title="Kalite"
+        mode="radio"
+        options={[
+          { value: 'oem', label: 'OEM', count: 12 },
+          { value: 'oes', label: 'OES', count: 30 },
+        ]}
+        selected={['oem']}
+        onChange={noop}
+      />
+    ),
+    link: (
+      <FacetSection
+        title="Kategori"
+        mode="link"
+        options={[
+          { value: 'fren', label: 'Fren sistemi', count: 412, href: '#fren' },
+          { value: 'filtre', label: 'Filtreler', count: 280, href: '#filtre' },
+        ]}
+        selected={['fren']}
+      />
+    ),
+    range: (
+      <FacetSection
+        title="Fiyat"
+        mode="range"
+        currency="TL"
+        range={{ min: 10000, max: null }}
+        onRangeChange={noop}
+        onClear={noop}
+      />
+    ),
+  },
+  AppliedFilters: {
+    default: (
+      <AppliedFilters
+        filters={[
+          { key: 'brand:bosch', group: 'Marka', label: 'Bosch', onRemove: noop },
+          { key: 'price', group: 'Fiyat', label: '₺100 – ₺500', onRemove: noop },
+        ]}
+        extraCount={1}
+        onClearAll={noop}
+      />
+    ),
+  },
+  FilterToolbar: {
+    default: (
+      <FilterToolbar
+        count={
+          <>
+            <strong>1.284</strong> ürün
+          </>
+        }
+        onFilterClick={noop}
+        activeFilterCount={2}
+        sortOptions={[
+          { value: 'relevance', label: 'Önerilen' },
+          { value: 'price-asc', label: 'Fiyat ↑' },
+        ]}
+        sortValue="relevance"
+        onSortChange={noop}
+        view="cards"
+        onViewChange={noop}
+        density="comfortable"
+        onDensityChange={noop}
+        pageSizeOptions={[24, 48, 96]}
+        pageSize={24}
+        onPageSizeChange={noop}
+      />
+    ),
+    loading: <FilterToolbar isCountLoading />,
+  },
+  SortableList: {
+    images: (
+      <SortableList
+        label="Ürün görselleri"
+        layout="grid"
+        items={['Ön yüz', 'Arka yüz', 'Yan yüz']}
+        getKey={item => item}
+        getLabel={item => item}
+        onReorder={noop}
+        renderItem={(item, { handle, index }) => (
+          <Card>
+            <CardBody>
+              {handle}
+              {item}
+              {index === 0 && <Badge tone="info">Kapak</Badge>}
+            </CardBody>
+          </Card>
+        )}
+      />
+    ),
+  },
+  CodeText: {
+    plain: (
+      <p>
+        OEM: <CodeText code="1K0 615 301 AA" isMuted />
+      </p>
+    ),
+    copyable: <CodeText code="0 986 424 815" isCopyable size="md" />,
+  },
+  BrandLockup: {
+    initial: <BrandLockup name="Yıldız Oto" tagline="Yedek parça" />,
+    link: <BrandLockup name="Yıldız Oto" size="lg" href="#ana-sayfa" logo={<HeartFill />} />,
+  },
+  StickyActionBar: {
+    visible: (
+      <StickyActionBar
+        label="Sepete ekle"
+        isVisible
+        info={<strong>Fren balatası · ₺1.240,00</strong>}
+      >
+        <Button variant={UIVariant.ACCENT}>Sepete ekle</Button>
+      </StickyActionBar>
+    ),
+  },
+  CompareTray: {
+    default: (
+      <CompareTray
+        max={4}
+        items={[
+          { id: 'a', label: 'Bosch fren balatası' },
+          { id: 'b', label: 'Febi fren balatası' },
+        ]}
+        onRemove={noop}
+        onClear={noop}
+        compareHref="#karsilastir"
+      />
+    ),
+    waiting: (
+      <CompareTray max={4} items={[{ id: 'a', label: 'Bosch fren balatası' }]} onRemove={noop} />
+    ),
+  },
+  ProductCarousel: {
+    default: (
+      <ProductCarousel title="Çok satanlar" description="Son 30 gün" seeAllHref="#cok-satanlar">
+        {['Fren balatası', 'Yağ filtresi', 'Buji', 'Silecek'].map(name => (
+          <Card key={name}>
+            <CardBody>
+              <a href={`#${name}`}>{name}</a>
+            </CardBody>
+          </Card>
+        ))}
+      </ProductCarousel>
+    ),
+  },
+  MegaMenu: {
+    default: (
+      <MegaMenu
+        items={[
+          {
+            id: 'fren',
+            label: 'Fren sistemi',
+            href: '#fren',
+            isActive: true,
+            columns: [
+              {
+                id: 'balata',
+                title: 'Balata ve disk',
+                links: [
+                  { id: 'on', label: 'Ön balata', href: '#on-balata', icon: <HeartFill /> },
+                  { id: 'disk', label: 'Fren diski', href: '#disk', description: 'Havalandırmalı' },
+                ],
+              },
+            ],
+          },
+          { id: 'kampanya', label: 'Kampanyalar', href: '#kampanya' },
+        ]}
+      />
+    ),
   },
   Pagination: {
     links: <Pagination page={2} totalPages={9} buildHref={page => `?sayfa=${page}`} />,

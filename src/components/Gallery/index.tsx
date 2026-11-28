@@ -82,6 +82,13 @@ type Props = {
   onIndexChange?: (index: number) => void;
   /** Magnifies the main image under a mouse pointer and lets the full-screen view zoom (default). */
   hasZoom?: boolean;
+  /**
+   * Drawn in the image's place when `images` is empty (3.4): the product's "no image" artwork.
+   * Without it an empty gallery draws nothing.
+   */
+  placeholder?: ReactNode;
+  /** Writes "2 / 5" on the main image (3.4): on a phone the thumbnails may be scrolled away. */
+  hasCounter?: boolean;
   labels?: Partial<GalleryLabels>;
   className?: string;
   testId?: string;
@@ -127,6 +134,8 @@ const Gallery = ({
   index: controlledIndex,
   onIndexChange,
   hasZoom = true,
+  placeholder,
+  hasCounter,
   labels: labelProps,
   className,
   testId,
@@ -203,7 +212,12 @@ const Gallery = ({
 
   useScrollLock(isFullscreen);
 
-  if (total === 0) return null;
+  if (total === 0)
+    return placeholder ? (
+      <section className={cx(styles.gallery, className)} aria-label={label} data-testid={testId}>
+        <div className={cx(styles.stage, styles['stage--empty'])}>{placeholder}</div>
+      </section>
+    ) : null;
 
   const image = images[current];
   const hasMany = total > 1;
@@ -306,6 +320,11 @@ const Gallery = ({
           <span className={styles.srOnly}>{text.fullscreen}</span>
           <ArrowsFullscreen aria-hidden className={styles.stage__hint} />
         </button>
+        {hasCounter && hasMany && (
+          <span className={styles.stage__counter}>
+            {current + 1} / {total}
+          </span>
+        )}
         {arrows}
       </div>
 

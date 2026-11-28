@@ -1,0 +1,128 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// The comparison tray (3.4): fixed to the bottom edge, lifted by the sticky action bar's height
+// while that bar is shown (`--ui-sticky-bar-height`, written by `StickyActionBar`).
+.tray {
+  position: fixed;
+  inset-inline: 0;
+  bottom: var(--ui-sticky-bar-height, 0px);
+  z-index: $z-sticky;
+  border-top: 1px solid $border-strong;
+  background-color: $bg-overlay;
+  box-shadow: $shadow-up;
+  animation: $anim-fade-in-up $duration-fast $ease-enter;
+  transition: bottom $duration-fast $ease-standard;
+
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  @include reduced-motion {
+    animation: none;
+    transition: none;
+  }
+
+  @media print {
+    display: none;
+  }
+
+  &__inner {
+    @include container;
+    @include row($space-3);
+
+    padding-block: $space-3;
+
+    @include for-mobile {
+      flex-direction: column;
+      align-items: stretch;
+      gap: $space-2;
+      padding-block: $space-2;
+    }
+  }
+
+  &__icon {
+    display: flex;
+    color: $text-2;
+    font-size: $icon-md;
+
+    @include for-mobile {
+      display: none;
+    }
+  }
+
+  &__body {
+    @include stack($space-1);
+
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    @include row($space-2);
+
+    margin: 0;
+    font-size: $font-size-small;
+    font-weight: $weight-semibold;
+    color: $text;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__count {
+    @include technical-text($font-size-caption);
+
+    font-weight: $weight-regular;
+    color: $text-2;
+  }
+
+  &__chips {
+    @include scroll-row($space-2);
+
+    margin: 0;
+    padding-inline: 0;
+    list-style: none;
+  }
+
+  &__chip {
+    @include row($space-1);
+
+    max-width: 220px;
+    padding-inline-start: $space-2;
+    border: 1px solid $border;
+    border-radius: $radius-pill;
+    background-color: $bg-raised;
+  }
+
+  &__image {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    border-radius: $radius-xs;
+
+    > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__label {
+    @include truncate;
+
+    font-size: $font-size-caption;
+    color: $text;
+  }
+
+  &__actions {
+    @include row($space-2);
+
+    flex-shrink: 0;
+
+    @include for-mobile {
+      justify-content: space-between;
+    }
+  }
+}

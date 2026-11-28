@@ -1,0 +1,54 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// The filter column (3.4): a panel that sticks below the application's header and scrolls inside
+// itself when it is taller than the window. At tablet width and below the drawer takes over.
+.sidebar {
+  @include panel;
+  @include sticky-below-header($space-4);
+
+  max-height: calc(100dvh - #{$header-offset} - #{$space-8});
+  padding-inline: $space-4;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  @include custom-scrollbar;
+
+  @include for-tablet {
+    display: none;
+  }
+
+  &__header {
+    @include row($space-3);
+
+    position: sticky;
+    top: 0;
+    z-index: $z-raised;
+    justify-content: space-between;
+    padding-block: $space-4 $space-3;
+    border-block-end: 1px solid $border;
+    background-color: $bg-surface;
+  }
+
+  &__title {
+    @include block-title;
+
+    margin: 0;
+  }
+
+  &__count {
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.footer {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: $space-3;
+}

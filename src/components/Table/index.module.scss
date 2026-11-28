@@ -52,7 +52,7 @@
     top: 0;
     z-index: $z-raised;
     background-color: $bg-raised;
-    font-family: $font-body;
+    font-family: var(--ui-overline-font, #{$font-body});
     font-size: $font-size-caption;
     font-weight: $weight-semibold;
     text-transform: uppercase;
@@ -63,6 +63,34 @@
 
   &--row-hover tbody tr:hover > td {
     background-color: $bg-raised;
+  }
+
+  // 3.4: technical specifications — key in the secondary colour, value in mono tabular figures.
+  &--spec {
+    th[scope='row'],
+    td {
+      vertical-align: top;
+    }
+
+    th[scope='row'] {
+      width: 40%;
+      font-weight: $weight-regular;
+      color: $text-2;
+    }
+
+    td {
+      @include technical-text;
+
+      font-weight: $weight-medium;
+      color: $text;
+      overflow-wrap: anywhere;
+    }
+
+    @include for-mobile {
+      th[scope='row'] {
+        width: auto;
+      }
+    }
   }
 }
 

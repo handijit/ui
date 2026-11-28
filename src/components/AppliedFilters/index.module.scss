@@ -1,0 +1,70 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Applied filters (3.4): an overline lead, the chips, and "clear all" at the end of the row. On a
+// phone the three stack, so a long list of chips does not push the button out of reach.
+.applied {
+  @include wrap-row($space-2);
+
+  padding: $space-3 $space-4;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background-color: $bg-raised;
+
+  @include for-mobile {
+    flex-direction: column;
+    align-items: stretch;
+    padding: $space-3;
+  }
+
+  &__lead {
+    @include overline;
+
+    flex-shrink: 0;
+    margin-inline-end: $space-1;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__list {
+    @include wrap-row($space-2);
+
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__chip {
+    max-width: 100%;
+  }
+
+  &__group {
+    margin-inline-end: $space-1;
+    color: $text-2;
+  }
+
+  &__value {
+    font-weight: $weight-semibold;
+    color: $text;
+  }
+
+  &__extra {
+    font-size: $font-size-caption;
+    color: $text-2;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__clear {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+
+    @include for-mobile {
+      align-self: flex-start;
+      margin-inline-start: 0;
+    }
+  }
+}

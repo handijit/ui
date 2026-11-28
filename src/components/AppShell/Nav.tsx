@@ -28,6 +28,8 @@ export type AppShellNavLink = {
   isDisabled?: boolean;
   /** Nested links: the entry becomes a group that opens and closes. */
   items?: AppShellNavLink[];
+  /** An action row without `href` ("Çıkış yap"), 3.4: a button with the link rows' metrics. */
+  onClick?: () => void;
   /** Extra props for the router's link component. */
   linkProps?: UiLinkExtraProps;
 };
@@ -68,6 +70,11 @@ export type AppShellNavItemProps = {
   /** The current page: drawn as selected and read as `aria-current="page"`. */
   isActive?: boolean;
   isDisabled?: boolean;
+  /**
+   * An action instead of a page (3.4) — "Çıkış yap" at the end of an account menu: without `href`
+   * the row is a `<button>` that shares the link rows' size, icon column and hover.
+   */
+  onClick?: () => void;
   linkProps?: UiLinkExtraProps;
   className?: string;
   testId?: string;
@@ -81,6 +88,7 @@ const AppShellNavItemBase = ({
   badge,
   isActive = false,
   isDisabled = false,
+  onClick,
   linkProps,
   className,
   testId,
@@ -101,6 +109,23 @@ const AppShellNavItemBase = ({
 
   /* On the icon rail the label is hidden: the native tooltip names the icon for the pointer. */
   const title = isCollapsed ? label : undefined;
+
+  if (href === undefined && onClick && !isDisabled)
+    return (
+      <li className={className} data-testid={testId}>
+        <button
+          type="button"
+          className={styles.nav__item}
+          title={title}
+          onClick={() => {
+            onClick();
+            onNavigate?.();
+          }}
+        >
+          {content}
+        </button>
+      </li>
+    );
 
   if (href === undefined || isDisabled)
     return (
@@ -285,6 +310,7 @@ const AppShellNavBase = ({
         badge={link.badge}
         isActive={isActive(link)}
         isDisabled={link.isDisabled}
+        onClick={link.onClick}
         linkProps={link.linkProps}
       />
     );

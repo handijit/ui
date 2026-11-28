@@ -237,6 +237,8 @@ Besides the design tokens, a few components read custom properties of their own
 | `Tabs`       | `--ui-tab-weight`                                                                                                                     |
 | `RadioCard`  | `--ui-radio-card-line` · `-radius`                                                                                                    |
 | sticky parts | `--ui-header-height` (see below)                                                                                                      |
+| overlines    | `--ui-overline-font` (3.4): the family of every overline — `Eyebrow`, section and filter leads, sticky table heads                    |
+| bottom bars  | `--ui-sticky-bar-height` (3.4): written by `StickyActionBar` while shown; `CompareTray` sits above it, a page can pad with it         |
 
 ```css
 :root {
@@ -245,6 +247,7 @@ Besides the design tokens, a few components read custom properties of their own
   --ui-chip-radius: var(--hd-radius-pill);
   --ui-badge-font: var(--hd-font-mono);
   --ui-badge-transform: uppercase;
+  --ui-overline-font: var(--hd-font-mono);
 }
 ```
 
@@ -347,6 +350,59 @@ either. Labels are given **once**, on the provider:
       more: count => `+${count} daha`,
       moved: (title, when) => `${title} taşındı: ${when}`,
     },
+    facets: {
+      title: 'Filtreler',
+      clearAll: 'Tümünü temizle',
+      clear: 'Temizle',
+      apply: 'Sonuçları göster',
+      applyRange: 'Uygula',
+      showMore: count => `${count} seçenek daha`,
+      showLess: 'Daha az göster',
+      search: title => `${title} içinde ara`,
+      noMatch: term => `“${term}” için sonuç yok`,
+      selected: count => `${count} seçili`,
+    },
+    appliedFilters: {
+      title: 'Uygulanan filtreler',
+      remove: (group, value) => `${group}: ${value} filtresini kaldır`,
+      clearAll: 'Tümünü temizle',
+      more: count => `+${count} filtre daha`,
+    },
+    filterToolbar: {
+      filter: 'Filtrele',
+      activeFilters: count => `${count} filtre uygulandı`,
+      sort: 'Sırala',
+      view: 'Görünüm',
+      viewTable: 'Tablo',
+      viewCards: 'Kartlar',
+      density: 'Yoğunluk',
+      densityComfortable: 'Rahat',
+      densityCompact: 'Sıkı',
+      pageSize: 'Sayfa başına',
+      perPage: size => `${size} / sayfa`,
+    },
+    sortableList: {
+      instructions: 'Boşluk ile tutun, oklarla taşıyın, Boşluk ile bırakın, Escape ile vazgeçin.',
+      handle: item => `${item} öğesini taşı`,
+      grabbed: (item, position, total) => `${item} tutuldu, sıra ${position} / ${total}`,
+      moved: (item, position, total) => `${item}: sıra ${position} / ${total}`,
+      dropped: (item, position, total) => `${item} bırakıldı, sıra ${position} / ${total}`,
+      cancelled: item => `${item} taşınmadı`,
+    },
+    compareTray: {
+      title: 'Karşılaştırma listesi',
+      count: (count, max) => `${count}/${max}`,
+      remove: item => `${item} ürününü karşılaştırmadan çıkar`,
+      clear: 'Temizle',
+      compare: count => `Karşılaştır (${count})`,
+      needMore: min => `En az ${min} ürün seçin`,
+    },
+    productCarousel: {
+      previous: title => `${title}: önceki ürünler`,
+      next: title => `${title}: sonraki ürünler`,
+      seeAll: 'Tümünü gör',
+    },
+    megaMenu: { navigation: 'Kategoriler', menu: 'Menü', seeAll: label => `Tüm ${label}` },
     rating: {
       srLabel: (value, count) => `5 üzerinden ${value}${count ? `, ${count} değerlendirme` : ''}`,
       starCount: star => `${star} yıldız`,
@@ -442,6 +498,7 @@ and changes when an announcement strip appears.
 | Shell (3.2)           | `AppShell` (+ `AppShellNav`, `AppShellNavGroup`, `AppShellNavItem`) · `UserMenu`                                                                                                                                                                                                                                                    |
 | Modal                 | `Modal` · `Drawer` · `BottomSheet` · `ConfirmDialog` · `PromptDialog` · `CommandPalette`                                                                                                                                                                                                                                            |
 | Data                  | `Table` (+ `TableScroller`) · `DataTable` (+ `DataTableRow`, `DataTableColumnMenu`) · `FilterBar` (+ `FilterBarField`) · `Pagination` · `Timeline`                                                                                                                                                                                  |
+| Commerce (3.4)        | `FacetSidebar` · `FacetSection` · `AppliedFilters` · `FilterToolbar` · `SortableList` · `CodeText` · `BrandLockup` · `StickyActionBar` · `CompareTray` · `ProductCarousel` · `MegaMenu`                                                                                                                                             |
 | Theme and hooks       | `UiProvider` · `UiThemeScript` · `useUi` · `useUiTheme` · `useUiTokens` · `useAnnounce` · `useStickToBottom` · `usePositioning` · `useVirtualList` · `useListboxNavigation` · `hasOpenSurface`                                                                                                                                      |
 | Chat, `/chat`         | `ChatThread` · `ChatMessage` · `PromptInput` · `PromptSuggestions` · `Prose` · `CodeBlock` · `ReasoningBlock` (+ `ReasoningText`) · `ToolCall` (+ `ToolCallSection`) · `TerminalOutput` · `SourceList` · `Citation` · `MessageActions` · `AppBar` · `ActionList` (+ `ActionListItem`) · `SegmentBar` · `Legend` · `DescriptionList` |
 | Charts, `/charts`     | `LineChart` · `AreaChart` · `BarChart` · `ComposedChart` · `PieChart` · `ScatterPlot` · `Heatmap` · `BoxPlot` · `Histogram` · `RadarChart`                                                                                                                                                                                          |
@@ -851,6 +908,196 @@ and one flag.
 - **Grand total.** `isTotal` sets the row in body size and semibold below a
   rule. Give its `Price` a larger `size` for more weight; usually one row has it.
 - A row never breaks across two printed pages.
+
+### Commerce building blocks (3.4)
+
+A storefront's catalogue, product page and header. Each component has its own
+subpath (`/facet-sidebar`, `/facet-section`, `/applied-filters`,
+`/filter-toolbar`, `/sortable-list`, `/code-text`, `/brand-lockup`,
+`/sticky-action-bar`, `/compare-tray`, `/product-carousel`, `/mega-menu`); a
+page pays for what it imports. None of them reads the URL: the app holds the
+filter state (usually in the query string) and passes values and callbacks.
+Links go through the provider's `linkComponent`, texts through `labels`.
+
+**Filters: `FacetSidebar` + `FacetSection`.** The column sticks below the
+header (`--ui-header-height`) and scrolls inside itself; at tablet width and
+below it is hidden and the same sections open in a `Drawer` with clear and
+apply buttons. A section is a plain `Disclosure` with a selection badge; it
+opens by itself while it holds a selection.
+
+```tsx
+<FacetSidebar
+  activeCount={active}
+  onClearAll={clearAll}
+  isDrawerOpen={isFiltersOpen}
+  onDrawerClose={closeFilters}
+  applyLabel={`${formatNumber(total)} ürünü göster`}
+>
+  <FacetSection title="Kategori" mode="link" options={categories} selected={[category]} />
+  <FacetSection title="Marka" options={brands} selected={brandIds} onChange={setBrands} onClear={clearBrands} />
+  <FacetSection title="Kalite" mode="radio" options={qualities} selected={[quality]} onChange={([q]) => setQuality(q)} />
+  <FacetSection title="Fiyat" mode="range" currency="TL" range={price} onRangeChange={setPrice} onClear={clearPrice} />
+  <FacetSection title="Aracım" selectedCount={vehicle ? 1 : 0}>
+    <VehiclePicker />
+  </FacetSection>
+</FacetSidebar>
+```
+
+- **Modes.** `checkbox` (many values, the default), `radio` (one), `link` (a
+  category tree: the current one is `aria-current="page"`), `range` (two
+  `MoneyInput`s in minor units, applied by the button or Enter, never per
+  keystroke), or your own `children`.
+- **Long lists.** After `visibleCount` options (6) a "show more" button
+  unfolds the rest; a selected option is never folded away. Above
+  `searchThreshold` options (10) a search field filters the list without case
+  or accents. An option with `count: 0` that is not selected is disabled: it
+  leads to an empty page.
+
+**`AppliedFilters`.** One removable chip per applied value, "Marka: Bosch",
+each named "Marka: Bosch filtresini kaldır"; `extraCount` names the filters a
+chip cannot ("+2 filtre daha"). Draws nothing when nothing is applied. After a
+removal, focus moves to the chip that took its place, so a keyboard user can
+keep removing.
+
+```tsx
+<AppliedFilters
+  filters={applied.map(filter => ({ key: filter.key, group: filter.group, label: filter.label, onRemove: () => remove(filter.key) }))}
+  onClearAll={clearAll}
+/>
+```
+
+**`FilterToolbar`.** The bar above a result list. Each control appears when
+its props are given: the narrow-screen "filter" button with its badge
+(`onFilterClick`, `activeFilterCount`), the count (`count`, a skeleton while
+`isCountLoading`, never a misleading "0"), the view switch (`view`: `table` /
+`cards`), density (`comfortable` / `compact`, which matches
+`DataTable.density`), page size and sort. `children` adds your own controls;
+`isSticky` keeps it below the header.
+
+```tsx
+<FilterToolbar
+  count={<><strong>{formatNumber(total)}</strong> ürün</>}
+  onFilterClick={openFilters}
+  activeFilterCount={active}
+  sortOptions={SORT_OPTIONS}
+  sortValue={sort}
+  onSortChange={setSort}
+  view={view}
+  onViewChange={setView}
+  pageSizeOptions={[24, 48, 96]}
+  pageSize={size}
+  onPageSizeChange={setSize}
+/>
+```
+
+**`SortableList`.** Reordering by pointer drag or keyboard, with no library:
+each item gets a handle (`renderItem`'s `handle`); Space grabs, the arrows (and
+Home/End) move, Space drops, Escape puts the order back, and every step is
+announced. `onReorder` receives the new order once, on the drop. `moveTo(0)`
+moves an item at once, which is how an image becomes the cover. `layout="grid"`
+lays tiles in a wrapping grid (`--ui-sortable-tile`, 120px).
+
+```tsx
+<SortableList
+  label="Ürün görselleri"
+  layout="grid"
+  items={images}
+  getKey={image => image.id}
+  getLabel={image => image.alt}
+  onReorder={setImages}
+  renderItem={(image, { handle, index, moveTo }) => (
+    <Card>
+      <CardMedia src={image.url} alt={image.alt} />
+      <CardFooter>
+        {handle}
+        {index === 0 ? <Badge tone="info">Kapak</Badge> : <Button variant={UIVariant.GHOST} size={UISize.SMALL} onClick={() => moveTo(0)}>Kapak yap</Button>}
+      </CardFooter>
+    </Card>
+  )}
+/>
+```
+
+**`CodeText`.** A calm inline code for a part, OEM or order number: the mono
+family a step below the text around it, tabular figures, no surface (the heavy
+ink badge is `CodeBadge`). One click selects the whole code; `isCopyable`
+adds a copy button with `labels.copyField`'s texts. Without `isCopyable` it is
+a server component.
+
+```tsx
+<p>OEM: <CodeText code="1K0 615 301 AA" isMuted isCopyable /></p>
+```
+
+**`BrandLockup`.** A client's mark for an app's header or footer: the logo
+(decorative, the name is written next to it) or a cobalt tile with the
+initial, the name, an optional tagline, `size` `sm` / `md` / `lg`. With `href`
+it is the home link.
+
+```tsx
+<BrandLockup name="Yıldız Oto" tagline="Yedek parça" href="/" logo={<img src="/logo.svg" alt="" />} />
+```
+
+**`StickyActionBar`.** Keeps the page's main action in reach: an
+edge-to-edge bar on a phone, a docked bar centred at the bottom on a wider
+screen. It appears once its target (`targetRef` or `targetId`, the buy box) has
+been scrolled **past**, not while it is still below the fold, and is inert and
+hidden from screen readers otherwise. An `IntersectionObserver` watches the
+target; on the server or without one the bar stays hidden (`isVisible`
+controls it by hand). While shown it writes its height to
+`--ui-sticky-bar-height`.
+
+```tsx
+<StickyActionBar label="Sepete ekle" targetRef={buyBoxRef} info={<><strong>{name}</strong><Price value={price} size="sm" /></>}>
+  <Button variant={UIVariant.ACCENT} onClick={addToCart}>Sepete ekle</Button>
+</StickyActionBar>
+```
+
+**`CompareTray`.** The items picked for comparison, fixed to the bottom edge
+(above the sticky bar when it is shown): removable name chips, "2/4", clear,
+and compare as a link (`compareHref`) or an action (`onCompare`). Below
+`minItems` (2) the button is disabled and says why. Draws nothing when empty.
+
+```tsx
+<CompareTray max={4} items={picked} onRemove={unpick} onClear={clear} compareHref={`/karsilastir?urunler=${ids}`} />
+```
+
+**`ProductCarousel`.** A showcase rail ("Çok satanlar") on `Carousel`: a
+section heading with "see all", arrows that page the rail, snap, responsive
+card counts (`itemsPerView`, default `{ base: 1.5, sm: 2.5, md: 3, lg: 4, xl: 5 }`
+— the fraction lets the next card peek), and ←/→/Home/End moving focus from
+card to card. Draws nothing without cards. `Carousel` itself gained the two
+options it needed: `itemsPerView` and `header`.
+
+```tsx
+<ProductCarousel title="Çok satanlar" description="Son 30 gün" seeAllHref="/arama?siralama=cok-satan">
+  {products.map(product => <ProductCard key={product.id} product={product} />)}
+</ProductCarousel>
+```
+
+**`MegaMenu`.** The header's category navigation: top-level categories, and
+under each a panel of sub-category columns (icons or thumbnails, a
+description line, a `feature` slot for a campaign card, "Tüm …" to the
+category page). It is a disclosure navigation, not an ARIA menu: the links are
+links and Tab walks them; ←/→/Home/End move along the bar, ↓ opens a panel and
+enters it, Escape closes it back on its button, and a resting mouse pointer
+opens it (touch does not). At tablet width and below the bar is hidden and the
+app's menu button opens a `Drawer` (`isDrawerOpen`) where each category is a
+section that opens in place.
+
+```tsx
+<MegaMenu items={categories} isDrawerOpen={isMenuOpen} onDrawerClose={closeMenu} />
+```
+
+**Smaller additions.**
+
+| Component       | 3.4 option                                                                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `DataTable`     | `DataTableColumn.align` (`start` / `end` / `center`) and `isNumeric` (end-aligned, tabular figures, no wrap); the header's sort button follows the alignment |
+| `Gallery`       | `placeholder` (drawn in the image's place when there is no image; an empty gallery drew nothing) and `hasCounter` ("2 / 5" on the main image)               |
+| `Steps`         | `mobileLayout="row"`: a checkout's steps stay on one line on a phone, only the current label written (the others are still read)                            |
+| `Table`         | `variant="spec"`: technical specifications — `th scope="row"` keys in the secondary colour, values in mono tabular figures                                   |
+| `AppShellNav`   | `onClick` on an item without `href`: an action row ("Çıkış yap") with the link rows' metrics, for an account sidebar                                        |
+| `Carousel`      | `itemsPerView` and `header` (see `ProductCarousel`)                                                                                                          |
+| overlines       | `--ui-overline-font` sets the family of every overline at once                                                                                               |
 
 ### Printing (3.3.0)
 

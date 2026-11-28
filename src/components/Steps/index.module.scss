@@ -144,3 +144,31 @@ button.steps__button {
 .steps__status {
   @include visually-hidden;
 }
+
+// 3.4: `mobileLayout="row"` — a phone keeps the steps on one line: markers joined by short lines,
+// only the current step's label written; the others' labels stay in the accessibility tree.
+.steps--mobile-row {
+  @include for-mobile {
+    flex-direction: row;
+    gap: 0;
+
+    .steps__item:not(:last-child)::after {
+      display: block;
+      margin-inline: 2px;
+    }
+
+    .steps__button {
+      position: relative;
+      gap: $space-1;
+      padding: $space-1;
+    }
+
+    .steps__item:not(.steps__item--current) .steps__text {
+      @include visually-hidden;
+    }
+
+    .steps__item:not(.steps__item--current) {
+      flex: 1 1 auto;
+    }
+  }
+}

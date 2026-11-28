@@ -4,11 +4,14 @@ import { type FC, memo, type ReactNode, useCallback, useEffect, useRef, useState
 
 import { CaretLeftFill, CaretRightFill } from 'react-bootstrap-icons';
 
+import { type CarouselItemsPerView, itemsPerViewStyle } from '../../helpers/carousel.helper';
 import { cx } from '../../helpers/class-name.helper';
 import { named } from '../../helpers/component.helper';
 import IconButton from '../IconButton';
 
 import styles from './index.module.scss';
+
+export type { CarouselItemsPerView } from '../../helpers/carousel.helper';
 
 type Props = {
   children: ReactNode;
@@ -26,6 +29,13 @@ type Props = {
    * kartları…
    */
   itemMinWidth?: number;
+  /**
+   * Cards side by side per width (3.4) — `{ base: 1.5, md: 3, lg: 4 }`; the card width follows the
+   * rail's width. Wins over `itemWidth`.
+   */
+  itemsPerView?: CarouselItemsPerView;
+  /** Drawn at the start of the arrows' row (3.4): a section heading with a "see all" link. */
+  header?: ReactNode;
   className?: string;
   testId?: string;
 };
@@ -39,6 +49,8 @@ const Carousel: FC<Props> = ({
   formatDotLabel,
   itemWidth,
   itemMinWidth,
+  itemsPerView,
+  header,
   className,
   testId,
 }) => {
@@ -111,6 +123,7 @@ const Carousel: FC<Props> = ({
   return (
     <section className={cx(styles.carousel, className)} aria-label={label} data-testid={testId}>
       <div className={styles.carousel__controls}>
+        {header && <div className={styles.carousel__header}>{header}</div>}
         <IconButton
           icon={<CaretLeftFill aria-hidden className={styles.carousel__arrowIcon} />}
           label={previousLabel}
@@ -131,7 +144,7 @@ const Carousel: FC<Props> = ({
 
       <div
         ref={trackRef}
-        className={styles.carousel__track}
+        className={cx(styles.carousel__track, itemsPerView && styles['carousel__track--fit'])}
         /*
          * ⚠ Sutun genisligi SABIT, `1fr` DEGIL: `minmax(item, 1fr)` yalnizca serit DOLMADIGINDA
          * devreye giriyor ve kartlari gerdiriyordu
@@ -139,6 +152,7 @@ const Carousel: FC<Props> = ({
         style={
           {
             '--ui-carousel-item-default': `${itemWidth ?? itemMinWidth ?? 240}px`,
+            ...(itemsPerView && itemsPerViewStyle(itemsPerView)),
           } as React.CSSProperties
         }
         /*

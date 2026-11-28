@@ -28,6 +28,12 @@ type Props = {
   /** Akışın erişilebilir adı ("Ödeme adımları"). */
   label: string;
   orientation?: 'horizontal' | 'vertical';
+  /**
+   * A horizontal stepper on a phone (3.4): `stack` lists the steps under each other (default);
+   * `row` keeps them on one line — numbered markers joined by lines, only the current step's label
+   * written (the others are still read). A checkout's "Cart → Delivery → Payment → Done".
+   */
+  mobileLayout?: 'stack' | 'row';
   className?: string;
   testId?: string;
 };
@@ -56,6 +62,7 @@ const Steps: FC<Props> = ({
   onStepClick,
   label,
   orientation = 'horizontal',
+  mobileLayout = 'stack',
   className,
   testId,
 }) => {
@@ -66,6 +73,7 @@ const Steps: FC<Props> = ({
       className={cx(
         styles.steps,
         styles[`steps--${orientation}`],
+        orientation === 'horizontal' && mobileLayout === 'row' && styles['steps--mobile-row'],
         currentIndex === undefined && styles['steps--static'],
         className,
       )}

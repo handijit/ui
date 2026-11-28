@@ -52,11 +52,15 @@ const needsClient = (source: string): boolean =>
 const SERVER_SAFE = [
   'Alert',
   'Badge',
+  /* 3.4: a client's brand mark; its link is the provider's link component. */
+  'BrandLockup',
   /* `useId` runs on the server; the brand surface sends no JavaScript (2.0.1, renamed in 3.0). */
   'BrandSurface',
   'Button',
   'Card',
   'Chip',
+  /* 3.4: only the copyable form is a client module (`CodeTextCopy`). */
+  'CodeText',
   'Divider',
   'EmptyState',
   'Eyebrow',

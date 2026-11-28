@@ -123,7 +123,7 @@ export {
   type CardMediaFit,
   CardOverlay,
 } from './components/Card';
-export { default as Carousel } from './components/Carousel';
+export { default as Carousel, type CarouselItemsPerView } from './components/Carousel';
 export { default as CodeBadge, type CodeBadgeSize } from './components/CodeBadge';
 export { default as Kbd } from './components/Kbd';
 export { default as StatusDot, type StatusDotTone } from './components/StatusDot';
@@ -205,6 +205,7 @@ export {
   default as DataTable,
   DataTableRow,
   type DataTableColumn,
+  type DataTableColumnAlign,
   type DataTableColumnState,
   type DataTableDensity,
 } from './components/DataTable';
@@ -261,6 +262,56 @@ export {
 export { default as UserMenu } from './components/UserMenu';
 export { default as FilterBar, FilterBarField } from './components/FilterBar';
 export { default as Pagination } from './components/Pagination';
+
+// --- Commerce (3.4) ---------------------------------------------------
+/*
+ * A storefront's catalogue and header, each on its own subpath (`/facet-sidebar`, `/mega-menu`…):
+ * filters (column, sections, applied chips, toolbar), reordering, codes, the brand mark, the
+ * sticky action bar, the comparison tray and the showcase rail.
+ */
+export { default as FacetSidebar, type FacetSidebarLabels } from './components/FacetSidebar';
+export {
+  default as FacetSection,
+  type FacetLabels,
+  type FacetMode,
+  type FacetOption,
+  type FacetRange,
+} from './components/FacetSection';
+export {
+  default as AppliedFilters,
+  type AppliedFilter,
+  type AppliedFiltersLabels,
+} from './components/AppliedFilters';
+export {
+  default as FilterToolbar,
+  type FilterToolbarDensity,
+  type FilterToolbarLabels,
+  type FilterToolbarView,
+} from './components/FilterToolbar';
+export {
+  default as SortableList,
+  type SortableItemState,
+  type SortableListLabels,
+} from './components/SortableList';
+export { default as CodeText } from './components/CodeText';
+export { default as BrandLockup, type BrandLockupSize } from './components/BrandLockup';
+export { default as StickyActionBar } from './components/StickyActionBar';
+export {
+  default as CompareTray,
+  type CompareTrayItem,
+  type CompareTrayLabels,
+} from './components/CompareTray';
+export {
+  default as ProductCarousel,
+  type ProductCarouselLabels,
+} from './components/ProductCarousel';
+export {
+  default as MegaMenu,
+  type MegaMenuColumn,
+  type MegaMenuItem,
+  type MegaMenuLabels,
+  type MegaMenuLink,
+} from './components/MegaMenu';
 
 /* Tip sozlesmeleri — govdeleri `src/types/` altinda. */
 export type { AnnouncePoliteness, ListboxNavigationOptions, VirtualRange } from './types/hook.type';

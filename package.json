@@ -1,6 +1,6 @@
 {
   "name": "@handijitcom/ui",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "description": "Accessible React component library on SCSS Modules, themed by its own design tokens (@handijitcom/ui/design): light and dark from one set of --hd-* tokens, a CSP-ready theme boot script, and Bootstrap Icons for iconography.",
   "author": "Ahmet ilhan <ahmetilhan.dev@gmail.com>",
   "license": "MIT",
@@ -46,6 +46,16 @@
         "default": "./build/components/Alert/index.cjs"
       }
     },
+    "./applied-filters": {
+      "import": {
+        "types": "./build/components/AppliedFilters/index.d.ts",
+        "default": "./build/components/AppliedFilters/index.js"
+      },
+      "require": {
+        "types": "./build/components/AppliedFilters/index.d.cts",
+        "default": "./build/components/AppliedFilters/index.cjs"
+      }
+    },
     "./app-shell": {
       "import": {
         "types": "./build/components/AppShell/index.d.ts",
@@ -84,6 +94,16 @@
       "require": {
         "types": "./build/components/BottomSheet/index.d.cts",
         "default": "./build/components/BottomSheet/index.cjs"
+      }
+    },
+    "./brand-lockup": {
+      "import": {
+        "types": "./build/components/BrandLockup/index.d.ts",
+        "default": "./build/components/BrandLockup/index.js"
+      },
+      "require": {
+        "types": "./build/components/BrandLockup/index.d.cts",
+        "default": "./build/components/BrandLockup/index.cjs"
       }
     },
     "./brand-surface": {
@@ -186,6 +206,16 @@
         "default": "./build/components/CodeBadge/index.cjs"
       }
     },
+    "./code-text": {
+      "import": {
+        "types": "./build/components/CodeText/index.d.ts",
+        "default": "./build/components/CodeText/index.js"
+      },
+      "require": {
+        "types": "./build/components/CodeText/index.d.cts",
+        "default": "./build/components/CodeText/index.cjs"
+      }
+    },
     "./combobox": {
       "import": {
         "types": "./build/components/Combobox/index.d.ts",
@@ -204,6 +234,16 @@
       "require": {
         "types": "./build/components/CommandPalette/index.d.cts",
         "default": "./build/components/CommandPalette/index.cjs"
+      }
+    },
+    "./compare-tray": {
+      "import": {
+        "types": "./build/components/CompareTray/index.d.ts",
+        "default": "./build/components/CompareTray/index.js"
+      },
+      "require": {
+        "types": "./build/components/CompareTray/index.d.cts",
+        "default": "./build/components/CompareTray/index.cjs"
       }
     },
     "./confirm-dialog": {
@@ -316,6 +356,26 @@
         "default": "./build/components/Eyebrow/index.cjs"
       }
     },
+    "./facet-section": {
+      "import": {
+        "types": "./build/components/FacetSection/index.d.ts",
+        "default": "./build/components/FacetSection/index.js"
+      },
+      "require": {
+        "types": "./build/components/FacetSection/index.d.cts",
+        "default": "./build/components/FacetSection/index.cjs"
+      }
+    },
+    "./facet-sidebar": {
+      "import": {
+        "types": "./build/components/FacetSidebar/index.d.ts",
+        "default": "./build/components/FacetSidebar/index.js"
+      },
+      "require": {
+        "types": "./build/components/FacetSidebar/index.d.cts",
+        "default": "./build/components/FacetSidebar/index.cjs"
+      }
+    },
     "./field": {
       "import": {
         "types": "./build/components/Field/index.d.ts",
@@ -344,6 +404,16 @@
       "require": {
         "types": "./build/components/FilterBar/index.d.cts",
         "default": "./build/components/FilterBar/index.cjs"
+      }
+    },
+    "./filter-toolbar": {
+      "import": {
+        "types": "./build/components/FilterToolbar/index.d.ts",
+        "default": "./build/components/FilterToolbar/index.js"
+      },
+      "require": {
+        "types": "./build/components/FilterToolbar/index.d.cts",
+        "default": "./build/components/FilterToolbar/index.cjs"
       }
     },
     "./gallery": {
@@ -384,6 +454,16 @@
       "require": {
         "types": "./build/components/Kbd/index.d.cts",
         "default": "./build/components/Kbd/index.cjs"
+      }
+    },
+    "./mega-menu": {
+      "import": {
+        "types": "./build/components/MegaMenu/index.d.ts",
+        "default": "./build/components/MegaMenu/index.js"
+      },
+      "require": {
+        "types": "./build/components/MegaMenu/index.d.cts",
+        "default": "./build/components/MegaMenu/index.cjs"
       }
     },
     "./menu": {
@@ -494,6 +574,16 @@
       "require": {
         "types": "./build/components/Price/index.d.cts",
         "default": "./build/components/Price/index.cjs"
+      }
+    },
+    "./product-carousel": {
+      "import": {
+        "types": "./build/components/ProductCarousel/index.d.ts",
+        "default": "./build/components/ProductCarousel/index.js"
+      },
+      "require": {
+        "types": "./build/components/ProductCarousel/index.d.cts",
+        "default": "./build/components/ProductCarousel/index.cjs"
       }
     },
     "./progress": {
@@ -656,6 +746,16 @@
         "default": "./build/components/Skeleton/index.cjs"
       }
     },
+    "./sortable-list": {
+      "import": {
+        "types": "./build/components/SortableList/index.d.ts",
+        "default": "./build/components/SortableList/index.js"
+      },
+      "require": {
+        "types": "./build/components/SortableList/index.d.cts",
+        "default": "./build/components/SortableList/index.cjs"
+      }
+    },
     "./spinner": {
       "import": {
         "types": "./build/components/Spinner/index.d.ts",
@@ -704,6 +804,16 @@
       "require": {
         "types": "./build/components/Steps/index.d.cts",
         "default": "./build/components/Steps/index.cjs"
+      }
+    },
+    "./sticky-action-bar": {
+      "import": {
+        "types": "./build/components/StickyActionBar/index.d.ts",
+        "default": "./build/components/StickyActionBar/index.js"
+      },
+      "require": {
+        "types": "./build/components/StickyActionBar/index.d.cts",
+        "default": "./build/components/StickyActionBar/index.cjs"
       }
     },
     "./summary-card": {

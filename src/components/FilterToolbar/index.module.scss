@@ -1,0 +1,100 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// The bar above a result list (3.4): the filter button and the count at the start, the controls at
+// the end. On a phone the count is read but not drawn (the list says it), and the view switch goes.
+.toolbar {
+  @include row($space-3);
+
+  padding: $space-2 $space-3;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background-color: $bg-surface;
+
+  &--sticky {
+    @include sticky-below-header($space-4);
+
+    z-index: $z-sticky;
+    box-shadow: $shadow-1;
+  }
+
+  @include for-mobile {
+    gap: $space-2;
+  }
+
+  &__filter {
+    display: none;
+    flex-shrink: 0;
+
+    @include for-tablet {
+      display: inline-flex;
+    }
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    margin-inline-start: $space-1;
+    padding-inline: 5px;
+    border-radius: $radius-pill;
+    background-color: $primary;
+    color: $on-primary;
+    font-size: $font-size-caption;
+    font-weight: $weight-bold;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__count {
+    margin: 0;
+    font-size: $font-size-small;
+    color: $text-2;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+
+    strong {
+      font-weight: $weight-semibold;
+      color: $text;
+    }
+
+    @include for-mobile {
+      @include visually-hidden;
+    }
+  }
+
+  &__skeleton {
+    flex-shrink: 0;
+
+    @include for-mobile {
+      display: none;
+    }
+  }
+
+  &__controls {
+    @include row($space-2);
+
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+
+  &__view,
+  &__density {
+    flex-shrink: 0;
+
+    @include for-mobile {
+      display: none;
+    }
+  }
+
+  &__select {
+    width: auto;
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+}
+
+.srOnly {
+  @include visually-hidden;
+}

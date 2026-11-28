@@ -8,6 +8,82 @@ README of the 1.0.0 tarball.
 
 ## [Unreleased]
 
+## [3.4.0] - 2026-11-28
+
+**Commerce building blocks for a storefront's catalogue, product page and header.** Additive;
+nothing to change for a 3.3.1 caller. A minor release: eleven components and their types are new
+public names (`check:api`), and five existing components gain options. Each new component has its
+own subpath; the look and the behaviour mirror the parts storefront that ran on `@ahmetilhn/hanui`,
+redrawn with this library's tokens (light and dark), its labels and its link component.
+
+### Added
+
+- **`FacetSidebar`** (`/facet-sidebar`): the filter column — a heading with "clear all (n)", sticky
+  below `--ui-header-height` and scrolling inside itself; at tablet width and below it is hidden
+  and the same sections open in a start-edge `Drawer` (`isDrawerOpen`) with clear and apply
+  (`applyLabel`, "128 ürünü göster") buttons, closed by itself when the window widens.
+- **`FacetSection`** (`/facet-section`): one collapsible filter group on `Disclosure` — `checkbox`,
+  `radio`, `link` (the current one `aria-current="page"`) or `range` mode (two `MoneyInput`s in
+  minor units, applied by a button or Enter), counts in tabular figures, a selection badge read as
+  text, "show more" after `visibleCount` (a selected option is never folded away), a search field
+  above `searchThreshold` (case- and accent-free), a clear button, or custom `children`. An option
+  with `count: 0` that is not selected is disabled. Opens by itself while it holds a selection.
+- **`AppliedFilters`** (`/applied-filters`): removable chips with their group ("Marka: Bosch"),
+  `extraCount` for filters without a chip, "clear all"; focus moves to the chip that takes a
+  removed one's place. Draws nothing when nothing is applied.
+- **`FilterToolbar`** (`/filter-toolbar`): result count (a skeleton while loading), the
+  narrow-screen filter button with its badge, sort, view (`table` / `cards`), density
+  (`comfortable` / `compact`), page size — each shown when its props are given — and a slot for the
+  app's own controls; optionally sticky.
+- **`SortableList`** (`/sortable-list`): reordering by pointer drag or keyboard, without a library —
+  a handle per item, Space grabs, arrows / Home / End move, Space drops, Escape cancels, Tab drops;
+  every step announced; `onReorder` once, on the drop; `moveTo(index)` for "make cover";
+  `layout="grid"` for image tiles. The arithmetic (`moveItem`, `nearestIndex`) is a pure helper.
+- **`CodeText`** (`/code-text`): a calm inline code for part and OEM numbers (mono, tabular,
+  no surface, select-all on click), optional copy with `labels.copyField`. Server-drawable unless
+  copyable.
+- **`BrandLockup`** (`/brand-lockup`): a client's mark — logo or an initial tile, name, tagline,
+  three sizes, optionally the home link. Server-drawable.
+- **`StickyActionBar`** (`/sticky-action-bar`): the page's main action kept in reach — a bottom bar
+  on a phone, a docked bar on a wider screen — shown once its target has been scrolled past
+  (`IntersectionObserver`; hidden on the server and without one), inert while hidden, and writing
+  `--ui-sticky-bar-height` while shown.
+- **`CompareTray`** (`/compare-tray`): the items picked for comparison in a tray fixed above the
+  sticky bar — name chips with remove, "2/4", clear, compare as a link or an action, disabled with
+  its reason below `minItems`.
+- **`ProductCarousel`** (`/product-carousel`): a showcase rail on `Carousel` — heading, "see all",
+  paging arrows named with the title, snap, responsive card counts, ←/→/Home/End between cards.
+- **`MegaMenu`** (`/mega-menu`): a storefront header's category navigation — panels of
+  sub-category columns with icons or thumbnails, a feature slot and "see all"; opened by click, ↓
+  or a resting mouse pointer; ←/→/Home/End along the bar, Escape back to the button, closed by a
+  press outside or by tabbing away; a drawer of sections on a narrow screen.
+- **Options.** `DataTableColumn.align` (`start` / `end` / `center`, type `DataTableColumnAlign`) and
+  `isNumeric` (end-aligned tabular figures); `Carousel.itemsPerView` (type
+  `CarouselItemsPerView`) and `Carousel.header`; `Gallery.placeholder` and `Gallery.hasCounter`;
+  `Steps.mobileLayout="row"`; `Table variant="spec"`; `AppShellNavLink.onClick` /
+  `AppShellNavItem.onClick` (an action row such as sign-out). Defaults keep the 3.3 behaviour.
+- **`--ui-overline-font`.** Every overline (`overline` mixin, `Eyebrow`, sticky table heads) reads
+  the family from it; the body font (mono for `Eyebrow`) otherwise.
+- **Labels.** `facets`, `appliedFilters`, `filterToolbar`, `sortableList`, `compareTray`,
+  `productCarousel`, `megaMenu` on `UiLabels`; each component also takes a `labels` prop.
+
+### Budgets
+
+- The facade 58 → 67 kB (measured 66.03 kB) and `styles.css` 28.5 → 33 kB (32.61 kB): the eleven
+  components and their sheets. No page pays either figure; each import is measured on its own:
+  `FacetSidebar` + `FacetSection` 9.33 kB, `FilterToolbar` 8.57 kB, `MegaMenu` 5.24 kB,
+  `ProductCarousel` 3.79 kB, `CompareTray` 2.6 kB, `AppliedFilters` 2.54 kB, `SortableList`
+  2.12 kB, `CodeText` 1.09 kB, `StickyActionBar` 779 B, `BrandLockup` 647 B. "DataTable with
+  DataTableColumnMenu" 7 → 7.3 kB (7.04 kB, the alignment classes); the table alone stays under
+  3.3 kB (3.25 kB). Public API 217 → 250 names.
+
+### Tests
+
+- One suite per component (behaviour, keyboard, labels, focus after removal, pointer drag with
+  measured boxes, the observer), the pure helpers, an axe scan of every new component in the
+  scenario book and of the open states (drawer, panel), and the options. New files are held at
+  100% coverage.
+
 ## [3.3.1] - 2026-11-28
 
 **A dark page prints light.** A fix; nothing to change for a 3.3.0 caller. An application that

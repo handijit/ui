@@ -81,6 +81,12 @@ type Props = TableHTMLAttributes<HTMLTableElement> &
     hasStickyHead: boolean;
     /** Satır hover zemini: çok sütunlu tabloda göz satırını kaybediyor. */
     hasRowHover: boolean;
+    /**
+     * `spec` (3.4): a key → value table of technical specifications. Each row is a
+     * `<th scope="row">` key in the secondary colour over 40% of the width (its own width on a
+     * phone) and a value in the mono family with tabular figures.
+     */
+    variant: 'default' | 'spec';
   }>;
 
 /** Temel tablo — hairline satır ayrımı, `$surface-2` başlık, yoğunluk ölçeği. */
@@ -88,6 +94,7 @@ const Table: FC<Props> = ({
   density = 'regular',
   hasStickyHead,
   hasRowHover,
+  variant = 'default',
   className,
   children,
   ...rest
@@ -98,6 +105,7 @@ const Table: FC<Props> = ({
       styles[`table--${density}`],
       hasStickyHead && styles['table--sticky-head'],
       hasRowHover && styles['table--row-hover'],
+      variant === 'spec' && styles['table--spec'],
       className,
     )}
     {...rest}

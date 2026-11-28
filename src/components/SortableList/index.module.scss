@@ -1,0 +1,77 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// A reorderable list (3.4). The list draws no surface of its own: the items are the app's cards or
+// rows. While an item is moved it rises (shadow) and the others keep their place in the flow.
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &--list {
+    @include stack($space-2);
+  }
+
+  &--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--ui-sortable-tile, 120px), 1fr));
+    gap: $space-3;
+  }
+
+  &--active {
+    user-select: none;
+  }
+}
+
+.item {
+  position: relative;
+  min-width: 0;
+  border-radius: $radius-md;
+  transition: box-shadow $duration-fast $ease-standard;
+
+  &--dragging {
+    z-index: $z-raised;
+    box-shadow: $shadow-2;
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+}
+
+.handle {
+  @include tap-target;
+
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: $radius-sm;
+  color: $text-2;
+  font-size: $icon-sm;
+  cursor: grab;
+  // The finger drags the item, not the page.
+  touch-action: none;
+
+  @include interactive-surface;
+  @include focus-ring;
+
+  .item--dragging & {
+    cursor: grabbing;
+  }
+
+  &[aria-pressed='true'] {
+    background-color: $primary-soft;
+    color: $primary-text;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+
+    @include passive-text;
+  }
+}

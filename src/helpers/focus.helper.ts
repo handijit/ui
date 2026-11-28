@@ -72,7 +72,7 @@ export const captureFocus = (): (() => void) => {
 };
 
 /** Odaklanabilir öğelerin seçicisi — `inert` ve `disabled` olanlar hariç. */
-const FOCUSABLE_SELECTOR = [
+export const FOCUSABLE_SELECTOR = [
   'a[href]',
   'button:not(:disabled)',
   'input:not(:disabled)',

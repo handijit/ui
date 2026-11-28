@@ -1,0 +1,101 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// A client's brand mark (3.4). The mark is a square slot: a logo is fitted into it, the initial is
+// set on a cobalt tile. The name uses the display face; sizes scale the slot and the type together.
+.lockup {
+  --ui-lockup-mark: 32px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  min-width: 0;
+  color: $text;
+
+  &--sm {
+    --ui-lockup-mark: 24px;
+
+    gap: $space-2;
+
+    .lockup__name {
+      font-size: $font-size-small;
+    }
+  }
+
+  &--lg {
+    --ui-lockup-mark: 44px;
+
+    gap: $space-3;
+
+    .lockup__name {
+      font-size: $font-size-h4;
+    }
+  }
+
+  &--link {
+    border-radius: $radius-sm;
+    text-decoration: none;
+
+    @include focus-ring;
+
+    &:hover .lockup__name {
+      color: $primary-text;
+    }
+  }
+
+  &__mark {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--ui-lockup-mark);
+    height: var(--ui-lockup-mark);
+    overflow: hidden;
+
+    > img,
+    > svg {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    &--tile {
+      border-radius: $radius-sm;
+      background-color: $primary;
+      color: $on-primary;
+      font-family: $font-display;
+      font-size: calc(var(--ui-lockup-mark) * 0.5);
+      font-weight: $weight-bold;
+      line-height: 1;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    @include truncate;
+
+    font-family: $font-display;
+    font-size: $font-size-body;
+    font-weight: $weight-semibold;
+    line-height: $leading-snug;
+    letter-spacing: $tracking-snug;
+    transition: color $duration-fast $ease-standard;
+
+    @include reduced-motion {
+      transition: none;
+    }
+  }
+
+  &__tagline {
+    @include truncate;
+
+    font-size: $font-size-caption;
+    line-height: $leading-snug;
+    color: $text-2;
+  }
+}

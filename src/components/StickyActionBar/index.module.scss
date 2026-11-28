@@ -1,0 +1,70 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// The page's main action, kept in reach (3.4). Phone: an edge-to-edge bar on the bottom edge, above
+// the home indicator. Wider: a docked bar, centred, lifted off the edge with the overlay shadow.
+.bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: $z-sticky;
+  padding-inline: $space-4;
+  padding-bottom: $space-4;
+  pointer-events: none;
+  translate: 0 calc(100% + #{$space-4});
+  transition: translate $duration-base $ease-standard;
+
+  @include for-mobile {
+    padding: 0;
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+
+  @media print {
+    display: none;
+  }
+
+  &--visible {
+    translate: 0 0;
+  }
+
+  &__inner {
+    @include row($space-4);
+
+    max-width: $container-narrow;
+    margin-inline: auto;
+    padding: $space-3 $space-4;
+    border: 1px solid $border;
+    border-radius: $radius-lg;
+    background-color: $bg-overlay;
+    box-shadow: $shadow-3;
+    pointer-events: auto;
+
+    @include for-mobile {
+      max-width: none;
+      border-width: 1px 0 0;
+      border-radius: 0;
+      box-shadow: $shadow-up;
+
+      @include safe-inline($space-4);
+      @include safe-bottom($space-3);
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__actions {
+    @include row($space-2);
+
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+}

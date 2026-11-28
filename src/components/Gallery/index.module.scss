@@ -44,6 +44,29 @@
     font-size: $icon-md;
     box-sizing: content-box;
   }
+
+  // 3.4: the "no image" artwork fills the same square the photos use.
+  &--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: var(--ui-gallery-ratio, 1);
+    color: $text-3;
+  }
+
+  // 3.4: "2 / 5" at the start of the image's foot, opposite the full-screen hint.
+  &__counter {
+    position: absolute;
+    inset-block-end: $space-3;
+    inset-inline-start: $space-3;
+    padding: 2px $space-2;
+    border-radius: $radius-pill;
+    background-color: $bg-overlay;
+    color: $text-2;
+    font-size: $font-size-caption;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
 }
 
 .image {

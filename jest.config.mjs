@@ -76,5 +76,22 @@ export default {
     /* 3.2.2: totals and printing. */
     './src/components/TotalsList/': FULL,
     './src/hooks/usePrinting.ts': FULL,
+    /* 3.4: the commerce building blocks. */
+    './src/components/FacetSidebar/': FULL,
+    './src/components/FacetSection/': FULL,
+    './src/components/AppliedFilters/': FULL,
+    './src/components/FilterToolbar/': FULL,
+    './src/components/SortableList/': FULL,
+    './src/components/CodeText/': FULL,
+    './src/components/BrandLockup/': FULL,
+    './src/components/StickyActionBar/': FULL,
+    './src/components/CompareTray/': FULL,
+    './src/components/ProductCarousel/': FULL,
+    './src/components/MegaMenu/': FULL,
+    './src/helpers/sortable.helper.ts': FULL,
+    './src/helpers/facet.helper.ts': FULL,
+    './src/helpers/carousel.helper.ts': FULL,
+    './src/helpers/sticky-bar.helper.ts': FULL,
+    './src/hooks/useRemovalFocus.ts': FULL,
   },
 };

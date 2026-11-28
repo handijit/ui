@@ -1,0 +1,246 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// A storefront's category bar (3.4). The panel hangs from the whole bar, not from its category:
+// it spans the navigation's width (the app places the bar in its header's container), so columns
+// have room and the panel does not jump sideways from one category to the next.
+.menu {
+  position: relative;
+
+  @include for-tablet {
+    display: none;
+  }
+
+  // Categories wrap to a second line rather than scroll: a scroll box would clip the panels.
+  &__bar {
+    @include wrap-row($space-1);
+
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__entry {
+    flex-shrink: 0;
+  }
+}
+
+.top {
+  @include row($space-2);
+
+  min-height: 40px;
+  padding: $space-2 $space-3;
+  border: none;
+  border-radius: $radius-sm;
+  background: none;
+  color: $text;
+  font-family: $font-body;
+  font-size: $font-size-small;
+  font-weight: $weight-medium;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+
+  @include interactive-surface;
+  @include focus-ring($focus, -2px);
+
+  &--active {
+    color: $primary-text;
+    font-weight: $weight-semibold;
+    box-shadow: inset 0 -2px 0 $primary;
+  }
+
+  &--open {
+    background-color: $state-hover;
+  }
+
+  &__icon {
+    display: inline-flex;
+    font-size: $icon-sm;
+    color: $text-2;
+  }
+
+  &__chevron {
+    font-size: $icon-xs;
+    color: $text-2;
+    transition: rotate $duration-fast $ease-standard;
+
+    .top--open & {
+      rotate: 180deg;
+    }
+
+    @include reduced-motion {
+      transition: none;
+    }
+  }
+}
+
+.panel {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(100% + #{$space-1});
+  z-index: $z-dropdown;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: $space-4 $space-6;
+  padding: $space-5 $space-6;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background-color: $bg-overlay;
+  box-shadow: $shadow-3;
+  animation: $anim-fade-in-down $duration-fast $ease-enter;
+
+  @include reduced-motion {
+    animation: none;
+  }
+
+  &[hidden] {
+    display: none;
+  }
+
+  &__columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: $space-5 $space-6;
+    min-width: 0;
+  }
+
+  &__feature {
+    width: 280px;
+    min-width: 0;
+  }
+
+  &__all {
+    grid-column: 1 / -1;
+    justify-self: start;
+    border-radius: $radius-xs;
+    color: $primary-text;
+    font-size: $font-size-small;
+    font-weight: $weight-semibold;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    @include focus-ring;
+  }
+}
+
+.column {
+  @include stack($space-2);
+
+  min-width: 0;
+
+  &__title {
+    @include overline;
+
+    margin: 0;
+  }
+
+  &__link {
+    color: inherit;
+    text-decoration: none;
+    border-radius: $radius-xs;
+
+    &:hover {
+      color: $primary-text;
+    }
+
+    @include focus-ring;
+  }
+
+  &__list {
+    @include stack(2px);
+
+    margin: 0 calc(-1 * #{$space-2});
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.link {
+  @include row($space-3);
+
+  padding: $space-2;
+  border-radius: $radius-sm;
+  color: $text;
+  font-size: $font-size-small;
+  text-decoration: none;
+
+  @include interactive-surface;
+  @include focus-ring($focus, -2px);
+
+  &__media {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    color: $text-2;
+    font-size: $icon-sm;
+
+    &--image {
+      width: 40px;
+      height: 40px;
+      overflow: hidden;
+      border-radius: $radius-sm;
+      background-color: $bg-raised;
+
+      > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__label {
+    overflow-wrap: anywhere;
+  }
+
+  &__description {
+    font-size: $font-size-caption;
+    color: $text-2;
+  }
+}
+
+.drawer {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  > li {
+    border-block-end: 1px solid $border;
+  }
+
+  &__section {
+    @include stack($space-4);
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    min-height: $tap-target-size;
+    padding-inline: $space-4;
+    color: $text;
+    font-size: $font-size-small;
+    font-weight: $weight-semibold;
+    text-decoration: none;
+
+    @include interactive-surface;
+    @include focus-ring($focus, -2px);
+
+    &[aria-current='page'] {
+      color: $primary-text;
+    }
+  }
+}

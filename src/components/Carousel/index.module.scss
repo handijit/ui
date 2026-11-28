@@ -84,3 +84,35 @@
     }
   }
 }
+
+// A heading in the arrows' row (3.4): it takes the room, the arrows stay at the end.
+.carousel__header {
+  flex: 1;
+  min-width: 0;
+}
+
+// Cards per view (3.4): the card width is a share of the rail, gaps included. The counts come from
+// `itemsPerView` as one custom property per breakpoint, each filled from the one below.
+.carousel__track--fit {
+  --ui-carousel-per-view: var(--ui-carousel-per-view-base, 1);
+
+  grid-auto-columns: calc(
+    (100% - (var(--ui-carousel-per-view) - 1) * #{$space-4}) / var(--ui-carousel-per-view)
+  );
+
+  @media (min-width: #{$breakpoint-sm + 1px}) {
+    --ui-carousel-per-view: var(--ui-carousel-per-view-sm, 1);
+  }
+
+  @media (min-width: #{$breakpoint-md + 1px}) {
+    --ui-carousel-per-view: var(--ui-carousel-per-view-md, 1);
+  }
+
+  @media (min-width: #{$breakpoint-lg + 1px}) {
+    --ui-carousel-per-view: var(--ui-carousel-per-view-lg, 1);
+  }
+
+  @media (min-width: #{$breakpoint-xl + 1px}) {
+    --ui-carousel-per-view: var(--ui-carousel-per-view-xl, 1);
+  }
+}
